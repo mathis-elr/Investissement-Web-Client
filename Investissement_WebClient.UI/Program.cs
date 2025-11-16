@@ -1,10 +1,20 @@
 using Investissement_WebClient.UI.Components;
+using Investissement_WebClient.UI.Components.ViewsModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+
+builder.Services.AddScoped<InvestirViewModel>();
+builder.Services.AddScoped<ActifViewModel>();
+builder.Services.AddScoped<ModeleViewModel>();
+builder.Services.AddScoped<PatrimoineViewModel>();
+builder.Services.AddScoped<BourseViewModel>();
+
+
 
 var app = builder.Build();
 

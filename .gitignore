@@ -67,3 +67,6 @@ appsettings.*.json
 
 # Ignore test results
 TestResults/
+
+#local bd
+bd/

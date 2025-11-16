@@ -1,9 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>94ce0e3e-47f0-4a40-8bc4-2456566ac493</UserSecretsId>
   </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Investissement_WebClient.Core\Investissement_WebClient.Core.csproj" />
+	</ItemGroup>
 
 </Project>

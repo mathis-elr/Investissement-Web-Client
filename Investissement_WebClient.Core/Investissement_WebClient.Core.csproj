@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Investissement_WebClient.Data\Investissement_WebClient.Data.csproj" />
+  </ItemGroup>
+
 </Project>

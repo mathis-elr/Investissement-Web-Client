@@ -1,43 +1,71 @@
-﻿@page "/"
+﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+@page "/"
+@rendermode InteractiveServer
+@inject InvestirViewModel IVM
 @inject IJSRuntime JS
+
 
 <PageTitle>Investir</PageTitle>
 
 <div class="investissement">
     <div class="investissement-header">
         <label>Investissement du </label>
-        <input type="date" />
+        <input @bind="IVM.selectedDate" type="date" />
         <label>avec le modèle</label>
-        <select>
-            <option>Aucun</option>
-            <option>semaine 1</option>
-            <option>semaine 2</option>
+        <select @bind="IVM.SelectedModele">
+            <option value="-1">Aucun</option>
+            @foreach(var modele in IVM.ListeModeles)
+            {
+                <option value="@modele.id">@modele.nom</option>
+            }
         </select>
     </div>
     
     <br>
     
     <div class="investissement-content">
-        <div class="actif-investissement">
-            <select>
-                <option>Bitcoin</option>
-                <option>Ethereum</option>
-                <option>S&P 500</option>
-                <option>Nasdaq 100</option>
-                <option>Physical Gold</option>
-            </select>
-            <input type="number" placeholder="Quantité investit" />
-            <input type="number" placeholder="Prix d'achat (€)" />
-        </div>
-
-        <div class="actif-investissement add">
+            @foreach (var transaction in IVM.ListeTransactions)
+            {
+                <div class="actif-investissement">
+                    <div class="line-1">
+                        <select @bind="transaction.actif">
+                            @foreach (var actif in IVM.ListeActifs)
+                            {
+                                <option>@actif</option>
+                            }
+                        </select>
+                        <input type="button" class="dell" value="🗑️" @onclick="() =>IVM.DellActifInvest(transaction)" />
+                    </div>
+                    <input @bind="transaction.quantite" type="number" placeholder="Quantité investit" />
+                    <input @bind="transaction.prix" type="number" placeholder="Prix d'achat (€)" />
+                </div>
+            }
+        @if(IVM.ListeActifs.Count != 0)
+        {
+        <div class="actif-investissement add" @onclick="IVM.AddActifInvest">
             <a>+</a>
         </div>
+        }
     </div>
     
     <br>
     
     <div class="investissement-footer">
-        <input class="btn-investir" type="button" value="Investir" />
+        <input @onclick="Investir" class="btn-investir" type="button" value="Investir" />
     </div>
 </div>
+@code{
+    async Task Investir()
+    {
+        IVM.Investir();
+
+        if(IVM.hasError)
+        {
+            await JS.InvokeVoidAsync("alert", IVM.errorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Investissement effectué avec succès !");
+        }
+    }
+}
