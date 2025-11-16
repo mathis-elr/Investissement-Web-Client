@@ -1,0 +1,68 @@
+﻿.investissement {
+    width: 90%;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+}
+
+.investissement-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.actif-investissement {
+    display:grid;
+    border: solid;
+    border-radius: 10px;
+    border-color: gold;
+    border-width: 2px;
+    padding: 5px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.investissement .add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 221px;
+    height: 151px;
+    font-size: 50px;
+    color: gold;
+    border: 2px dashed,gold;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add:hover {
+    background-color: gold;
+    color: rgb(82, 72, 72);
+    transition: 0.3s;
+}
+
+.investissement-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-investir {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-investir:hover {
+        color: black;
+        background-color: goldenrod;
+        transition: 0.3s;
+    }

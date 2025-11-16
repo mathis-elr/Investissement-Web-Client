@@ -1,0 +1,59 @@
+﻿@page "/modele"
+@inject IJSRuntime JS
+
+<PageTitle>Modele</PageTitle>
+
+<div class="modele">
+    <div class="ajout-modele">
+        <div class="ajout-modele-header">
+            <label>Ajouter le modele</label>
+            <input type="text" placeholder="Nom du Modele" />
+        </div>
+
+        <div class="ajout-modele-content">
+            <div class="actif-modele-investissement">
+                <select>
+                    <option>Bitcoin</option>
+                    <option>Ethereum</option>
+                    <option>S&P 500</option>
+                    <option>Nasdaq 100</option>
+                    <option>Physical Gold</option>
+                </select>
+                <br>
+                <input type="number" placeholder="Quantité (optionnel)" />
+            </div>
+
+            <div class="actif-modele-investissement add">
+                <a>+</a>
+            </div>
+        </div>
+        <br>
+        <div class="ajout-modele-footer">
+            <input class="btn-ajout-modele" type="button" value="Ajouter" />
+        </div>
+    </div>
+
+    <div class="edit-modele">
+        <div class="edit-modele-header">
+            <label>Modifier le modele</label>
+            <select>
+                <option>Aucun</option>
+                <option>semaine 1</option>
+                <option>semaine 2</option>
+            </select>
+        </div>
+        <br>
+        <div class="edit-modele-footer">
+            <input hidden class="btn-edit" type="button" value="Modifier" />
+        </div>
+    </div>
+
+    <div class="suppr-modele">
+        <label>Supprimer le modele</label>
+        <select>
+            <option>semaine 1</option>
+            <option>semaine 2</option>
+        </select>
+        <input class="btn-suppr-modele" type="button" value="Supprimer" />
+    </div>
+</div>

@@ -1,0 +1,69 @@
+## Build and Solution Files ##
+
+# Visual Studio files
+*.code-workspace
+*.suo
+*.user
+*.code-snippets
+*.vspscc
+*.vssscc
+*.vbproj.user
+*.csproj.user
+
+# Binaries, artifacts, and build outputs
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Tt]emp/
+*.pdb
+*.intellisense.xml
+*.builds
+*.log
+*.bak
+
+# Rider/Resharper cache
+.idea/
+*.ReSharper/
+*.ReSharper.user
+_ReSharper.*/
+
+# NuGet packages and cache
+packages/
+*.nupkg
+.nuget/packages/
+.nuget/tmp/
+.nupkg/
+.vs/
+/obj/
+/bin/
+
+## Blazor/ASP.NET Core Specific Files ##
+
+# Blazor WebAssembly AOT output
+wwwroot/
+wwwroot/index.html
+wwwroot/_framework/
+wwwroot/service-worker-assets.js
+wwwroot/service-worker.published.js
+
+# Blazor Server/WebAssembly Output (If published)
+/publish/
+/bundle/
+web.config
+
+# Runtime files
+*.runtimeconfig.dev.json
+*.runtimeconfig.json
+*.deps.json
+
+# Tooling and secrets
+appsettings.Development.json
+appsettings.json
+appsettings.*.json
+
+# Visual Studio Code specific files
+.vscode/
+
+# Ignore test results
+TestResults/

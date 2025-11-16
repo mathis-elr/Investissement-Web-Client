@@ -1,0 +1,24 @@
+﻿.patrimoine {
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+    width: 90%;
+}
+
+.patrimoine-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.valeur {
+    font-size: 30px;
+    font-weight: bold;
+}

@@ -1,0 +1,43 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>Investir</PageTitle>
+
+<div class="investissement">
+    <div class="investissement-header">
+        <label>Investissement du </label>
+        <input type="date" />
+        <label>avec le modèle</label>
+        <select>
+            <option>Aucun</option>
+            <option>semaine 1</option>
+            <option>semaine 2</option>
+        </select>
+    </div>
+    
+    <br>
+    
+    <div class="investissement-content">
+        <div class="actif-investissement">
+            <select>
+                <option>Bitcoin</option>
+                <option>Ethereum</option>
+                <option>S&P 500</option>
+                <option>Nasdaq 100</option>
+                <option>Physical Gold</option>
+            </select>
+            <input type="number" placeholder="Quantité investit" />
+            <input type="number" placeholder="Prix d'achat (€)" />
+        </div>
+
+        <div class="actif-investissement add">
+            <a>+</a>
+        </div>
+    </div>
+    
+    <br>
+    
+    <div class="investissement-footer">
+        <input class="btn-investir" type="button" value="Investir" />
+    </div>
+</div>

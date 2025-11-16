@@ -1,0 +1,134 @@
+﻿.actif {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 90%;
+    gap: 15px;
+}
+
+.ajout-actif {
+    grid-row: 1;
+    grid-column: 1;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+}
+
+.ajout-actif-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    margin-top: 4px;
+}
+
+.ajout-actif-content {
+    display: grid;
+    gap: 10px;
+}
+
+.ajout-actif-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-ajout {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-ajout:hover {
+        color: black;
+        background-color: goldenrod;
+        transition: 0.3s;
+    }
+
+.edit-actif {
+    grid-row: 1;
+    grid-column: 2;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+}
+
+.edit-actif-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.edit-actif-content {
+    display: grid;
+    gap: 10px;
+}
+
+.edit-actif-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-edit {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-edit:hover {
+        color: black;
+        background-color: goldenrod;
+        transition: 0.3s;
+    }
+
+.suppr-actif {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-row: 2 / span 2;
+    grid-column: 1 / span 2;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    gap: 20px;
+}
+
+.suppr-actif-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.btn-suppr-actif {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-suppr-actif:hover {
+        color: black;
+        background-color: darkred;
+        transition: 0.3s;
+    }

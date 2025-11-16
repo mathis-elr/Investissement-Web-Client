@@ -1,0 +1,69 @@
+﻿@page "/actif"
+@inject IJSRuntime JS
+
+<PageTitle>Actif</PageTitle>
+
+<div class="actif">
+    <div class="ajout-actif">
+        <div class="ajout-actif-header">
+            <label>Ajouter un actif</label>
+        </div>
+        <div class="ajout-actif-content">
+            <input type="text" placeholder="Nom" />
+            <input type="text" placeholder="Symbole" />
+            <input type="text" placeholder="Type" />
+            <input type="text" placeholder="ISIN" />
+            <select>
+                <option disabled selected hidden>Niveau de risque</option>
+                <option>Faible</option>
+                <option>Moyen</option>
+                <option>Élevé</option>
+            </select>
+        </div>
+
+        <div class="ajout-actif-footer">
+            <input class="btn-ajout" type="button" value="Ajouter" />
+        </div>
+    </div>
+
+    <div class="edit-actif">
+        <div class="edit-actif-header">
+            <label>Modifier l'actif</label>
+            <select>
+                <option>Aucun</option>
+                <option>Bitcoin</option>
+                <option>Ethereum</option>
+                <option>S&P 500</option>
+                <option>Nasdaq 100</option>
+                <option>Physical Gold</option>
+            </select>
+        </div>
+        <div class="edit-actif-content">
+            <input type="text" placeholder="Nom" />
+            <input type="text" placeholder="Symbole" />
+            <input type="text" placeholder="Type" />
+            <input type="text" placeholder="ISIN" />
+            <select>
+                <option disabled selected hidden>Niveau de risque</option>
+                <option>Faible</option>
+                <option>Moyen</option>
+                <option>Élevé</option>
+            </select>
+        </div>
+        <div class="edit-actif-footer">
+            <input hidden class="btn-edit" type="button" value="Modifier" />
+        </div>
+    </div>
+
+    <div class="suppr-actif">
+        <label>Supprimer l'actif</label>
+        <select>
+            <option>Bitcoin</option>
+            <option>Ethereum</option>
+            <option>S&P 500</option>
+            <option>Nasdaq 100</option>
+            <option>Physical Gold</option>
+        </select>
+        <input class="btn-suppr-actif" type="button" value="Supprimer" />
+    </div>
+</div>

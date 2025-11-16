@@ -1,0 +1,173 @@
+﻿.modele {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 90%;
+    gap: 15px;
+}
+
+.ajout-modele {
+    grid-row: 1;
+    grid-column: 1;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+}
+
+.ajout-modele-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    margin-top: 4px;
+}
+
+.ajout-modele-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 230px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.actif-modele-investissement {
+    border: solid;
+    border-radius: 10px;
+    border-color: gold;
+    border-width: 2px;
+    padding: 5px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.modele .add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 104px;
+    font-size: 50px;
+    color: gold;
+    border: 2px dashed,gold;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add:hover {
+    background-color: gold;
+    color: rgb(82, 72, 72);
+    transition: 0.3s;
+}
+
+.ajout-modele-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-ajout-modele {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-ajout-modele:hover {
+        color: black;
+        background-color: goldenrod;
+        transition: 0.3s;
+    }
+
+.edit-modele {
+    grid-row: 1;
+    grid-column: 2;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+}
+
+.edit-modele-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    margin-top: 4px;
+}
+
+.edit-modele-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 230px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.edit-modele-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-edit-modele {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-edit-modele:hover {
+        color: black;
+        background-color: goldenrod;
+        transition: 0.3s;
+    }
+
+.suppr-modele {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-row: 2 / span 2;
+    grid-column: 1 / span 2;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    gap: 20px;
+}
+
+.suppr-modele-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.btn-suppr-modele {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-suppr-modele:hover {
+        color: black;
+        background-color: darkred;
+        transition: 0.3s;
+    }

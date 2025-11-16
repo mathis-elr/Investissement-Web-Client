@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+@inject IJSRuntime JS
+
+@{
+    // Ce bloc exécute la logique C# à chaque rendu du Layout.
+    
+    // 1. Lit l'URI via NavManager
+    var fullPath = NavManager.Uri;
+    
+    // 2. Extrait le segment de route (ex: "actif" ou vide)
+    var relativePath = new Uri(fullPath).AbsolutePath.Trim('/');
+    
+    // 3. Extrait le nom à partir du dernier segment
+    var segment = relativePath.Split('/').LastOrDefault();
+    
+    // 4. Transforme en nom de classe lisible
+    var className = string.IsNullOrWhiteSpace(segment) || segment.Equals("investir", StringComparison.OrdinalIgnoreCase)
+        ? "Investir"
+        : segment.Substring(0, 1).ToUpper() + segment.Substring(1);
+}
+
+<body>
+    <div class="nav-bar">
+        <NavLink class="nav-link" href=""><div class="page">Investir.cs</div></NavLink>
+        <NavLink class="nav-link" href="actif"><div class="page">Actif.cs</div></NavLink>
+        <NavLink class="nav-link" href="modele"><div class="page">Modele.cs</div></NavLink>
+        <NavLink class="nav-link" href="patrimoine"><div class="page">Patrimoine.cs</div></NavLink>
+        <NavLink class="nav-link" href="bourse"><div class="page">Bourse.cs</div></NavLink>
+    </div>
+
+    <div class="side-band">
+        @for(int i=1;i<26;i++)
+        {
+            <div class="side-band-number">@i</div>
+        }
+    </div>
+
+    <main>
+        <div class="main-header">
+            <span class="label-bleu">public class</span>
+            <span class="label-blanc">@className</span>
+            <div class="label-blanc">{</div>
+        </div>
+
+        <div class="main-content">
+            @Body
+        </div>
+
+        <div class="main-footer">
+            <span class="label-blanc">}</span>
+        </div>
+    </main>
+</body>
+
+<footer>
+    <div class="footer-content">
+        /* © Investissement by Mathis 2025 */
+    </div>
+</footer>
