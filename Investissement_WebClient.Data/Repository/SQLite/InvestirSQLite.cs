@@ -165,7 +165,32 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit");
+                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit precedent une date donné");
+                    throw;
+                }
+            }
+        }
+
+        public double getQuantiteTotaleSuivante(DateTime date)
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT quantiteEUR FROM InvestissementTotal WHERE date > @date ORDER BY date DESC LIMIT 1;";
+                    var command = new SqliteCommand(query, connection);
+                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+                    var res = command.ExecuteScalar();
+                    if (res == null || res == DBNull.Value)
+                    {
+                        return Convert.ToInt64(0);
+                    }
+                    return Convert.ToInt64(res);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit suivant une date donné");
                     throw;
                 }
             }
@@ -194,7 +219,27 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                     throw;
                 }
             }
+        }
 
+        public DateTime getDatePremierInvest()
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT date FROM InvestissementTotal ORDER BY date ASC LIMIT 1;";
+                    var command = new SqliteCommand(query, connection);
+                    var res = command.ExecuteScalar();
+                    DateTime dateDernierInvest = Convert.ToDateTime(res);
+                    return dateDernierInvest;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message, "erreur recuperation date dernier invest");
+                    throw;
+                }
+            }
         }
 
         public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit)
@@ -213,10 +258,33 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Debug.WriteLine($"Erreur insertion ValeurPatrimoine SQLite : {ex.Message}");
+                    Debug.WriteLine($"Erreur insertion InvestissementTotal SQLite : {ex.Message}");
                     throw;
                 }
             }
         }
+
+        public void modifierInvestissementTotal(DateTime date, double quantiteAjoute)
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "UPDATE InvestissementTotal SET quantiteEUR = quantiteEUR + @quantiteAjoute WHERE date=@date;";
+                    var command = new SqliteCommand(query, connection);
+                    
+                    command.Parameters.AddWithValue("@quantiteAjoute", quantiteAjoute);
+                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+                    command.ExecuteNonQuery();
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine($"Erreur modification InvestissementTotal SQLite : {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
     }
 }

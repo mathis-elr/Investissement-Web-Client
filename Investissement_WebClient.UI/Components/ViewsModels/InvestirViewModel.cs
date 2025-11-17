@@ -109,7 +109,6 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             try
             {
                 investir.AddInvest(ListeTransactions);
-
             }
             catch (SqliteException)
             {
