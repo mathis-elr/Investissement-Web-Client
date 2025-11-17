@@ -15,5 +15,7 @@ namespace Investissement_WebClient.Data.Repository.Interfaces
         public double getQuantiteTotalePrecedente(DateTime date);
 
         public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit);
+
+        public DateTime? getDateDernierInvest();
     }
 }

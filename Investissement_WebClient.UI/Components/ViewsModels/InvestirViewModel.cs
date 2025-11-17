@@ -2,6 +2,7 @@
 using Investissement_WebClient.Data.Modeles;
 using Investissement_WebClient.Data.Repository.Interfaces;
 using Investissement_WebClient.Data.Repository.SQLite;
+using Microsoft.Data.Sqlite;
 using System;
 using System.Reflection;
 
@@ -98,14 +99,30 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 errorMessage = "Selectionner au moins un actif pour pouvoir investir";
                 return;
             }
-            if(ListeTransactions.Any(t => t.quantite == null || t.prix == null))
+            if(ListeTransactions.Any(t => t.quantite == null || t.prix == null || t.quantite == 0 || t.prix == 0 || t.quantite < 0 || t.prix < 0))
             {
                 hasError = true;
-                errorMessage = "La quantité et le prix sont obligatoires pour pouvoir investir dans un actif.";
+                errorMessage = "La quantité et le prix doivent être des valeur valides (supérieures à 0 et non null).";
                 return;
             }
 
-            investir.AddInvest(ListeTransactions);
+            try
+            {
+                investir.AddInvest(ListeTransactions);
+
+            }
+            catch (SqliteException)
+            {
+                hasError = true;
+                errorMessage = "Une erreur est survenue lors de l'ajout de l'investissement.";
+                return;
+            }
+            catch (Exception ex)
+            {
+                hasError = true;
+                errorMessage = ex.Message;
+                return;
+            }
 
             selectedModele = -1;
             ListeTransactions = [];

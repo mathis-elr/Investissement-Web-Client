@@ -1,6 +1,7 @@
 ﻿using Investissement_WebClient.Data.Modeles;
 using Investissement_WebClient.Data.Repository.Interfaces;
 using Microsoft.Data.Sqlite;
+using System.Diagnostics;
 
 namespace Investissement_WebClient.Data.Repository.SQLite
 {
@@ -32,7 +33,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Console.WriteLine($"Erreur de connexion : {ex.Message}");
+                    Debug.WriteLine($"Erreur de connexion : {ex.Message}");
                     throw;
                 }
             }
@@ -60,7 +61,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Console.WriteLine($"Erreur de connexion : {ex.Message}");
+                    Debug.WriteLine($"Erreur de connexion : {ex.Message}");
                     throw;
                 }
             }
@@ -92,7 +93,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Console.WriteLine($"Erreur de connexion : {ex.Message}");
+                    Debug.WriteLine($"Erreur de connexion : {ex.Message}");
                     throw;
                 }
             }
@@ -138,7 +139,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                     {
                         // Si une erreur se produit, annuler toutes les insertions
                         dbTransaction.Rollback();
-                        Console.Error.WriteLine($"Erreur insertion transaction SQLite : {ex.Message}");
+                        Debug.WriteLine($"Erreur insertion transaction SQLite : {ex.Message}");
                         throw;
                     }
                 }
@@ -164,10 +165,36 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message, "erreur recuperation quantite totale investit");
+                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit");
                     throw;
                 }
             }
+        }
+
+        public DateTime? getDateDernierInvest()
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT date FROM InvestissementTotal ORDER BY date DESC LIMIT 1;";
+                    var command = new SqliteCommand(query, connection);
+                    var res = command.ExecuteScalar();
+                    if (res == null || res == DBNull.Value)
+                    {
+                        return null;
+                    }
+                    DateTime dateDernierInvest = Convert.ToDateTime(res);
+                    return dateDernierInvest;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message, "erreur recuperation date dernier invest");
+                    throw;
+                }
+            }
+
         }
 
         public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit)
@@ -186,7 +213,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Console.Error.WriteLine($"Erreur insertion ValeurPatrimoine SQLite : {ex.Message}");
+                    Debug.WriteLine($"Erreur insertion ValeurPatrimoine SQLite : {ex.Message}");
                     throw;
                 }
             }
