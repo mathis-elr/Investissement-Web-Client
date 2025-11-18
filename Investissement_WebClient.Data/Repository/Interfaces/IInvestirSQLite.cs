@@ -23,5 +23,7 @@ namespace Investissement_WebClient.Data.Repository.Interfaces
         public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit);
 
         public void modifierInvestissementTotal(DateTime date, double quantiteInvestit);
+
+        public bool existanceInvestissementTotal(DateTime date);
     }
 }

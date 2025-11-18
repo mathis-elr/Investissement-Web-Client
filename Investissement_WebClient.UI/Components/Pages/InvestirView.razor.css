@@ -49,23 +49,23 @@
                 transition: 0.3s;
             }
 
-        .add {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 285px;
-            height: 155px;
-            font-size: 50px;
-            color: gold;
-            border: 2px dashed,gold;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 285px;
+    height: 155px;
+    font-size: 50px;
+    color: gold;
+    border: 2px dashed,gold;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
             .add:hover {
                 background-color: gold;
                 color: rgb(82, 72, 72);
-                transition: 0.3s;
             }
 
         .investissement-footer {
@@ -73,20 +73,20 @@
             justify-content: flex-end;
         }
 
-        .btn-investir {
-            margin-top: 10px;
-            padding: 10px;
-            font-size: 20px;
-            font-weight: bold;
-            color: rgb(82, 72, 72);
-            background-color: gold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.btn-investir {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
             .btn-investir:hover {
                 color: black;
                 background-color: goldenrod;
-                transition: 0.3s;
             }

@@ -286,5 +286,27 @@ namespace Investissement_WebClient.Data.Repository.SQLite
             }
         }
 
+        public bool existanceInvestissementTotal(DateTime date)
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT COUNT(1) FROM InvestissementTotal WHERE date = @date;";
+                    var command = new SqliteCommand(query, connection);
+
+                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+                    long res = Convert.ToInt64(command.ExecuteScalar());
+                    return res != 0;
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine($"Erreur modification InvestissementTotal SQLite : {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
     }
 }
