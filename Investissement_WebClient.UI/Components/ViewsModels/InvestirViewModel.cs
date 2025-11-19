@@ -20,6 +20,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public List<TransactionModele> ListeTransactionsModele { get; set; } = new List<TransactionModele>();
         public List<Transaction> ListeTransactions { get; set; } = new List<Transaction>();
 
+        public List<Transaction> ListeDernierInvestissement { get; set; } = new List<Transaction>();
+
+        public DateTime? dateDernierInvest { get; set; }
+
         public bool hasError { get; set; } = false;
         public string errorMessage { get; set; } = string.Empty;
 
@@ -51,6 +55,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             SelectedModele = -1;
             LoadModeles();
             LoadActifs();
+            LoadDernierInvestissement();
         }
 
         public void LoadModeles()
@@ -61,6 +66,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public void LoadActifs()
         {
             ListeActifs = investir.GetNomActifs();  
+        }
+
+        public void LoadDernierInvestissement()
+        {
+            ListeDernierInvestissement = investir.GetDernierInvest();
+            dateDernierInvest = ListeDernierInvestissement?.FirstOrDefault()?.date;
         }
 
         public void LoadActifsModele(long modele)
@@ -82,6 +93,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             ListeTransactions.Add(new Transaction(selectedDate, ListeActifs.First()));
         }
+
 
         public void DellActifInvest(Transaction transaction)
         {
@@ -125,6 +137,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             selectedModele = -1;
             ListeTransactions = [];
+            LoadDernierInvestissement();
         }
     }
 }

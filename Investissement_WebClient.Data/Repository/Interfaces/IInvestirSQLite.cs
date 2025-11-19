@@ -10,20 +10,18 @@ namespace Investissement_WebClient.Data.Repository.Interfaces
 
         public List<TransactionModele> ReadTransactionsModele(long idModele);
 
-        public void AddInvest(List<Transaction> transactions);
-
-        public double getQuantiteTotalePrecedente(DateTime date);
-
-        public double getQuantiteTotaleSuivante(DateTime date);
+        public List<Transaction> GetTransactionsDernierInvest();
 
         public DateTime? getDateDernierInvest();
 
+        public double getQuantiteTotalePrecedente(DateTime date);
+
         public DateTime getDatePremierInvest();
+
+        public void AddInvest(List<Transaction> transactions);
 
         public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit);
 
         public void modifierInvestissementTotal(DateTime date, double quantiteInvestit);
-
-        public bool existanceInvestissementTotal(DateTime date);
     }
 }

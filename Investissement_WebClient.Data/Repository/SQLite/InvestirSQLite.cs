@@ -33,7 +33,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Debug.WriteLine($"Erreur de connexion : {ex.Message}");
+                    Debug.WriteLine($"Erreur recuperation des modeles Invest : {ex.Message}");
                     throw;
                 }
             }
@@ -61,7 +61,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Debug.WriteLine($"Erreur de connexion : {ex.Message}");
+                    Debug.WriteLine($"Erreur recuperation noms des actifs : {ex.Message}");
                     throw;
                 }
             }
@@ -93,7 +93,109 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
                 catch (SqliteException ex)
                 {
-                    Debug.WriteLine($"Erreur de connexion : {ex.Message}");
+                    Debug.WriteLine($"Erreur recuperation transaction associé au modele id={idModele} : {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+        public double getQuantiteTotalePrecedente(DateTime date)
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT quantiteEUR FROM InvestissementTotal WHERE date < @date ORDER BY date DESC LIMIT 1;";
+                    var command = new SqliteCommand(query, connection);
+                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+                    var res = command.ExecuteScalar();
+                    if (res == null || res == DBNull.Value)
+                    {
+                        return Convert.ToInt64(0);
+                    }
+                    return Convert.ToInt64(res);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit precedent une date donné");
+                    throw;
+                }
+            }
+        }
+
+        public DateTime? getDateDernierInvest()
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT date FROM InvestissementTotal ORDER BY date DESC LIMIT 1;";
+                    var command = new SqliteCommand(query, connection);
+                    var res = command.ExecuteScalar();
+                    if (res == null || res == DBNull.Value)
+                    {
+                        return null;
+                    }
+                    DateTime dateDernierInvest = Convert.ToDateTime(res);
+                    return dateDernierInvest;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message, "erreur recuperation date dernier invest");
+                    throw;
+                }
+            }
+        }
+
+        public DateTime getDatePremierInvest()
+        {
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT date FROM InvestissementTotal ORDER BY date ASC LIMIT 1;";
+                    var command = new SqliteCommand(query, connection);
+                    var res = command.ExecuteScalar();
+                    DateTime dateDernierInvest = Convert.ToDateTime(res);
+                    return dateDernierInvest;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message, "erreur recuperation date dernier invest");
+                    throw;
+                }
+            }
+        }
+
+        public List<Transaction> GetTransactionsDernierInvest()
+        {
+            List<Transaction> transactionsDernierInvest = new List<Transaction>();
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM [Transaction] WHERE date=(SELECT date FROM [Transaction] ORDER BY date DESC);";
+                    var command = new SqliteCommand(query, connection);
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        transactionsDernierInvest.Add(new Transaction(
+                            reader.GetDateTime(1),
+                            reader.GetString(2),
+                            reader.GetDouble(3),
+                            reader.GetDouble(4)));
+                    }
+
+                    return transactionsDernierInvest;
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine($"erreur recuperation transactions dernier invest : {ex.Message}");
                     throw;
                 }
             }
@@ -146,102 +248,6 @@ namespace Investissement_WebClient.Data.Repository.SQLite
             }
         }
 
-        public double getQuantiteTotalePrecedente(DateTime date)
-        {
-            using (var connection = new SqliteConnection(_connexion))
-            {
-                try
-                {
-                    connection.Open();
-                    string query = "SELECT quantiteEUR FROM InvestissementTotal WHERE date < @date ORDER BY date DESC LIMIT 1;";
-                    var command = new SqliteCommand(query, connection);
-                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
-                    var res = command.ExecuteScalar();
-                    if (res == null || res == DBNull.Value)
-                    {
-                        return Convert.ToInt64(0);
-                    }
-                    return Convert.ToInt64(res);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit precedent une date donné");
-                    throw;
-                }
-            }
-        }
-
-        public double getQuantiteTotaleSuivante(DateTime date)
-        {
-            using (var connection = new SqliteConnection(_connexion))
-            {
-                try
-                {
-                    connection.Open();
-                    string query = "SELECT quantiteEUR FROM InvestissementTotal WHERE date > @date ORDER BY date DESC LIMIT 1;";
-                    var command = new SqliteCommand(query, connection);
-                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
-                    var res = command.ExecuteScalar();
-                    if (res == null || res == DBNull.Value)
-                    {
-                        return Convert.ToInt64(0);
-                    }
-                    return Convert.ToInt64(res);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message, "erreur recuperation quantite totale investit suivant une date donné");
-                    throw;
-                }
-            }
-        }
-
-        public DateTime? getDateDernierInvest()
-        {
-            using (var connection = new SqliteConnection(_connexion))
-            {
-                try
-                {
-                    connection.Open();
-                    string query = "SELECT date FROM InvestissementTotal ORDER BY date DESC LIMIT 1;";
-                    var command = new SqliteCommand(query, connection);
-                    var res = command.ExecuteScalar();
-                    if (res == null || res == DBNull.Value)
-                    {
-                        return null;
-                    }
-                    DateTime dateDernierInvest = Convert.ToDateTime(res);
-                    return dateDernierInvest;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message, "erreur recuperation date dernier invest");
-                    throw;
-                }
-            }
-        }
-
-        public DateTime getDatePremierInvest()
-        {
-            using (var connection = new SqliteConnection(_connexion))
-            {
-                try
-                {
-                    connection.Open();
-                    string query = "SELECT date FROM InvestissementTotal ORDER BY date ASC LIMIT 1;";
-                    var command = new SqliteCommand(query, connection);
-                    var res = command.ExecuteScalar();
-                    DateTime dateDernierInvest = Convert.ToDateTime(res);
-                    return dateDernierInvest;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message, "erreur recuperation date dernier invest");
-                    throw;
-                }
-            }
-        }
-
         public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit)
         {
             using (var connection = new SqliteConnection(_connexion))
@@ -285,28 +291,5 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 }
             }
         }
-
-        public bool existanceInvestissementTotal(DateTime date)
-        {
-            using (var connection = new SqliteConnection(_connexion))
-            {
-                try
-                {
-                    connection.Open();
-                    string query = "SELECT COUNT(1) FROM InvestissementTotal WHERE date = @date;";
-                    var command = new SqliteCommand(query, connection);
-
-                    command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
-                    long res = Convert.ToInt64(command.ExecuteScalar());
-                    return res != 0;
-                }
-                catch (SqliteException ex)
-                {
-                    Debug.WriteLine($"Erreur modification InvestissementTotal SQLite : {ex.Message}");
-                    throw;
-                }
-            }
-        }
-
     }
 }

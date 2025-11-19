@@ -31,6 +31,18 @@ namespace Investissement_WebClient.Core
             return _Iinvestir.ReadTransactionsModele(idModele);
         }
 
+        public List<Transaction> GetDernierInvest()
+        {
+            DateTime? dateDernierInvestNullable = _Iinvestir.getDateDernierInvest();
+            if(dateDernierInvestNullable == null)
+            {
+                return [];
+            }
+
+            List<Transaction> dernierInvest = [];
+            return _Iinvestir.GetTransactionsDernierInvest();
+        }
+
         public void AddInvest(List<Transaction> transactions)
         {
             _Iinvestir.AddInvest(transactions);
@@ -49,7 +61,7 @@ namespace Investissement_WebClient.Core
             }
 
             DateTime? dateDernierInvestNullable = _Iinvestir.getDateDernierInvest();
-            //cas 1 : On investit pour la première fois
+            //cas 2 : On investit pour la première fois
             if (dateDernierInvestNullable == null)
             {
                 _Iinvestir.ajouterInvestissementTotal(dateInvest.AddDays(-1), 0); //on ajoute au jour precedent le jour de l'investissement
