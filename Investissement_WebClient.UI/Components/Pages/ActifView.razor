@@ -1,6 +1,9 @@
-﻿@page "/actif"
+﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+
+@page "/actif"
 @rendermode InteractiveServer
 @inject IJSRuntime JS
+@inject ActifViewModel AVM
 
 <PageTitle>Actif</PageTitle>
 
@@ -10,61 +13,118 @@
             <label>Ajouter un actif</label>
         </div>
         <div class="ajout-actif-content">
-            <input type="text" placeholder="Nom" />
-            <input type="text" placeholder="Symbole" />
-            <input type="text" placeholder="Type" />
-            <input type="text" placeholder="ISIN" />
-            <select>
+            <input type="text" @bind="AVM.selectedNom" placeholder="Nom" />
+            <input type="text" @bind="AVM.selectedSymbole" placeholder="Symbole" />
+            <input type="text" @bind="AVM.selectedType" placeholder="Type" />
+            <input type="text" @bind="AVM.selectedISIN" placeholder="ISIN" />
+            <select @bind="AVM.selectedNvRisque">
                 <option disabled selected hidden>Niveau de risque</option>
-                <option>Faible</option>
-                <option>Moyen</option>
-                <option>Élevé</option>
+                @foreach(var item in AVM.ListeNvRisque)
+                {
+                    <option>@item</option>
+                }
             </select>
         </div>
 
         <div class="ajout-actif-footer">
-            <input class="btn-ajout" type="button" value="Ajouter" />
+            <input class="btn-ajout" type="button" value="Ajouter" @onclick="Ajouter" />
         </div>
     </div>
 
     <div class="edit-actif">
         <div class="edit-actif-header">
             <label>Modifier l'actif</label>
-            <select>
+            <select @bind="AVM.SelectedActifEdit">
                 <option>Aucun</option>
-                <option>Bitcoin</option>
-                <option>Ethereum</option>
-                <option>S&P 500</option>
-                <option>Nasdaq 100</option>
-                <option>Physical Gold</option>
+                @foreach(var actif in AVM.ListeNomsActifs)
+                {
+                    <option value="@actif">@actif</option>
+                }
             </select>
         </div>
         <div class="edit-actif-content">
-            <input type="text" placeholder="Nom" />
-            <input type="text" placeholder="Symbole" />
-            <input type="text" placeholder="Type" />
-            <input type="text" placeholder="ISIN" />
-            <select>
-                <option disabled selected hidden>Niveau de risque</option>
-                <option>Faible</option>
-                <option>Moyen</option>
-                <option>Élevé</option>
-            </select>
+            @if (AVM.SelectedActifEdit != "Aucun")
+            {
+                <input disabled type="text" @bind="AVM.selectedNomEdit" placeholder="Nom" />
+                <input type="text" @bind="AVM.selectedSymboleEdit" placeholder="Symbole" />
+                <input type="text" @bind="AVM.selectedTypeEdit" placeholder="Type" />
+                <input type="text" @bind="AVM.selectedISINEdit" placeholder="ISIN" />
+                <select @bind="AVM.selectedNvRisqueEdit">
+                    @foreach (var item in AVM.ListeNvRisque)
+                    {
+                        <option>@item</option>
+                    }
+                </select>
+            }
         </div>
         <div class="edit-actif-footer">
-            <input hidden class="btn-edit" type="button" value="Modifier" />
+            @if(AVM.SelectedActifEdit != "Aucun")
+            {
+                <input class="btn-edit" type="button" value="Modifier" @onclick="Editer" />
+            }
         </div>
     </div>
 
     <div class="suppr-actif">
         <label>Supprimer l'actif</label>
-        <select>
-            <option>Bitcoin</option>
-            <option>Ethereum</option>
-            <option>S&P 500</option>
-            <option>Nasdaq 100</option>
-            <option>Physical Gold</option>
+        <select @bind="AVM.selectedActifSuppr">
+            <option>Aucun</option>
+            @foreach (var actif in AVM.ListeNomsActifs)
+            {
+                <option value="@actif">@actif</option>
+            }
         </select>
-        <input class="btn-suppr-actif" type="button" value="Supprimer" />
+        @if (AVM.selectedActifSuppr != "Aucun")
+        {
+            <input class="btn-suppr-actif" type="button" value="Supprimer" @onclick="Supprimer" />
+        }
     </div>
 </div>
+
+
+@code{
+    async Task Ajouter()
+    {
+        AVM.Ajouter();
+
+        if(AVM.hasError)
+        {
+            await JS.InvokeVoidAsync("alert", AVM.errorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Actif ajouté avec succès");
+        }
+    }
+
+    async Task Editer()
+    {
+        AVM.Editer();
+
+        if (AVM.hasError)
+        {
+            await JS.InvokeVoidAsync("alert", AVM.errorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Actif modifié avec succès");
+        }
+    }
+
+    async Task Supprimer()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer cet actif ?"))
+        {
+            AVM.Supprimer();
+
+            if (AVM.hasError)
+            {
+                await JS.InvokeVoidAsync("alert", AVM.errorMessage);
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Actif supprimé avec succès");
+            }
+        }
+    }
+}

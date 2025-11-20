@@ -62,18 +62,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             ListeModeles = investir.GetNomModeles();
         }
-
         public void LoadActifs()
         {
             ListeActifs = investir.GetNomActifs();  
         }
-
         public void LoadDernierInvestissement()
         {
             ListeDernierInvestissement = investir.GetDernierInvest();
             dateDernierInvest = ListeDernierInvestissement?.FirstOrDefault()?.date;
         }
-
         public void LoadActifsModele(long modele)
         {
             ListeTransactionsModele = investir.GetTransactionsModele(modele);
@@ -93,14 +90,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             ListeTransactions.Add(new Transaction(selectedDate, ListeActifs.First()));
         }
-
-
         public void DellActifInvest(Transaction transaction)
         {
             ListeTransactions.Remove(transaction);
         }
 
-        public void Investir()
+        public async Task Investir()
         {
             hasError= false;
             errorMessage= string.Empty;

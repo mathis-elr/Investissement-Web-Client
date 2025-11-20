@@ -43,12 +43,12 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: ease-in-out 0.3s;
 }
 
     .btn-ajout:hover {
+        transform: scale(1.10);
         color: black;
-        background-color: goldenrod;
-        transition: 0.3s;
     }
 
 .edit-actif {
@@ -88,12 +88,12 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: ease-in-out 0.3s;
 }
 
     .btn-edit:hover {
+        transform: scale(1.10);
         color: black;
-        background-color: goldenrod;
-        transition: 0.3s;
     }
 
 .suppr-actif {
@@ -125,10 +125,10 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: ease-in-out 0.3s;
 }
 
     .btn-suppr-actif:hover {
+        transform: scale(1.08);
         color: black;
-        background-color: darkred;
-        transition: 0.3s;
     }

@@ -4,8 +4,43 @@
     gap:15px;
 }
 
+.transactions {
+    width: 95%;
+    border: solid;
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    padding: 15px;
+}
+
+.transactions-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.transaction-dernier-invest {
+    display: flex;
+    align-content: center;
+    justify-content: start;
+    flex-direction: column;
+    border: solid;
+    border-radius: 10px;
+    border-color: rgb(28, 99, 199);
+    border-width: 3px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    transition: ease-in-out 0.3s;
+}
+
+    .transaction-dernier-invest:hover {
+        transform: translateY(-3px);
+    }
+
 .investissement {
-    width: 90%;
+    width: 95%;
     border: solid;
     border-radius: 10px;
     border-color: white;
@@ -53,7 +88,6 @@
 
     .dell:hover {
         transform: scale(1.10);
-        background-color: red;
     }
 
 .add {
@@ -100,38 +134,3 @@
                 color: black;
                 background-color: gold;
             }
-
-.transactions {
-    width: 90%;
-    border: solid;
-    border-radius: 10px;
-    border-color: white;
-    border-width: 3px;
-    padding: 15px;
-}
-
-.transactions-content {
-    display: flex;
-    flex-wrap:wrap;
-    gap: 10px;
-}
-
-.transaction-dernier-invest {
-    display: flex;
-    align-content: center;
-    justify-content: start;
-    flex-direction: column;
-    border: solid;
-    border-radius: 10px;
-    border-color: rgb(28, 99, 199);
-    border-width: 3px;
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 5px;
-    transition: ease-in-out 0.3s;
-}
-
-    .transaction-dernier-invest:hover {
-        transform: translateY(-3px);
-    }

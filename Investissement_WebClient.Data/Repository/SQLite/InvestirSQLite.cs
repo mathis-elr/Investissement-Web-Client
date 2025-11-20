@@ -37,7 +37,6 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                     throw;
                 }
             }
-
         }
 
         public List<string> ReadNomActifs()
