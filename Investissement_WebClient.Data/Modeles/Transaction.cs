@@ -8,8 +8,6 @@
         public double? quantite { get; set; }
         public double? prix { get; set; }
 
-
-
         /*CONSTRUCTEURS*/
         public Transaction(DateTime date, string actif, double? quantite, double? prix)
         {

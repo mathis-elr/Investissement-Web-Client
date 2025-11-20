@@ -112,21 +112,26 @@
 
 .transactions-content {
     display: flex;
-    flex-direction:column;
-    gap: 5px;
+    flex-wrap:wrap;
+    gap: 10px;
 }
 
 .transaction-dernier-invest {
     display: flex;
-    align-content:center;
-    justify-content:start;
+    align-content: center;
+    justify-content: start;
+    flex-direction: column;
     border: solid;
     border-radius: 10px;
-    border-color: gold;
-    border-width: 1px;
+    border-color: rgb(28, 99, 199);
+    border-width: 3px;
     margin-top: 10px;
     font-size: 16px;
     font-weight: bold;
-    padding:5px;
-    gap:20px;
+    padding: 5px;
+    transition: ease-in-out 0.3s;
 }
+
+    .transaction-dernier-invest:hover {
+        transform: translateY(-3px);
+    }

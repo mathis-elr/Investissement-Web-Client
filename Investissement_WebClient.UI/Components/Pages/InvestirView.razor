@@ -8,6 +8,25 @@
 <PageTitle>Investir</PageTitle>
 
 <div class="investir">
+    <div class="transactions">
+        <div class="transactions-header">
+            <label>Dernières transactions le @(IVM.dateDernierInvest.HasValue? IVM.dateDernierInvest.Value.ToString("dddd d MMMM yyyy") : "")</label>
+        </div>
+        <div class="transactions-content">
+            @if (IVM.ListeDernierInvestissement.Count == 0)
+            {
+                <div class="aucune-investisssement">aucune transactions trouvé, commencer à investir</div>
+            }
+            @foreach (var transaction in IVM.ListeDernierInvestissement)
+            {
+                <div class="transaction-dernier-invest">
+                    <div class="contenu-transaction">@transaction.quantite @transaction.actif à @transaction.prix €</div>
+                    <div class="contenu-transaction">+@(transaction.prix* transaction.quantite) €</div>
+                </div>
+            }
+        </div>
+    </div>
+
     <div class="investissement">
         <div class="investissement-header">
             <label>Investissement du </label>
@@ -53,25 +72,6 @@
     
         <div class="investissement-footer">
             <input @onclick="Investir" class="btn-investir" type="button" value="Investir" />
-        </div>
-    </div>
-
-    <div class="transactions">
-        <div class="transactions-header">
-            <label>Dernières transactions le @(IVM.dateDernierInvest.HasValue? IVM.dateDernierInvest.Value.ToString("dddd d MMMM yyyy") : "")</label>
-        </div>
-        <div class="transactions-content">
-            @if(IVM.ListeDernierInvestissement.Count == 0)
-            {
-                <div class="aucune-investisssement">aucune transactions trouvé, commencer à investir</div>
-            }
-            @foreach (var transaction in IVM.ListeDernierInvestissement)
-            {
-                <div class="transaction-dernier-invest">
-                    <div class="contenu-transaction">@transaction.actif</div>
-                    <div class="contenu-transaction">@(transaction.prix * transaction.quantite) €</div>
-                </div>
-            }
         </div>
     </div>
 </div>
