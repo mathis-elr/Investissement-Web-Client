@@ -36,7 +36,7 @@
 }
 
     .transaction-dernier-invest:hover {
-        transform: translateY(-3px);
+        transform: scale(1.01);
     }
 
 .investissement {
@@ -87,7 +87,7 @@
 }
 
     .dell:hover {
-        transform: scale(1.10);
+        transform: translate(1px,-1px);
     }
 
 .add {
@@ -98,15 +98,14 @@
     height: 155px;
     font-size: 50px;
     color: gold;
-    border: 2px dashed,gold;
+    border: 2px dashed gold;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
     transition: ease-in-out 0.3s;
 }
 
     .add:hover {
-        transform: scale(1.03);
+        transform: translate(6px,-6px);
         background-color: gold;
         color: rgb(82, 72, 72);
     }
@@ -129,8 +128,8 @@
     transition: ease-in-out 0.3s;
 }
 
-            .btn-investir:hover {
-                transform:scale(1.15);
-                color: black;
-                background-color: gold;
-            }
+    .btn-investir:hover {
+        transform: translate(2px,-2px);
+        color: black;
+        background-color: gold;
+    }
