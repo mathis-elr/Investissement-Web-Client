@@ -1,10 +1,5 @@
 ﻿using Investissement_WebClient.Data.Repository.Interfaces;
 using Investissement_WebClient.Data.Modeles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Investissement_WebClient.Core
 {

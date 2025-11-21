@@ -66,17 +66,23 @@
     </div>
 
     <div class="suppr-actif">
-        <label>Supprimer l'actif</label>
-        <select @bind="AVM.selectedActifSuppr">
-            <option>Aucun</option>
-            @foreach (var actif in AVM.ListeNomsActifs)
+        <div class="suppr-actif-header">
+            <label>Mes actifs</label>
+        </div>
+        <div class="suppr-actif-content">
+            @foreach(var actif in AVM.ListeActifs)
             {
-                <option value="@actif">@actif</option>
+                <div class="actif-enregistre">
+                    <span disabled type="text" class="actif-enregistre-content @(AVM.ListeActifASuppr.Contains(actif.nom) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.nom)">@actif.nom</span>
+                </div>
             }
-        </select>
-        @if (AVM.selectedActifSuppr != "Aucun")
+        </div>
+
+        @if(AVM.ListeActifASuppr.Count != 0)
         {
-            <input class="btn-suppr-actif" type="button" value="Supprimer" @onclick="Supprimer" />
+            <div class="suppr-actif-footer">
+                <input class="btn-suppr-actif" type="button" value="Supprimer" @onclick="() => Supprimer()" />
+            </div>
         }
     </div>
 </div>
@@ -90,10 +96,6 @@
         if(AVM.hasError)
         {
             await JS.InvokeVoidAsync("alert", AVM.errorMessage);
-        }
-        else
-        {
-            await JS.InvokeVoidAsync("alert", "Actif ajouté avec succès");
         }
     }
 
@@ -120,10 +122,6 @@
             if (AVM.hasError)
             {
                 await JS.InvokeVoidAsync("alert", AVM.errorMessage);
-            }
-            else
-            {
-                await JS.InvokeVoidAsync("alert", "Actif supprimé avec succès");
             }
         }
     }

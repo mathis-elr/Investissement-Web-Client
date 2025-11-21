@@ -29,7 +29,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public string? selectedISINEdit { get; set; } = null;
         public string? selectedNvRisqueEdit { get; set; } = null;
 
-        public string selectedActifSuppr { get; set; }
+        public List<string> ListeActifASuppr { get; set; } = new List<string>();
 
         public bool hasError { get; set; } = false;
         public string errorMessage { get; set; } = string.Empty;
@@ -80,7 +80,6 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             LoadActifs();
 
             selectedActifEdit = "Aucun";
-            selectedActifSuppr = "Aucun";
         }
 
         public void Ajouter()
@@ -130,21 +129,24 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public void Supprimer()
         {
-            hasError = false;
-            errorMessage = string.Empty;
-
-            if (selectedActifSuppr == "Aucun")
+            foreach(string nomActif in ListeActifASuppr)
             {
-                hasError = true;
-                errorMessage = "Aucun actif sélectionné.";
-                return;
+                actif.SupprimerActif(nomActif);
             }
 
-            Debug.WriteLine(selectedActifSuppr);
-            actif.SupprimerActif(selectedActifSuppr);
-
             LoadActifs();
-            selectedActifSuppr = "Aucun";
+        }
+
+        public void ChangerEtatSuppression(string nom)
+        {
+            if(ListeActifASuppr.Contains(nom))
+            {
+                ListeActifASuppr.Remove(nom);
+            }
+            else
+            {
+                ListeActifASuppr.Add(nom);
+            }
         }
     }
 }
