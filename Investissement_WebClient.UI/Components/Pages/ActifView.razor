@@ -72,9 +72,7 @@
         <div class="suppr-actif-content">
             @foreach(var actif in AVM.ListeActifs)
             {
-                <div class="actif-enregistre">
-                    <span disabled type="text" class="actif-enregistre-content @(AVM.ListeActifASuppr.Contains(actif.nom) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.nom)">@actif.nom</span>
-                </div>
+                <span type="text" class="actif-enregistre-content @(AVM.ListeActifASuppr.Contains(actif.nom) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.nom)">@actif.nom</span>
             }
         </div>
 

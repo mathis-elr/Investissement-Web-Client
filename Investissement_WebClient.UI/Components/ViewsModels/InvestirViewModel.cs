@@ -12,10 +12,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     {
         public Investir investir;
         public DateTime selectedDate { get; set; }
-        private long selectedModele;
-        private string selectedActif;
 
-        public List<ModeleInvest> ListeModeles { get; set; } = new List<ModeleInvest>();
+        private string selectedModele;
+
+        public List<string> ListeModeles { get; set; } = new List<string>();
         public List<string> ListeActifs { get; set; } = new List<string>();
         public List<TransactionModele> ListeTransactionsModele { get; set; } = new List<TransactionModele>();
         public List<Transaction> ListeTransactions { get; set; } = new List<Transaction>();
@@ -27,7 +27,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public bool hasError { get; set; } = false;
         public string errorMessage { get; set; } = string.Empty;
 
-        public long SelectedModele
+        public string SelectedModele
         {
             get {  return selectedModele; }
             set
@@ -37,22 +37,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             }
         }
 
-        public string SelectedActif
-        {
-            get { return selectedActif; }
-            set
-            {
-                selectedActif = value;
-            }
-        }
-
         public InvestirViewModel() 
         {
             IInvestirSQLite Iinvestir = new InvestirSQLite(BDDService.ConnectionString);
             investir = new Investir(Iinvestir);
 
             selectedDate = DateTime.Now;
-            SelectedModele = -1;
+            SelectedModele = "Aucun";
             LoadModeles();
             LoadActifs();
             LoadDernierInvestissement();
@@ -71,7 +62,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ListeDernierInvestissement = investir.GetDernierInvest();
             dateDernierInvest = ListeDernierInvestissement?.FirstOrDefault()?.date;
         }
-        public void LoadActifsModele(long modele)
+        public void LoadActifsModele(string modele)
         {
             ListeTransactionsModele = investir.GetTransactionsModele(modele);
 
@@ -130,7 +121,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
 
-            selectedModele = -1;
+            selectedModele = "Aucun";
             ListeTransactions = [];
             LoadDernierInvestissement();
         }

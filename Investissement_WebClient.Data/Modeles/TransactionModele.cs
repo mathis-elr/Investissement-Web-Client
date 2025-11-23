@@ -3,20 +3,17 @@
     public class TransactionModele
     {
         /*ATTRIBUTS*/
-        public long id { get; set; }
+        public string? modele {  get; set; }
         public string actif { get; set; }
-        public long? quantite { get; set; }
-        public long id_modele { get; set; }
+        public double? quantite { get; set; }
 
 
         /*CONSTRUCTEUR*/
-        public TransactionModele(long id, string actif, long? quantite, long idModele)
+        public TransactionModele(string? modele, string actif, double? quantite)
         {
-            // Utiliser 'this.' pour pointer clairement vers l'attribut de la classe
-            this.id = id;
+            this.modele = modele;
             this.actif = actif;
             this.quantite = quantite;
-            this.id_modele = idModele; // Attribution corrigée
         }
 
         public TransactionModele() { } // Ajouté pour l'initialiseur d'objet

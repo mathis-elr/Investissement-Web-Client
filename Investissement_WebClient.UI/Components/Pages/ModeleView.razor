@@ -1,60 +1,162 @@
-﻿@page "/modele"
+﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+
+@page "/modele"
 @rendermode InteractiveServer
 @inject IJSRuntime JS
+@inject ModeleViewModel MVM
 
 <PageTitle>Modele</PageTitle>
 
 <div class="modele">
-    <div class="ajout-modele">
-        <div class="ajout-modele-header">
-            <label>Ajouter le modele</label>
-            <input type="text" placeholder="Nom du Modele" />
-        </div>
-
-        <div class="ajout-modele-content">
-            <div class="actif-modele-investissement">
-                <select>
-                    <option>Bitcoin</option>
-                    <option>Ethereum</option>
-                    <option>S&P 500</option>
-                    <option>Nasdaq 100</option>
-                    <option>Physical Gold</option>
-                </select>
-                <br>
-                <input type="number" placeholder="Quantité (optionnel)" />
-            </div>
-
-            <div class="actif-modele-investissement add">
-                <a>+</a>
-            </div>
-        </div>
-        <br>
-        <div class="ajout-modele-footer">
-            <input class="btn-ajout-modele" type="button" value="Ajouter" />
-        </div>
-    </div>
-
-    <div class="edit-modele">
-        <div class="edit-modele-header">
-            <label>Modifier le modele</label>
-            <select>
-                <option>Aucun</option>
-                <option>semaine 1</option>
-                <option>semaine 2</option>
-            </select>
-        </div>
-        <br>
-        <div class="edit-modele-footer">
-            <input hidden class="btn-edit" type="button" value="Modifier" />
-        </div>
-    </div>
-
-    <div class="suppr-modele">
-        <label>Supprimer le modele</label>
-        <select>
-            <option>semaine 1</option>
-            <option>semaine 2</option>
+    <div class="modele-header">
+        <select @bind="MVM.selectedMode">
+            @foreach(string mode in MVM.ListeModes)
+            {
+                <option>@mode</option>
+            }
         </select>
-        <input class="btn-suppr-modele" type="button" value="Supprimer" />
     </div>
+            @switch(MVM.selectedMode)
+            {
+                case "Ajouter":
+                        <div class="modele-header">
+                            <label>le modele</label>
+                            <input @bind="MVM.selectedNomModele" type="text" placeholder="Nom du Modele" />
+                        </div>
+
+                        <div class="ajout-modele-content">
+                            @foreach (var transaction in MVM.ListeTransactionsModele)
+                            {
+                                <div class="actif-modele-investissement">
+                                    <div class="line-1">
+                                        <select @bind="transaction.actif">
+                                            @foreach (var actif in MVM.ListeNomsActif)
+                                            {
+                                                <option>@actif</option>
+                                            }
+                                        </select>
+                                        <input type="button" class="dell" value="🗑️" @onclick="() => MVM.DellActifModele(transaction)" />
+                                    </div>
+                                    <input type="number" @bind="transaction.quantite" placeholder="Quantité (optionnel)" />
+                                </div>
+                            }
+
+                            <div class="actif-modele-investissement add" @onclick="MVM.AddActifModele">
+                                <a>+</a>
+                           </div>
+                        </div>
+
+                        @if(MVM.ListeTransactionsModele.Count != 0)
+                        {
+                            <div class="ajout-modele-footer">
+                                <input class="btn-ajout-modele" type="button" value="Ajouter" @onclick="Ajouter" />
+                            </div>
+                        }
+
+
+                    break;
+
+                case "Modifier":
+                        <div class="modele-header">
+                            <label>le modele</label>
+                            <select @bind="MVM.SelectedModeleEdit">
+                                <option>Aucun</option>
+                                @foreach (var modele in MVM.ListeModeles)
+                                {
+                                    <option>@modele</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="edit-modele-content">
+                            @if (MVM.SelectedModeleEdit != "Aucun")
+                            {
+                                @foreach (var transaction in MVM.ListeTransactionsModeleEdit)
+                                {
+                                    <div class="actif-modele-investissement">
+                                        <div class="line-1">
+                                            <select @bind="transaction.actif">
+                                                @foreach (var actif in MVM.ListeNomsActif)
+                                                {
+                                                    <option>@actif</option>
+                                                }
+                                            </select>
+                                            <input type="button" class="dell" value="🗑️" @onclick="() => MVM.DellActifModeleEdit(transaction)" />
+                                        </div>
+                                        <input type="number" @bind="transaction.quantite" placeholder="Quantité (optionnel)" />
+                                    </div>
+                                }
+                                <div class="actif-modele-investissement add" @onclick="MVM.AddActifModeleEdit">
+                                    <a>+</a>
+                                </div>
+                            }
+                        </div>
+
+                    @if(MVM.SelectedModeleEdit != "Aucun" && MVM.ListeTransactionsModeleEdit.Count != 0)
+                    {
+                        <div class="edit-modele-footer">
+                            <input class="btn-edit-modele" type="button" value="Modifier" @onclick="Editer" />
+                        </div>
+                    }
+
+                    break;
+
+                case "Mes modèles":
+                    <div class="suppr-modele">
+                        <div class="suppr-modele-content">
+                                @foreach(string modele in MVM.ListeModeles)
+                                {
+                                    <span class="modele-enregistre-content @(MVM.ListeModelesAsuppr.Contains(modele) ? "active" : null)" @onclick="() => MVM.ChangerEtatSuppression(modele)">@modele</span>              
+                                }
+                        </div>
+
+                        @if(MVM.ListeModelesAsuppr.Count != 0)
+                        {
+                            <div class="suppr-modele-footer">
+                                <input class="btn-suppr-modele" type="button" value="Supprimer" @onclick="Supprimer" />
+                            </div>
+                        }
+                    </div>
+
+                    break;
+            }
 </div>
+
+@code {
+    async Task Ajouter()
+    {
+        MVM.Ajouter();
+
+        if (MVM.hasError)
+        {
+            await JS.InvokeVoidAsync("alert", MVM.errorMessage);
+        }
+    }
+
+    async Task Editer()
+    {
+        MVM.Editer();
+
+        if (MVM.hasError)
+        {
+            await JS.InvokeVoidAsync("alert", MVM.errorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Modele modifié avec succès");
+        }
+    }
+
+    async Task Supprimer()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer ce/ces modele(s) ?"))
+        {
+            MVM.Supprimer();
+
+            if (MVM.hasError)
+            {
+                await JS.InvokeVoidAsync("alert", MVM.errorMessage);
+            }
+        }
+    }
+}

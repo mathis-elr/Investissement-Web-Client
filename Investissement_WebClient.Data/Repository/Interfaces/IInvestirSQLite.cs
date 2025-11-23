@@ -4,11 +4,11 @@ namespace Investissement_WebClient.Data.Repository.Interfaces
 {
     public interface IInvestirSQLite
     {
-        public List<ModeleInvest> ReadNomModeles();
+        public List<string> ReadNomModeles();
 
         public List<string> ReadNomActifs();
 
-        public List<TransactionModele> ReadTransactionsModele(long idModele);
+        public List<TransactionModele> ReadTransactionsModele(string modele);
 
         public List<Transaction> GetTransactionsDernierInvest();
 

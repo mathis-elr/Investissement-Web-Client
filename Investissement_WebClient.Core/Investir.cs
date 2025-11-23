@@ -16,7 +16,7 @@ namespace Investissement_WebClient.Core
             _Iinvestir = Iinvestir;
         }
 
-        public List<ModeleInvest> GetNomModeles()
+        public List<string> GetNomModeles()
         {
             return _Iinvestir.ReadNomModeles();
         }
@@ -26,9 +26,9 @@ namespace Investissement_WebClient.Core
             return  _Iinvestir.ReadNomActifs();
         }
 
-        public List<TransactionModele> GetTransactionsModele(long idModele)
+        public List<TransactionModele> GetTransactionsModele(string modele)
         {
-            return _Iinvestir.ReadTransactionsModele(idModele);
+            return _Iinvestir.ReadTransactionsModele(modele);
         }
 
         public List<Transaction> GetDernierInvest()

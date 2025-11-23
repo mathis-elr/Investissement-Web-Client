@@ -12,21 +12,21 @@ namespace Investissement_WebClient.Data.Repository.SQLite
             _connexion = connection;
         }
 
-        public List<ModeleInvest> ReadNomModeles()
+        public List<string> ReadNomModeles()
         {
-            List<ModeleInvest> modeles = new List<ModeleInvest>();
+            List<string> modeles = new List<string>();
             using (var connection = new SqliteConnection(_connexion))
             {
                 try
                 {
                     connection.Open();
-                    string query = "SELECT * FROM ModeleInvest";
+                    string query = "SELECT modele FROM TransactionsModele";
                     var command = new SqliteCommand(query, connection);
                     var reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        modeles.Add(new ModeleInvest(reader.GetInt64(0), reader.GetString(1)));
+                        modeles.Add(reader.GetString(0));
                     }
 
                     return modeles;
@@ -66,7 +66,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
             }
         }
 
-        public List<TransactionModele> ReadTransactionsModele(long idModele)
+        public List<TransactionModele> ReadTransactionsModele(string modele)
         {
             List<TransactionModele> transactionsModele = new List<TransactionModele>();
             using (var connection = new SqliteConnection(_connexion))
@@ -74,25 +74,24 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 try
                 {
                     connection.Open();
-                    string query = "SELECT * FROM TransactionsModele WHERE idModele=@id";
+                    string query = "SELECT * FROM TransactionsModele WHERE modele=@modele";
                     var command = new SqliteCommand(query, connection);
-                    command.Parameters.AddWithValue("@id", idModele);
+                    command.Parameters.AddWithValue("@modele", modele);
                     var reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
                         transactionsModele.Add(new TransactionModele(
-                            reader.GetInt64(0),
+                            reader.GetString(0),
                             reader.GetString(1),
-                            reader.IsDBNull(2) ? (long?)null : reader.GetInt64(2),
-                            reader.GetInt64(3)));
+                            reader.IsDBNull(2) ? (long?)null : reader.GetInt64(2)));
                     }
 
                     return transactionsModele;
                 }
                 catch (SqliteException ex)
                 {
-                    Debug.WriteLine($"Erreur recuperation transaction associé au modele id={idModele} : {ex.Message}");
+                    Debug.WriteLine($"Erreur recuperation transaction associé au modele id={modele} : {ex.Message}");
                     throw;
                 }
             }

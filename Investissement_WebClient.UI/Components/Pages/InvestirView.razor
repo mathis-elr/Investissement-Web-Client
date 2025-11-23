@@ -33,10 +33,10 @@
             <input @bind="IVM.selectedDate" type="date" />
             <label>avec le modèle</label>
             <select @bind="IVM.SelectedModele">
-                <option value="-1">Aucun</option>
-                @foreach(var modele in IVM.ListeModeles)
+                <option>Aucun</option>
+                @foreach(string modele in IVM.ListeModeles)
                 {
-                    <option value="@modele.id">@modele.nom</option>
+                    <option>@modele</option>
                 }
             </select>
         </div>
