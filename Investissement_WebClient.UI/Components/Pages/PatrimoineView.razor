@@ -1,13 +1,16 @@
-﻿@page "/patrimoine"
+﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+@page "/patrimoine"
 @rendermode InteractiveServer
 @inject IJSRuntime JS
+@inject PatrimoineViewModel PVM
 
 <PageTitle>Patrimoine</PageTitle>
 
 <div class="patrimoine">
     <div class="patrimoine-header">
-        <label class="total">Total</label>
-        <label class="valeur">1205€</label>
+        <div class="total-label">Total</div>
+        <span class="valeur-totale-courante">@PVM.valeurPatrimoineCourante €</span>
+        <span class="variation-prix">@PVM.variationPrix %</span>
     </div>
     <div class="patrimoine-content">
     </div>

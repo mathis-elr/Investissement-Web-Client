@@ -15,7 +15,14 @@
             this.actif = actif;
             this.quantite = quantite;
             this.prix = prix;
-        } 
+        }
+
+        public Transaction(string actif, double quantite, double prix)
+        {
+            this.actif = actif;
+            this.quantite = quantite;
+            this.prix = prix;
+        }
 
         public Transaction(DateTime date, string actif) 
         { 

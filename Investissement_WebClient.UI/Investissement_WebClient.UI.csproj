@@ -7,6 +7,10 @@
     <UserSecretsId>94ce0e3e-47f0-4a40-8bc4-2456566ac493</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Investissement_WebClient.Core\Investissement_WebClient.Core.csproj" />
 	</ItemGroup>
