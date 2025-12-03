@@ -5,6 +5,8 @@
     border-width: 3px;
     padding: 15px;
     width: 97%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .modele-header {
@@ -20,9 +22,6 @@
     display: flex;
     flex-wrap:wrap;
     gap: 10px;
-    max-height: 230px;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 .actif-modele-investissement {

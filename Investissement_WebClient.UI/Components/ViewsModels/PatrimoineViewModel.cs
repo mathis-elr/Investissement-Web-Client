@@ -13,17 +13,31 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public string valeurPatrimoineCourante { get; set; }
         public string variationPrix { get; set; }
 
+        public List<ChartLinePoint> ListPointLineQuantiteInvesitParDate { get; set; }
+        public List<ChartLinePoint> ListPointLineValeurPatrimoineParDate { get; set; }
+
 
         public async Task LoadValeurPatrimoineCourant()
         {
-            double valeurPatrimoineCouranteDouble = await patrimoine.GetValeurPatrimoineCourant();
-            valeurPatrimoineCourante = valeurPatrimoineCouranteDouble.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"));
+            await patrimoine.CalculerValeurPatrimoineCourant();
+            valeurPatrimoineCourante = await patrimoine.GetValeurPatrimoineCourant();
         }
+
         public void LoadVariationPrix()
         {
-
+            patrimoine.CalculerVariationPrix();
+            variationPrix = patrimoine.GetVariationPrix();
         }
 
+        public void LoadQuantiteParDate()
+        {
+            ListPointLineQuantiteInvesitParDate = patrimoine.GetQuantiteInvestitParDate();
+        }
+
+        public void LoadValeurPatrimoineParDate()
+        {
+            ListPointLineValeurPatrimoineParDate = patrimoine.GetValeurPatrimoineParDate();
+        }
 
         public PatrimoineViewModel()
         {
@@ -32,11 +46,11 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             patrimoine = new Patrimoine(iPatrimoine, iMarketDataService);
 
             valeurPatrimoineCourante = "-- ----,--";
-            variationPrix = "--,--";
+            variationPrix = "00,00";
 
-            LoadValeurPatrimoineCourant();
-            LoadVariationPrix();
+            patrimoine.LoadQuantiteInvestitParActif(); //on l'appelle dans le constructeur car on ne veux aps qu'il se re-calcule a chaque fois que le prix change
+            LoadQuantiteParDate();
+            LoadValeurPatrimoineParDate();
         }
-
     }
 }

@@ -2,6 +2,10 @@
 {
     public static class BDDService
     {
-        public static string ConnectionString = "Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement_WebClient\\bd\\historique_transactions_tests_web.db";
+        /*depuis windows*/
+        public static string ConnectionString = "Data Source=O:\\Mathis\\Documents\\prog perso\\c#\\Investissement_WebClient\\bd\\historique_transactions_tests_web.db";
+        
+        /*depuis ubuntu*/
+        //public static string ConnectionString = "Data Source=\\media\\Commun\\Mathis\\Documents\\prog perso\\c#\\Investissement_WebClient\\bd\\historique_transactions_tests_web.db";
     }
 }

@@ -3,7 +3,6 @@ using Investissement_WebClient.Data.Repository.Interfaces;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection.Metadata;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Investissement_WebClient.Core
 {

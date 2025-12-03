@@ -8,83 +8,96 @@
 <PageTitle>Actif</PageTitle>
 
 <div class="actif">
-    <div class="ajout-actif">
-        <div class="ajout-actif-header">
-            <label>Ajouter un actif</label>
-        </div>
-        <div class="ajout-actif-content">
-            <input type="text" @bind="AVM.selectedNom" placeholder="Nom" />
-            <input type="text" @bind="AVM.selectedSymbole" placeholder="Symbole" />
-            <input type="text" @bind="AVM.selectedType" placeholder="Type" />
-            <input type="text" @bind="AVM.selectedISIN" placeholder="ISIN" />
-            <select @bind="AVM.selectedNvRisque">
-                <option disabled selected hidden>Niveau de risque</option>
-                @foreach(var item in AVM.ListeNvRisque)
-                {
-                    <option>@item</option>
-                }
-            </select>
-        </div>
-
-        <div class="ajout-actif-footer">
-            <input class="btn-ajout" type="button" value="Ajouter" @onclick="Ajouter" />
-        </div>
-    </div>
-
-    <div class="edit-actif">
-        <div class="edit-actif-header">
-            <label>Modifier l'actif</label>
-            <select @bind="AVM.SelectedActifEdit">
-                <option>Aucun</option>
-                @foreach(var actif in AVM.ListeNomsActifs)
-                {
-                    <option value="@actif">@actif</option>
-                }
-            </select>
-        </div>
-        <div class="edit-actif-content">
-            @if (AVM.SelectedActifEdit != "Aucun")
+    <div class="actif-header">
+        <select @bind="AVM.selectedMode">
+            @foreach(string mode in AVM.ListeModes)
             {
-                <input disabled type="text" @bind="AVM.selectedNomEdit" placeholder="Nom" />
-                <input type="text" @bind="AVM.selectedSymboleEdit" placeholder="Symbole" />
-                <input type="text" @bind="AVM.selectedTypeEdit" placeholder="Type" />
-                <input type="text" @bind="AVM.selectedISINEdit" placeholder="ISIN" />
-                <select @bind="AVM.selectedNvRisqueEdit">
-                    @foreach (var item in AVM.ListeNvRisque)
+                <option>@mode</option>
+            }
+        </select>
+    </div>
+    
+    @switch (AVM.selectedMode)
+    {
+        case "Ajouter" :
+            <div class="actif-header">
+                <label>un actif</label>
+            </div>
+            <div class="ajout-actif-content">
+                <input type="text" @bind="AVM.selectedNom" placeholder="Nom"/>
+                <input type="text" @bind="AVM.selectedSymbole" placeholder="Symbole"/>
+                <input type="text" @bind="AVM.selectedType" placeholder="Type"/>
+                <input type="text" @bind="AVM.selectedISIN" placeholder="ISIN"/>
+                <select @bind="AVM.selectedNvRisque">
+                    <option disabled selected hidden>Niveau de risque</option>
+                    @foreach (string item in AVM.ListeNvRisque)
                     {
                         <option>@item</option>
                     }
                 </select>
-            }
-        </div>
-        <div class="edit-actif-footer">
-            @if(AVM.SelectedActifEdit != "Aucun")
-            {
-                <input class="btn-edit" type="button" value="Modifier" @onclick="Editer" />
-            }
-        </div>
-    </div>
-
-    <div class="suppr-actif">
-        <div class="suppr-actif-header">
-            <label>Mes actifs</label>
-        </div>
-        <div class="suppr-actif-content">
-            @foreach(var actif in AVM.ListeActifs)
-            {
-                <span type="text" class="actif-enregistre-content @(AVM.ListeActifASuppr.Contains(actif.nom) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.nom)">@actif.nom</span>
-            }
-        </div>
-
-        @if(AVM.ListeActifASuppr.Count != 0)
-        {
-            <div class="suppr-actif-footer">
-                <input class="btn-suppr-actif" type="button" value="Supprimer" @onclick="() => Supprimer()" />
             </div>
-        }
-    </div>
-</div>
 
+            <div class="ajout-actif-footer">
+                <input class="btn-ajout" type="button" value="Ajouter" @onclick="Ajouter"/>
+            </div>
+            break;
+            
+        case "Modifier":
+            <div class="actif-header">
+                <label>Modifier l'actif</label>
+                <select @bind="AVM.SelectedActifEdit">
+                    <option>Aucun</option>
+                    @foreach (var actif in AVM.ListeNomsActifs)
+                    {
+                        <option value="@actif">@actif</option>
+                    }
+                </select>
+            </div>
+            <div class="edit-actif-content">
+                @if (AVM.SelectedActifEdit != "Aucun")
+                {
+                    <input disabled type="text" @bind="AVM.selectedNomEdit" placeholder="Nom"/>
+                    <input type="text" @bind="AVM.selectedSymboleEdit" placeholder="Symbole"/>
+                    <input type="text" @bind="AVM.selectedTypeEdit" placeholder="Type"/>
+                    <input type="text" @bind="AVM.selectedISINEdit" placeholder="ISIN"/>
+                    <select @bind="AVM.selectedNvRisqueEdit">
+                        @foreach (var item in AVM.ListeNvRisque)
+                        {
+                            <option>@item</option>
+                        }
+                    </select>
+                }
+            </div>
+            <div class="edit-actif-footer">
+                @if (AVM.SelectedActifEdit != "Aucun")
+                {
+                    <input class="btn-edit" type="button" value="Modifier" @onclick="Editer"/>
+                }
+            </div>
+            
+            break;
+            
+        case "Supprimer":
+                <div class="actif-header">
+                    <label>Mes actifs</label>
+                </div>
+                <div class="suppr-actif-content">
+                    @foreach (var actif in AVM.ListeActifs)
+                    {
+                        <span type="text" class="actif-enregistre-content @(AVM.ListeActifASuppr.Contains(actif.nom) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.nom)">@actif.nom</span>
+                    }
+                </div>
+
+                @if (AVM.ListeActifASuppr.Count != 0)
+                {
+                    <div class="suppr-actif-footer">
+                        <input class="btn-suppr-actif" type="button" value="Supprimer" @onclick="() => Supprimer()"/>
+                    </div>
+                }
+
+            break;
+    }
+    </div>
 
 @code{
     async Task Ajouter()

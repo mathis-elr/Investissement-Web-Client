@@ -11,6 +11,11 @@ namespace Investissement_WebClient.Core
             _IActif = IActif;
         }
 
+        public List<string> GetModes()
+        {
+            return ["Ajouter", "Modifier", "Supprimer"];
+        }
+
         public List<ActifModele> GetListeActifs()
         {
             return _IActif.ReadActifs();

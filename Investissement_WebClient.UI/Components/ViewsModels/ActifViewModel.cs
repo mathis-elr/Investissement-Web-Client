@@ -16,6 +16,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public string? selectedType { get; set; } = null;
         public string? selectedISIN { get; set; } = null;
         public string? selectedNvRisque { get; set; } = null;
+        
+        public string selectedMode { get; set; }
+        public List<string> ListeModes { get; set; }
 
         public List<string>? ListeNvRisque { get; set; }
         public List<ActifModele>? ListeActifs { get; set; }
@@ -71,11 +74,18 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ListeNomsActifs = ListeActifs.Select(nom => nom.nom).ToList();
         }
 
+        public void LoadModes()
+        {
+            ListeModes = actif.GetModes();
+            selectedMode = ListeModes.First();
+        }
+
         public ActifViewModel() 
         {
             IActifSQLite Iactif = new ActifSQLite(BDDService.ConnectionString);
             actif = new Actif(Iactif);
 
+            LoadModes();
             LoadNvRisque();
             LoadActifs();
 

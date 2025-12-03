@@ -11,8 +11,8 @@
     <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
   </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Investissement_WebClient.Core\Investissement_WebClient.Core.csproj" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\Investissement_WebClient.Core\Investissement_WebClient.Core.csproj" />
+  </ItemGroup>
+  
 </Project>

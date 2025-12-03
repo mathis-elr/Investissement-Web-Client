@@ -1,8 +1,69 @@
 ﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+@using Investissement_WebClient.Data.Modeles;
+@using System.Diagnostics;
+@using System.Linq;
+
+@using ApexCharts
+@implements IDisposable
+
 @page "/patrimoine"
 @rendermode InteractiveServer
 @inject IJSRuntime JS
 @inject PatrimoineViewModel PVM
+
+@{
+    const string blanc = "#FFFFFF";
+
+    var chartLinesOptions = new ApexChartOptions<ChartLinePoint>
+    {
+        Chart = new Chart
+        {
+            Height = "200%",
+            Width = "100%"
+        },
+
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark
+        },
+
+        //Couleurs des Lines
+        Colors = new[] { "#008FFB", "#FF4560" }.ToList(),
+
+        Xaxis = new XAxis
+        {
+            Labels = new XAxisLabels
+            {
+                Style = new()
+                {
+                    Colors = new List<string> { blanc }
+                }
+            }
+        },
+
+        Yaxis = new List<YAxis>
+        {
+            new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Style = new()
+                    {
+                        Colors = new List<string> { blanc }
+                    }
+                }
+            }
+        },
+
+        Legend = new Legend
+        {
+            Labels = new LegendLabels
+            {
+                Colors = blanc
+            }
+        }
+    };
+}
 
 <PageTitle>Patrimoine</PageTitle>
 
@@ -10,10 +71,86 @@
     <div class="patrimoine-header">
         <div class="total-label">Total</div>
         <span class="valeur-totale-courante">@PVM.valeurPatrimoineCourante €</span>
-        <span class="variation-prix">@PVM.variationPrix %</span>
+        <span class="variation-prix @(PVM.variationPrix.StartsWith("-") ? "negative" : "positive")">@PVM.variationPrix</span>
     </div>
     <div class="patrimoine-content">
+        <ApexChart TItem="ChartLinePoint" 
+                   Options="chartLinesOptions">
+
+            <ApexPointSeries Items="@PVM.ListPointLineQuantiteInvesitParDate"
+                             Name="Quantité Investit"
+                             SeriesType="SeriesType.Line"
+                             XValue="@(e => e.Date)"
+                             YValue="@(e => e.Value)" />
+
+            <ApexPointSeries Items="@PVM.ListPointLineValeurPatrimoineParDate"
+                             Name="Valeur Actuelle"
+                             SeriesType="SeriesType.Line"
+                             XValue="@(e => e.Date)"
+                             YValue="@(e => e.Value)" />
+        </ApexChart>
     </div>
     <div class="patrimoine-footer">
     </div>
 </div>
+
+@code {
+    private CancellationTokenSource cts = new CancellationTokenSource();
+
+    private readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(20);
+
+    protected override Task OnInitializedAsync()
+    {
+        StartPolling();
+
+        var loadingTask = PVM.LoadValeurPatrimoineCourant();
+
+        loadingTask.ContinueWith(t =>
+        {
+            PVM.LoadVariationPrix();
+            InvokeAsync(StateHasChanged);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    private async void StartPolling()
+    {
+        // Récupère le jeton d'annulation
+        var token = cts.Token;
+
+        // Boucle infinie qui s'arrêtera via le jeton si l'utilisateur navigue
+        while (!token.IsCancellationRequested)
+        {
+            try
+            {
+                Debug.WriteLine("chargé");
+                // 1. Attendre le délai (non-bloquant)
+                await Task.Delay(RefreshInterval, token);
+
+                // 2. Charger les nouvelles données
+                await PVM.LoadValeurPatrimoineCourant();
+                PVM.LoadVariationPrix();
+
+                // 3. Forcer le rafraîchissement de l'UI
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (TaskCanceledException)
+            {
+                // Cela se produit lorsque le jeton est annulé (l'utilisateur a navigué)
+                break;
+            }
+            catch (Exception ex)
+            {
+                // Gestion des erreurs d'API (très probable avec Yahoo toutes les 1 min)
+                Console.WriteLine($"Erreur de rafraîchissement des prix: {ex.Message}");
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        cts.Cancel();
+        cts.Dispose();
+    }
+}

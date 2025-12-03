@@ -52,6 +52,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         private void LoadModeles()
         {
             ListeModeles = modeleInvest.GetModeles();
+            selectedMode = ListeModes.First();
         }
 
         private void LoadTransactionsModele(string modele)
@@ -65,7 +66,6 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             modeleInvest = new ModeleInvest(_iModeleInvest);
 
             LoadModes();
-            selectedMode = ListeModes.First();
 
             LoadNomsActif();
             LoadModeles();

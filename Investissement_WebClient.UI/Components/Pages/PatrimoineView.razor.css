@@ -25,12 +25,10 @@
     font-size: 18px;
 }
 
-.variation-prix .positive{
+.positive{
     color:green;
-    font-size: 22px;
 }
 
-.variation-prix .negtive {
+.negative {
     color:red;
-    font-size: 22px;
 }
