@@ -19,7 +19,7 @@ namespace Investissement_WebClient.Core
 
         public List<string> GetModes()
         {
-            return ["Ajouter", "Modifier", "Mes modèles"];
+            return ["Ajouter", "Modifier", "Supprimer"];
         }
 
         public List<string> GetNomsActif()
