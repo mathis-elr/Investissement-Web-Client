@@ -14,7 +14,7 @@
 @{
     const string blanc = "#FFFFFF";
 
-    var chartLinesOptions = new ApexChartOptions<ChartLinePoint>
+    var chartLinesOptions = new ApexChartOptions<ChartsLinesPrix>
     {
         Chart = new Chart
         {
@@ -74,20 +74,31 @@
         <span class="variation-prix @(PVM.variationPrix.StartsWith("-") ? "negative" : "positive")">@PVM.variationPrix</span>
     </div>
     <div class="patrimoine-content">
-        <ApexChart TItem="ChartLinePoint" 
+        <ApexChart TItem="ChartsLinesPrix" 
                    Options="chartLinesOptions">
 
-            <ApexPointSeries Items="@PVM.ListPointLineQuantiteInvesitParDate"
+            <ApexPointSeries Items="@PVM.ListPointsLineQuantiteInvesitParDate"
                              Name="Quantité Investit"
                              SeriesType="SeriesType.Line"
                              XValue="@(e => e.Date)"
                              YValue="@(e => e.Value)" />
 
-            <ApexPointSeries Items="@PVM.ListPointLineValeurPatrimoineParDate"
+            <ApexPointSeries Items="@PVM.ListPointsLineValeurPatrimoineParDate"
                              Name="Valeur Actuelle"
                              SeriesType="SeriesType.Line"
                              XValue="@(e => e.Date)"
                              YValue="@(e => e.Value)" />
+        </ApexChart>
+        
+        <ApexChart Title="Proportion actif par rapport au portefeuille total" TItem="ChartPieProportionParActif">
+
+            <ApexPointSeries TItem="ChartPieProportionParActif"
+                             Items="@PVM.ListProportionParActif"
+                             SeriesType="SeriesType.Pie"
+                             XValue="@(e => e.Actif)"
+                             YValue="@(e => e.Proportion)"
+                             OrderByDescending="e=>e.Y" 
+            />
         </ApexChart>
     </div>
     <div class="patrimoine-footer">
@@ -108,6 +119,7 @@
         loadingTask.ContinueWith(t =>
         {
             PVM.LoadVariationPrix();
+            PVM.LoadProportionParActif();
             InvokeAsync(StateHasChanged);
         });
 
@@ -124,25 +136,24 @@
         {
             try
             {
-                Debug.WriteLine("chargé");
                 // 1. Attendre le délai (non-bloquant)
                 await Task.Delay(RefreshInterval, token);
 
                 // 2. Charger les nouvelles données
                 await PVM.LoadValeurPatrimoineCourant();
                 PVM.LoadVariationPrix();
+                PVM.LoadProportionParActif();
 
                 // 3. Forcer le rafraîchissement de l'UI
                 await InvokeAsync(StateHasChanged);
             }
             catch (TaskCanceledException)
             {
-                // Cela se produit lorsque le jeton est annulé (l'utilisateur a navigué)
+                //l'utilisateur a navigué on stop
                 break;
             }
             catch (Exception ex)
             {
-                // Gestion des erreurs d'API (très probable avec Yahoo toutes les 1 min)
                 Console.WriteLine($"Erreur de rafraîchissement des prix: {ex.Message}");
             }
         }

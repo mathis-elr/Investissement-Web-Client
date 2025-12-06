@@ -13,14 +13,16 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public string valeurPatrimoineCourante { get; set; }
         public string variationPrix { get; set; }
 
-        public List<ChartLinePoint> ListPointLineQuantiteInvesitParDate { get; set; }
-        public List<ChartLinePoint> ListPointLineValeurPatrimoineParDate { get; set; }
+        public List<ChartsLinesPrix> ListPointsLineQuantiteInvesitParDate { get; set; }
+        public List<ChartsLinesPrix> ListPointsLineValeurPatrimoineParDate { get; set; }
+        public List<ChartPieProportionParActif> ListProportionParActif { get; set; }
 
 
         public async Task LoadValeurPatrimoineCourant()
         {
-            await patrimoine.CalculerValeurPatrimoineCourant();
-            valeurPatrimoineCourante = await patrimoine.GetValeurPatrimoineCourant();
+            await patrimoine.CalculerQuantiteEurParActif();
+            patrimoine.CalculerValeurPatrimoineCourant();
+            valeurPatrimoineCourante = patrimoine.GetValeurPatrimoineCourant();
         }
 
         public void LoadVariationPrix()
@@ -31,12 +33,17 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public void LoadQuantiteParDate()
         {
-            ListPointLineQuantiteInvesitParDate = patrimoine.GetQuantiteInvestitParDate();
+            ListPointsLineQuantiteInvesitParDate = patrimoine.GetQuantiteInvestitParDate();
         }
 
         public void LoadValeurPatrimoineParDate()
         {
-            ListPointLineValeurPatrimoineParDate = patrimoine.GetValeurPatrimoineParDate();
+            ListPointsLineValeurPatrimoineParDate = patrimoine.GetValeurPatrimoineParDate();
+        }
+
+        public void LoadProportionParActif()
+        {
+            ListProportionParActif = patrimoine.GetProportionParActif();
         }
 
         public PatrimoineViewModel()

@@ -14,6 +14,7 @@ namespace Investissement_WebClient.Core
         private double variationPrix { get; set; }
         private Dictionary<string, (double, double)> dictionnaireQuantiteParActif { get; set; }
         private Dictionary<string, double> dictionnairePrixParActif { get; set; }
+        private Dictionary<string, double> dictionnaireQuantiteEURParActif { get; set; } = new Dictionary<string, double>();
 
         public Patrimoine(IPatrimoineSQLite iPatrimoine, IMarketDataService iMarketDataService)
         {
@@ -36,28 +37,31 @@ namespace Investissement_WebClient.Core
             dictionnairePrixParActif = await _IMarketDataService.GetPrixActuelAsync(_IPatrimoine.GetSymboles());
         }
 
-        public async Task CalculerValeurPatrimoineCourant()
+        public async Task CalculerQuantiteEurParActif()
         {
             await this.LoadPrixParActif();
-            valeurTotalePatrimoine = 0;
-
-            foreach (KeyValuePair<string, string> symboleParActif in _IPatrimoine.GetSymboleParActif())
-            {
-                double quantite = dictionnaireQuantiteParActif[symboleParActif.Key].Item1;
-
-                double prix = 0;
-                if (dictionnairePrixParActif.ContainsKey(symboleParActif.Value))
+                foreach (KeyValuePair<string, string> symboleParActif in _IPatrimoine.GetSymboleParActif())
                 {
-                    prix = dictionnairePrixParActif[symboleParActif.Value];
+                    double quantite = dictionnaireQuantiteParActif[symboleParActif.Key].Item1;
+
+                    double prix = 0;
+                    if (dictionnairePrixParActif.ContainsKey(symboleParActif.Value))
+                    {
+                        prix = dictionnairePrixParActif[symboleParActif.Value];
+                    }
+
+                    dictionnaireQuantiteEURParActif[symboleParActif.Key] = Math.Round(quantite * prix, 2);
                 }
-
-                valeurTotalePatrimoine += quantite * prix;
-            }
-
-            valeurTotalePatrimoine = Math.Round(valeurTotalePatrimoine, 2);
         }
 
-        public async Task<string> GetValeurPatrimoineCourant()
+        public void CalculerValeurPatrimoineCourant()
+        {
+            valeurTotalePatrimoine = dictionnaireQuantiteEURParActif.Sum(actif => actif.Value);
+            valeurTotalePatrimoine = Math.Round(valeurTotalePatrimoine, 2);
+            Console.WriteLine(valeurTotalePatrimoine);
+        }
+
+        public string GetValeurPatrimoineCourant()
         {
             return valeurTotalePatrimoine.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"));
         }
@@ -66,6 +70,17 @@ namespace Investissement_WebClient.Core
         {
             this.CalculerQuantiteTotaleInvestit();
             variationPrix = ((valeurTotalePatrimoine - quantiteTotaleInvestit) / quantiteTotaleInvestit);
+        }
+
+        public Dictionary<string,double> CalculerProportionParActif()
+        {
+            Dictionary<string, double> proportionParActif = new Dictionary<string, double>();
+            foreach (KeyValuePair<string,double> prixParActif in this.dictionnaireQuantiteEURParActif)
+            {
+                double proportion = prixParActif.Value / valeurTotalePatrimoine * 100;
+                proportionParActif.Add(prixParActif.Key, Math.Round(proportion,2));
+            }
+            return proportionParActif;
         }
 
         public string GetVariationPrix()
@@ -84,16 +99,22 @@ namespace Investissement_WebClient.Core
             }
         }
 
-        public List<ChartLinePoint> GetQuantiteInvestitParDate()
+        public List<ChartsLinesPrix> GetQuantiteInvestitParDate()
         {
             Dictionary<DateTime, double> quantiteParDate = _IPatrimoine.GetQuantiteInvestitParDate();
-            return quantiteParDate.Select(kvp => new ChartLinePoint(kvp.Key.ToString("dd-MM-yy"), (decimal)kvp.Value)).ToList();
+            return quantiteParDate.Select(kvp => new ChartsLinesPrix(kvp.Key.ToString("dd-MM-yy"), (decimal)kvp.Value)).ToList();
         }
 
-        public List<ChartLinePoint> GetValeurPatrimoineParDate()
+        public List<ChartsLinesPrix> GetValeurPatrimoineParDate()
         {
             Dictionary<DateTime, double> valeurParDate = _IPatrimoine.GetValeurPatrimoineParDate();
-            return valeurParDate.Select(kvp => new ChartLinePoint(kvp.Key.ToString("dd-MM-yy"), (decimal)kvp.Value)).ToList();
+            return valeurParDate.Select(kvp => new ChartsLinesPrix(kvp.Key.ToString("dd-MM-yy"), (decimal)kvp.Value)).ToList();
+        }
+
+        public List<ChartPieProportionParActif> GetProportionParActif()
+        {
+            Dictionary<string, double> proporionParActif = this.CalculerProportionParActif();
+            return proporionParActif.Select(kvp => new ChartPieProportionParActif(kvp.Key, (decimal)kvp.Value)).ToList();
         }
     }
 }
