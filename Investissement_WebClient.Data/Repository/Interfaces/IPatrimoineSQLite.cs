@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Investissement_WebClient.Data.Repository.Interfaces
+﻿namespace Investissement_WebClient.Data.Repository.Interfaces
 {
     public interface IPatrimoineSQLite
     {

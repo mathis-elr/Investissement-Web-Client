@@ -1,6 +1,5 @@
 ﻿@using Investissement_WebClient.UI.Components.ViewsModels;
 @using Investissement_WebClient.Data.Modeles;
-@using System.Diagnostics;
 @using System.Linq;
 
 @using ApexCharts
@@ -14,6 +13,7 @@
 @{
     const string blanc = "#FFFFFF";
 
+    //paramétrage graphique Lines
     var chartLinesOptions = new ApexChartOptions<ChartsLinesPrix>
     {
         Chart = new Chart
@@ -106,30 +106,32 @@
 </div>
 
 @code {
-    private CancellationTokenSource cts = new CancellationTokenSource();
+    private CancellationTokenSource detectionChangementPage = new CancellationTokenSource();
+    private readonly TimeSpan intervale = TimeSpan.FromSeconds(20);
 
-    private readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(20);
-
+    
     protected override Task OnInitializedAsync()
     {
-        StartPolling();
-
+        BoucleMajValeurPatrimoine();
+        
         var loadingTask = PVM.LoadValeurPatrimoineCourant();
 
+        // après la fin de la recuperation de la valeur du patrimoine
         loadingTask.ContinueWith(t =>
         {
             PVM.LoadVariationPrix();
-            PVM.LoadProportionParActif();
+            PVM.RecupererDonneesPieProportionParActif();
             InvokeAsync(StateHasChanged);
         });
-
+        
         return Task.CompletedTask;
     }
+    
 
-    private async void StartPolling()
+    private async void BoucleMajValeurPatrimoine()
     {
         // Récupère le jeton d'annulation
-        var token = cts.Token;
+        var token = detectionChangementPage.Token;
 
         // Boucle infinie qui s'arrêtera via le jeton si l'utilisateur navigue
         while (!token.IsCancellationRequested)
@@ -137,12 +139,14 @@
             try
             {
                 // 1. Attendre le délai (non-bloquant)
-                await Task.Delay(RefreshInterval, token);
+                await Task.Delay(intervale, token);
 
-                // 2. Charger les nouvelles données
+                // 2. Charger de nouvelles données
                 await PVM.LoadValeurPatrimoineCourant();
                 PVM.LoadVariationPrix();
-                PVM.LoadProportionParActif();
+                PVM.RecupererDonneesLineQuantiteInvestitParDate();
+                PVM.RecupererDonneesLineValeurPatrimoineParDate();
+                PVM.RecupererDonneesPieProportionParActif();
 
                 // 3. Forcer le rafraîchissement de l'UI
                 await InvokeAsync(StateHasChanged);
@@ -161,7 +165,7 @@
 
     public void Dispose()
     {
-        cts.Cancel();
-        cts.Dispose();
+        detectionChangementPage.Cancel();
+        detectionChangementPage.Dispose();
     }
 }

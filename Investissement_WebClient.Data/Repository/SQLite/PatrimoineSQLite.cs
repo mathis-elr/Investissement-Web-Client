@@ -1,12 +1,6 @@
-﻿using Investissement_WebClient.Data.Modeles;
-using Investissement_WebClient.Data.Repository.Interfaces;
+﻿using Investissement_WebClient.Data.Repository.Interfaces;
 using Microsoft.Data.Sqlite;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Investissement_WebClient.Data.Repository.SQLite
 {
