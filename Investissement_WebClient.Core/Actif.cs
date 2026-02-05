@@ -5,8 +5,8 @@ namespace Investissement_WebClient.Core
 {
     public class Actif
     {
-        private readonly IActifSQLite _IActif;
-        public Actif(IActifSQLite IActif) 
+        private readonly IActifEnregistreSQLite _IActif;
+        public Actif(IActifEnregistreSQLite IActif) 
         { 
             _IActif = IActif;
         }
@@ -15,10 +15,15 @@ namespace Investissement_WebClient.Core
         {
             return ["Ajouter", "Modifier", "Supprimer"];
         }
-
+        
         public List<ActifModele> GetListeActifs()
         {
             return _IActif.ReadActifs();
+        }
+
+        public List<ActifEnresgistreModele> GetListeActifsEnresgistre()
+        {
+            return _IActif.ReadActifsEnregistre();
         }
 
         public List<string> GetListeNvRisque()
@@ -26,14 +31,14 @@ namespace Investissement_WebClient.Core
             return ["Faible", "Moyen", "Fort"];
         }
 
-        public void AjouterActif(ActifModele actif)
+        public void AjouterActif(ActifEnresgistreModele actifEnresgistre)
         {
-            _IActif.ajouterActif(actif);
+            _IActif.ajouterActif(actifEnresgistre);
         }
 
-        public void ModifierActif(ActifModele actif)
+        public void ModifierActif(ActifEnresgistreModele actifEnresgistre)
         {
-            _IActif.modifierActif(actif);
+            _IActif.modifierActif(actifEnresgistre);
         }
 
         public void SupprimerActif(string nom)

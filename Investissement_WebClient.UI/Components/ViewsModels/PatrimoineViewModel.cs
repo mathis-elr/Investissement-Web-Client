@@ -1,9 +1,8 @@
 ﻿using Investissement_WebClient.Data.Repository.Interfaces;
 using Investissement_WebClient.Data.Repository.SQLite;
-using Investissement_WebClient.Data.Repository.API;
+using Investissement_WebClient.Data.Repository.Services;
 using Investissement_WebClient.Data.Modeles;
 using Investissement_WebClient.Core;
-using System.Diagnostics;
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
@@ -22,20 +21,14 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             IPatrimoineSQLite iPatrimoine = new PatrimoineSQLite(BDDService.ConnectionString);
             IMarketDataService iMarketDataService = new YahooDataService();
             patrimoine = new Patrimoine(iPatrimoine, iMarketDataService);
-            
-            RecupererDonneesLineQuantiteInvestitParDate();
-            RecupererDonneesLineValeurPatrimoineParDate();
         }
         
         public async Task LoadValeurPatrimoineCourant()
         {
-            Console.WriteLine("recuperation de la valeur du patrimoine actuel ...");
             valeurPatrimoineCourante = await patrimoine.GetValeurPatrimoineCourant();
-            RecupererDonneesPieProportionParActif();
         }
         public void LoadVariationPrix()
         {
-            Console.WriteLine("recuperation de la variation de prix ...");
             variationPrix = patrimoine.GetVariationPrix();
         }
         

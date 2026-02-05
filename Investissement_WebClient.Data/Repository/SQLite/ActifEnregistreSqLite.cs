@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace Investissement_WebClient.Data.Repository.SQLite
 {
-    public class ActifSQLite : DataContext, IActifSQLite
+    public class ActifEnregistreSqLite : DataContext, IActifEnregistreSQLite
     {
-        public ActifSQLite(string connection)
+        public ActifEnregistreSqLite(string connection)
         {
             _connexion = connection;
         }
@@ -27,6 +27,37 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                     while (reader.Read())
                     {
                         actifs.Add(new ActifModele(reader.GetString(0),
+                            reader.GetString(1),
+                            reader.IsDBNull(2) ? null : reader.GetString(2),
+                            reader.GetString(3)
+                            ));
+                    }
+
+                    return actifs;
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine($"Erreur recuperation des actifs : {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+        public List<ActifEnresgistreModele> ReadActifsEnregistre()
+        {
+            List<ActifEnresgistreModele> actifs = new List<ActifEnresgistreModele>();
+            using (var connection = new SqliteConnection(_connexion))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM ActifEnregistre";
+                    var command = new SqliteCommand(query, connection);
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        actifs.Add(new ActifEnresgistreModele(reader.GetString(0),
                                              reader.GetString(1),
                                              reader.GetString(2),
                                              reader.IsDBNull(3) ? null : reader.GetString(3),
@@ -43,20 +74,20 @@ namespace Investissement_WebClient.Data.Repository.SQLite
             }
         }
 
-        public void ajouterActif(ActifModele actif)
+        public void ajouterActif(ActifEnresgistreModele actifEnresgistre)
         {
             using (var connection = new SqliteConnection(_connexion))
             {
                 try
                 {
                     connection.Open();
-                    string query = "INSERT INTO Actif VALUES(@nom,@symbole,@type,@ISIN,@risque);";
+                    string query = "INSERT INTO ActifEnregistre VALUES(@nom,@symbole,@type,@ISIN,@risque);";
                     var command = new SqliteCommand(query, connection);
-                    command.Parameters.AddWithValue("@nom", actif.nom);
-                    command.Parameters.AddWithValue("@symbole", actif.symbole);
-                    command.Parameters.AddWithValue("@type", actif.type);
-                    command.Parameters.AddWithValue("@ISIN", actif.isin == null ? DBNull.Value : actif.isin);
-                    command.Parameters.AddWithValue("@risque", actif.risque);
+                    command.Parameters.AddWithValue("@nom", actifEnresgistre.nom);
+                    command.Parameters.AddWithValue("@symbole", actifEnresgistre.symbole);
+                    command.Parameters.AddWithValue("@type", actifEnresgistre.type);
+                    command.Parameters.AddWithValue("@ISIN", actifEnresgistre.isin == null ? DBNull.Value : actifEnresgistre.isin);
+                    command.Parameters.AddWithValue("@risque", actifEnresgistre.risque);
                     command.ExecuteNonQuery();
                 }
                 catch (SqliteException ex)
@@ -67,20 +98,20 @@ namespace Investissement_WebClient.Data.Repository.SQLite
             }
         }
 
-        public void modifierActif(ActifModele actif)
+        public void modifierActif(ActifEnresgistreModele actifEnresgistre)
         {
             using (var connection = new SqliteConnection(_connexion))
             {
                 try
                 {
                     connection.Open();
-                    string query = "UPDATE Actif SET symbole=@symbole, type=@type, isin=@ISIN, risque=@risque WHERE nom=@nom;";
+                    string query = "UPDATE ActifEnregistre SET symbole=@symbole, type=@type, isin=@ISIN, risque=@risque WHERE nom=@nom;";
                     var command = new SqliteCommand(query, connection);
-                    command.Parameters.AddWithValue("@symbole", actif.symbole);
-                    command.Parameters.AddWithValue("@type", actif.type);
-                    command.Parameters.AddWithValue("@ISIN", actif.isin == null ? DBNull.Value : actif.isin);
-                    command.Parameters.AddWithValue("@risque", actif.risque);
-                    command.Parameters.AddWithValue("@nom", actif.nom);
+                    command.Parameters.AddWithValue("@symbole", actifEnresgistre.symbole);
+                    command.Parameters.AddWithValue("@type", actifEnresgistre.type);
+                    command.Parameters.AddWithValue("@ISIN", actifEnresgistre.isin == null ? DBNull.Value : actifEnresgistre.isin);
+                    command.Parameters.AddWithValue("@risque", actifEnresgistre.risque);
+                    command.Parameters.AddWithValue("@nom", actifEnresgistre.nom);
                     command.ExecuteNonQuery();
                 }
                 catch (SqliteException ex)
@@ -98,7 +129,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 try
                 {
                     connection.Open();
-                    string query = "DELETE FROM Actif WHERE nom=@nom;";
+                    string query = "DELETE FROM ActifEnregistre WHERE nom=@nom;";
                     var command = new SqliteCommand(query, connection);
                     command.Parameters.AddWithValue("@nom", nom);
                     command.ExecuteNonQuery();

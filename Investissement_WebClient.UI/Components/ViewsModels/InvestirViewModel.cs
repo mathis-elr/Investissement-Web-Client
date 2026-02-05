@@ -72,7 +72,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                     selectedDate,
                     tm.actif,
                     tm.quantite.HasValue ? (double?)tm.quantite.Value : null,
-                    null // prix
+                    null 
                 ))
             );
         }

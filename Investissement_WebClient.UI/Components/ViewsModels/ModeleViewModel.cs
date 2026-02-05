@@ -72,6 +72,11 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             selectedModeleEdit = "Aucun";
         }
+        
+        public void ChangeMode()
+        {
+            selectedMode = selectedMode == "Ajouter" ? "Modifier" : "Ajouter";
+        }
 
         public void AddActifModele()
         {

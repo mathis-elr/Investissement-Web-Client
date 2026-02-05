@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using YahooFinanceApi;
 
-namespace Investissement_WebClient.Data.Repository.API
+namespace Investissement_WebClient.Data.Repository.Services
 {
     public class YahooDataService : IMarketDataService
     {
@@ -18,9 +18,7 @@ namespace Investissement_WebClient.Data.Repository.API
 
             try
             {
-                // 1. C'est la magie de la bibliothèque :
-                // Elle fait UN SEUL appel pour TOUS les symboles en même temps.
-                // Pas de boucle, pas de "Rate Limit".
+                //UN SEUL appel pour TOUS les symboles en même temps.
                 IReadOnlyDictionary<string, Security> resultats =
                     await Yahoo.Symbols(symboles.ToArray()).QueryAsync();
 

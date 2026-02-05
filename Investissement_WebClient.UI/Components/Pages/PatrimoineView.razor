@@ -10,60 +10,81 @@
 @inject IJSRuntime JS
 @inject PatrimoineViewModel PVM
 
-@{
-    const string blanc = "#FFFFFF";
-
-    //paramétrage graphique Lines
-    var chartLinesOptions = new ApexChartOptions<ChartsLinesPrix>
-    {
-        Chart = new Chart
-        {
-            Height = "200%",
-            Width = "100%"
-        },
-
-        Tooltip = new Tooltip
-        {
-            Theme = Mode.Dark
-        },
-
-        //Couleurs des Lines
-        Colors = new[] { "#008FFB", "#FF4560" }.ToList(),
-
-        Xaxis = new XAxis
-        {
-            Labels = new XAxisLabels
-            {
-                Style = new()
-                {
-                    Colors = new List<string> { blanc }
-                }
-            }
-        },
-
-        Yaxis = new List<YAxis>
-        {
-            new YAxis
-            {
-                Labels = new YAxisLabels
-                {
-                    Style = new()
-                    {
-                        Colors = new List<string> { blanc }
-                    }
-                }
-            }
-        },
-
-        Legend = new Legend
-        {
-            Labels = new LegendLabels
-            {
-                Colors = blanc
-            }
-        }
-    };
-}
+@* @{ *@
+@*     const string blanc = "#FFFFFF"; *@
+@* *@
+@*     //paramétrage graphique Lines *@
+@*     var chartLinesOptions = new ApexChartOptions<ChartsLinesPrix> *@
+@*     { *@
+@*         Chart = new Chart *@
+@*         { *@
+@*             Height = "200%", *@
+@*             Width = "100%" *@
+@*         }, *@
+@* *@
+@*         Tooltip = new Tooltip *@
+@*         { *@
+@*             Theme = Mode.Dark *@
+@*         }, *@
+@* *@
+@*         //Couleurs des Lines *@
+@*         Colors = new[] { "#008FFB", "#FF4560" }.ToList(), *@
+@* *@
+@*         Xaxis = new XAxis *@
+@*         { *@
+@*             Labels = new XAxisLabels *@
+@*             { *@
+@*                 Style = new() *@
+@*                 { *@
+@*                     Colors = new List<string> { blanc } *@
+@*                 } *@
+@*             } *@
+@*         }, *@
+@* *@
+@*         Yaxis = new List<YAxis> *@
+@*         { *@
+@*             new YAxis *@
+@*             { *@
+@*                 Labels = new YAxisLabels *@
+@*                 { *@
+@*                     Style = new() *@
+@*                     { *@
+@*                         Colors = new List<string> { blanc } *@
+@*                     } *@
+@*                 } *@
+@*             } *@
+@*         }, *@
+@* *@
+@*         Legend = new Legend *@
+@*         { *@
+@*             Labels = new LegendLabels{Colors = blanc}, *@
+@*         } *@
+@*     }; *@
+@*      *@
+@*     //paramétrage graphique Pie proportion par actif *@
+@*     var chartPieProportionParActifOptions = new ApexChartOptions<ChartPieProportionParActif> *@
+@*     { *@
+@*         Chart = new Chart *@
+@*         { *@
+@*             Height = "100%", *@
+@*             Width = "50%" *@
+@*         }, *@
+@*          *@
+@*         Title = new Title *@
+@*         { *@
+@*             Text = "Proportion actif \npar rapport au portefeuille total", *@
+@*             Align = Align.Center, *@
+@*             Style = new TitleStyle{Color = blanc, FontSize = "16"}, *@
+@*         }, *@
+@*          *@
+@*         Legend = new Legend *@
+@*         { *@
+@*             Show = false, *@
+@*             // Labels = new LegendLabels{Colors = blanc}, *@
+@*             // Position = LegendPosition.Bottom *@
+@*         }, *@
+@*     }; *@
+@* } *@
 
 <PageTitle>Patrimoine</PageTitle>
 
@@ -74,32 +95,33 @@
         <span class="variation-prix @(PVM.variationPrix.StartsWith("-") ? "negative" : "positive")">@PVM.variationPrix</span>
     </div>
     <div class="patrimoine-content">
-        <ApexChart TItem="ChartsLinesPrix" 
-                   Options="chartLinesOptions">
-
-            <ApexPointSeries Items="@PVM.ListPointsLineQuantiteInvesitParDate"
-                             Name="Quantité Investit"
-                             SeriesType="SeriesType.Line"
-                             XValue="@(e => e.Date)"
-                             YValue="@(e => e.Value)" />
-
-            <ApexPointSeries Items="@PVM.ListPointsLineValeurPatrimoineParDate"
-                             Name="Valeur Actuelle"
-                             SeriesType="SeriesType.Line"
-                             XValue="@(e => e.Date)"
-                             YValue="@(e => e.Value)" />
-        </ApexChart>
+        @* <ApexChart TItem="ChartsLinesPrix"  *@
+        @*            Options="chartLinesOptions"> *@
+        @* *@
+        @*     <ApexPointSeries Items="@PVM.ListPointsLineQuantiteInvesitParDate" *@
+        @*                      Name="Quantité Investit" *@
+        @*                      SeriesType="SeriesType.Line" *@
+        @*                      XValue="@(e => e.Date)" *@
+        @*                      YValue="@(e => e.Value)" /> *@
+        @* *@
+        @*     <ApexPointSeries Items="@PVM.ListPointsLineValeurPatrimoineParDate" *@
+        @*                      Name="Valeur Actuelle" *@
+        @*                      SeriesType="SeriesType.Line" *@
+        @*                      XValue="@(e => e.Date)" *@
+        @*                      YValue="@(e => e.Value)"/> *@
+        @* </ApexChart> *@
         
-        <ApexChart Title="Proportion actif par rapport au portefeuille total" TItem="ChartPieProportionParActif">
-
-            <ApexPointSeries TItem="ChartPieProportionParActif"
-                             Items="@PVM.ListProportionParActif"
-                             SeriesType="SeriesType.Pie"
-                             XValue="@(e => e.Actif)"
-                             YValue="@(e => e.Proportion)"
-                             OrderByDescending="e=>e.Y" 
-            />
-        </ApexChart>
+        @* <ApexChart TItem="ChartPieProportionParActif" *@
+        @*            Options="chartPieProportionParActifOptions"> *@
+        @* *@
+        @*     <ApexPointSeries TItem="ChartPieProportionParActif" *@
+        @*                      Items="@PVM.ListProportionParActif" *@
+        @*                      SeriesType="SeriesType.Pie" *@
+        @*                      XValue="@(e => e.Actif)" *@
+        @*                      YValue="@(e => e.Proportion)" *@
+        @*                      OrderByDescending="e=>e.Y" *@
+        @*     /> *@
+        @* </ApexChart> *@
     </div>
     <div class="patrimoine-footer">
     </div>
@@ -107,53 +129,38 @@
 
 @code {
     private CancellationTokenSource detectionChangementPage = new CancellationTokenSource();
-    private readonly TimeSpan intervale = TimeSpan.FromSeconds(20);
-
     
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        await PVM.LoadValeurPatrimoineCourant();
+        PVM.LoadVariationPrix();
+        
+        //PVM.RecupererDonneesLineQuantiteInvestitParDate();
+        //PVM.RecupererDonneesLineValeurPatrimoineParDate();
+        //PVM.RecupererDonneesPieProportionParActif();
+        
         BoucleMajValeurPatrimoine();
-        
-        var loadingTask = PVM.LoadValeurPatrimoineCourant();
-
-        // après la fin de la recuperation de la valeur du patrimoine
-        loadingTask.ContinueWith(t =>
-        {
-            PVM.LoadVariationPrix();
-            PVM.RecupererDonneesPieProportionParActif();
-            InvokeAsync(StateHasChanged);
-        });
-        
-        return Task.CompletedTask;
     }
-    
 
     private async void BoucleMajValeurPatrimoine()
     {
-        // Récupère le jeton d'annulation
         var token = detectionChangementPage.Token;
 
-        // Boucle infinie qui s'arrêtera via le jeton si l'utilisateur navigue
+        // tant que l'utilisateur est sur la page "Patrimoine"
         while (!token.IsCancellationRequested)
         {
             try
             {
-                // 1. Attendre le délai (non-bloquant)
-                await Task.Delay(intervale, token);
-
-                // 2. Charger de nouvelles données
+                await Task.Delay(TimeSpan.FromSeconds(20), token);
+                
                 await PVM.LoadValeurPatrimoineCourant();
                 PVM.LoadVariationPrix();
-                PVM.RecupererDonneesLineQuantiteInvestitParDate();
-                PVM.RecupererDonneesLineValeurPatrimoineParDate();
-                PVM.RecupererDonneesPieProportionParActif();
-
-                // 3. Forcer le rafraîchissement de l'UI
+                //PVM.RecupererDonneesPieProportionParActif();
+                
                 await InvokeAsync(StateHasChanged);
             }
             catch (TaskCanceledException)
             {
-                //l'utilisateur a navigué on stop
                 break;
             }
             catch (Exception ex)

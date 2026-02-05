@@ -8,33 +8,14 @@
 <PageTitle>Investir</PageTitle>
 
 <div class="investir">
-    <div class="transactions">
-        <div class="transactions-header">
-            <label>Dernières transactions le @(IVM.dateDernierInvest.HasValue? IVM.dateDernierInvest.Value.ToString("dddd d MMMM yyyy") : "")</label>
-        </div>
-        <div class="transactions-content">
-            @if (IVM.ListeDernierInvestissement.Count == 0)
-            {
-                <div class="aucune-investisssement">aucune transactions trouvé, commencer à investir</div>
-            }
-            @foreach (var transaction in IVM.ListeDernierInvestissement)
-            {
-                <div class="transaction-dernier-invest">
-                    <div class="contenu-transaction">@transaction.quantite @transaction.actif à @transaction.prix €</div>
-                    <div class="contenu-transaction">+@(transaction.prix* transaction.quantite) €</div>
-                </div>
-            }
-        </div>
-    </div>
-
     <div class="investissement">
         <div class="investissement-header">
-            <label>Investissement du </label>
-            <input @bind="IVM.selectedDate" type="date" />
+            <label>Investissement du</label>
+            <input @bind="IVM.selectedDate" type="date"/>
             <label>avec le modèle</label>
             <select @bind="IVM.SelectedModele">
                 <option>Aucun</option>
-                @foreach(string modele in IVM.ListeModeles)
+                @foreach (string modele in IVM.ListeModeles)
                 {
                     <option>@modele</option>
                 }
@@ -44,37 +25,60 @@
         <br>
     
         <div class="investissement-content">
-                @foreach (var transaction in IVM.ListeTransactions)
-                {
-                    <div class="actif-investissement">
-                        <div class="line-1">
-                            <select @bind="transaction.actif">
-                                @foreach (var actif in IVM.ListeActifs)
-                                {
-                                    <option>@actif</option>
-                                }
-                            </select>
-                            <input type="button" class="dell" value="🗑️" @onclick="() =>IVM.DellActifInvest(transaction)" />
-                        </div>
-                        <input @bind="transaction.quantite" type="number" placeholder="Quantité investit" />
-                        <input @bind="transaction.prix" type="number" placeholder="Prix d'achat (€)" />
-                    </div>
-                }
-            @if(IVM.ListeActifs.Count != 0)
+            @foreach (var transaction in IVM.ListeTransactions)
             {
-            <div class="actif-investissement add" @onclick="IVM.AddActifInvest">
-                <a>+</a>
-            </div>
+                <div class="actif-investissement">
+                    <div class="header">
+                        <select @bind="transaction.actif">
+                            @foreach (var actif in IVM.ListeActifs)
+                            {
+                                <option>@actif</option>
+                            }
+                        </select>
+                        <div type="button" class="dell" @onclick="() => IVM.DellActifInvest(transaction)">✖</div>
+                    </div>
+                    <div class="content">
+                        <input @bind="transaction.quantite" placeholder="Quantité investit"/>
+                        <input @bind="transaction.prix" placeholder="Prix d'achat (€)"/>
+                    </div>
+                </div>
+            }
+            @if (IVM.ListeActifs.Count != 0)
+            {
+                <div class="actif-investissement add" @onclick="IVM.AddActifInvest">
+                    <a>+</a>
+                </div>
             }
         </div>
+        
+        @if (IVM.ListeTransactions.Count != 0)
+        {
+            <div class="investissement-footer">
+                <button @onclick="Investir" class="btn-investir">Investir</button>
+            </div>
+        }
+    </div>
     
-        <br>
-    
-        <div class="investissement-footer">
-            <input @onclick="Investir" class="btn-investir" type="button" value="Investir" />
+    <div class="transactions">
+        <div class="transactions-header">
+            @* <label>Dernières transactions le @(IVM.dateDernierInvest.HasValue? IVM.dateDernierInvest.Value.ToString("dddd d MMMM yyyy") : "")</label> *@
+            <label>Transactions</label>
+        </div>
+        <div class="transactions-content">
+            @if (IVM.ListeDernierInvestissement.Count == 0)
+            {
+                <div class="aucune-investisssement">aucune transactions trouvé, commencer à investir demain c'est déjà trop tard</div>
+            }
+            @foreach (var transaction in IVM.ListeDernierInvestissement)
+            {
+                <div class="transaction-dernier-invest">
+                    <div class="contenu-transaction">@transaction.quantite @transaction.actif à @transaction.prix €  => +@(transaction.prix* transaction.quantite) €</div>
+                </div>
+            }
         </div>
     </div>
 </div>
+
 @code{
     async Task Investir()
     {

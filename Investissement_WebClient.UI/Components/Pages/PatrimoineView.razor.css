@@ -1,8 +1,5 @@
 ﻿.patrimoine {
-    border: solid;
     border-radius: 10px;
-    border-color: white;
-    border-width: 3px;
     padding: 15px;
     width: 90%;
 }

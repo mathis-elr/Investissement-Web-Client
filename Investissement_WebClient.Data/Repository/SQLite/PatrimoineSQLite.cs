@@ -19,7 +19,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 try
                 {
                     connection.Open();
-                    string query = "SELECT symbole FROM Actif;";
+                    string query = "SELECT symbole FROM ActifEnregistre;";
                     var command = new SqliteCommand(query, connection);
                     var reader = command.ExecuteReader();
 
@@ -74,7 +74,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 try
                 {
                     connection.Open();
-                    string query = "SELECT DISTINCT Actif.nom, Actif.symbole FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif";
+                    string query = "SELECT DISTINCT ActifEnregistre.nom, ActifEnregistre.symbole FROM [Transaction] JOIN ActifEnregistre ON ActifEnregistre.nom = [Transaction].actif";
                     var command = new SqliteCommand(query, connection);
                     var reader = command.ExecuteReader();
 

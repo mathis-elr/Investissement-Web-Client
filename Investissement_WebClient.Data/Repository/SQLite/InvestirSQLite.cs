@@ -47,7 +47,7 @@ namespace Investissement_WebClient.Data.Repository.SQLite
                 try
                 {
                     connection.Open();
-                    string query = "SELECT nom FROM Actif";
+                    string query = "SELECT nom FROM ActifEnregistre";
                     var command = new SqliteCommand(query, connection);
                     var reader = command.ExecuteReader();
 
