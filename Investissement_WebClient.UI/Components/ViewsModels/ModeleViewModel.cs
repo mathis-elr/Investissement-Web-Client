@@ -1,28 +1,26 @@
 ﻿using Investissement_WebClient.Core;
-using Investissement_WebClient.Data.Modeles;
-using Investissement_WebClient.Data.Repository.Interfaces;
-using Investissement_WebClient.Data.Repository.SQLite;
 using System.Diagnostics;
-using System.Transactions;
+using Investissement_WebClient.Core.Modeles;
+using Transaction = System.Transactions.Transaction;
 
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class ModeleViewModel
     {
-        private ModeleInvest modeleInvest;
+        // private ModeleInvest modeleInvest;
 
         public List<string> ListeModes { get; set; }
         public string selectedMode { get; set; }
         public string? selectedNomModele { get; set; } = null;
         public List<string> ListeNomsActif { get; set; }
         //public List<string> ListeActifModele { get; set; }
-        public List<TransactionModele> ListeTransactionsModele { get; set; } = new List<TransactionModele>();
+        public List<CompositionModele> ListeTransactionsModele { get; set; } = new List<CompositionModele>();
         public double? selectedQuantite { get; set; } = null;
 
         private string selectedModeleEdit { get; set; }
         public List<string> ListeModeles { get; set; }
-        public List<TransactionModele> ListeTransactionsModeleEdit { get; set; } = new List<TransactionModele>();
+        public List<CompositionModele> ListeTransactionsModeleEdit { get; set; } = new List<CompositionModele>();
 
         public List<string> ListeModelesAsuppr {  get; set; } = new List<string>();
 
@@ -41,29 +39,27 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         private void LoadModes()
         {
-            ListeModes = modeleInvest.GetModes();
+            // ListeModes = modeleInvest.GetModes();
         }
 
         private void LoadNomsActif()
         {
-            ListeNomsActif = modeleInvest.GetNomsActif();
+            // ListeNomsActif = modeleInvest.GetNomsActif();
         }
 
         private void LoadModeles()
         {
-            ListeModeles = modeleInvest.GetModeles();
+            // ListeModeles = modeleInvest.GetModeles();
             selectedMode = ListeModes.First();
         }
 
         private void LoadTransactionsModele(string modele)
         {
-            ListeTransactionsModeleEdit = modeleInvest.GetTransactionsModele(modele);
+            // ListeTransactionsModeleEdit = modeleInvest.GetTransactionsModele(modele);
         }
 
         public ModeleViewModel()
         {
-            IModeleInvestSQLite _iModeleInvest = new ModeleInvestSQLite(BDDService.ConnectionString);
-            modeleInvest = new ModeleInvest(_iModeleInvest);
 
             LoadModes();
 
@@ -80,12 +76,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public void AddActifModele()
         {
-            ListeTransactionsModele.Add(new TransactionModele(selectedNomModele, ListeNomsActif.First(), null));
+            // ListeTransactionsModele.Add(new TransactionModele(selectedNomModele, ListeNomsActif.First(), null));
         }
 
-        public void DellActifModele(TransactionModele transaction)
+        public void DellActifModele()
         {
-            ListeTransactionsModele.Remove(transaction);
+            // ListeTransactionsModele.Remove(transaction);
         }
 
         public void Ajouter()
@@ -107,26 +103,26 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
 
-            foreach (TransactionModele transaction in ListeTransactionsModele)
-            {
-                transaction.modele = selectedNomModele;
-            }
+            // foreach (TransactionModele transaction in ListeTransactionsModele)
+            // {
+                // transaction.modele = selectedNomModele;
+            // }
 
-            modeleInvest.AjouterModele(ListeTransactionsModele);
+            // modeleInvest.AjouterModele(ListeTransactionsModele);
 
-            ListeTransactionsModele = [];
+            // ListeTransactionsModele = [];
             selectedNomModele = null;
             LoadModeles();
         }
 
         public void AddActifModeleEdit()
         {
-            ListeTransactionsModeleEdit.Add(new TransactionModele(selectedModeleEdit, ListeNomsActif.First(), null));
+            // ListeTransactionsModeleEdit.Add(new TransactionModele(selectedModeleEdit, ListeNomsActif.First(), null));
         }
 
-        public void DellActifModeleEdit(TransactionModele transaction)
+        public void DellActifModeleEdit()
         {
-            ListeTransactionsModeleEdit.Remove(transaction);
+            // ListeTransactionsModeleEdit.Remove(transaction);
         }
 
         public void Editer()
@@ -134,9 +130,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             hasError = false;
             errorMessage = string.Empty;
 
-            modeleInvest.EditerModele(ListeTransactionsModeleEdit);
+            // modeleInvest.EditerModele(ListeTransactionsModeleEdit);
 
-            ListeTransactionsModeleEdit = [];
+            // ListeTransactionsModeleEdit = [];
             selectedModeleEdit = "Aucun";
             LoadModeles();
         }
@@ -160,7 +156,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             foreach(string modele in ListeModelesAsuppr)
             {
-                modeleInvest.SupprimerModele(modele);
+                // modeleInvest.SupprimerModele(modele);
             }
 
             LoadModeles();

@@ -9,10 +9,15 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Investissement_WebClient.Core\Investissement_WebClient.Core.csproj" />
+    <ProjectReference Include="..\Investissement_WebClient.Data\Investissement_WebClient.Data.csproj" />
   </ItemGroup>
   
 </Project>

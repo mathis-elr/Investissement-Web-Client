@@ -1,40 +1,38 @@
 ﻿using Investissement_WebClient.Core;
-using Investissement_WebClient.Data.Modeles;
-using Investissement_WebClient.Data.Repository.Interfaces;
-using Investissement_WebClient.Data.Repository.SQLite;
 using System.Diagnostics;
+using Investissement_WebClient.Core.Modeles;
 
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class ActifViewModel
     {
-        private readonly Actif actif;
+        private readonly ActifEnregistre actif;
 
-        public ActifModele actifSelectionne { get; set; } = new ActifModele(string.Empty, string.Empty, string.Empty, string.Empty);
+        public Actif actifSelectionne { get; set; } = new();
         private string nomActifSelectionne;
 
         public string? selectedNom { get; set; } = null;
         public string? selectedSymbole { get; set; } = null;
-        public string? selectedType { get; set; } = null;
+        public ActifType? selectedType { get; set; } = null;
         public string? selectedISIN { get; set; } = null;
-        public string? selectedNvRisque { get; set; } = null;
+        public ActifRisque? selectedNvRisque { get; set; } = null;
         
         public string selectedMode { get; set; }
         public List<string> ListeModes { get; set; }
 
         public List<string>? ListeNvRisque { get; set; }
-        public List<ActifModele> ListeActifs { get; set; }
-        public List<ActifEnresgistreModele>? ListeActifsEnregistre { get; set; }
+        public List<Actif> ListeActifs { get; set; }
+        public List<ActifEnregistre>? ListeActifsEnregistre { get; set; }
         public List<string>? ListeNomsActifs { get; set; }
 
-        private ActifEnresgistreModele? selectActifModelEdit { get; set; } = null;
+        private ActifEnregistre? selectActifModelEdit { get; set; } = null;
         private string selectedActifEdit { get; set; }
         public string? selectedNomEdit { get; set; } = null;
         public string? selectedSymboleEdit { get; set; } = null;
-        public string? selectedTypeEdit { get; set; } = null;
+        public ActifType? selectedTypeEdit { get; set; } = null;
         public string? selectedISINEdit { get; set; } = null;
-        public string? selectedNvRisqueEdit { get; set; } = null;
+        public ActifRisque? selectedNvRisqueEdit { get; set; } = null;
 
         public List<string> ListeActifASuppr { get; set; } = new List<string>();
 
@@ -47,20 +45,20 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             set
             {
                 nomActifSelectionne = value;
-                actifSelectionne = ListeActifs.FirstOrDefault(a => a.nom == value);
-                switch (actifSelectionne.type)
+                actifSelectionne = ListeActifs.FirstOrDefault(a => a.Name == value);
+                switch (actifSelectionne.Type)
                 {
                     case "ETC":
-                        selectedNvRisque = "Faible";
+                        selectedNvRisque = ActifRisque.Faible;
                         break;
                     case "ETF":
-                        selectedNvRisque = "Moyen";
+                        selectedNvRisque = ActifRisque.Moyen;
                         break;
                     case "Action":
-                        selectedNvRisque = "Fort";
+                        selectedNvRisque = ActifRisque.Fort;
                         break;
                     case "Crypto":
-                        selectedNvRisque = "Fort";
+                        selectedNvRisque = ActifRisque.Fort;
                         break;
                 }
             }
@@ -74,49 +72,49 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 selectedActifEdit = value;
                 if(value != "Aucun")
                 {
-                    selectActifModelEdit = ListeActifsEnregistre.FirstOrDefault(actif => actif.nom == value);
-                    selectedNomEdit = selectActifModelEdit.nom;
-                    selectedSymboleEdit = selectActifModelEdit.symbole;
-                    selectedTypeEdit = selectActifModelEdit.type;
-                    selectedISINEdit = selectActifModelEdit.isin;
-                    selectedNvRisqueEdit = selectActifModelEdit.risque;
+                    selectActifModelEdit = ListeActifsEnregistre.FirstOrDefault(actif => actif.Nom == value);
+                    selectedNomEdit = selectActifModelEdit.Nom;
+                    selectedSymboleEdit = selectActifModelEdit.Symbole;
+                    selectedTypeEdit = selectActifModelEdit.Type;
+                    selectedISINEdit = selectActifModelEdit.Isin;
+                    selectedNvRisqueEdit = selectActifModelEdit.Risque;
                 }
                 else
                 {
                     selectActifModelEdit = null;
                     selectedNomEdit = string.Empty;
                     selectedSymboleEdit = string.Empty;
-                    selectedTypeEdit = string.Empty;
+                    selectedTypeEdit = null;
                     selectedISINEdit = null;
-                    selectedNvRisqueEdit = string.Empty;
+                    selectedNvRisqueEdit = null;
                 }
             }
         }
 
         public void LoadNvRisque()
         {
-            ListeNvRisque = actif.GetListeNvRisque();
+            // ListeNvRisque = actif.GetListeNvRisque();
         }
         public void LoadActifs()
         {
-            ListeActifs = actif.GetListeActifs();
+            // ListeActifs = actif.GetListeActifs();
         }
         public void LoadActifsEnregistre()
         {
-            ListeActifsEnregistre = actif.GetListeActifsEnresgistre();
-            ListeNomsActifs = ListeActifsEnregistre.Select(nom => nom.nom).ToList();
+            // ListeActifsEnregistre = actif.GetListeActifsEnresgistre();
+            // ListeNomsActifs = ListeActifsEnregistre.Select(nom => nom.nom).ToList();
         }
 
         public void LoadModes()
         {
-            ListeModes = actif.GetModes();
-            selectedMode = ListeModes.First();
+            // ListeModes = actif.GetModes();
+            // selectedMode = ListeModes.First();
         }
 
         public ActifViewModel() 
         {
-            IActifEnregistreSQLite Iactif = new ActifEnregistreSqLite(BDDService.ConnectionString);
-            actif = new Actif(Iactif);
+            // IActifEnregistreSQLite Iactif = new ActifEnregistreSqLite(BDDService.ConnectionString);
+            // actif = new Actif(Iactif);
 
             LoadModes();
             LoadNvRisque();
@@ -143,14 +141,14 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
 
-            ActifEnresgistreModele selectActifEnresgistreModelAdd = new ActifEnresgistreModele(selectedNom, selectedSymbole, selectedType, selectedISIN, selectedNvRisque);
-            actif.AjouterActif(selectActifEnresgistreModelAdd);
+            // ActifEnresgistreModele selectActifEnresgistreModelAdd = new ActifEnresgistreModele(selectedNom, selectedSymbole, selectedType, selectedISIN, selectedNvRisque);
+            // actif.AjouterActif(selectActifEnresgistreModelAdd);
 
             selectedNom = null;
             selectedSymbole = null;
             selectedType = null;
             selectedISIN = null;
-            selectedNvRisque = "Niveau de risque";
+            selectedNvRisque = null;
 
             LoadActifs();
         }
@@ -167,9 +165,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
 
-            ActifEnresgistreModele actifEnresgistreModifie = new ActifEnresgistreModele(selectedNomEdit, selectedSymboleEdit, selectedTypeEdit, selectedISINEdit, selectedNvRisqueEdit);
+            // ActifEnresgistreModele actifEnresgistreModifie = new ActifEnresgistreModele(selectedNomEdit, selectedSymboleEdit, selectedTypeEdit, selectedISINEdit, selectedNvRisqueEdit);
 
-            actif.ModifierActif(actifEnresgistreModifie);
+            // actif.ModifierActif(actifEnresgistreModifie);
 
             SelectedActifEdit = "Aucun";
 
@@ -180,7 +178,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             foreach(string nomActif in ListeActifASuppr)
             {
-                actif.SupprimerActif(nomActif);
+                // actif.SupprimerActif(nomActif);
             }
 
             LoadActifs();

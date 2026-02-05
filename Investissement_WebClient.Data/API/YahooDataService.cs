@@ -1,10 +1,9 @@
-﻿using Investissement_WebClient.Data.Repository.Interfaces;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using YahooFinanceApi;
 
 namespace Investissement_WebClient.Data.Repository.Services
 {
-    public class YahooDataService : IMarketDataService
+    public class YahooDataService
     {
         public async Task<Dictionary<string, double>> GetPrixActuelAsync(List<string> symboles)
         {

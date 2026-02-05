@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Investissement_WebClient.Data\Investissement_WebClient.Data.csproj" />
+    <Folder Include="InterfacesServices\" />
   </ItemGroup>
 
 </Project>
