@@ -1,4 +1,5 @@
 ﻿using Investissement_WebClient.Core.InterfacesServices;
+using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.AspNetCore.Components;
 
@@ -17,14 +18,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         
         public IEnumerable<(int Id, string Nom)> Modeles { get; set; }
         public IEnumerable<(int Id, string Nom)> ActifsEnregistre { get; set; }
-        public IEnumerable<PreparationTransaction> ActifsModele { get; set; }
+        private IEnumerable<PreparationTransaction> ActifsModele { get; set; }
         public List<PreparationTransaction> TransactionsInvestissement { get; set; } = new ();
         
-        public DateTime SelectedDate { get; set; } = DateTime.Now;
-        private int SelectedModele { get; set; }
-        public DateTime? DateDernierInvest { get; set; }
-        public bool HasError { get; set; } = false;
-        public string ErrorMessage { get; set; } = string.Empty;
+        public DateTime SelectedDateInvest { get; set; } = DateTime.Now;
+        private int? SelectedIdModele { get; set; } = null;
+        public bool HasError { get; private set; } = false;
+        public string ErrorMessage { get; private set; } = string.Empty;
         
         
         public async Task LoadData()
@@ -41,23 +41,19 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             ActifsEnregistre = await _serviceActif.GetNomActifsEnregistres();  
         }
-        // public void LoadDernierInvestissement()
-        // {
-        //     ListeDernierInvestissement = _serviceInvestir.GetDernierInvest();
-        //     dateDernierInvest = ListeDernierInvestissement?.FirstOrDefault()?.date;
-        // }
         private async Task LoadCompositionModele(int idModele)
         {
             ActifsModele = await _serviceInvestir.GetCompositionModele(idModele);
 
             TransactionsInvestissement.Clear();
             TransactionsInvestissement.AddRange(
-                ActifsModele.Select(tm => new PreparationTransaction(
-                    tm.IdActif,  
-                    tm.NomActif,  
-                    tm.Quantite,  
-                    null           
-                ))
+                ActifsModele.Select(tm => new PreparationTransaction
+                {
+                    IdActif = tm.IdActif,
+                    NomActif = tm.NomActif,
+                    Quantite = tm.Quantite,
+                    Prix = null
+                })
             );
         }
         
@@ -65,20 +61,25 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             if (int.TryParse(e?.Value.ToString(), out int idModele))
             {
-                SelectedModele = idModele;
-                await LoadCompositionModele(SelectedModele);
+                SelectedIdModele = idModele;
+                int modeleNotNull = idModele;
+                await LoadCompositionModele(modeleNotNull);
             }
         }
 
-        public void AddActifInvest()
+        public void AddTransactionInvest()
         {
-            TransactionsInvestissement.Add(new PreparationTransaction(
-                ActifsEnregistre.Select(a => a.Id).First(),
-                ActifsEnregistre.Select(a => a.Nom).First(),
-                null,
-                null));
+            var premierActif = ActifsEnregistre.FirstOrDefault();
+
+            TransactionsInvestissement.Add(new PreparationTransaction
+            {
+                IdActif = premierActif.Id,
+                NomActif = premierActif.Nom,
+                Quantite = null,
+                Prix = null
+            });
         }
-        public void DellActifInvest(PreparationTransaction transaction)
+        public void DellTransactionInvest(PreparationTransaction transaction)
         {
             TransactionsInvestissement.Remove(transaction);
         }
@@ -88,39 +89,46 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             HasError = false;
             ErrorMessage = string.Empty;
 
-            // if (ListeTransactions.Count == 0)
-            // {
-                // hasError = true;
-                // errorMessage = "Selectionner au moins un actif pour pouvoir investir";
-                // return;
-            // }
-            // if(ListeTransactions.Any(t => t.quantite == null || t.prix == null || t.quantite == 0 || t.prix == 0 || t.quantite < 0 || t.prix < 0))
-            // {
-                // hasError = true;
-                // errorMessage = "La quantité et le prix doivent être des valeur valides (supérieures à 0 et non null).";
-                // return;
-            // }
+            if (TransactionsInvestissement.Count == 0)
+            {
+                HasError = true;
+                ErrorMessage = "Selectionner au moins un actif pour pouvoir investir";
+                return;
+            }
+            if(TransactionsInvestissement.Any(t => t.Quantite == null || t.Prix == null ||  t.Quantite <= 0 || t.Prix <= 0))
+            {
+                HasError = true;
+                ErrorMessage = "La quantité et le prix doivent être des valeur valides (supérieures à 0 et non null).";
+                return;
+            }
+            if (SelectedDateInvest > DateTime.Now)
+            {
+                HasError = true;
+                ErrorMessage = "Impossible d'investir dans le futur";
+                return;
+            }
 
-            // try
-            // {
-                // investir.AddInvest(ListeTransactions);
-            // }
-            // catch (SqliteException)
-            // {
-                // hasError = true;
-                // errorMessage = "Une erreur est survenue lors de l'ajout de l'investissement.";
-                // return;
-            // }
-            // catch (Exception ex)
-            // {
-                // hasError = true;
-                // errorMessage = ex.Message;
-                // return;
-            // }
+            try
+            {
+               await  _serviceInvestir.SaveInvestissement(SelectedIdModele, SelectedDateInvest, TransactionsInvestissement);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                Console.WriteLine(ex.Message);
+                ErrorMessage = "Erreur d'insertion";
+                return;
+            }
 
-            // selectedModele = "Aucun";
-            // ListeTransactions = [];
+            SelectedIdModele = null;
+            TransactionsInvestissement = [];
             // LoadDernierInvestissement();
         }
+        
+        // public void LoadDernierInvestissement()
+        // {
+        //     ListeDernierInvestissement = _serviceInvestir.GetDernierInvest();
+        //     dateDernierInvest = ListeDernierInvestissement?.FirstOrDefault()?.date;
+        // }
     }
 }

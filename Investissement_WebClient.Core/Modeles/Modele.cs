@@ -6,9 +6,7 @@ public class Modele
     
     public string Nom { get; set; }
     
-    public ICollection<ActifEnregistre> ActifEnregistres { get; set; }
-    
     public ICollection<Investissement>? Investissements { get; set; }
     
-    public ICollection<CompositionModele>? CompositionModeles { get; set; }
+    public ICollection<CompositionModele>? Composition { get; set; }
 }

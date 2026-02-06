@@ -11,7 +11,7 @@
     <div class="investissement">
         <div class="investissement-header">
             <label>Investissement du</label>
-            <input @bind="IVM.SelectedDate" type="date"/>
+            <input @bind="IVM.SelectedDateInvest" type="date"/>
             <label>avec le modèle</label>
             <select @onchange="IVM.OnChangeModele">
                 <option>Aucun</option>
@@ -35,17 +35,17 @@
                                 <option value="@actif.Id">@actif.Nom</option>
                             }
                         </select>
-                        <div type="button" class="dell" @onclick="() => IVM.DellActifInvest(transaction)">✖</div>
+                        <div type="button" class="dell" @onclick="() => IVM.DellTransactionInvest(transaction)">✖</div>
                     </div>
                     <div class="content">
-                        @* <input @bind="transaction.Quantite" placeholder="Quantité investit"/>  *@
-                        @* <input @bind="transaction.Prix" placeholder="Prix d'achat (€)"/>  *@
+                        <input @bind="transaction.Quantite" placeholder="Quantité investit"/>
+                        <input @bind="transaction.Prix" placeholder="Prix d'achat (€)"/>
                     </div>
                 </div>
             }
             @if (IVM.ActifsEnregistre.Count() != 0)
             {
-                <div class="actif-investissement add" @onclick="IVM.AddActifInvest">
+                <div class="actif-investissement add" @onclick="IVM.AddTransactionInvest">
                     <a>+</a>
                 </div>
             }

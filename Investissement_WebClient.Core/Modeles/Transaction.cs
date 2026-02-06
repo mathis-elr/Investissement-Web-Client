@@ -8,7 +8,7 @@ public class Transaction
     
     public double Prix { get; set; }
     
-    public double Frais { get; set; }
+    public double? Frais { get; set; }
     
     public ActifEnregistre ActifEnregistre { get; set; }
     public int IdActifEnregistre { get; set; }

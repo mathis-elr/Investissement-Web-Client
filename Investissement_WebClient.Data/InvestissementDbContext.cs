@@ -69,10 +69,10 @@ public class InvestissementDbContext : DbContext
                 entity.HasKey(cm => new {cm.IdActifEnregistre,cm.IdModele});
                 
                 entity.HasOne(cm => cm.Modele)
-                    .WithMany(m => m.CompositionModeles)
+                    .WithMany(m => m.Composition)
                     .HasForeignKey(cm => cm.IdModele);
                 entity.HasOne(cm => cm.ActifEnregistre)
-                    .WithMany(a => a.CompositionModeles)
+                    .WithMany(a => a.Composition)
                     .HasForeignKey(cm => cm.IdActifEnregistre);
             });
 
@@ -83,7 +83,7 @@ public class InvestissementDbContext : DbContext
             
             entity.Property(i => i.Id)
                 .ValueGeneratedOnAdd();
-            entity.Property(i => i.dateInvest)
+            entity.Property(i => i.DateInvest)
                 .IsRequired();
             
             entity.HasOne(i => i.Modele)
@@ -104,10 +104,10 @@ public class InvestissementDbContext : DbContext
             entity.Property(t => t.Frais);
             
             entity.HasOne(t => t.Investissement)
-                .WithMany(t => t.Transactions)
+                .WithMany(i => i.Transactions)
                 .HasForeignKey(t => t.IdInvestissement);
             entity.HasOne(t => t.ActifEnregistre)
-                .WithMany()
+                .WithMany(a => a.Transactions)
                 .HasForeignKey(t => t.IdActifEnregistre);
         });
 

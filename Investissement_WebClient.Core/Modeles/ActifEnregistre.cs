@@ -14,9 +14,7 @@ public class ActifEnregistre
     
     public ActifRisque Risque { get; set; }
     
-    public ICollection<Modele>? Modeles { get; set; }
-    
     public ICollection<Transaction>? Transactions { get; set; }
     
-    public ICollection<CompositionModele>? CompositionModeles { get; set; }
+    public ICollection<CompositionModele>? Composition { get; set; }
 }
