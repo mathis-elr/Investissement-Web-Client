@@ -1,4 +1,6 @@
+using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Data;
+using Investissement_WebClient.Data.Services;
 using Investissement_WebClient.UI.Components;
 using Investissement_WebClient.UI.Components.ViewsModels;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContext<InvestissementDbContext>(options => 
+builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
 
+builder.Services.AddScoped<IServiceInvestir, ServiceInvestir>();
+builder.Services.AddScoped<IServiceActif, ServiceActif>();
+
 builder.Services.AddScoped<InvestirViewModel>();
-builder.Services.AddScoped<ActifViewModel>();
-builder.Services.AddScoped<ModeleViewModel>();
-builder.Services.AddScoped<PatrimoineViewModel>();
-builder.Services.AddScoped<BourseViewModel>();
-
-
+// builder.Services.AddScoped<ActifViewModel>();
+// builder.Services.AddScoped<ModeleViewModel>();
+// builder.Services.AddScoped<PatrimoineViewModel>();
+// builder.Services.AddScoped<BourseViewModel>();
 
 var app = builder.Build();
 
