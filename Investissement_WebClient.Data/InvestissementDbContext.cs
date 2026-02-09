@@ -116,17 +116,22 @@ public class InvestissementDbContext : DbContext
                 entity.HasKey(a => a.Id);
                 entity.Property(a => a.Id)
                     .ValueGeneratedOnAdd();
-                entity.Property(a => a.Name)
+                entity.Property(a => a.Nom)
                     .IsRequired()
                     .HasMaxLength(100);
                 entity.Property(a => a.Type)
                     .IsRequired()
-                    .HasMaxLength(10);
+                    .HasConversion<string>();
                 entity.Property(a => a.Isin)
                     .HasMaxLength(12);
+                entity.HasIndex(a => a.Isin)
+                    .IsUnique();
                 entity.Property(a => a.Symbole)
                     .IsRequired()
                     .HasMaxLength(20);
+                entity.Property(a => a.Risque)
+                    .IsRequired()
+                    .HasConversion<string>();
             });
     }
 }
