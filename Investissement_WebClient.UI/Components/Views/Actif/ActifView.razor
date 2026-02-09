@@ -1,0 +1,89 @@
+﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+
+@page "/actif"
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject ActifViewModel AVM
+
+<PageTitle>Actif</PageTitle>
+
+<div class="actif">
+    
+    <Formulaire AVM="AVM" Soumission="Soumission"></Formulaire>
+
+    <div class="mes-actif">
+        <div class="mes-actif-header">
+            <label>Actifs enregistrés</label>
+        </div>
+
+        <div class="mes-actif-content">
+            @foreach (var actif in AVM.ActifsEnregistre)
+            {
+                <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+            }
+        </div>
+
+        @if (AVM.ActifASuppr.Count != 0)
+        {
+            <div class="mes-actif-footer">
+                <button class="btn-suppr" @onclick="() => Supprimer()">Supprimer</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await AVM.LoadData();
+    }
+    
+    private async Task Soumission()
+    {
+        if (AVM.SelectedMode == "Ajouter")
+        {
+            await Ajouter();
+        }
+        else
+        {
+            await Editer();
+        }
+    }
+    
+    private async Task Ajouter()
+    {
+        await AVM.Ajouter();
+
+        if (AVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+        }
+    }
+    
+    private async Task Editer()
+    {
+        await AVM.Editer();
+
+        if (AVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Actif modifié avec succès");
+        }
+    }
+
+    private async Task Supprimer()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer cet actif ?"))
+        {
+            await AVM.Supprimer();
+
+            if (AVM.HasError)
+            {
+                await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+            }
+        }
+    }
+}

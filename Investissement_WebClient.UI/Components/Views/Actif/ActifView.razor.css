@@ -7,16 +7,14 @@
     width: 100%;
     box-sizing: border-box;
 }
-
 .actif:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.ajout-edit-actif,
 .mes-actif{
     display:flex;
     flex-direction: column;
-    gap:20px;
+    gap:50px;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
@@ -24,74 +22,12 @@
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
 }
-
-.ajout-edit-actif:hover,
 .mes-actif:hover{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     opacity: 1;
 }
 
-.choix-ajout-edit-actif{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    gap:30px;
-    margin: 0 auto;
-    padding:10px;
-    width:fit-content;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3px);
-    border: 1px solid rgba(173, 173, 173, 0.3);
-    border-radius: 50px;
-}
-
-.mode-ajout,
-.mode-edit{
-    border-radius: 50px;
-    transition: all 0.3s ease-in-out;
-}
-
-.mode-ajout:hover,
-.mode-edit:hover,
-.choix-ajout-edit-actif .selected{
-    background-color: rgba(45, 41, 41);
-    border-radius: 50px;
-    padding : 10px;
-    cursor: pointer;
-}
-
-.ajout-actif,
-.edit-actif{
-    display:flex;
-    flex-direction: column;
-    gap:30px;
-}
-
-.ajout-actif-header,
-.edit-actif-header{
-    display:inline-block;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 18px;
-    margin-top: 4px;
-    padding-right:10px;
-}
-
-.ajout-actif-content,
-.edit-actif-content{
-    display: grid;
-    gap: 20px;
-}
-
-
-.ajout-actif-footer,
-.edit-actif-footer,
 .mes-actif-footer{
-    display: flex;
-    justify-content: flex-end;
-}
-
-.edit-actif-footer {
     display: flex;
     justify-content: flex-end;
 }
@@ -131,9 +67,8 @@
     border-color: red;
 }
 
-.btn-ajout,
-.btn-edit,
 .btn-suppr{
+    background-color: red;
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
@@ -144,17 +79,6 @@
     transition: ease-in-out 0.3s;
 }
 
-.btn-ajout,
-.btn-edit{
-    background-color: goldenrod;
-}
-
-.btn-suppr{
-    background-color: red;
-}
-
-.btn-ajout:hover,
-.btn-edit:hover,
 .btn-suppr:hover{
     transform: translate(-2px,2px);
     color: black;
