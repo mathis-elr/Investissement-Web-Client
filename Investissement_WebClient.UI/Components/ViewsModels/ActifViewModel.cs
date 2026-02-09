@@ -1,198 +1,150 @@
 ﻿using Investissement_WebClient.Core;
 using System.Diagnostics;
+using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
+using Microsoft.AspNetCore.Components;
 
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class ActifViewModel
     {
-        private readonly ActifEnregistre actif;
-
-        public Actif actifSelectionne { get; set; } = new();
-        private string nomActifSelectionne;
-
-        public string? selectedNom { get; set; } = null;
-        public string? selectedSymbole { get; set; } = null;
-        public ActifType? selectedType { get; set; } = null;
-        public string? selectedISIN { get; set; } = null;
-        public ActifRisque? selectedNvRisque { get; set; } = null;
+        private readonly IServiceActif _serviceActif;
         
-        public string selectedMode { get; set; }
-        public List<string> ListeModes { get; set; }
-
-        public List<string>? ListeNvRisque { get; set; }
-        public List<Actif> ListeActifs { get; set; }
-        public List<ActifEnregistre>? ListeActifsEnregistre { get; set; }
-        public List<string>? ListeNomsActifs { get; set; }
-
-        private ActifEnregistre? selectActifModelEdit { get; set; } = null;
-        private string selectedActifEdit { get; set; }
-        public string? selectedNomEdit { get; set; } = null;
-        public string? selectedSymboleEdit { get; set; } = null;
-        public ActifType? selectedTypeEdit { get; set; } = null;
-        public string? selectedISINEdit { get; set; } = null;
-        public ActifRisque? selectedNvRisqueEdit { get; set; } = null;
-
-        public List<string> ListeActifASuppr { get; set; } = new List<string>();
-
-        public bool hasError { get; set; } = false;
-        public string errorMessage { get; set; } = string.Empty;
-
-        public string NomActifSelectionne
+        public string SelectedMode { get; set; } = "Ajouter";
+        
+        public Actif SelectedActif { get; set; } = new Actif();
+        
+        public ActifEnregistre SelectedActifEdit { get; set; } = new ActifEnregistre();
+        
+        public IEnumerable<string> NiveauxRisqueActif { get; } = Enum.GetNames(typeof(ActifRisque));
+        public IEnumerable<string> TypesActif { get; } = Enum.GetNames(typeof(ActifType));
+        public IEnumerable<(int Id, string Nom)> ActifsDisponibles { get; set; } = [];
+        public IEnumerable<(int Id, string Nom)> ActifsEnregistre { get; set; } = [];
+        public List<int> ActifASuppr { get; set; } = [];
+        
+        public bool HasError { get; set; } = false;
+        public string ErrorMessage { get; set; } = string.Empty;
+        
+        
+        public ActifViewModel(IServiceActif  serviceActif) 
         {
-            get { return nomActifSelectionne; }
-            set
+            _serviceActif = serviceActif;
+        }
+        
+        
+        private async Task LoadActifsEnregistre()
+        {
+            ActifsEnregistre = await _serviceActif.GetActifsEnregistres();
+        }
+
+        private async Task LoadActifsDisponibles()
+        {
+            ActifsDisponibles = await _serviceActif.GetActifsDisponibles();
+        }
+
+        private async Task LoadActif(int idActif)
+        {
+            SelectedActif = await _serviceActif.GetActifDisponible(idActif);
+        }
+        
+        private async Task LoadActifEdit(int idActif)
+        {
+            SelectedActifEdit = await _serviceActif.GetActifEnregistre(idActif);
+        }
+
+        public async Task LoadData()
+        {
+            await LoadActifsDisponibles();
+            await LoadActifsEnregistre();
+        }
+
+        public async Task OnChangeActif(ChangeEventArgs e)
+        {
+            if(int.TryParse(e?.Value.ToString(), out int idActif))
             {
-                nomActifSelectionne = value;
-                actifSelectionne = ListeActifs.FirstOrDefault(a => a.Name == value);
-                switch (actifSelectionne.Type)
-                {
-                    case "ETC":
-                        selectedNvRisque = ActifRisque.Faible;
-                        break;
-                    case "ETF":
-                        selectedNvRisque = ActifRisque.Moyen;
-                        break;
-                    case "Action":
-                        selectedNvRisque = ActifRisque.Fort;
-                        break;
-                    case "Crypto":
-                        selectedNvRisque = ActifRisque.Fort;
-                        break;
-                }
+                await LoadActif(idActif);
+            }
+            else
+            {
+                SelectedActif = new Actif();
             }
         }
 
-        public string SelectedActifEdit
+        public async Task OnChangeActifEdit(ChangeEventArgs e)
         {
-            get {  return selectedActifEdit; }
-            set
+            if(int.TryParse(e?.Value.ToString(), out int idActifEdit))
             {
-                selectedActifEdit = value;
-                if(value != "Aucun")
-                {
-                    selectActifModelEdit = ListeActifsEnregistre.FirstOrDefault(actif => actif.Nom == value);
-                    selectedNomEdit = selectActifModelEdit.Nom;
-                    selectedSymboleEdit = selectActifModelEdit.Symbole;
-                    selectedTypeEdit = selectActifModelEdit.Type;
-                    selectedISINEdit = selectActifModelEdit.Isin;
-                    selectedNvRisqueEdit = selectActifModelEdit.Risque;
-                }
-                else
-                {
-                    selectActifModelEdit = null;
-                    selectedNomEdit = string.Empty;
-                    selectedSymboleEdit = string.Empty;
-                    selectedTypeEdit = null;
-                    selectedISINEdit = null;
-                    selectedNvRisqueEdit = null;
-                }
+                await LoadActifEdit(idActifEdit);
             }
-        }
-
-        public void LoadNvRisque()
-        {
-            // ListeNvRisque = actif.GetListeNvRisque();
-        }
-        public void LoadActifs()
-        {
-            // ListeActifs = actif.GetListeActifs();
-        }
-        public void LoadActifsEnregistre()
-        {
-            // ListeActifsEnregistre = actif.GetListeActifsEnresgistre();
-            // ListeNomsActifs = ListeActifsEnregistre.Select(nom => nom.nom).ToList();
-        }
-
-        public void LoadModes()
-        {
-            // ListeModes = actif.GetModes();
-            // selectedMode = ListeModes.First();
-        }
-
-        public ActifViewModel() 
-        {
-            // IActifEnregistreSQLite Iactif = new ActifEnregistreSqLite(BDDService.ConnectionString);
-            // actif = new Actif(Iactif);
-
-            LoadModes();
-            LoadNvRisque();
-            LoadActifsEnregistre();
-            LoadActifs();
-
-            selectedActifEdit = "Aucun";
+            else
+            {
+                SelectedActifEdit = new ActifEnregistre();
+            }
         }
 
         public void ChangeMode()
         {
-            selectedMode = selectedMode == "Ajouter" ? "Modifier" : "Ajouter";
+            SelectedMode = SelectedMode == "Ajouter" ? "Modifier" : "Ajouter";
         }
 
-        public void Ajouter()
+        public async Task Ajouter()
         {
-            hasError = false;
-            errorMessage = string.Empty;
+            HasError = false;
+            ErrorMessage = string.Empty;
 
-            if(selectedNom == null|| selectedSymbole == null || selectedType == null || selectedNvRisque == null)
+            if(SelectedActif.Nom == null|| SelectedActif.Symbole == null || SelectedActif.Type == null)
             {
-                hasError = true;
-                errorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir ajouter un actif.";
+                HasError = true;
+                ErrorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir ajouter un actif.";
                 return;
             }
+            
+            await _serviceActif.AjouterActif(SelectedActif);
 
-            // ActifEnresgistreModele selectActifEnresgistreModelAdd = new ActifEnresgistreModele(selectedNom, selectedSymbole, selectedType, selectedISIN, selectedNvRisque);
-            // actif.AjouterActif(selectActifEnresgistreModelAdd);
+            SelectedActif = new Actif();
 
-            selectedNom = null;
-            selectedSymbole = null;
-            selectedType = null;
-            selectedISIN = null;
-            selectedNvRisque = null;
-
-            LoadActifs();
+            await LoadActifsEnregistre();
+            await LoadActifsDisponibles();
         }
 
-        public void Editer()
+        public async Task Editer()
         {
-            hasError = false;
-            errorMessage = string.Empty;
+            HasError = false;
+            ErrorMessage = string.Empty;
 
-            if (selectedNomEdit == null || selectedSymboleEdit == null || selectedTypeEdit == null || selectedNvRisqueEdit == null)
+            if (SelectedActifEdit.Nom == null || SelectedActifEdit.Symbole == null || SelectedActifEdit.Type == null || SelectedActifEdit.Risque == null)
             {
-                hasError = true;
-                errorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir modifier un actif.";
+                HasError = true;
+                ErrorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir modifier un actif.";
                 return;
             }
+            
+            await _serviceActif.ModifierActif(SelectedActifEdit);
 
-            // ActifEnresgistreModele actifEnresgistreModifie = new ActifEnresgistreModele(selectedNomEdit, selectedSymboleEdit, selectedTypeEdit, selectedISINEdit, selectedNvRisqueEdit);
+            SelectedActifEdit = new ActifEnregistre();
 
-            // actif.ModifierActif(actifEnresgistreModifie);
-
-            SelectedActifEdit = "Aucun";
-
-            LoadActifs();
+            await LoadActifsEnregistre();
+            await LoadActifsDisponibles();
         }
 
-        public void Supprimer()
+        public async Task Supprimer()
         {
-            foreach(string nomActif in ListeActifASuppr)
-            {
-                // actif.SupprimerActif(nomActif);
-            }
+            await _serviceActif.SupprimerActifs(ActifASuppr);
 
-            LoadActifs();
+           await LoadActifsEnregistre();
+           await LoadActifsDisponibles();
         }
 
-        public void ChangerEtatSuppression(string nom)
+        public void ChangerEtatSuppression(int id)
         {
-            if(ListeActifASuppr.Contains(nom))
+            if(ActifASuppr.Contains(id))
             {
-                ListeActifASuppr.Remove(nom);
+                ActifASuppr.Remove(id);
             }
             else
             {
-                ListeActifASuppr.Add(nom);
+                ActifASuppr.Add(id);
             }
         }
     }

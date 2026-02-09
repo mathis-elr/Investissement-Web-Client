@@ -1,5 +1,4 @@
-﻿
-@using Investissement_WebClient.Core.Modeles
+﻿@using Investissement_WebClient.Core.Modeles
 @using Investissement_WebClient.UI.Components.ViewsModels;
 
 @page "/actif"
@@ -9,145 +8,200 @@
 
 <PageTitle>Actif</PageTitle>
 
-@* <div class="actif"> *@
-@*     <div class="ajout-edit-actif"> *@
-@*         <div class="choix-ajout-edit-actif"> *@
-@*             <div class="mode-ajout @(AVM.selectedMode == "Ajouter" ? "selected" : "")" @onclick="AVM.ChangeMode"> *@
-@*                 <label>Ajouter</label> *@
-@*             </div> *@
-@*             <div class="mode-edit @(AVM.selectedMode == "Modifier" ? "selected" : "")" @onclick="AVM.ChangeMode"> *@
-@*                 <label>Modifier</label> *@
-@*             </div> *@
-@*         </div> *@
-@*          *@
-@*         @switch (AVM.selectedMode) *@
-@*         { *@
-@*             case "Ajouter": *@
-@*                 <div class="ajout-actif"> *@
-@*                     <div class="ajout-actif-header"> *@
-@*                         <label>Disponibles :</label> *@
-@*                         <select @bind="AVM.NomActifSelectionne"> *@
-@*                         <option>Aucun</option> *@
-@*                             @foreach (Actif actif in AVM.ListeActifs) *@
-@*                             { *@
-@*                                 <option>@actif.Name</option> *@
-@*                             } *@
-@*                         </select> *@
-@*                     </div> *@
-@*                     <div class="ajout-actif-content"> *@
-@*                         <input type="text" @bind="AVM.actifSelectionne.Name" placeholder="Nom"/> *@
-@*                         <input type="text" @bind="AVM.actifSelectionne.Type" placeholder="Type"/> *@
-@*                         <input type="text" @bind="AVM.actifSelectionne.Isin" placeholder="ISIN"/> *@
-@*                         <input type="text" @bind="AVM.actifSelectionne.Symbole" placeholder="Symbole"/> *@
-@*                         <select @bind="AVM.selectedNvRisque"> *@
-@*                             <option disabled selected>Niveau de risque</option> *@
-@*                             @foreach (string item in AVM.ListeNvRisque) *@
-@*                             { *@
-@*                                 <option>@item</option> *@
-@*                             } *@
-@*                         </select> *@
-@*                     </div> *@
-@* *@
-@*                     <div class="ajout-actif-footer"> *@
-@*                         <button class="btn-ajout" @onclick="Ajouter">Ajouter</button> *@
-@*                     </div> *@
-@*                 </div> *@
-@* *@
-@*                 break; *@
-@* *@
-@*             case "Modifier": *@
-@*                 <div class="edit-actif-header"> *@
-@*                     <label>Enregistrés </label> *@
-@*                     <select @bind="AVM.SelectedActifEdit"> *@
-@*                         <option>Aucun</option> *@
-@*                         @foreach (var actif in AVM.ListeNomsActifs) *@
-@*                         { *@
-@*                             <option value="@actif">@actif</option> *@
-@*                         } *@
-@*                     </select> *@
-@*                 </div> *@
-@*                 <div class="edit-actif-content"> *@
-@*                     @if (AVM.SelectedActifEdit != "Aucun") *@
-@*                     { *@
-@*                         <input disabled type="text" @bind="AVM.selectedNomEdit" placeholder="Nom"/> *@
-@*                         <input type="text" @bind="AVM.selectedSymboleEdit" placeholder="Symbole"/> *@
-@*                         <input type="text" @bind="AVM.selectedTypeEdit" placeholder="Type"/> *@
-@*                         <input type="text" @bind="AVM.selectedISINEdit" placeholder="ISIN"/> *@
-@*                         <select @bind="AVM.selectedNvRisqueEdit"> *@
-@*                             @foreach (var item in AVM.ListeNvRisque) *@
-@*                             { *@
-@*                                 <option>@item</option> *@
-@*                             } *@
-@*                         </select> *@
-@*                     } *@
-@*                 </div> *@
-@*                 <div class="edit-actif-footer"> *@
-@*                     @if (AVM.SelectedActifEdit != "Aucun") *@
-@*                     { *@
-@*                         <button class="btn-edit" @onclick="Editer">Modifier</button> *@
-@*                     } *@
-@*                 </div> *@
-@*                 break; *@
-@*         } *@
-@*     </div> *@
-@*      *@
-@*     <div class="mes-actif"> *@
-@*         <div class="mes-actif-header"> *@
-@*             <label>Actifs enregistrés</label> *@
-@*         </div> *@
-@*          *@
-@*         <div class="mes-actif-content"> *@
-@*             @foreach (var actif in AVM.ListeActifsEnregistre) *@
-@*             { *@
-@*                 <span type="text" class="un-actif @(AVM.ListeActifASuppr.Contains(actif.Nom) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Nom)">@actif.Nom</span> *@
-@*             } *@
-@*         </div> *@
-@* *@
-@*         @if (AVM.ListeActifASuppr.Count != 0) *@
-@*         { *@
-@*             <div class="mes-actif-footer"> *@
-@*                 <button class="btn-suppr" @onclick="() => Supprimer()">Supprimer</button> *@
-@*             </div> *@
-@*         } *@
-@*     </div> *@
-@* </div> *@
-@* *@
-@* @code{ *@
-@* *@
-@*     async Task Ajouter() *@
-@*     { *@
-@*         AVM.Ajouter(); *@
-@* *@
-@*         if (AVM.hasError) *@
-@*         { *@
-@*             await JS.InvokeVoidAsync("alert", AVM.errorMessage); *@
-@*         } *@
-@*     } *@
-@* *@
-@*     async Task Editer() *@
-@*     { *@
-@*         AVM.Editer(); *@
-@* *@
-@*         if (AVM.hasError) *@
-@*         { *@
-@*             await JS.InvokeVoidAsync("alert", AVM.errorMessage); *@
-@*         } *@
-@*         else *@
-@*         { *@
-@*             await JS.InvokeVoidAsync("alert", "Actif modifié avec succès"); *@
-@*         } *@
-@*     } *@
-@* *@
-@*     async Task Supprimer() *@
-@*     { *@
-@*         if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer cet actif ?")) *@
-@*         { *@
-@*             AVM.Supprimer(); *@
-@* *@
-@*             if (AVM.hasError) *@
-@*             { *@
-@*                 await JS.InvokeVoidAsync("alert", AVM.errorMessage); *@
-@*             } *@
-@*         } *@
-@*     } *@
-@* } *@
+<div class="actif">
+    <div class="ajout-edit-actif">
+        <div class="choix-ajout-edit-actif">
+            <div class="mode-ajout @(AVM.SelectedMode == "Ajouter" ? "selected" : "")" @onclick="AVM.ChangeMode">
+                <label>Ajouter</label>
+            </div>
+            <div class="mode-edit @(AVM.SelectedMode == "Modifier" ? "selected" : "")" @onclick="AVM.ChangeMode">
+                <label>Modifier</label>
+            </div>
+        </div>
+
+        @switch (AVM.SelectedMode)
+        {
+            case "Ajouter":
+                <div class="ajout-actif">
+                    <div class="ajout-actif-header">
+                        <label>Disponibles :</label>
+                        <select @onchange="AVM.OnChangeActif">
+                            <option value="">Aucun</option>
+                            @foreach (var actif in AVM.ActifsDisponibles)
+                            {
+                                <option value="@actif.Id">@actif.Nom</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <EditForm Model="AVM.SelectedActif" OnValidSubmit="Ajouter">
+                        <DataAnnotationsValidator />
+
+                        <div class="ajout-actif-content">
+                            <InputText @bind-Value="AVM.SelectedActif.Nom" placeholder="Nom"/>
+                            <ValidationMessage For="@(() => AVM.SelectedActif.Nom)" />
+                            
+                            <InputText @bind-Value="AVM.SelectedActif.Symbole" placeholder="Symbole"/>
+                            <ValidationMessage For="@(() => AVM.SelectedActif.Symbole)" />
+                            
+                            <InputSelect @bind-Value="AVM.SelectedActif.Type">
+                                <option value="" disabled selected>Type</option>
+                                @foreach (var t in AVM.TypesActif) { <option>@t</option> }
+                            </InputSelect>
+
+                            <InputText @bind-Value="AVM.SelectedActif.Isin" placeholder="ISIN"/>
+                            <ValidationMessage For="@(() => AVM.SelectedActif.Isin)" />
+
+                            <InputSelect @bind-Value="AVM.SelectedActif.Risque">
+                                <option value="" disabled selected>Risque</option>
+                                @foreach (var t in AVM.NiveauxRisqueActif) { <option>@t</option> }
+                            </InputSelect>
+                        </div>
+
+                        <div class="ajout-actif-footer">
+                            <button type="submit" class="btn-ajout">Ajouter</button>
+                        </div>
+                    </EditForm>
+                </div>
+
+                break;
+
+            case "Modifier":
+                <div class="edit-actif-header">
+                    <label>Enregistrés </label>
+                    <select @onchange="AVM.OnChangeActifEdit">
+                        <option value="" disabled selected>Selectionner un actif</option>
+                        @foreach (var actif in AVM.ActifsEnregistre)
+                        {
+                            <option value="@actif.Id">@actif.Nom</option>
+                        }
+                    </select>
+                </div>
+                
+                <EditForm Model="AVM.SelectedActifEdit" OnValidSubmit="Editer">
+                    <DataAnnotationsValidator />
+
+                    <div class="ajout-actif-content">
+                        <InputText @bind-Value="AVM.SelectedActifEdit.Nom" placeholder="Nom"/>
+                        <ValidationMessage For="@(() => AVM.SelectedActifEdit.Nom)" />
+                            
+                        <InputText @bind-Value="AVM.SelectedActifEdit.Symbole" placeholder="Symbole"/>
+                        <ValidationMessage For="@(() => AVM.SelectedActifEdit.Symbole)" />
+                            
+                        <InputSelect @bind-Value="AVM.SelectedActifEdit.Type">
+                            <option value="" disabled selected>Type</option>
+                            @foreach (var t in AVM.TypesActif) { <option>@t</option> }
+                        </InputSelect>
+
+                        <InputText @bind-Value="AVM.SelectedActifEdit.Isin" placeholder="ISIN"/>
+                        <ValidationMessage For="@(() => AVM.SelectedActifEdit.Isin)" />
+
+                        <InputSelect @bind-Value="AVM.SelectedActifEdit.Risque">
+                            <option value="" disabled selected>Risque</option>
+                            @foreach (var t in AVM.NiveauxRisqueActif) { <option>@t</option> }
+                        </InputSelect>
+                    </div>
+
+                    <div class="ajout-actif-footer">
+                        <button type="submit" class="btn-ajout">Modifier</button>
+                    </div>
+                </EditForm>
+                
+                @*     <div class="edit-actif-content"> *@
+                @*         <input type="text" @bind="AVM.SelectedActifEdit.Nom" placeholder="Nom"/> *@
+                @*         <input type="text" @bind="AVM.SelectedActifEdit.Symbole" placeholder="Symbole"/> *@
+                @*         <input type="text" @bind="AVM.SelectedActifEdit.Type" placeholder="Type"/> *@
+                @*         <input type="text" @bind="AVM.SelectedActifEdit.Isin" placeholder="ISIN"/> *@
+                @*          *@
+                @*         <EditForm Model="AVM.SelectedActif"> *@
+                @*             $1$ Étape 1 : Activer le moteur de validation #1# *@
+                @*             <DataAnnotationsValidator /> *@
+                @* *@
+                @*             <div class="form-group"> *@
+                @*                 <label>ISIN</label> *@
+                @*                 <InputText @bind-Value="AVM.SelectedActif.Isin" /> *@
+                @* *@
+                @*                 $1$ Étape 2 : L'élément "expres" pour afficher l'erreur du champ #1# *@
+                @*                 <ValidationMessage For="@(() => AVM.SelectedActif.Isin)" /> *@
+                @*             </div> *@
+                @*         </EditForm> *@
+                @*          *@
+                @*         <select @bind="AVM.SelectedActifEdit.Risque"> *@
+                @*             @foreach (var item in AVM.NiveauxRisqueActif) *@
+                @*             { *@
+                @*                 <option>@item</option> *@
+                @*             } *@
+                @*         </select> *@
+                @*     </div> *@
+                @* <div class="edit-actif-footer"> *@
+                @*     <button class="btn-edit" @onclick="Editer">Modifier</button> *@
+                @* </div> *@
+
+                break;
+        }
+    </div>
+
+    <div class="mes-actif">
+        <div class="mes-actif-header">
+            <label>Actifs enregistrés</label>
+        </div>
+
+        <div class="mes-actif-content">
+            @foreach (var actif in AVM.ActifsEnregistre)
+            {
+                <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+            }
+        </div>
+
+        @if (AVM.ActifASuppr.Count != 0)
+        {
+            <div class="mes-actif-footer">
+                <button class="btn-suppr" @onclick="() => Supprimer()">Supprimer</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await AVM.LoadData();
+    }
+    
+    async Task Ajouter()
+    {
+        AVM.Ajouter();
+
+        if (AVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+        }
+    }
+
+    async Task Editer()
+    {
+        AVM.Editer();
+
+        if (AVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Actif modifié avec succès");
+        }
+    }
+
+    async Task Supprimer()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer cet actif ?"))
+        {
+            AVM.Supprimer();
+
+            if (AVM.HasError)
+            {
+                await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+            }
+        }
+    }
+}

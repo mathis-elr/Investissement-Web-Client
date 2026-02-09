@@ -39,7 +39,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
         private async Task LoadActifs()
         {
-            ActifsEnregistre = await _serviceActif.GetNomActifsEnregistres();  
+            ActifsEnregistre = await _serviceActif.GetActifsEnregistres();  
         }
         private async Task LoadCompositionModele(int idModele)
         {
