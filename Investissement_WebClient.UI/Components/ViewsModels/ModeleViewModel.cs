@@ -1,5 +1,4 @@
 ﻿using Investissement_WebClient.Core.InterfacesServices;
-using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.AspNetCore.Components;
 
@@ -7,13 +6,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class ModeleViewModel
     {
-        private readonly IServiceActif  _serviceActif;
-        private readonly IServiceInvestir _serviceInvestir;
+        private readonly IActifService  _actifService;
+        private readonly IModeleService _modeleService;
         
-        public ModeleViewModel(IServiceActif serviceActif, IServiceInvestir serviceInvestir)
+        public ModeleViewModel(IActifService actifService, ITransactionService transactionService, IModeleService modeleService)
         {
-            _serviceActif = serviceActif;
-            _serviceInvestir = serviceInvestir;
+            _actifService = actifService;
+            _modeleService = modeleService;
         }
         
         public string SelectedMode { get; set; } = "Ajouter";
@@ -42,17 +41,17 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
         private async Task LoadModeles()
         {
-            Modeles = await _serviceInvestir.GetModeles();
+            Modeles = await _modeleService.GetModeles();
         }
 
         private async Task LoadCompositionModele(int idModele)
         {
-            CompositionModeleEdit = await _serviceInvestir.GetCompositionModele(idModele);
+            CompositionModeleEdit = await _modeleService.GetCompositionModele(idModele);
         }
 
         private async Task LoadActifsEnregistres()
         {
-            ActifEnregistre = await _serviceActif.GetActifsEnregistres();
+            ActifEnregistre = await _actifService.GetActifsEnregistres();
         }
         
         public void ChangeMode()
@@ -117,7 +116,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             VerificationModeleCorrect();
                 
-            await _serviceInvestir.AjouterModele(SelectedItem.Nom, CompositionModele);
+            await _modeleService.AjouterModele(SelectedItem.Nom, CompositionModele);
 
             CompositionModele.Clear();
             SelectedItem = new  ItemDto();
@@ -128,7 +127,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             VerificationModeleCorrect();
 
-            await _serviceInvestir.UpdateModele(SelectedItemEdit, CompositionModeleEdit);
+            await _modeleService.UpdateModele(SelectedItemEdit, CompositionModeleEdit);
 
             CompositionModeleEdit.Clear();
             SelectedItemEdit = new ItemDto();
@@ -143,7 +142,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task Supprimer()
         {
-            await _serviceInvestir.DeleteModeles(ModelesAsuppr);
+            await _modeleService.DeleteModeles(ModelesAsuppr);
             
             ModelesAsuppr.Clear();
             await LoadModeles();

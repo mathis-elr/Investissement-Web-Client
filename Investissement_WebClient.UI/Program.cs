@@ -1,5 +1,6 @@
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Data;
+using Investissement_WebClient.Data.Background;
 using Investissement_WebClient.Data.Services;
 using Investissement_WebClient.UI.Components;
 using Investissement_WebClient.UI.Components.ViewsModels;
@@ -11,19 +12,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-//builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
-//    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
+builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
 
-builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
+// builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
+//     options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
 
-builder.Services.AddScoped<IServiceInvestir, ServiceInvestir>();
-builder.Services.AddScoped<IServiceActif, ServiceActif>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IActifService, ActifService>();
+builder.Services.AddScoped<IModeleService, ModeleService>();
+builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();
+builder.Services.AddScoped<IYahooDataService, YahooDataService>();
+
 builder.Services.AddScoped<InvestirViewModel>();
 builder.Services.AddScoped<ActifViewModel>();
 builder.Services.AddScoped<ModeleViewModel>();
-// builder.Services.AddScoped<PatrimoineViewModel>();
-// builder.Services.AddScoped<BourseViewModel>();
+builder.Services.AddScoped<PatrimoineViewModel>();
+builder.Services.AddScoped<BourseViewModel>();
+
+builder.Services.AddHostedService<PatrimoineWorker>();
 
 var app = builder.Build();
 

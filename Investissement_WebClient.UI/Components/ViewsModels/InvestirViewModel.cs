@@ -6,13 +6,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class InvestirViewModel
     {
-        private readonly IServiceInvestir _serviceInvestir;
-        private readonly IServiceActif _serviceActif;
+        private readonly ITransactionService _transactionService;
+        private readonly IActifService _actifService;
+        private readonly IModeleService _modeleService;
         
-        public InvestirViewModel(IServiceInvestir serviceInvestir, IServiceActif serviceActif)
+        public InvestirViewModel(ITransactionService transactionService, IActifService actifService, IModeleService modeleService)
         {
-            _serviceInvestir = serviceInvestir; 
-            _serviceActif = serviceActif;
+            _transactionService = transactionService; 
+            _actifService = actifService;
+            _modeleService = modeleService;
         }
         
         public IEnumerable<ItemDto> Modeles { get; set; }
@@ -34,15 +36,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         private async Task LoadModeles()
         {
-            Modeles = await _serviceInvestir.GetModeles();
+            Modeles = await _modeleService.GetModeles();
         }
         private async Task LoadActifs()
         {
-            ActifsEnregistre = await _serviceActif.GetActifsEnregistres();  
+            ActifsEnregistre = await _actifService.GetActifsEnregistres();  
         }
         private async Task LoadCompositionModele(int idModele)
         {
-            ActifsModele = await _serviceInvestir.GetCompositionModele(idModele);
+            ActifsModele = await _modeleService.GetCompositionModele(idModele);
 
             TransactionsInvestissement.Clear();
             TransactionsInvestissement.AddRange(
@@ -109,7 +111,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             try
             {
-               await  _serviceInvestir.SaveInvestissement(SelectedIdModele, SelectedDateInvest, TransactionsInvestissement);
+               await  _transactionService.SaveInvestissement(SelectedIdModele, SelectedDateInvest, TransactionsInvestissement);
             }
             catch (Exception ex)
             {

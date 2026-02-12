@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Data.Services;
 
-public class ServiceInvestir : IServiceInvestir
+public class ModeleService : IModeleService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
 
-    public ServiceInvestir(IDbContextFactory<InvestissementDbContext> dbContext)
+    public ModeleService(IDbContextFactory<InvestissementDbContext> dbContext)
     {
         _dbFactory = dbContext;
     }
@@ -36,43 +36,16 @@ public class ServiceInvestir : IServiceInvestir
         var compositionModele = await context.CompositionModeles
             .Where(cm => cm.IdModele == idModele)
             .Select(cm => new TransactionDto()
-                {
-                    IdActif = cm.IdActifEnregistre, 
-                    NomActif = cm.ActifEnregistre.Nom, 
-                    Quantite = cm.Quantite, 
-                })
+            {
+                IdActif = cm.IdActifEnregistre, 
+                NomActif = cm.ActifEnregistre.Nom, 
+                Quantite = cm.Quantite, 
+            })
             .ToListAsync();
         
         return compositionModele;
     }
-
-    public async Task SaveInvestissement(int? idModele, DateTime dateInvest,
-        List<TransactionDto> transactionsInvestissement)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        
-        Investissement investissement = new()
-        {
-            DateInvest = dateInvest,
-            IdModele = idModele
-        };
-        
-        context.Investissements.Add(investissement);
-        await context.SaveChangesAsync();
-
-        var transactions = transactionsInvestissement.Select(pt => new Transaction
-        {
-            Quantite = pt.Quantite ?? 0,
-            Prix = pt.Prix ?? 0,
-            Frais = null,
-            IdActifEnregistre = pt.IdActif,
-            IdInvestissement = investissement.Id,
-        }).ToList();
-        
-        await context.Transactions.AddRangeAsync(transactions);
-        await context.SaveChangesAsync();
-    }
-
+    
     public async Task AjouterModele(string nomModele, List<TransactionDto> compositionModele)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();

@@ -1,176 +1,74 @@
-﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+﻿@using System.Globalization
+@using Investissement_WebClient.UI.Components.ViewsModels;
 
 @using ApexCharts
-@* @implements IDisposable *@
+@using Investissement_WebClient.Core.Modeles.DTO
 
 @page "/patrimoine"
 @rendermode InteractiveServer
 @inject IJSRuntime JS
 @inject PatrimoineViewModel PVM
 
-@* @{ *@
-@*     const string blanc = "#FFFFFF"; *@
-@* *@
-@*     //paramétrage graphique Lines *@
-@*     var chartLinesOptions = new ApexChartOptions<ChartsLinesPrix> *@
-@*     { *@
-@*         Chart = new Chart *@
-@*         { *@
-@*             Height = "200%", *@
-@*             Width = "100%" *@
-@*         }, *@
-@* *@
-@*         Tooltip = new Tooltip *@
-@*         { *@
-@*             Theme = Mode.Dark *@
-@*         }, *@
-@* *@
-@*         //Couleurs des Lines *@
-@*         Colors = new[] { "#008FFB", "#FF4560" }.ToList(), *@
-@* *@
-@*         Xaxis = new XAxis *@
-@*         { *@
-@*             Labels = new XAxisLabels *@
-@*             { *@
-@*                 Style = new() *@
-@*                 { *@
-@*                     Colors = new List<string> { blanc } *@
-@*                 } *@
-@*             } *@
-@*         }, *@
-@* *@
-@*         Yaxis = new List<YAxis> *@
-@*         { *@
-@*             new YAxis *@
-@*             { *@
-@*                 Labels = new YAxisLabels *@
-@*                 { *@
-@*                     Style = new() *@
-@*                     { *@
-@*                         Colors = new List<string> { blanc } *@
-@*                     } *@
-@*                 } *@
-@*             } *@
-@*         }, *@
-@* *@
-@*         Legend = new Legend *@
-@*         { *@
-@*             Labels = new LegendLabels{Colors = blanc}, *@
-@*         } *@
-@*     }; *@
-@*      *@
-@*     //paramétrage graphique Pie proportion par actif *@
-@*     var chartPieProportionParActifOptions = new ApexChartOptions<ChartPieProportionParActif> *@
-@*     { *@
-@*         Chart = new Chart *@
-@*         { *@
-@*             Height = "100%", *@
-@*             Width = "50%" *@
-@*         }, *@
-@*          *@
-@*         Title = new Title *@
-@*         { *@
-@*             Text = "Proportion actif \npar rapport au portefeuille total", *@
-@*             Align = Align.Center, *@
-@*             Style = new TitleStyle{Color = blanc, FontSize = "16"}, *@
-@*         }, *@
-@*          *@
-@*         Legend = new Legend *@
-@*         { *@
-@*             Show = false, *@
-@*             // Labels = new LegendLabels{Colors = blanc}, *@
-@*             // Position = LegendPosition.Bottom *@
-@*         }, *@
-@*     }; *@
-@* } *@
 
 <PageTitle>Patrimoine</PageTitle>
 
-@* <div class="patrimoine"> *@
-@*     <div class="patrimoine-header"> *@
-@*         <div class="total-label">Total</div> *@
-@*         <span class="valeur-totale-courante">@PVM.valeurPatrimoineCourante €</span> *@
-@*         <span class="variation-prix @(PVM.variationPrix.StartsWith("-") ? "negative" : "positive")">@PVM.variationPrix</span> *@
-@*     </div> *@
-@*     <div class="patrimoine-content"> *@
-        @* <ApexChart TItem="ChartsLinesPrix"  *@
-        @*            Options="chartLinesOptions"> *@
-        @* *@
-        @*     <ApexPointSeries Items="@PVM.ListPointsLineQuantiteInvesitParDate" *@
-        @*                      Name="Quantité Investit" *@
-        @*                      SeriesType="SeriesType.Line" *@
-        @*                      XValue="@(e => e.Date)" *@
-        @*                      YValue="@(e => e.Value)" /> *@
-        @* *@
-        @*     <ApexPointSeries Items="@PVM.ListPointsLineValeurPatrimoineParDate" *@
-        @*                      Name="Valeur Actuelle" *@
-        @*                      SeriesType="SeriesType.Line" *@
-        @*                      XValue="@(e => e.Date)" *@
-        @*                      YValue="@(e => e.Value)"/> *@
-        @* </ApexChart> *@
+<div class="patrimoine">
+    <div class="patrimoine-infos">
+        <span class="valeur-totale-courante">
+            <label>
+                @(PVM.ValeurPatrimoineCourante == 0 ? "-----,--" : PVM.ValeurPatrimoineCourante.ToString("C2", CultureInfo.GetCultureInfo("fr-FR")))
+            </label>
+        </span>
+        <div class="variations-prix">
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix24H)">
+                <label>24H :</label>
+                    @(PVM.Variations.VariationPrix24H == 0 ? "--,--" : @PVM.Variations.VariationPrix24H) %
+            </span>
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix7J)">
+                <label>7J :</label>
+                @(PVM.Variations.VariationPrix7J == 0 ? "--,--" : @PVM.Variations.VariationPrix7J) %
+            </span>
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix1M)">
+                <label>1M :</label>
+                    @(PVM.Variations.VariationPrix1M == 0 ? "--,--" : @PVM.Variations.VariationPrix1M) %
+            </span>
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix1A)">
+                <label>1A :</label>
+                    @(PVM.Variations.VariationPrix1A == 0 ? "--,--" : @PVM.Variations.VariationPrix1A) %
+            </span>
+        </div>
+    </div>
+    
+    <div class="patrimoine-content">
+        <div class="patrimoine-candle">
+            <ApexChart TItem="ValeurPatrimoine"
+                       XAxisType="XAxisType.Datetime">
+
+                <ApexCandleSeries TItem="ValeurPatrimoine"
+                                  Items="PVM.ValeursPatrimoine"
+                                  Name="Apex Stock Price"
+                                  XValue="@(e => e.Date)"
+                                  Open="@(e => e.Open)"
+                                  High="@(e => e.High)"
+                                  Low="@(e => e.Low)"
+                                  Close="@(e => e.Close)"
+                                  OrderByDescending="e => e.X"/>
+            </ApexChart>
+        </div>
         
-        @* <ApexChart TItem="ChartPieProportionParActif" *@
-        @*            Options="chartPieProportionParActifOptions"> *@
-        @* *@
-        @*     <ApexPointSeries TItem="ChartPieProportionParActif" *@
-        @*                      Items="@PVM.ListProportionParActif" *@
-        @*                      SeriesType="SeriesType.Pie" *@
-        @*                      XValue="@(e => e.Actif)" *@
-        @*                      YValue="@(e => e.Proportion)" *@
-        @*                      OrderByDescending="e=>e.Y" *@
-        @*     /> *@
-        @* </ApexChart> *@
-@*     </div> *@
-@*     <div class="patrimoine-footer"> *@
-@*     </div> *@
-@* </div> *@
-@* *@
-@* @code { *@
-@*     private CancellationTokenSource detectionChangementPage = new CancellationTokenSource(); *@
-@*      *@
-@*     protected override async Task OnInitializedAsync() *@
-@*     { *@
-@*         await PVM.LoadValeurPatrimoineCourant(); *@
-@*         PVM.LoadVariationPrix(); *@
-@*          *@
-@*         //PVM.RecupererDonneesLineQuantiteInvestitParDate(); *@
-@*         //PVM.RecupererDonneesLineValeurPatrimoineParDate(); *@
-@*         //PVM.RecupererDonneesPieProportionParActif(); *@
-@*          *@
-@*         BoucleMajValeurPatrimoine(); *@
-@*     } *@
-@* *@
-@*     private async void BoucleMajValeurPatrimoine() *@
-@*     { *@
-@*         var token = detectionChangementPage.Token; *@
-@* *@
-@*         // tant que l'utilisateur est sur la page "Patrimoine" *@
-@*         while (!token.IsCancellationRequested) *@
-@*         { *@
-@*             try *@
-@*             { *@
-@*                 await Task.Delay(TimeSpan.FromSeconds(20), token); *@
-@*                  *@
-@*                 await PVM.LoadValeurPatrimoineCourant(); *@
-@*                 PVM.LoadVariationPrix(); *@
-@*                 //PVM.RecupererDonneesPieProportionParActif(); *@
-@*                  *@
-@*                 await InvokeAsync(StateHasChanged); *@
-@*             } *@
-@*             catch (TaskCanceledException) *@
-@*             { *@
-@*                 break; *@
-@*             } *@
-@*             catch (Exception ex) *@
-@*             { *@
-@*                 Console.WriteLine($"Erreur de rafraîchissement des prix: {ex.Message}"); *@
-@*             } *@
-@*         } *@
-@*     } *@
-@* *@
-@*     public void Dispose() *@
-@*     { *@
-@*         detectionChangementPage.Cancel(); *@
-@*         detectionChangementPage.Dispose(); *@
-@*     } *@
-@* } *@
+        <div class="patrimoine-pies">
+            
+        </div>
+    </div>
+    
+    <div class="patrimoine-footer">
+        
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await PVM.LoadData();
+    }
+}

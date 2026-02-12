@@ -3,7 +3,7 @@ using Investissement_WebClient.Core.Modeles.DTO;
 
 namespace Investissement_WebClient.Core.InterfacesServices;
 
-public interface IServiceActif
+public interface IActifService
 {
     Task<IEnumerable<ItemDto>> GetActifsEnregistres();
     

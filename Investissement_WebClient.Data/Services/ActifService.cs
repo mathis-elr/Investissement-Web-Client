@@ -4,11 +4,11 @@ using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Data.Services;
-public class ServiceActif : IServiceActif
+public class ActifService : IActifService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
 
-    public ServiceActif(IDbContextFactory<InvestissementDbContext> dbContext)
+    public ActifService(IDbContextFactory<InvestissementDbContext> dbContext)
     {
         _dbFactory = dbContext;
     }

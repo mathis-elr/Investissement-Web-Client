@@ -10,7 +10,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class ActifViewModel
     {
-        private readonly IServiceActif _serviceActif;
+        private readonly IActifService _actifService;
         
         public string SelectedMode { get; set; } = "Ajouter";
         
@@ -28,30 +28,30 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public string ErrorMessage { get; set; } = string.Empty;
         
         
-        public ActifViewModel(IServiceActif  serviceActif) 
+        public ActifViewModel(IActifService  actifService) 
         {
-            _serviceActif = serviceActif;
+            _actifService = actifService;
         }
         
         
         private async Task LoadActifsEnregistre()
         {
-            ActifsEnregistre = await _serviceActif.GetActifsEnregistres();
+            ActifsEnregistre = await _actifService.GetActifsEnregistres();
         }
 
         private async Task LoadActifsDisponibles()
         {
-            ActifsDisponibles = await _serviceActif.GetActifsDisponibles();
+            ActifsDisponibles = await _actifService.GetActifsDisponibles();
         }
 
         private async Task LoadActif(int idActif)
         {
-            SelectedActif = await _serviceActif.GetActifDisponible(idActif);
+            SelectedActif = await _actifService.GetActifDisponible(idActif);
         }
         
         private async Task LoadActifEdit(int idActif)
         {
-            SelectedActifEdit = await _serviceActif.GetActifEnregistre(idActif);
+            SelectedActifEdit = await _actifService.GetActifEnregistre(idActif);
         }
 
         public async Task LoadData()
@@ -101,7 +101,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
             
-            await _serviceActif.AjouterActif(SelectedActif);
+            await _actifService.AjouterActif(SelectedActif);
 
             SelectedActif = new Actif();
 
@@ -121,7 +121,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
             
-            await _serviceActif.ModifierActif(SelectedActifEdit);
+            await _actifService.ModifierActif(SelectedActifEdit);
 
             SelectedActifEdit = new ActifEnregistre();
 
@@ -131,7 +131,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task Supprimer()
         { 
-            await _serviceActif.SupprimerActifs(ActifASuppr);
+            await _actifService.SupprimerActifs(ActifASuppr);
 
             ActifASuppr.Clear();
             await LoadActifsEnregistre();

@@ -1,15 +1,15 @@
 ﻿using System.Diagnostics;
+using Investissement_WebClient.Core.InterfacesServices;
 using YahooFinanceApi;
 
-namespace Investissement_WebClient.Data.Repository.Services
+namespace Investissement_WebClient.Data.Services
 {
-    public class YahooDataService
+    public class YahooDataService : IYahooDataService
     {
         public async Task<Dictionary<string, double>> GetPrixActuelAsync(List<string> symboles)
         {
             var dictionnairePrix = new Dictionary<string, double>();
-
-            // S'il n'y a rien à demander, on retourne le dictionnaire vide
+            
             if (symboles == null || !symboles.Any())
             {
                 return dictionnairePrix;
@@ -20,8 +20,7 @@ namespace Investissement_WebClient.Data.Repository.Services
                 //UN SEUL appel pour TOUS les symboles en même temps.
                 IReadOnlyDictionary<string, Security> resultats =
                     await Yahoo.Symbols(symboles.ToArray()).QueryAsync();
-
-                // 2. On traite les résultats
+                
                 foreach (var symbole in symboles)
                 {
                     if (resultats.TryGetValue(symbole, out Security data))

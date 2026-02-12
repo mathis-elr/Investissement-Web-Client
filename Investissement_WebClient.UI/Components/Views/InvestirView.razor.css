@@ -36,8 +36,7 @@
 }
 
 .investissement-content {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 15px;
 }
 
@@ -88,7 +87,7 @@
 }
 
     .dell:hover {
-       rotate: 90deg;
+        rotate: 90deg;
         background-color: rgb(255, 0, 0);
     }
 
@@ -96,8 +95,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 265px;
-    height: 174px;
+    width: 100%;
+    height: 160px;
     font-size: 50px;
     color: goldenrod;
     border: 2px dashed goldenrod;

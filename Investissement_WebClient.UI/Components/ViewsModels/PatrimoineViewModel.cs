@@ -1,45 +1,48 @@
-﻿using Investissement_WebClient.Data.Repository.Services;
-using Investissement_WebClient.Core;
+﻿using Investissement_WebClient.Core.InterfacesServices;
+using Investissement_WebClient.Core.Modeles.DTO;
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class PatrimoineViewModel
     {
-        // private readonly Patrimoine patrimoine;
-        public string valeurPatrimoineCourante { get; set; } = "-- ----,--";
-        public string variationPrix { get; set; } = "00,00";
-
-        // public List<ChartsLinesPrix> ListPointsLineQuantiteInvesitParDate { get; set; }
-        // public List<ChartsLinesPrix> ListPointsLineValeurPatrimoineParDate { get; set; }
-        // public List<ChartPieProportionParActif> ListProportionParActif { get; set; }
-
-        public PatrimoineViewModel()
+        private readonly IPatrimoineService _patrimoineService;
+        
+        public PatrimoineViewModel(IPatrimoineService patrimoineService)
         {
-            // IPatrimoineSQLite iPatrimoine = new PatrimoineSQLite(BDDService.ConnectionString);
-            // IMarketDataService iMarketDataService = new YahooDataService();
-            // patrimoine = new Patrimoine(iPatrimoine, iMarketDataService);
+            _patrimoineService = patrimoineService;
         }
         
-        public async Task LoadValeurPatrimoineCourant()
-        {
-            // valeurPatrimoineCourante = await patrimoine.GetValeurPatrimoineCourant();
-        }
-        public void LoadVariationPrix()
-        {
-            // variationPrix = patrimoine.GetVariationPrix();
-        }
+        public double ValeurPatrimoineCourante { get; set; }
+        public VariationsDto Variations { get; set; } = new VariationsDto();
+        public IEnumerable<ValeurPatrimoine> ValeursPatrimoine { get; set; } = [];
         
-        public void RecupererDonneesLineQuantiteInvestitParDate()
+        
+        private async Task LoadValeurPatrimoineCourante()
         {
-            // ListPointsLineQuantiteInvesitParDate = patrimoine.GetQuantiteInvestitParDate();
+            ValeurPatrimoineCourante = await _patrimoineService.CalculerValeurPatrimoineCourante();
         }
-        public void RecupererDonneesLineValeurPatrimoineParDate()
+
+        private async Task LoadVariationsPrix()
         {
-            // ListPointsLineValeurPatrimoineParDate = patrimoine.GetValeurPatrimoineParDate();
+           Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante);
         }
-        public void RecupererDonneesPieProportionParActif()
+
+        public async Task LoadData()
         {
-            // ListProportionParActif = patrimoine.GetProportionParActif();
+            await LoadValeurPatrimoineCourante();
+            await LoadVariationsPrix();
+        }
+
+        public string DeterminerSigne(double variationPrix)
+        {
+            var v = Math.Round(variationPrix, 2);
+    
+            return v switch
+            {
+                > 0 => "positive",
+                < 0 => "negative",
+                _   => "neutre"
+            };
         }
     }
 }

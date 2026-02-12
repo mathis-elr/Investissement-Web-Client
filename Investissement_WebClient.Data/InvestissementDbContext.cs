@@ -21,6 +21,9 @@ public class InvestissementDbContext : DbContext
     public DbSet<Transaction> Transactions { get; set; }
     
     public DbSet<Actif> Actifs { get; set; }
+    
+    public DbSet<HistoriquePatrimoine>  HistoriquePatrimoine { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -132,6 +135,17 @@ public class InvestissementDbContext : DbContext
                 entity.Property(a => a.Risque)
                     .IsRequired()
                     .HasConversion<string>();
-            });
+        });
+
+        modelBuilder.Entity<HistoriquePatrimoine>(entity =>
+        {
+            entity.HasKey(h => h.Id);
+            entity.Property(h => h.Id)
+                .ValueGeneratedOnAdd();
+            entity.Property(h => h.Date)
+                .IsRequired();
+            entity.Property(h => h.Valeur)
+                .IsRequired();
+        });
     }
 }

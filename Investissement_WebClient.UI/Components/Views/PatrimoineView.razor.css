@@ -1,31 +1,70 @@
 ﻿.patrimoine {
-    border-radius: 10px;
-    padding: 15px;
-    width: 90%;
+    display: grid;
+    grid-template-rows: auto 1fr; 
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
 }
 
-.patrimoine-header {
+.patrimoine-infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
     color:white;
+    padding:15px;
+    gap:5px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    opacity: 0.8;
+    width:fit-content;
+    transition: all 0.3s ease-in-out;
 }
 
-.total-label {
-    font-size: 20px;
-    font-weight: normal;
-}
-
-.valeur-totale-courante {
+.valeur-totale-courante label {
+    line-height: 1;
     font-size: 30px;
     font-weight: bold;
 }
 
-.variation-prix {
-    font-size: 18px;
+.variations-prix{
+    display: flex;
+    gap:20px;
 }
 
-.positive{
+.variation-prix label {
+    font-size: 14px;
+    font-weight: normal;
+    color: grey;
+}
+
+.variation-prix.neutre{
+    color:grey;
+}
+
+.variation-prix.positive{
     color:green;
 }
 
-.negative {
+.variation-prix.negative {
     color:red;
+}
+
+
+.patrimoine-content {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+    opacity: 0.8;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.patrimoine-infos:hover,
+.patrimoine-content:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    opacity: 1;
 }

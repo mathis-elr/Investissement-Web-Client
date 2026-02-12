@@ -104,6 +104,7 @@
     width: 25px;
     height: 25px;
     border-radius: 100%;
+    background-color: rgba(255,0,0,0.7);
     color: rgb(45, 41, 41);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3px);
