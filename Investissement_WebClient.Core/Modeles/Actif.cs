@@ -7,7 +7,7 @@ public class Actif : IActif
     public int Id { get; set; }
     
     [Required(ErrorMessage = "Nom requis.")]
-    public string Nom { get; set; } 
+    public string Nom { get; set; } = null!;
     
     [Required(ErrorMessage = "Type requis.")]
     public ActifType? Type { get; set; } 
@@ -17,7 +17,7 @@ public class Actif : IActif
     public string? Isin { get; set; } 
     
     [Required(ErrorMessage = "Symbole requis.")]
-    public string Symbole { get; set; }
+    public string Symbole { get; set; } = null!;
     
     [Required(ErrorMessage = "Niveau de risque requis.")]
     public ActifRisque? Risque { get; set; }

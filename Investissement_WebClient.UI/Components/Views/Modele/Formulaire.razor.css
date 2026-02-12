@@ -1,35 +1,28 @@
-﻿.modele {
-    display:grid;
-    grid-template-columns:7fr 3fr;
-    gap:30px;
-    padding: 20px;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.modele:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.ajout-edit-modele,
-.mes-modele{
-    display:flex;
+.ajout-edit-modele {
+    display: flex;
     flex-direction: column;
-    gap:20px;
+    gap: 50px;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
+    opacity: 0.8;
+    height: 100%;
+    min-height: 0;
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
-    opacity: 0.8;
 }
 
-.ajout-edit-modele:hover,
-.mes-modele:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    opacity: 1;
-}
+    .ajout-edit-modele:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
+
+    .ajout-edit-modele form {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto; 
+    }
 
 .choix-ajout-edit-modele{
     display:flex;
@@ -60,25 +53,15 @@
     cursor: pointer;
 }
 
-.ajout-modele,
-.edit-modele{
-    display:flex;
-    flex-direction: column;
-    gap:30px;
-}
-
-.ajout-modele-header,
-.edit-modele-header{
-    display:inline-block;
+.ajout-edit-header{
+    display:inline-flex;
+    align-items: center;
+    gap:10px;
     font-size: 20px;
     font-weight: bold;
-    margin-bottom: 18px;
-    margin-top: 4px;
-    padding-right:10px;
 }
 
-.ajout-modele-content,
-.edit-modele-content{
+.ajout-edit-content{
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -152,51 +135,13 @@
     border: solid goldenrod;
 }
 
-.ajout-modele-footer,
-.edit-modele-footer,
-.mes-modele-footer{
+.ajout-edit-footer{
     display: flex;
     justify-content: flex-end;
 }
 
-.mes-modele-header {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.mes-modele-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.un-modele {
-    border: solid 2px rgb(82, 72, 72);
-    font-size: 20px;
-    padding: 5px;
-    margin: 5px;
-    border-radius: 5px;
-    transition: ease-in-out 0.3s;
-}
-
-.un-modele:hover {
-    border:dashed 2px;
-    border-color: red;
-    cursor: pointer;
-}
-
-.un-modele.active {
-    border-color: red;
-}
-
-.un-modele.active:hover {
-    border: solid 2px;
-    border-color: red;
-}
-
-.btn-ajout,
-.btn-edit,
-.btn-suppr{
+.btn {
+    background-color: goldenrod;
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
@@ -206,19 +151,7 @@
     cursor: pointer;
     transition: ease-in-out 0.3s;
 }
-
-.btn-ajout,
-.btn-edit{
-    background-color: goldenrod;
-}
-
-.btn-suppr{
-    background-color: red;
-}
-
-.btn-ajout:hover,
-.btn-edit:hover,
-.btn-suppr:hover{
+.btn:hover{
     transform: translate(-2px,2px);
     color: black;
 }

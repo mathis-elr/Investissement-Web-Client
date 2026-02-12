@@ -1,5 +1,6 @@
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
+using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Data.Services;
@@ -12,26 +13,34 @@ public class ServiceActif : IServiceActif
         _dbFactory = dbContext;
     }
 
-    public async Task<IEnumerable<(int Id, string Nom)>> GetActifsDisponibles()
+    public async Task<IEnumerable<ItemDto>> GetActifsDisponibles()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
         var actifs = await context.Actifs
-            .Select(a => new {a.Id,a.Nom})
+            .Select(a => new ItemDto
+            {
+                Id = a.Id,
+                Nom = a.Nom,
+            })
             .ToListAsync();
         
-        return actifs.Select(a => (a.Id, a.Nom));
+        return actifs;
     }
     
-    public async Task<IEnumerable<(int Id, string Nom)>> GetActifsEnregistres()
+    public async Task<IEnumerable<ItemDto>> GetActifsEnregistres()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
         var actifs = await context.ActifEnregistres
-            .Select(a => new {a.Id, a.Nom})
+            .Select(a => new ItemDto
+            {
+                Id = a.Id,
+                Nom = a.Nom,
+            })
             .ToListAsync();
         
-        return actifs.Select(a => (a.Id, a.Nom));
+        return actifs;
     }
 
     public async Task<Actif> GetActifDisponible(int idActif)

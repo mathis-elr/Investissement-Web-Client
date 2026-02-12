@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
+using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.AspNetCore.Components;
 
 
@@ -19,8 +20,8 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         
         public IEnumerable<string> NiveauxRisqueActif { get; } = Enum.GetNames(typeof(ActifRisque));
         public IEnumerable<string> TypesActif { get; } = Enum.GetNames(typeof(ActifType));
-        public IEnumerable<(int Id, string Nom)> ActifsDisponibles { get; set; } = [];
-        public IEnumerable<(int Id, string Nom)> ActifsEnregistre { get; set; } = [];
+        public IEnumerable<ItemDto> ActifsDisponibles { get; set; } = [];
+        public IEnumerable<ItemDto> ActifsEnregistre { get; set; } = [];
         public List<int> ActifASuppr { get; set; } = [];
         
         public bool HasError { get; set; } = false;
@@ -129,11 +130,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
 
         public async Task Supprimer()
-        {
+        { 
             await _serviceActif.SupprimerActifs(ActifASuppr);
 
-           await LoadActifsEnregistre();
-           await LoadActifsDisponibles();
+            ActifASuppr.Clear();
+            await LoadActifsEnregistre();
+            await LoadActifsDisponibles();
         }
 
         public void ChangerEtatSuppression(int id)

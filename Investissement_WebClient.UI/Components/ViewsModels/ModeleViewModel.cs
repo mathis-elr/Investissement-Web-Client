@@ -1,165 +1,152 @@
-﻿using Investissement_WebClient.Core;
-using System.Diagnostics;
+﻿using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
-using Transaction = System.Transactions.Transaction;
-
+using Investissement_WebClient.Core.Modeles.DTO;
+using Microsoft.AspNetCore.Components;
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class ModeleViewModel
     {
-        // private ModeleInvest modeleInvest;
-
-        public List<string> ListeModes { get; set; }
-        public string selectedMode { get; set; }
-        public string? selectedNomModele { get; set; } = null;
-        public List<string> ListeNomsActif { get; set; }
-        //public List<string> ListeActifModele { get; set; }
-        public List<CompositionModele> ListeTransactionsModele { get; set; } = new List<CompositionModele>();
-        public double? selectedQuantite { get; set; } = null;
-
-        private string selectedModeleEdit { get; set; }
-        public List<string> ListeModeles { get; set; }
-        public List<CompositionModele> ListeTransactionsModeleEdit { get; set; } = new List<CompositionModele>();
-
-        public List<string> ListeModelesAsuppr {  get; set; } = new List<string>();
-
-        public bool hasError { get; set; } = false;
-        public string errorMessage { get; set; } = string.Empty;
-
-        public string SelectedModeleEdit
+        private readonly IServiceActif  _serviceActif;
+        private readonly IServiceInvestir _serviceInvestir;
+        
+        public ModeleViewModel(IServiceActif serviceActif, IServiceInvestir serviceInvestir)
         {
-            get { return selectedModeleEdit; }
-            set
-            {
-                selectedModeleEdit = value;
-                LoadTransactionsModele(selectedModeleEdit);
-            }
+            _serviceActif = serviceActif;
+            _serviceInvestir = serviceInvestir;
+        }
+        
+        public string SelectedMode { get; set; } = "Ajouter";
+        
+        public IEnumerable<ItemDto> Modeles { get; set; } = [];
+        
+        public ItemDto SelectedItem { get; set; } = new ItemDto();
+        public ItemDto SelectedItemEdit { get; set; } = new  ItemDto();
+
+        public List<TransactionDto> CompositionModele { get; set; } = [];
+        public List<TransactionDto> CompositionModeleEdit { get; set; } = [];
+
+        public IEnumerable<ItemDto> ActifEnregistre { get; set; } = [];
+
+        public List<int> ModelesAsuppr { get; set; } = [];
+
+        public bool HasError { get; set; } = false;
+        public string ErrorMessage { get; set; } = string.Empty;
+        
+        
+
+        public async Task LoadData()
+        {
+            await LoadModeles();
+            await LoadActifsEnregistres();
+        }
+        private async Task LoadModeles()
+        {
+            Modeles = await _serviceInvestir.GetModeles();
         }
 
-        private void LoadModes()
+        private async Task LoadCompositionModele(int idModele)
         {
-            // ListeModes = modeleInvest.GetModes();
+            CompositionModeleEdit = await _serviceInvestir.GetCompositionModele(idModele);
         }
 
-        private void LoadNomsActif()
+        private async Task LoadActifsEnregistres()
         {
-            // ListeNomsActif = modeleInvest.GetNomsActif();
-        }
-
-        private void LoadModeles()
-        {
-            // ListeModeles = modeleInvest.GetModeles();
-            selectedMode = ListeModes.First();
-        }
-
-        private void LoadTransactionsModele(string modele)
-        {
-            // ListeTransactionsModeleEdit = modeleInvest.GetTransactionsModele(modele);
-        }
-
-        public ModeleViewModel()
-        {
-
-            LoadModes();
-
-            LoadNomsActif();
-            LoadModeles();
-
-            selectedModeleEdit = "Aucun";
+            ActifEnregistre = await _serviceActif.GetActifsEnregistres();
         }
         
         public void ChangeMode()
         {
-            selectedMode = selectedMode == "Ajouter" ? "Modifier" : "Ajouter";
+            SelectedMode = SelectedMode == "Ajouter" ? "Modifier" : "Ajouter";
         }
 
-        public void AddActifModele()
+        public async Task OnChangeModeleEdit(ChangeEventArgs e)
         {
-            // ListeTransactionsModele.Add(new TransactionModele(selectedNomModele, ListeNomsActif.First(), null));
-        }
-
-        public void DellActifModele()
-        {
-            // ListeTransactionsModele.Remove(transaction);
-        }
-
-        public void Ajouter()
-        {
-            hasError = false;
-            errorMessage = string.Empty;
-
-            if(selectedNomModele == null)
+            if(int.TryParse(e?.Value.ToString(), out int idModeleEdit))
             {
-                hasError = true;
-                errorMessage = "Entrez un nom pour votre modèle";
-                return;
-            }
-
-            if(ListeModeles.Contains(selectedNomModele))
-            {
-                hasError = true;
-                errorMessage = "Ce nom de modele existe déjà";
-                return;
-            }
-
-            // foreach (TransactionModele transaction in ListeTransactionsModele)
-            // {
-                // transaction.modele = selectedNomModele;
-            // }
-
-            // modeleInvest.AjouterModele(ListeTransactionsModele);
-
-            // ListeTransactionsModele = [];
-            selectedNomModele = null;
-            LoadModeles();
-        }
-
-        public void AddActifModeleEdit()
-        {
-            // ListeTransactionsModeleEdit.Add(new TransactionModele(selectedModeleEdit, ListeNomsActif.First(), null));
-        }
-
-        public void DellActifModeleEdit()
-        {
-            // ListeTransactionsModeleEdit.Remove(transaction);
-        }
-
-        public void Editer()
-        {
-            hasError = false;
-            errorMessage = string.Empty;
-
-            // modeleInvest.EditerModele(ListeTransactionsModeleEdit);
-
-            // ListeTransactionsModeleEdit = [];
-            selectedModeleEdit = "Aucun";
-            LoadModeles();
-        }
-
-        public void ChangerEtatSuppression(string modele)
-        {
-            if (ListeModelesAsuppr.Contains(modele))
-            {
-                ListeModelesAsuppr.Remove(modele);
+                await LoadCompositionModele(idModeleEdit);
+                SelectedItemEdit =  new ItemDto
+                {
+                   Id = idModeleEdit, 
+                   Nom = Modeles.First(m => m.Id == idModeleEdit).Nom
+                };
             }
             else
             {
-                ListeModelesAsuppr.Add(modele);
+                SelectedItemEdit = new ItemDto();
             }
         }
-
-        public void Supprimer()
+        
+        public void AddActifModele()
         {
-            hasError = false;
-            errorMessage = string.Empty;
+            (SelectedMode == "Ajouter" ? CompositionModele : CompositionModeleEdit).Add(new TransactionDto());
+        }
 
-            foreach(string modele in ListeModelesAsuppr)
+        public void DellActifModele(TransactionDto preparationTransaction)
+        {
+            (SelectedMode == "Ajouter" ? CompositionModele : CompositionModeleEdit).Remove(preparationTransaction);
+        }
+
+        private void VerificationModeleCorrect()
+        {
+            HasError = true;
+
+            if (string.IsNullOrWhiteSpace(SelectedItem.Nom))
             {
-                // modeleInvest.SupprimerModele(modele);
+                ErrorMessage = "Entrez un nom pour votre modèle";
+                return;
             }
 
-            LoadModeles();
+            if (Modeles.Any(m => m.Nom == SelectedItem.Nom && m.Id != SelectedItem.Id))
+            {
+                ErrorMessage = "Un modèle de même nom existe déjà";
+                return;
+            }
+
+            if (CompositionModele.Where(t => t.IdActif > 0).GroupBy(t => t.IdActif).Any(g => g.Count() > 1))
+            {
+                ErrorMessage = "Vous avez sélectionné plusieurs fois le même actif.";
+                return;
+            }
+
+            HasError = false;
+            ErrorMessage = string.Empty;
+        }
+
+        public async Task Ajouter()
+        {
+            VerificationModeleCorrect();
+                
+            await _serviceInvestir.AjouterModele(SelectedItem.Nom, CompositionModele);
+
+            CompositionModele.Clear();
+            SelectedItem = new  ItemDto();
+            await LoadModeles();
+        }
+
+        public async Task Editer()
+        {
+            VerificationModeleCorrect();
+
+            await _serviceInvestir.UpdateModele(SelectedItemEdit, CompositionModeleEdit);
+
+            CompositionModeleEdit.Clear();
+            SelectedItemEdit = new ItemDto();
+            SelectedMode = "Ajouter";
+            await LoadModeles();
+        }
+
+        public void ChangerEtatSuppression(int idModele)
+        {
+            if (!ModelesAsuppr.Remove(idModele)) ModelesAsuppr.Add(idModele);
+        }
+
+        public async Task Supprimer()
+        {
+            await _serviceInvestir.DeleteModeles(ModelesAsuppr);
+            
+            ModelesAsuppr.Clear();
+            await LoadModeles();
         }
     }
 }

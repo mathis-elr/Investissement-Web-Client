@@ -1,4 +1,5 @@
-﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+﻿@using Investissement_WebClient.Core.Modeles.DTO
+@using Investissement_WebClient.UI.Components.ViewsModels;
 
 @page "/actif"
 @rendermode InteractiveServer
@@ -11,13 +12,13 @@
     
     <Formulaire AVM="AVM" Soumission="Soumission"></Formulaire>
 
-    <div class="mes-actif">
+    <div class="mes-actifs">
         <div class="mes-actif-header">
             <label>Actifs enregistrés</label>
         </div>
 
         <div class="mes-actif-content">
-            @foreach (var actif in AVM.ActifsEnregistre)
+            @foreach (ItemDto actif in AVM.ActifsEnregistre)
             {
                 <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
             }
@@ -30,6 +31,7 @@
             </div>
         }
     </div>
+
 </div>
 
 @code{

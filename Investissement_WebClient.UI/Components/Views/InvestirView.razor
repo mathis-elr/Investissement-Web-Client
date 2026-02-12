@@ -1,4 +1,6 @@
-﻿@using Investissement_WebClient.UI.Components.ViewsModels;
+﻿@using System.Transactions
+@using Investissement_WebClient.Core.Modeles.DTO
+@using Investissement_WebClient.UI.Components.ViewsModels;
 @page "/"
 @rendermode InteractiveServer
 @inject InvestirViewModel IVM
@@ -15,7 +17,7 @@
             <label>avec le modèle</label>
             <select @onchange="IVM.OnChangeModele">
                 <option>Aucun</option>
-                @foreach ((int Id, string Nom) modele in IVM.Modeles)
+                @foreach (ItemDto modele in IVM.Modeles)
                 {
                     <option value="@modele.Id">@modele.Nom</option>
                 }
@@ -29,8 +31,8 @@
             {
                 <div class="actif-investissement">
                     <div class="header">
-                        <select>
-                            @foreach ((int Id, string Nom) actif in IVM.ActifsEnregistre)
+                        <select Tvalue="int" @bind="transaction.IdActif">
+                            @foreach (ItemDto actif in IVM.ActifsEnregistre)
                             {
                                 <option value="@actif.Id">@actif.Nom</option>
                             }

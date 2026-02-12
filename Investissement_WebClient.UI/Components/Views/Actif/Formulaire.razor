@@ -1,11 +1,11 @@
 @using Investissement_WebClient.Core.Modeles
+@using Investissement_WebClient.Core.Modeles.DTO
 @using Investissement_WebClient.UI.Components.ViewsModels
 
 <EditForm Model="Mode" OnValidSubmit="Soumission">
     <DataAnnotationsValidator />
-    
+
     <div class="ajout-edit-actif">
-        
         <div class="choix-mode-actif">
             <div class="mode-ajout @(AVM.SelectedMode == "Ajouter" ? "selected" : "")" @onclick="AVM.ChangeMode">
                 <label>Ajouter</label>
@@ -14,14 +14,14 @@
                 <label>Modifier</label>
             </div>
         </div>
-        
+
         <div class="ajout-edit-header">
             @if (AVM.SelectedMode == "Ajouter")
             {
                 <label>Disponibles</label>
-                <select value="@AVM.SelectedActif.Id"  @onchange="AVM.OnChangeActif">
+                <select value="@AVM.SelectedActif.Id" @onchange="AVM.OnChangeActif">
                     <option value="0" disabled selected>Selectionner un actif</option>
-                    @foreach (var actif in AVM.ActifsDisponibles)
+                    @foreach (ItemDto actif in AVM.ActifsDisponibles)
                     {
                         <option value="@actif.Id">@actif.Nom</option>
                     }
@@ -32,7 +32,7 @@
                 <label>Enregistrés</label>
                 <select value="@AVM.SelectedActifEdit.Id" @onchange="AVM.OnChangeActifEdit">
                     <option value="0" disabled selected>Selectionner un actif</option>
-                    @foreach (var actif in AVM.ActifsEnregistre)
+                    @foreach (ItemDto actif in AVM.ActifsEnregistre)
                     {
                         <option value="@actif.Id">@actif.Nom</option>
                     }
@@ -41,24 +41,32 @@
         </div>
 
         <div class="ajout-edit-content">
-            <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
+            <InputText @bind-Value="Mode.Nom" placeholder="Nom" />
             <ValidationMessage For="@(() => Mode.Nom)" />
-                            
-            <InputText @bind-Value="Mode.Symbole" placeholder="Symbole"/>
+
+            <InputText @bind-Value="Mode.Symbole" placeholder="Symbole" />
             <ValidationMessage For="@(() => Mode.Symbole)" />
-                            
+
             <InputSelect @bind-Value="Mode.Type">
                 <option value="" disabled selected>Type</option>
-                @foreach (var type in AVM.TypesActif) { <option value="@type">@type</option> }
+                @foreach (string type in AVM.TypesActif)
+                {
+                    <option value="@type">@type</option>
+
+                }
             </InputSelect>
             <ValidationMessage For="@(() => Mode.Type)" />
 
-            <InputText @bind-Value="Mode.Isin" placeholder="ISIN"/>
+            <InputText @bind-Value="Mode.Isin" placeholder="ISIN" />
             <ValidationMessage For="@(() => Mode.Isin)" />
 
             <InputSelect @bind-Value="Mode.Risque">
                 <option value="" disabled selected>Risque</option>
-                @foreach (var niveau in AVM.NiveauxRisqueActif) { <option value="@niveau">@niveau</option> }
+                @foreach (string niveau in AVM.NiveauxRisqueActif)
+                {
+                    <option value="@niveau">@niveau</option>
+
+                }
             </InputSelect>
             <ValidationMessage For="@(() => Mode.Risque)" />
         </div>

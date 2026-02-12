@@ -11,15 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
-    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
+//builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
+//    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
+
+builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
 
 builder.Services.AddScoped<IServiceInvestir, ServiceInvestir>();
 builder.Services.AddScoped<IServiceActif, ServiceActif>();
-
 builder.Services.AddScoped<InvestirViewModel>();
 builder.Services.AddScoped<ActifViewModel>();
-// builder.Services.AddScoped<ModeleViewModel>();
+builder.Services.AddScoped<ModeleViewModel>();
 // builder.Services.AddScoped<PatrimoineViewModel>();
 // builder.Services.AddScoped<BourseViewModel>();
 
@@ -38,7 +40,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<Investissement_WebClient.UI.App>()
+app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();

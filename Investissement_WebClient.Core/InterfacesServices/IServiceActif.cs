@@ -1,12 +1,13 @@
 using Investissement_WebClient.Core.Modeles;
+using Investissement_WebClient.Core.Modeles.DTO;
 
 namespace Investissement_WebClient.Core.InterfacesServices;
 
 public interface IServiceActif
 {
-    Task<IEnumerable<(int Id,string Nom)>> GetActifsEnregistres();
+    Task<IEnumerable<ItemDto>> GetActifsEnregistres();
     
-    Task<IEnumerable<(int Id,string Nom)>> GetActifsDisponibles();
+    Task<IEnumerable<ItemDto>> GetActifsDisponibles();
     
     Task<Actif> GetActifDisponible(int idActif);
     

@@ -9,10 +9,10 @@ public class Transaction
     public double Prix { get; set; }
     
     public double? Frais { get; set; }
-    
-    public ActifEnregistre ActifEnregistre { get; set; }
+
+    public ActifEnregistre ActifEnregistre { get; set; } = null!;
     public int IdActifEnregistre { get; set; }
     
-    public Investissement Investissement { get; set; }
+    public Investissement Investissement { get; set; } = null!;
     public int IdInvestissement { get; set; }
 }

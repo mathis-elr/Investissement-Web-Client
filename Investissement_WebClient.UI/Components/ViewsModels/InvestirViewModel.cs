@@ -1,5 +1,4 @@
 ﻿using Investissement_WebClient.Core.InterfacesServices;
-using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.AspNetCore.Components;
 
@@ -16,10 +15,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             _serviceActif = serviceActif;
         }
         
-        public IEnumerable<(int Id, string Nom)> Modeles { get; set; }
-        public IEnumerable<(int Id, string Nom)> ActifsEnregistre { get; set; }
-        private IEnumerable<PreparationTransaction> ActifsModele { get; set; }
-        public List<PreparationTransaction> TransactionsInvestissement { get; set; } = new ();
+        public IEnumerable<ItemDto> Modeles { get; set; }
+        public IEnumerable<ItemDto> ActifsEnregistre { get; set; }
+        private IEnumerable<TransactionDto> ActifsModele { get; set; }
+        public List<TransactionDto> TransactionsInvestissement { get; set; } = new ();
         
         public DateTime SelectedDateInvest { get; set; } = DateTime.Now;
         private int? SelectedIdModele { get; set; } = null;
@@ -47,7 +46,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             TransactionsInvestissement.Clear();
             TransactionsInvestissement.AddRange(
-                ActifsModele.Select(tm => new PreparationTransaction
+                ActifsModele.Select(tm => new TransactionDto
                 {
                     IdActif = tm.IdActif,
                     NomActif = tm.NomActif,
@@ -71,7 +70,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             var premierActif = ActifsEnregistre.FirstOrDefault();
 
-            TransactionsInvestissement.Add(new PreparationTransaction
+            TransactionsInvestissement.Add(new TransactionDto
             {
                 IdActif = premierActif.Id,
                 NomActif = premierActif.Nom,
@@ -79,7 +78,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 Prix = null
             });
         }
-        public void DellTransactionInvest(PreparationTransaction transaction)
+        public void DellTransactionInvest(TransactionDto transaction)
         {
             TransactionsInvestissement.Remove(transaction);
         }

@@ -1,23 +1,20 @@
-.ajout-edit-content{
-    display: grid;
-    gap: 20px;
-}
-
-.ajout-edit-actif{
-    display:flex;
+.ajout-edit-actif {
+    display: flex;
     flex-direction: column;
-    gap:50px;
+    gap: 50px;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
     opacity: 0.8;
+    height: 100%;
+    min-height: 0;
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
 }
-.ajout-edit-actif:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    opacity: 1;
-}
+    .ajout-edit-actif:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
 
 .choix-mode-actif{
     display:flex;
@@ -52,6 +49,11 @@
     gap:10px;
     font-size: 20px;
     font-weight: bold;
+}
+
+.ajout-edit-content {
+    display: grid;
+    gap: 20px;
 }
 
 .ajout-edit-footer{

@@ -1,48 +1,47 @@
-﻿.actif {
+﻿.modele {
     display: grid;
     grid-template-columns: 7fr 3fr;
+    grid-template-rows: minmax(0, 1fr);
     gap: 30px;
     padding: 20px;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
+    min-height: 0;
 }
 
-.mes-actifs {
-    display: flex;
+.mes-modele{
+    display:flex;
     flex-direction: column;
-    gap: 50px;
+    gap:20px;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
-    opacity: 0.8;
-    height: 100%; 
-    min-height: 0;
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
+    opacity: 0.8;
 }
-.mes-actifs:hover{
+.mes-modele:hover{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     opacity: 1;
 }
 
-.mes-actif-footer{
+.mes-modele-footer{
     display: flex;
     justify-content: flex-end;
 }
 
-.mes-actif-header {
+.mes-modele-header {
     font-size: 20px;
     font-weight: bold;
 }
 
-.mes-actif-content {
+.mes-modele-content {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
 }
 
-.un-actif {
+.un-modele {
     border: solid 2px rgb(82, 72, 72);
     font-size: 20px;
     padding: 5px;
@@ -51,23 +50,22 @@
     transition: ease-in-out 0.3s;
 }
 
-.un-actif:hover {
+.un-modele:hover {
     border:dashed 2px;
     border-color: red;
     cursor: pointer;
 }
 
-.un-actif.active {
+.un-modele.active {
     border-color: red;
 }
 
-.un-actif.active:hover {
+.un-modele.active:hover {
     border: solid 2px;
     border-color: red;
 }
 
 .btn-suppr{
-    background-color: red;
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
@@ -76,6 +74,10 @@
     border-radius: 5px;
     cursor: pointer;
     transition: ease-in-out 0.3s;
+}
+
+.btn-suppr{
+    background-color: red;
 }
 
 .btn-suppr:hover{

@@ -1,0 +1,91 @@
+﻿@using Investissement_WebClient.Core.Modeles
+@using Investissement_WebClient.Core.Modeles.DTO
+@using Investissement_WebClient.UI.Components.ViewsModels;
+
+@page "/modele"
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject ModeleViewModel MVM
+
+<PageTitle>Modele</PageTitle>
+
+<div class="modele">
+    
+    <Formulaire MVM="MVM" Soumission="Soumission"></Formulaire>
+    
+    <div class="mes-modele">
+        <div class="mes-modele-header">
+            <label>Modèles enregistrés</label>
+        </div>
+        <div class="mes-modele-content">
+            @foreach (ItemDto modele in MVM.Modeles)
+            {
+                <span class="un-modele @(MVM.ModelesAsuppr.Contains(modele.Id) ? "active" : null)" @onclick="() => MVM.ChangerEtatSuppression(modele.Id)">@modele.Nom</span>
+            }
+        </div>
+
+        @if (MVM.ModelesAsuppr.Count() != 0)
+        {
+            <div class="mes-modele-footer">
+                <button class="btn-suppr" @onclick="Supprimer">Supprimer</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await MVM.LoadData();
+    }
+    
+    private async Task Soumission()
+    {
+        Console.WriteLine("soumission ...");
+        if (MVM.SelectedMode == "Ajouter")
+        {
+            await Ajouter();
+        }
+        else
+        {
+            await Editer();
+        }
+    }
+    
+    async Task Ajouter()
+    {
+        await MVM.Ajouter();
+
+        if (MVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", MVM.ErrorMessage);
+        }
+    }
+
+    async Task Editer()
+    {
+        await MVM.Editer();
+
+        if (MVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", MVM.ErrorMessage);
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Modele modifié avec succès");
+        }
+    }
+
+    async Task Supprimer()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer ce/ces modele(s) ?"))
+        {
+            await MVM.Supprimer();
+
+            if (MVM.HasError)
+            {
+                await JS.InvokeVoidAsync("alert", MVM.ErrorMessage);
+            }
+        }
+    }
+}

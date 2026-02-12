@@ -9,5 +9,5 @@ public class Investissement
     public Modele? Modele { get; set; }
     public int? IdModele { get; set; }
 
-    public ICollection<Transaction> Transactions { get; set; }
+    public ICollection<Transaction> Transactions { get; set; } = null!;
 }

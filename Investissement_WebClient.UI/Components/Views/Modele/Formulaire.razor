@@ -1,0 +1,79 @@
+@using Investissement_WebClient.Core.Modeles.DTO
+@using Investissement_WebClient.UI.Components.ViewsModels
+
+<EditForm Model="Mode" OnValidSubmit="Soumission">
+    <DataAnnotationsValidator />
+    
+    <div class="ajout-edit-modele">
+        
+        <div class="choix-ajout-edit-modele">
+            <div class="mode-ajout @(MVM.SelectedMode == "Ajouter" ? "selected" : "")" @onclick="MVM.ChangeMode">
+                <label>Ajouter</label>
+            </div>
+            <div class="mode-edit @(MVM.SelectedMode == "Modifier" ? "selected" : "")" @onclick="MVM.ChangeMode">
+                <label>Modifier</label>
+            </div>
+        </div>
+
+        <div class="ajout-edit-header">
+            @if (MVM.SelectedMode == "Modifier")
+            {
+                <label>Modèles</label>
+                <select value="@Mode.Id" @onchange="MVM.OnChangeModeleEdit">
+                    <option disabled selected>Selectionner un modele</option>
+                    @foreach (ItemDto modele in MVM.Modeles)
+                    {
+                        <option value="@modele.Id">@modele.Nom</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <label>Nom du modèle</label> 
+            }
+            <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
+        </div>
+
+        <div class="ajout-edit-content">
+            @foreach (TransactionDto transaction in CompositionModele)
+            {
+                <div class="actif-modele-investissement">
+                    <div class="header">
+                        <InputSelect TValue="int" @bind-Value="transaction.IdActif">
+                            <option value="0" disabled selected>Choisissez un actif</option>
+                            @foreach (ItemDto actif in MVM.ActifEnregistre)
+                            {
+                                <option value="@actif.Id">@actif.Nom</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => transaction.IdActif)"/>
+
+                        <div type="button" class="dell" @onclick="() => MVM.DellActifModele(transaction)">✖</div>
+                    </div>
+                    <div class="content">
+                        <InputNumber @bind-Value="@transaction.Quantite"></InputNumber>
+                        <ValidationMessage For="@(() => transaction.Quantite)"/>
+                    </div>
+                </div>
+            }
+
+            <div class="actif-modele-investissement add" @onclick="MVM.AddActifModele">
+                <a>+</a>
+            </div>
+        </div>
+
+        <div class="ajout-edit-footer">
+            <button type="submit" class="btn">@MVM.SelectedMode</button>
+        </div>
+    </div>
+    
+</EditForm>
+
+
+@code{
+    [Parameter] public ModeleViewModel MVM { get; set; }
+    [Parameter] public EventCallback Soumission { get; set; }
+
+    private ItemDto Mode => MVM.SelectedMode == "Ajouter" ? MVM.SelectedItem : MVM.SelectedItemEdit;
+    private IEnumerable<TransactionDto> CompositionModele => MVM.SelectedMode == "Ajouter" ? MVM.CompositionModele : MVM.CompositionModeleEdit;
+}
