@@ -1,12 +1,11 @@
 ﻿@using System.Globalization
 @using Investissement_WebClient.UI.Components.ViewsModels;
 
-@using ApexCharts
 @using Investissement_WebClient.Core.Modeles.DTO
 
 @page "/patrimoine"
 @rendermode InteractiveServer
-@inject IJSRuntime JS
+@inject IToastService TS
 @inject PatrimoineViewModel PVM
 
 <PageTitle>Patrimoine</PageTitle>
@@ -60,10 +59,6 @@
             
         </div>
     </div>
-    
-    <div class="patrimoine-footer">
-        
-    </div>
 </div>
 
 @code {
@@ -77,7 +72,8 @@
 
         if (PVM.HasError)
         {
-            await JS.InvokeVoidAsync("alert", PVM.ErrorMessage);
+            TS.ShowError(PVM.ErrorMessage);
+            PVM.HasError = false;
         }
     }
 }

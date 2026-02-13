@@ -5,6 +5,7 @@
 @page "/modele"
 @rendermode InteractiveServer
 @inject IJSRuntime JS
+@inject IToastService TS
 @inject ModeleViewModel MVM
 
 <PageTitle>Modele</PageTitle>
@@ -58,7 +59,11 @@
 
         if (MVM.HasError)
         {
-            await JS.InvokeVoidAsync("alert", MVM.ErrorMessage);
+            TS.ShowError(MVM.ErrorMessage);
+        }
+        else
+        {
+            TS.ShowSuccess("Modèle ajouté avec succès !");
         }
     }
 
@@ -68,11 +73,11 @@
 
         if (MVM.HasError)
         {
-            await JS.InvokeVoidAsync("alert", MVM.ErrorMessage);
+            TS.ShowError(MVM.ErrorMessage);
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Modele modifié avec succès");
+            TS.ShowSuccess("Modèle modifié avec succès !");
         }
     }
 
@@ -84,7 +89,11 @@
 
             if (MVM.HasError)
             {
-                await JS.InvokeVoidAsync("alert", MVM.ErrorMessage);
+                TS.ShowError(MVM.ErrorMessage);
+            }
+            else
+            {
+                TS.ShowSuccess("Modèle(s) suprimé(s) avec succès !");
             }
         }
     }

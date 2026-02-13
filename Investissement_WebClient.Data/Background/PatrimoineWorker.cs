@@ -28,6 +28,7 @@ public class PatrimoineWorker : BackgroundService
                 try 
                 {
                     var valeurPatrimoine = await patrimoineService.CalculerValeurPatrimoineCourante();
+                    if(valeurPatrimoine == 0) Console.WriteLine("Valeur de 0 pour la patrimoine");
                     await SaveValeurPatrimoine(valeurPatrimoine);
                 }
                 catch (Exception ex)

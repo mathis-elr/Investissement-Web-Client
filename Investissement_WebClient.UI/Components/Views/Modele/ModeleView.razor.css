@@ -17,17 +17,13 @@
     border-radius: 10px;
     padding: 20px;
     overflow-y: auto;
-    transition: all 0.3s ease-in-out;
     opacity: 0.8;
+    position: relative;
+    transition: all 0.3s ease-in-out;
 }
 .mes-modele:hover{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     opacity: 1;
-}
-
-.mes-modele-footer{
-    display: flex;
-    justify-content: flex-end;
 }
 
 .mes-modele-header {
@@ -65,6 +61,13 @@
     border-color: red;
 }
 
+.mes-modele-footer{
+    position: sticky;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+}
+
 .btn-suppr{
     padding: 10px;
     font-size: 20px;
@@ -73,6 +76,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
     transition: ease-in-out 0.3s;
 }
 

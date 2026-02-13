@@ -1,25 +1,28 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavManager
+@rendermode InteractiveServer
 
-<body>
-    <nav>
-        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-            <div class="page">Investir</div></NavLink>
-        <NavLink class="nav-link" href="actif">
-            <div class="page">Actif</div></NavLink>
-        <NavLink class="nav-link" href="modele">
-            <div class="page">Modele</div></NavLink>
-        <NavLink class="nav-link" href="patrimoine">
-            <div class="page">Patrimoine</div></NavLink>
-        <NavLink class="nav-link" href="bourse">
-            <div class="page">Bourse</div></NavLink>
-    </nav>
+<BlazoredToasts Position="ToastPosition.TopRight"
+                Timeout="5"
+                IconType="IconType.FontAwesome"/>
 
-    @Body
+<nav>
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+        <div class="page">Investir</div></NavLink>
+    <NavLink class="nav-link" href="actif">
+        <div class="page">Actif</div></NavLink>
+    <NavLink class="nav-link" href="modele">
+        <div class="page">Modele</div></NavLink>
+    <NavLink class="nav-link" href="patrimoine">
+        <div class="page">Patrimoine</div></NavLink>
+    <NavLink class="nav-link" href="bourse">
+        <div class="page">Bourse</div></NavLink>
+</nav>
 
-    <footer>
-        <div class="footer-content">
-            <label>© Investissement 2025 - 2026 </label>
-        </div>
-    </footer>
-</body>
+@Body
+
+<footer>
+    <div class="footer-content">
+        <label>© Investissement 2025 - 2026 </label>
+    </div>
+</footer>

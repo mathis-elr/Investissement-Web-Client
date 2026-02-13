@@ -5,6 +5,7 @@
 @rendermode InteractiveServer
 @inject InvestirViewModel IVM
 @inject IJSRuntime JS
+@inject IToastService TS
 
 
 <PageTitle>Investir</PageTitle>
@@ -92,11 +93,11 @@
 
         if(IVM.HasError)
         {
-            await JS.InvokeVoidAsync("alert", IVM.ErrorMessage);
+            TS.ShowError(IVM.ErrorMessage);
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Investissement effectué avec succès !");
+            TS.ShowSuccess("Investissement effectué avec succès !");
         }
     }
 }

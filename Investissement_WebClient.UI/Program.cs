@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Data;
 using Investissement_WebClient.Data.Background;
@@ -31,6 +32,8 @@ builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<BourseViewModel>();
 
 builder.Services.AddHostedService<PatrimoineWorker>();
+
+builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 

@@ -3,6 +3,7 @@
 
 @page "/actif"
 @rendermode InteractiveServer
+@inject IToastService TS
 @inject IJSRuntime JS
 @inject ActifViewModel AVM
 
@@ -108,7 +109,11 @@
 
         if (AVM.HasError)
         {
-            await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+            TS.ShowError(AVM.ErrorMessage);
+        }
+        else
+        {
+            TS.ShowSuccess("Actif enregistré avec succès !");
         }
     }
     
@@ -118,11 +123,11 @@
 
         if (AVM.HasError)
         {
-            await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+            TS.ShowError(AVM.ErrorMessage);
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Actif modifié avec succès");
+            TS.ShowSuccess("Actif modifié avec succès !");
         }
     }
 
@@ -134,7 +139,11 @@
 
             if (AVM.HasError)
             {
-                await JS.InvokeVoidAsync("alert", AVM.ErrorMessage);
+                TS.ShowError(AVM.ErrorMessage);
+            }
+            else
+            {
+                TS.ShowSuccess("Actif(s) supprimé(s) avec succès !");
             }
         }
     }
