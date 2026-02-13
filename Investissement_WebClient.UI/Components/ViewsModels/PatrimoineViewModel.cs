@@ -16,15 +16,27 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public VariationsDto Variations { get; set; } = new VariationsDto();
         public IEnumerable<ValeurPatrimoine> ValeursPatrimoine { get; set; } = [];
         
+        public bool HasError {get; set;} = false;
+        public string ErrorMessage {get; set;} = string.Empty;
+        
         
         private async Task LoadValeurPatrimoineCourante()
         {
-            ValeurPatrimoineCourante = await _patrimoineService.CalculerValeurPatrimoineCourante();
+            try
+            {
+                ValeurPatrimoineCourante = await _patrimoineService.CalculerValeurPatrimoineCourante();
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = ex.Message;
+            }
         }
 
         private async Task LoadVariationsPrix()
-        {
-           Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante);
+        { 
+            if (ValeurPatrimoineCourante == 0) return;
+            Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante);
         }
 
         public async Task LoadData()
@@ -35,9 +47,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public string DeterminerSigne(double variationPrix)
         {
-            var v = Math.Round(variationPrix, 2);
-    
-            return v switch
+            return variationPrix switch
             {
                 > 0 => "positive",
                 < 0 => "negative",

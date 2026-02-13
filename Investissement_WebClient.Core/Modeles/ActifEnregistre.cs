@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Investissement_WebClient.Core.Modeles;
 
-public class ActifEnregistre : IActif
+public class ActifEnregistre
 {
     public int Id { get; set; }
 

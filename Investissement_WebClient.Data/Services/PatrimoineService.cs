@@ -59,6 +59,6 @@ public class PatrimoineService : IPatrimoineService
             .Select(h => h.Valeur)
             .FirstOrDefault();
         
-        return Math.Round(((valeurActuelle - ancienneValeur) / ancienneValeur) * 100, 2);
+        return (valeurActuelle - ancienneValeur) / ancienneValeur;
     }
 }

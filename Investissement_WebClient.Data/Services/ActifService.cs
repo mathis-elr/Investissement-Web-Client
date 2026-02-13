@@ -13,48 +13,50 @@ public class ActifService : IActifService
         _dbFactory = dbContext;
     }
 
-    public async Task<IEnumerable<ItemDto>> GetActifsDisponibles()
+    public async Task<IEnumerable<ActifDto>> GetActifsDisponibles()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
-        var actifs = await context.Actifs
-            .Select(a => new ItemDto
+        return await context.Actifs
+            .Select(a => new ActifDto
             {
                 Id = a.Id,
                 Nom = a.Nom,
+                Type = a.Type.Value,
+                Isin = a.Isin,
+                Symbole = a.Symbole,
+                Risque = a.Risque.Value
             })
             .ToListAsync();
-        
-        return actifs;
     }
     
-    public async Task<IEnumerable<ItemDto>> GetActifsEnregistres()
+    public async Task<IEnumerable<ActifDto>> GetActifsEnregistres()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
-        var actifs = await context.ActifEnregistres
-            .Select(a => new ItemDto
+        return await context.ActifEnregistres
+            .Select(a => new ActifDto
             {
                 Id = a.Id,
                 Nom = a.Nom,
+                Type = a.Type.Value,
+                Isin = a.Isin,
+                Symbole = a.Symbole,
+                Risque = a.Risque.Value
             })
             .ToListAsync();
-        
-        return actifs;
     }
-
-    public async Task<Actif> GetActifDisponible(int idActif)
+    
+    public ActifTypesDto GetActifsParType(IEnumerable<ActifDto> actifs)
     {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        
-        return await context.Actifs.Where(a => a.Id == idActif).FirstAsync();
-    }
-
-    public async Task<ActifEnregistre> GetActifEnregistre(int idActif)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        
-        return await context.ActifEnregistres.Where(a => a.Id == idActif).FirstAsync();
+        return new ActifTypesDto
+        {
+            Etfs = actifs.Where(a => a.Type == ActifType.ETF),
+            Etcs = actifs.Where(a => a.Type == ActifType.ETC),
+            Cryptos = actifs.Where(a => a.Type == ActifType.Crypto),
+            Actions =  actifs.Where(a => a.Type == ActifType.Action),
+            Obligations =  actifs.Where(a => a.Type == ActifType.Obligation),
+        };
     }
 
     public async Task SupprimerActifs(List<int> idActifs)
@@ -65,7 +67,7 @@ public class ActifService : IActifService
         await context.SaveChangesAsync();
     }
 
-    public async Task AjouterActif(Actif actif)
+    public async Task AjouterActif(ActifDto actif)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
@@ -83,10 +85,21 @@ public class ActifService : IActifService
         await context.SaveChangesAsync();
     }
     
-    public async Task ModifierActif(ActifEnregistre actif)
+    public async Task ModifierActif(ActifDto actif)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
-        context.ActifEnregistres.Update(actif);
+        
+        var actifUpdate = new ActifEnregistre
+        {
+            Id = actif.Id,
+            Nom =  actif.Nom,
+            Type = actif.Type,
+            Isin =  actif.Isin,
+            Symbole = actif.Symbole,
+            Risque = actif.Risque
+        };
+        
+        context.ActifEnregistres.Update(actifUpdate);
         await context.SaveChangesAsync();
     }
 }

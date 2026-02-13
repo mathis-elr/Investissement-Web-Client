@@ -26,12 +26,17 @@
                         <option value="@modele.Id">@modele.Nom</option>
                     }
                 </select>
+                if (Mode.Id != 0)
+                {
+                    <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
+                }
             }
             else
             {
                 <label>Nom du modèle</label> 
+                <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
             }
-            <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
+            
         </div>
 
         <div class="ajout-edit-content">
@@ -41,7 +46,7 @@
                     <div class="header">
                         <InputSelect TValue="int" @bind-Value="transaction.IdActif">
                             <option value="0" disabled selected>Choisissez un actif</option>
-                            @foreach (ItemDto actif in MVM.ActifEnregistre)
+                            @foreach (ActifDto actif in MVM.ActifEnregistre)
                             {
                                 <option value="@actif.Id">@actif.Nom</option>
                             }
@@ -51,7 +56,7 @@
                         <div type="button" class="dell" @onclick="() => MVM.DellActifModele(transaction)">✖</div>
                     </div>
                     <div class="content">
-                        <InputNumber @bind-Value="@transaction.Quantite"></InputNumber>
+                        <InputNumber @bind-Value="@transaction.Quantite" placeholder="Quantite"></InputNumber>
                         <ValidationMessage For="@(() => transaction.Quantite)"/>
                     </div>
                 </div>
@@ -62,9 +67,12 @@
             </div>
         </div>
 
-        <div class="ajout-edit-footer">
-            <button type="submit" class="btn">@MVM.SelectedMode</button>
-        </div>
+        @if (CompositionModele.Count() != 0)
+        {
+            <div class="ajout-edit-footer">
+                <button type="submit" class="btn">@MVM.SelectedMode</button>
+            </div>
+        }
     </div>
     
 </EditForm>

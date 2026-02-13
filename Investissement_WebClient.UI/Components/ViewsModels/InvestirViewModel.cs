@@ -18,7 +18,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
         
         public IEnumerable<ItemDto> Modeles { get; set; }
-        public IEnumerable<ItemDto> ActifsEnregistre { get; set; }
+        public IEnumerable<ActifDto> ActifsEnregistre { get; set; }
         private IEnumerable<TransactionDto> ActifsModele { get; set; }
         public List<TransactionDto> TransactionsInvestissement { get; set; } = new ();
         

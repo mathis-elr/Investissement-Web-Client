@@ -13,20 +13,70 @@
     <Formulaire AVM="AVM" Soumission="Soumission"></Formulaire>
 
     <div class="mes-actifs">
-        <div class="mes-actif-header">
+        <div class="mes-actifs-header">
             <label>Actifs enregistrés</label>
         </div>
 
-        <div class="mes-actif-content">
-            @foreach (ItemDto actif in AVM.ActifsEnregistre)
+        <div class="mes-actifs-content">
+            @if (AVM.ActifsParType.Etfs.Count() != 0)
             {
-                <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+                <label>ETFs</label>
+                <div class="type-actif">
+                    @foreach (ActifDto actif in AVM.ActifsParType.Etfs)
+                    {
+                        <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+                    }
+                </div>
+            }
+
+            @if (AVM.ActifsParType.Cryptos.Count() != 0)
+            {
+                <label>Cryptos</label>
+                <div class="type-actif">
+                    @foreach (ActifDto actif in AVM.ActifsParType.Cryptos)
+                    {
+                        <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+                    }
+                </div>
+            }
+
+            @if(AVM.ActifsParType.Etcs.Count() != 0)
+            {
+            <label>ETCs</label>
+                <div class="type-actif">
+                    @foreach (ActifDto actif in AVM.ActifsParType.Etcs)
+                    {
+                        <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+                    }
+                </div>
+            }
+
+            @if (AVM.ActifsParType.Actions.Count() != 0)
+            {
+                <label>Actions</label>
+                <div class="type-actif">
+                    @foreach (ActifDto actif in AVM.ActifsParType.Actions)
+                    {
+                        <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+                    }
+                </div>
+            }
+
+            @if (AVM.ActifsParType.Obligations.Count() != 0)
+            {
+                <label>Obligations</label>
+                <div class="type-actif">
+                    @foreach (ActifDto actif in AVM.ActifsParType.Obligations)
+                    {
+                        <span type="text" class="un-actif @(AVM.ActifASuppr.Contains(actif.Id) ? "active" : null)" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">@actif.Nom</span>
+                    }
+                </div>
             }
         </div>
 
         @if (AVM.ActifASuppr.Count != 0)
         {
-            <div class="mes-actif-footer">
+            <div class="mes-actifs-footer">
                 <button class="btn-suppr" @onclick="() => Supprimer()">Supprimer</button>
             </div>
         }

@@ -5,17 +5,15 @@ namespace Investissement_WebClient.Core.InterfacesServices;
 
 public interface IActifService
 {
-    Task<IEnumerable<ItemDto>> GetActifsEnregistres();
+    Task<IEnumerable<ActifDto>> GetActifsEnregistres();
     
-    Task<IEnumerable<ItemDto>> GetActifsDisponibles();
+    Task<IEnumerable<ActifDto>> GetActifsDisponibles();
     
-    Task<Actif> GetActifDisponible(int idActif);
-    
-    Task<ActifEnregistre> GetActifEnregistre(int idActif);
+    ActifTypesDto GetActifsParType(IEnumerable<ActifDto> actifs);
     
     Task SupprimerActifs(List<int> idActifs);
     
-    Task AjouterActif(Actif actif);
+    Task AjouterActif(ActifDto actif);
     
-    Task ModifierActif(ActifEnregistre actif);
+    Task ModifierActif(ActifDto actif);
 }

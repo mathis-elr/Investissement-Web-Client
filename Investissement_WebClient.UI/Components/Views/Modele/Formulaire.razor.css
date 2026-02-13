@@ -10,6 +10,7 @@
     min-height: 0;
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
+    position:relative;
 }
 
     .ajout-edit-modele:hover {
@@ -74,6 +75,7 @@
     font-size: 16px;
     font-weight: bold;
     border: 2px solid goldenrod;
+    width: 100%;
 }
 
 .actif-modele-investissement .header{
@@ -122,8 +124,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 265px;
-    height: 124px;
+    width: 100%;
+    height: 120px;
     font-size: 50px;
     color: goldenrod;
     border: 2px dashed goldenrod;
@@ -132,18 +134,19 @@
     transition: all ease-in-out 0.3s;
 }
 .add:hover {
-    transform: translate(-4px,4px);
+    transform: translateY(4px);
     border: solid goldenrod;
 }
 
 .ajout-edit-footer{
-    display: flex;
-    justify-content: flex-end;
+    position: sticky;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
 }
 
 .btn {
     background-color: goldenrod;
-    padding: 10px;
     font-size: 20px;
     font-weight: bold;
     color: rgb(82, 72, 72);
@@ -151,6 +154,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: ease-in-out 0.3s;
+    width:100%;
 }
 .btn:hover{
     transform: translate(-2px,2px);

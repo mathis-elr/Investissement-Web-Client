@@ -14,14 +14,16 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         
         public string SelectedMode { get; set; } = "Ajouter";
         
-        public Actif SelectedActif { get; set; } = new Actif();
+        public ActifDto SelectedActif { get; set; } = new ActifDto();
         
-        public ActifEnregistre SelectedActifEdit { get; set; } = new ActifEnregistre();
+        public ActifDto SelectedActifEdit { get; set; } = new ActifDto();
         
         public IEnumerable<string> NiveauxRisqueActif { get; } = Enum.GetNames(typeof(ActifRisque));
         public IEnumerable<string> TypesActif { get; } = Enum.GetNames(typeof(ActifType));
-        public IEnumerable<ItemDto> ActifsDisponibles { get; set; } = [];
-        public IEnumerable<ItemDto> ActifsEnregistre { get; set; } = [];
+        public IEnumerable<ActifDto> ActifsDisponibles { get; set; } = [];
+        public IEnumerable<ActifDto> ActifsEnregistre { get; set; } = [];
+        
+        public ActifTypesDto ActifsParType { get; set; } = new ActifTypesDto();
         public List<int> ActifASuppr { get; set; } = [];
         
         public bool HasError { get; set; } = false;
@@ -44,31 +46,28 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ActifsDisponibles = await _actifService.GetActifsDisponibles();
         }
 
-        private async Task LoadActif(int idActif)
+        private void TrieActifsParType()
         {
-            SelectedActif = await _actifService.GetActifDisponible(idActif);
-        }
-        
-        private async Task LoadActifEdit(int idActif)
-        {
-            SelectedActifEdit = await _actifService.GetActifEnregistre(idActif);
+            if (ActifsEnregistre.Count() == 0) return;
+            ActifsParType = _actifService.GetActifsParType(ActifsEnregistre);
         }
 
         public async Task LoadData()
         {
             await LoadActifsDisponibles();
             await LoadActifsEnregistre();
+            TrieActifsParType();
         }
 
         public async Task OnChangeActif(ChangeEventArgs e)
         {
             if(int.TryParse(e?.Value.ToString(), out int idActif))
             {
-                await LoadActif(idActif);
+                SelectedActif = ActifsDisponibles.Where(a => a.Id == idActif).FirstOrDefault();
             }
             else
             {
-                SelectedActif = new Actif();
+                SelectedActif = new ActifDto();
             }
         }
 
@@ -76,11 +75,11 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             if(int.TryParse(e?.Value.ToString(), out int idActifEdit))
             {
-                await LoadActifEdit(idActifEdit);
+                SelectedActifEdit = ActifsEnregistre.Where(a => a.Id == idActifEdit).FirstOrDefault();
             }
             else
             {
-                SelectedActifEdit = new ActifEnregistre();
+                SelectedActifEdit = new ActifDto();
             }
         }
 
@@ -103,10 +102,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             
             await _actifService.AjouterActif(SelectedActif);
 
-            SelectedActif = new Actif();
+            SelectedActif = new ActifDto();
 
-            await LoadActifsEnregistre();
-            await LoadActifsDisponibles();
+            await LoadData();
         }
 
         public async Task Editer()
@@ -123,10 +121,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             
             await _actifService.ModifierActif(SelectedActifEdit);
 
-            SelectedActifEdit = new ActifEnregistre();
+            SelectedActifEdit = new ActifDto();
 
-            await LoadActifsEnregistre();
-            await LoadActifsDisponibles();
+            await LoadData();
         }
 
         public async Task Supprimer()
@@ -134,8 +131,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             await _actifService.SupprimerActifs(ActifASuppr);
 
             ActifASuppr.Clear();
-            await LoadActifsEnregistre();
-            await LoadActifsDisponibles();
+            await LoadData();
         }
 
         public void ChangerEtatSuppression(int id)

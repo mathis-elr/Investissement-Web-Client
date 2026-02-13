@@ -25,7 +25,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public List<TransactionDto> CompositionModele { get; set; } = [];
         public List<TransactionDto> CompositionModeleEdit { get; set; } = [];
 
-        public IEnumerable<ItemDto> ActifEnregistre { get; set; } = [];
+        public IEnumerable<ActifDto> ActifEnregistre { get; set; } = [];
 
         public List<int> ModelesAsuppr { get; set; } = [];
 

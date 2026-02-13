@@ -24,24 +24,23 @@
             </select>
         </div>
 
-        <br>
-
         <div class="investissement-content">
             @foreach (var transaction in IVM.TransactionsInvestissement)
             {
-                <div class="actif-investissement">
-                    <div class="header">
+                <div class="transaction-investissement">
+                    <div class="actif-transaction">
                         <select Tvalue="int" @bind="transaction.IdActif">
-                            @foreach (ItemDto actif in IVM.ActifsEnregistre)
+                            @foreach (ActifDto actif in IVM.ActifsEnregistre)
                             {
                                 <option value="@actif.Id">@actif.Nom</option>
                             }
                         </select>
                         <div type="button" class="dell" @onclick="() => IVM.DellTransactionInvest(transaction)">✖</div>
                     </div>
-                    <div class="content">
+                    <div class="valeurs-transaction">
                         <input @bind="transaction.Quantite" placeholder="Quantité investit"/>
                         <input @bind="transaction.Prix" placeholder="Prix d'achat (€)"/>
+                        <input @bind="transaction.Frais" placeholder="Frais (€)"/>
                     </div>
                 </div>
             }

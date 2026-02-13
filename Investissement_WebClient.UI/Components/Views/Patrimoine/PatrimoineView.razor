@@ -9,7 +9,6 @@
 @inject IJSRuntime JS
 @inject PatrimoineViewModel PVM
 
-
 <PageTitle>Patrimoine</PageTitle>
 
 <div class="patrimoine">
@@ -22,19 +21,19 @@
         <div class="variations-prix">
             <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix24H)">
                 <label>24H :</label>
-                    @(PVM.Variations.VariationPrix24H == 0 ? "--,--" : @PVM.Variations.VariationPrix24H) %
+                    @(PVM.Variations.VariationPrix24H == 0 ? "--,--" : @PVM.Variations.VariationPrix24H.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
             </span>
             <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix7J)">
                 <label>7J :</label>
-                @(PVM.Variations.VariationPrix7J == 0 ? "--,--" : @PVM.Variations.VariationPrix7J) %
+                @(PVM.Variations.VariationPrix7J == 0 ? "--,--" : @PVM.Variations.VariationPrix7J.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
             </span>
             <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix1M)">
                 <label>1M :</label>
-                    @(PVM.Variations.VariationPrix1M == 0 ? "--,--" : @PVM.Variations.VariationPrix1M) %
+                    @(PVM.Variations.VariationPrix1M == 0 ? "--,--" : @PVM.Variations.VariationPrix1M.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
             </span>
             <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix1A)">
                 <label>1A :</label>
-                    @(PVM.Variations.VariationPrix1A == 0 ? "--,--" : @PVM.Variations.VariationPrix1A) %
+                    @(PVM.Variations.VariationPrix1A == 0 ? "--,--" : @PVM.Variations.VariationPrix1A.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
             </span>
         </div>
     </div>
@@ -42,7 +41,8 @@
     <div class="patrimoine-content">
         <div class="patrimoine-candle">
             <ApexChart TItem="ValeurPatrimoine"
-                       XAxisType="XAxisType.Datetime">
+                       XAxisType="XAxisType.Datetime"
+                       Options="ChartsOptions.Options">
 
                 <ApexCandleSeries TItem="ValeurPatrimoine"
                                   Items="PVM.ValeursPatrimoine"
@@ -67,8 +67,17 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await PVM.LoadData();
+        if (firstRender)
+        {
+            await PVM.LoadData();
+            StateHasChanged();
+        }
+
+        if (PVM.HasError)
+        {
+            await JS.InvokeVoidAsync("alert", PVM.ErrorMessage);
+        }
     }
 }

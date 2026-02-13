@@ -9,4 +9,6 @@ public class TransactionDto
     public double? Quantite { get; set; }
     
     public double? Prix { get; set; }
+    
+    public double? Frais { get; set; }
 }

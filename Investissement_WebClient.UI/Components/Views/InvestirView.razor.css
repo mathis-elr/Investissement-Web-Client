@@ -1,21 +1,30 @@
 ﻿.investir{
     display:grid;
-    grid-template-columns:7fr 3fr;
+    grid-template-columns:6fr 4fr;
+    grid-template-rows: 100%;
     gap:30px;
     padding: 20px;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .investissement,
 .transactions{
+    display:flex;
+    flex-direction: column;
+    gap:30px;
+    min-height: 0;
+    max-height: 100%;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
     opacity: 0.8;
     overflow-y: auto;
+    overflow-x: hidden;
     transition: all 0.3s ease-in-out;
+    position: relative;
 }
 
 .investissement:hover,
@@ -40,7 +49,7 @@
     gap: 15px;
 }
 
-.actif-investissement {
+.transaction-investissement {
     display: flex;
     flex-direction: column;
     border-radius: 10px;
@@ -49,19 +58,23 @@
     border: 2px solid goldenrod;
 }
 
-.actif-investissement .header{
-    display: flex;
-    justify-content: space-between;
+.actif-transaction{
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
     gap: 10px;
     padding: 10px;
 }
 
-.actif-investissement .content {    
+.valeurs-transaction{    
     display: flex;
-    flex-direction: column;
+    width: 100%;
     padding: 10px;
     gap: 10px;
+}
+
+.valeurs-transaction input{
+    flex:1;
 }
 
 .actif-investissement select,
@@ -96,22 +109,28 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 160px;
+    height: 120px;
     font-size: 50px;
     color: goldenrod;
     border: 2px dashed goldenrod;
+    border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
     transition: all ease-in-out 0.3s;
 }
     .add:hover {
-        transform: translate(-4px,4px);
+        transform: translateY(4px);
         border: solid goldenrod;
     }
 
 .investissement-footer {
+    position: sticky;
+    bottom: 0;    
+    right: 0;
+    z-index: 100;
+    padding: 10px;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
 }
 
 .btn-investir {
@@ -125,6 +144,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: ease-in-out 0.3s;
+    width: 100%;
 }
 
     .btn-investir:hover {

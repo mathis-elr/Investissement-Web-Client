@@ -1,7 +1,7 @@
 using Investissement_WebClient.Core.InterfacesServices;
+using Microsoft.Extensions.DependencyInjection;
 using Investissement_WebClient.Core.Modeles;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Investissement_WebClient.Data.Background;
@@ -32,11 +32,11 @@ public class PatrimoineWorker : BackgroundService
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur Worker Patrimoine : {ex.Message}");
+                    Console.WriteLine($"Erreur d'enregistrement d'un historique de patrimoine : {ex.Message}");
                 }
             }
             
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
         }
     }
     
