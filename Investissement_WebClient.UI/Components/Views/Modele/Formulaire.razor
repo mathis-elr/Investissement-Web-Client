@@ -21,7 +21,7 @@
                 <label>Modèles</label>
                 <select value="@Mode.Id" @onchange="MVM.OnChangeModeleEdit">
                     <option value="0" disabled>-- Sélectionnez un modele --</option>
-                    @foreach (ItemDto modele in MVM.Modeles)
+                    @foreach (ModeleCompositionDto modele in MVM.ModelesComposition)
                     {
                         <option value="@modele.Id">@modele.Nom</option>
                     }
@@ -85,6 +85,6 @@
     [Parameter] public ModeleViewModel MVM { get; set; }
     [Parameter] public EventCallback Soumission { get; set; }
 
-    private ItemDto Mode => MVM.SelectedMode == "Ajouter" ? MVM.SelectedItem : MVM.SelectedItemEdit;
+    private ModeleDto Mode => MVM.SelectedMode == "Ajouter" ? MVM.SelectedModele : MVM.SelectedModeleEdit;
     private IEnumerable<TransactionDto> CompositionModele => MVM.SelectedMode == "Ajouter" ? MVM.CompositionModele : MVM.CompositionModeleEdit;
 }

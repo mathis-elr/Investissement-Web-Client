@@ -1,6 +1,6 @@
 namespace Investissement_WebClient.Core.Modeles.DTO;
 
-public class ItemDto
+public class ModeleDto
 {
     public int Id { get; init; }
     

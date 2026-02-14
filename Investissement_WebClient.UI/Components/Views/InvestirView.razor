@@ -18,7 +18,7 @@
             <label>avec le modèle</label>
             <select @onchange="IVM.OnChangeModele">
                 <option>Aucun</option>
-                @foreach (ItemDto modele in IVM.Modeles)
+                @foreach (ModeleDto modele in IVM.Modeles)
                 {
                     <option value="@modele.Id">@modele.Nom</option>
                 }

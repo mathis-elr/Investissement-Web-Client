@@ -31,20 +31,30 @@
     font-weight: bold;
 }
 
-.mes-modele-content {
+.mes-modeles-content {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 15px;
 }
 
-.un-modele {
+.mes-modeles-content label{
+    font-size: 20px;
+}
+
+.un-modele{
+    display: flex;
+    flex-direction: column;
+    gap:3px;
+    background-color: #202020;
+    border-radius: 10px;
     border: dashed 2px transparent;
     font-size: 20px;
     padding: 5px;
     margin: 5px;
-    border-radius: 5px;
     transition: ease-in-out 0.3s;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 
 .un-modele:hover {
     border-color: red;
@@ -60,7 +70,7 @@
     border-color: red;
 }
 
-.mes-modele-footer{
+.mes-modeles-footer{
     position: sticky;
     bottom: 0;
     right: 0;

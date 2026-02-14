@@ -17,10 +17,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         
         public string SelectedMode { get; set; } = "Ajouter";
         
-        public IEnumerable<ItemDto> Modeles { get; set; } = [];
+        public IEnumerable<ModeleCompositionDto> ModelesComposition { get; set; } = [];
         
-        public ItemDto SelectedItem { get; set; } = new ItemDto();
-        public ItemDto SelectedItemEdit { get; set; } = new  ItemDto();
+        public ModeleDto SelectedModele { get; set; } = new ModeleDto();
+        public ModeleDto SelectedModeleEdit { get; set; } = new  ModeleDto();
 
         public List<TransactionDto> CompositionModele { get; set; } = [];
         public List<TransactionDto> CompositionModeleEdit { get; set; } = [];
@@ -41,7 +41,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
         private async Task LoadModeles()
         {
-            Modeles = await _modeleService.GetModeles();
+            ModelesComposition = await _modeleService.GetModelesComposition();
         }
 
         private async Task LoadCompositionModele(int idModele)
@@ -64,15 +64,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             if(int.TryParse(e?.Value.ToString(), out int idModeleEdit))
             {
                 await LoadCompositionModele(idModeleEdit);
-                SelectedItemEdit =  new ItemDto
+                SelectedModeleEdit =  new ModeleDto
                 {
                    Id = idModeleEdit, 
-                   Nom = Modeles.First(m => m.Id == idModeleEdit).Nom
+                   Nom = ModelesComposition.First(m => m.Id == idModeleEdit).Nom
                 };
             }
             else
             {
-                SelectedItemEdit = new ItemDto();
+                SelectedModeleEdit = new ModeleDto();
             }
         }
         
@@ -86,15 +86,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             (SelectedMode == "Ajouter" ? CompositionModele : CompositionModeleEdit).Remove(preparationTransaction);
         }
 
-        private bool VerificationModeleCorrect(ItemDto item,List<TransactionDto> transactions)
+        private bool VerificationModeleCorrect(ModeleDto modele,List<TransactionDto> transactions)
         {
-            if (string.IsNullOrWhiteSpace(item.Nom))
+            if (string.IsNullOrWhiteSpace(modele.Nom))
             {
                 ErrorMessage = "Entrez un nom pour votre modèle";
                 return false;
             }
 
-            if (Modeles.Any(m => m.Nom == item.Nom && m.Id != item.Id))
+            if (ModelesComposition.Any(m => m.Nom == modele.Nom && m.Id != modele.Id))
             {
                 ErrorMessage = "Un modèle de même nom existe déjà";
                 return false;
@@ -111,31 +111,31 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task Ajouter()
         {
-            if (!VerificationModeleCorrect(SelectedItem, CompositionModele))
+            if (!VerificationModeleCorrect(SelectedModele, CompositionModele))
             {
                 HasError = true;
                 return;
             }
                 
-            await _modeleService.AjouterModele(SelectedItem.Nom, CompositionModele);
+            await _modeleService.AjouterModele(SelectedModele.Nom, CompositionModele);
 
             CompositionModele.Clear();
-            SelectedItem = new  ItemDto();
+            SelectedModele = new  ModeleDto();
             await LoadModeles();
         }
 
         public async Task Editer()
         {
-            if (!VerificationModeleCorrect(SelectedItemEdit, CompositionModeleEdit))
+            if (!VerificationModeleCorrect(SelectedModeleEdit, CompositionModeleEdit))
             {
                 HasError = true;
                 return;
             }
             
-            await _modeleService.UpdateModele(SelectedItemEdit, CompositionModeleEdit);
+            await _modeleService.UpdateModele(SelectedModeleEdit, CompositionModeleEdit);
 
             CompositionModeleEdit.Clear();
-            SelectedItemEdit = new ItemDto();
+            SelectedModeleEdit = new ModeleDto();
             SelectedMode = "Ajouter";
             await LoadModeles();
         }

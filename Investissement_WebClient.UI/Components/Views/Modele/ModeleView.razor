@@ -18,16 +18,28 @@
         <div class="mes-modele-header">
             <label>Modèles enregistrés</label>
         </div>
-        <div class="mes-modele-content">
-            @foreach (ItemDto modele in MVM.Modeles)
+        <div class="mes-modeles-content">
+            @foreach (ModeleCompositionDto modele in MVM.ModelesComposition)
             {
-                <span class="un-modele @(MVM.ModelesAsuppr.Contains(modele.Id) ? "active" : null)" @onclick="() => MVM.ChangerEtatSuppression(modele.Id)">@modele.Nom</span>
+                <div class="un-modele @(MVM.ModelesAsuppr.Contains(modele.Id) ? "active" : null)" @onclick="() => MVM.ChangerEtatSuppression(modele.Id)">
+                    <label>@modele.Nom</label>
+                    @foreach (TransactionDto transaction in modele.Composition)
+                    {
+                        <div class="actif-modele">
+                            @if (@transaction.Quantite != null)
+                            {
+                                 <span type="text">@transaction.Quantite &nbsp;</span> 
+                            }
+                            <span type="text">@transaction.NomActif</span>
+                        </div>
+                    }
+                </div>
             }
         </div>
 
         @if (MVM.ModelesAsuppr.Count() != 0)
         {
-            <div class="mes-modele-footer">
+            <div class="mes-modeles-footer">
                 <button class="btn-suppr" @onclick="Supprimer">Supprimer</button>
             </div>
         }
@@ -35,11 +47,12 @@
 </div>
 
 @code {
+
     protected override async Task OnInitializedAsync()
     {
         await MVM.LoadData();
     }
-    
+
     private async Task Soumission()
     {
         if (MVM.SelectedMode == "Ajouter")
@@ -51,7 +64,7 @@
             await Editer();
         }
     }
-    
+
     async Task Ajouter()
     {
         await MVM.Ajouter();

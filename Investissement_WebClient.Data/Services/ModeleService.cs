@@ -13,20 +13,40 @@ public class ModeleService : IModeleService
     {
         _dbFactory = dbContext;
     }
+
+    public async Task<List<ModeleDto>> GetModeles()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        var modeles = await context.Modeles
+            .Select(m => new ModeleDto
+            {
+                Id = m.Id,
+                Nom = m.Nom,
+            })
+            .ToListAsync();
+        return modeles;
+    }
     
-    public async Task<IEnumerable<ItemDto>> GetModeles()
+    public async Task<IEnumerable<ModeleCompositionDto>> GetModelesComposition()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
-        var modele = await context.Modeles
-            .Select(m => new ItemDto
+        var modeles = await context.Modeles
+            .Select(m => new ModeleCompositionDto
             {
                 Id = m.Id,
-                Nom = m.Nom
+                Nom = m.Nom,
+                Composition = m.Composition.Select(c => new TransactionDto
+                {
+                    IdActif =  c.IdActifEnregistre,
+                    NomActif = c.ActifEnregistre.Nom,
+                    Quantite = c.Quantite,
+                })
+                .ToList()
             })
             .ToListAsync();
         
-        return modele;
+        return modeles;
     }
 
     public async Task<List<TransactionDto>> GetCompositionModele(int idModele)
@@ -69,20 +89,20 @@ public class ModeleService : IModeleService
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateModele(ItemDto item, List<TransactionDto> compositionModele)
+    public async Task UpdateModele(ModeleDto modele, List<TransactionDto> compositionModele)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
         var updateModele = new Modele
         {
-            Id = item.Id,
-            Nom = item.Nom,
+            Id = modele.Id,
+            Nom = modele.Nom,
         };
         
         context.Modeles.Update(updateModele);
         
         var ancienneComposition = context.CompositionModeles
-            .Where(c => c.IdModele == item.Id);
+            .Where(c => c.IdModele == modele.Id);
         context.CompositionModeles.RemoveRange(ancienneComposition);
         
         await context.SaveChangesAsync();
@@ -90,7 +110,7 @@ public class ModeleService : IModeleService
         var nouvelleComposition = compositionModele.Select(pt => new CompositionModele
         {
             IdActifEnregistre = pt.IdActif,
-            IdModele = item.Id,
+            IdModele = modele.Id,
             Quantite = pt.Quantite,
         });
         
