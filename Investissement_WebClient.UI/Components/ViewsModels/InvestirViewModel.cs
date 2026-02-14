@@ -70,15 +70,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public void AddTransactionInvest()
         {
-            var premierActif = ActifsEnregistre.FirstOrDefault();
-
-            TransactionsInvestissement.Add(new TransactionDto
-            {
-                IdActif = premierActif.Id,
-                NomActif = premierActif.Nom,
-                Quantite = null,
-                Prix = null
-            });
+            TransactionsInvestissement.Add(new TransactionDto());
         }
         public void DellTransactionInvest(TransactionDto transaction)
         {

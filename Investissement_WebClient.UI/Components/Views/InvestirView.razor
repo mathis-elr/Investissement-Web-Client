@@ -31,12 +31,13 @@
                 <div class="transaction-investissement">
                     <div class="actif-transaction">
                         <select Tvalue="int" @bind="transaction.IdActif">
+                            <option value="0" disable>-- Sélectionnez un actif --</option>
                             @foreach (ActifDto actif in IVM.ActifsEnregistre)
                             {
                                 <option value="@actif.Id">@actif.Nom</option>
                             }
                         </select>
-                        <div type="button" class="dell" @onclick="() => IVM.DellTransactionInvest(transaction)">✖</div>
+                        <div type="button" class="dell" @onclick="() => IVM.DellTransactionInvest(transaction)">✕</div>
                     </div>
                     <div class="valeurs-transaction">
                         <input @bind="transaction.Quantite" placeholder="Quantité investit"/>

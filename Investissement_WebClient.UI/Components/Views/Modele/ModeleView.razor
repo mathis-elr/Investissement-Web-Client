@@ -42,7 +42,6 @@
     
     private async Task Soumission()
     {
-        Console.WriteLine("soumission ...");
         if (MVM.SelectedMode == "Ajouter")
         {
             await Ajouter();
@@ -60,6 +59,7 @@
         if (MVM.HasError)
         {
             TS.ShowError(MVM.ErrorMessage);
+            MVM.HasError = false;
         }
         else
         {
@@ -74,6 +74,7 @@
         if (MVM.HasError)
         {
             TS.ShowError(MVM.ErrorMessage);
+            MVM.HasError = false;
         }
         else
         {
@@ -90,6 +91,7 @@
             if (MVM.HasError)
             {
                 TS.ShowError(MVM.ErrorMessage);
+                MVM.HasError = false;
             }
             else
             {

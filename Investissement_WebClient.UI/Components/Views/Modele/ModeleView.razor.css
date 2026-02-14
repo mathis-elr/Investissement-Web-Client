@@ -1,6 +1,6 @@
 ﻿.modele {
     display: grid;
-    grid-template-columns: 7fr 3fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: minmax(0, 1fr);
     gap: 30px;
     padding: 20px;
@@ -38,7 +38,7 @@
 }
 
 .un-modele {
-    border: solid 2px rgb(82, 72, 72);
+    border: dashed 2px transparent;
     font-size: 20px;
     padding: 5px;
     margin: 5px;
@@ -47,17 +47,16 @@
 }
 
 .un-modele:hover {
-    border:dashed 2px;
     border-color: red;
     cursor: pointer;
 }
 
 .un-modele.active {
-    border-color: red;
+    border : 2px solid red;
 }
 
 .un-modele.active:hover {
-    border: solid 2px;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
     border-color: red;
 }
 

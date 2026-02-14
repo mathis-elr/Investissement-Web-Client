@@ -20,7 +20,7 @@
             {
                 <label>Disponibles</label>
                 <select value="@AVM.SelectedActif.Id" @onchange="AVM.OnChangeActif">
-                    <option value="0" disabled selected>Selectionner un actif</option>
+                    <option value="0" disabled selected>-- Selectionnez un actif --</option>
                     @foreach (ActifDto actif in AVM.ActifsDisponibles)
                     {
                         <option value="@actif.Id">@actif.Nom</option>
@@ -31,7 +31,7 @@
             {
                 <label>Enregistrés</label>
                 <select value="@AVM.SelectedActifEdit.Id" @onchange="AVM.OnChangeActifEdit">
-                    <option value="0" disabled selected>Selectionner un actif</option>
+                    <option value="0" disabled selected>-- Sélectionnez un actif --</option>
                     @foreach (ActifDto actif in AVM.ActifsEnregistre)
                     {
                         <option value="@actif.Id">@actif.Nom</option>
@@ -48,7 +48,7 @@
             <ValidationMessage For="@(() => Mode.Symbole)" />
 
             <InputSelect @bind-Value="Mode.Type">
-                <option value="" disabled selected>Type</option>
+                <option value="0" disabled selected>-- Sélectionnez un type --</option>
                 @foreach (string type in AVM.TypesActif)
                 {
                     <option value="@type">@type</option>
@@ -61,7 +61,7 @@
             <ValidationMessage For="@(() => Mode.Isin)" />
 
             <InputSelect @bind-Value="Mode.Risque">
-                <option value="" disabled selected>Risque</option>
+                <option value="0" disabled selected>-- Sélectionnez un niveau de risque --</option>
                 @foreach (string niveau in AVM.NiveauxRisqueActif)
                 {
                     <option value="@niveau">@niveau</option>

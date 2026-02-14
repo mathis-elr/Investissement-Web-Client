@@ -53,26 +53,25 @@
 }
 
 .un-actif {
-    border: solid 2px #202020;
+    border: dashed 2px transparent;
     font-size: 20px;
     padding: 5px;
     margin: 5px;
     border-radius: 5px;
-    transition: ease-in-out 0.1s;
+    transition:  0.4s ease-in-out;
 }
 
 .un-actif:hover {
-    border:dashed 2px;
     border-color: red;
     cursor: pointer;
 }
 
 .un-actif.active {
-    border-color: red;
+    border : 2px solid red;
 }
 
 .un-actif.active:hover {
-    border: solid 2px;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
     border-color: red;
 }
 

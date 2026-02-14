@@ -20,7 +20,7 @@
             {
                 <label>Modèles</label>
                 <select value="@Mode.Id" @onchange="MVM.OnChangeModeleEdit">
-                    <option disabled selected>Selectionner un modele</option>
+                    <option value="0" disabled>-- Sélectionnez un modele --</option>
                     @foreach (ItemDto modele in MVM.Modeles)
                     {
                         <option value="@modele.Id">@modele.Nom</option>
@@ -45,7 +45,7 @@
                 <div class="actif-modele-investissement">
                     <div class="header">
                         <InputSelect TValue="int" @bind-Value="transaction.IdActif">
-                            <option value="0" disabled selected>Choisissez un actif</option>
+                            <option value="0" disabled> -- Sélectionnez un actif --</option>
                             @foreach (ActifDto actif in MVM.ActifEnregistre)
                             {
                                 <option value="@actif.Id">@actif.Nom</option>
@@ -53,7 +53,7 @@
                         </InputSelect>
                         <ValidationMessage For="@(() => transaction.IdActif)"/>
 
-                        <div type="button" class="dell" @onclick="() => MVM.DellActifModele(transaction)">✖</div>
+                        <div type="button" class="dell" @onclick="() => MVM.DellActifModele(transaction)">✕</div>
                     </div>
                     <div class="content">
                         <InputNumber @bind-Value="@transaction.Quantite" placeholder="Quantite"></InputNumber>
@@ -62,9 +62,12 @@
                 </div>
             }
 
-            <div class="actif-modele-investissement add" @onclick="MVM.AddActifModele">
-                <a>+</a>
-            </div>
+            @if (Mode.Id != 0 || MVM.SelectedMode == "Ajouter")
+            {
+                <div class="actif-modele-investissement add" @onclick="MVM.AddActifModele">
+                    <a>+</a>
+                </div>
+            }
         </div>
 
         @if (CompositionModele.Count() != 0)

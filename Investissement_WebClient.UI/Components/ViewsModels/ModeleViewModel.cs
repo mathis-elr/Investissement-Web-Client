@@ -86,35 +86,36 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             (SelectedMode == "Ajouter" ? CompositionModele : CompositionModeleEdit).Remove(preparationTransaction);
         }
 
-        private void VerificationModeleCorrect()
+        private bool VerificationModeleCorrect(ItemDto item,List<TransactionDto> transactions)
         {
-            HasError = true;
-
-            if (string.IsNullOrWhiteSpace(SelectedItem.Nom))
+            if (string.IsNullOrWhiteSpace(item.Nom))
             {
                 ErrorMessage = "Entrez un nom pour votre modèle";
-                return;
+                return false;
             }
 
-            if (Modeles.Any(m => m.Nom == SelectedItem.Nom && m.Id != SelectedItem.Id))
+            if (Modeles.Any(m => m.Nom == item.Nom && m.Id != item.Id))
             {
                 ErrorMessage = "Un modèle de même nom existe déjà";
-                return;
+                return false;
             }
 
-            if (CompositionModele.Where(t => t.IdActif > 0).GroupBy(t => t.IdActif).Any(g => g.Count() > 1))
+            if (transactions.Where(t => t.IdActif > 0).GroupBy(t => t.IdActif).Any(g => g.Count() > 1))
             {
                 ErrorMessage = "Vous avez sélectionné plusieurs fois le même actif.";
-                return;
+                return false;
             }
-
-            HasError = false;
-            ErrorMessage = string.Empty;
+            
+            return true;
         }
 
         public async Task Ajouter()
         {
-            VerificationModeleCorrect();
+            if (!VerificationModeleCorrect(SelectedItem, CompositionModele))
+            {
+                HasError = true;
+                return;
+            }
                 
             await _modeleService.AjouterModele(SelectedItem.Nom, CompositionModele);
 
@@ -125,8 +126,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task Editer()
         {
-            VerificationModeleCorrect();
-
+            if (!VerificationModeleCorrect(SelectedItemEdit, CompositionModeleEdit))
+            {
+                HasError = true;
+                return;
+            }
+            
             await _modeleService.UpdateModele(SelectedItemEdit, CompositionModeleEdit);
 
             CompositionModeleEdit.Clear();

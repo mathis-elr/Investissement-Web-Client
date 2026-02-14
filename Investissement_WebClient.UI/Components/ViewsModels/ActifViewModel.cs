@@ -99,6 +99,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 ErrorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir ajouter un actif.";
                 return;
             }
+
+            if (ActifsEnregistre.Any(a => a.Id == SelectedActif.Id))
+            {
+                HasError = true;
+                ErrorMessage = "Vous avez déjà enregistré cet actif";
+                return;
+            }
             
             await _actifService.AjouterActif(SelectedActif);
 

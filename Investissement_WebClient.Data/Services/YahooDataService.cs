@@ -31,14 +31,14 @@ namespace Investissement_WebClient.Data.Services
                     else
                     {
                         Console.WriteLine($"AVERTISSEMENT (YahooApi): Symbole non trouvé {symbole}");
-                        dictionnairePrix[symbole] = 0;
+                        throw new Exception("ERREUR de symbole");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"ERREUR recuperation prix actifs API yahoo : {ex.Message}");
-                throw new Exception($"ERREUR de connexion pour la recuperation prix");
+                Console.WriteLine($"ERREUR internet, impossible de recuperer le prix des actifs avec l'API yahoo");
+                throw new Exception($"Echec du chargement du patrimoine, connectez-vous à internet pour visualiser votre patrimoine");
             }
 
             return dictionnairePrix;

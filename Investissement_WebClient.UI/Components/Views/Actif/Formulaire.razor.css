@@ -1,7 +1,7 @@
 .ajout-edit-actif {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 40px;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
@@ -32,17 +32,37 @@
 
 .mode-ajout,
 .mode-edit{
+    padding:10px;
     border-radius: 50px;
     transition: all 0.3s ease-in-out;
 }
 .mode-ajout:hover,
-.mode-edit:hover,
-.selected{
-    background-color: rgba(45, 41, 41);
+.mode-edit:hover{
+    box-shadow: 0 4px 12px goldenrod !important;
+    opacity: 0.4;
     border-radius: 50px;
-    padding : 10px;
     cursor: pointer;
 }
+
+.selected{
+    box-shadow: 0 4px 12px gold !important;
+    opacity: 0.4;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.ajout-edit-actif ::deep select,
+.ajout-edit-actif ::deep input{
+    transition: 0.4s ease-in-out;
+}
+.ajout-edit-actif ::deep select:hover,
+.ajout-edit-actif ::deep input:hover,
+.ajout-edit-actif ::deep select:focus,
+.ajout-edit-actif ::deep input:focus{
+    outline: none !important;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
+}
+
 
 .ajout-edit-header{
     display:flex;
