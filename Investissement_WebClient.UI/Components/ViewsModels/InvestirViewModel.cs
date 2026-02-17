@@ -6,13 +6,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 {
     public class InvestirViewModel
     {
-        private readonly ITransactionService _transactionService;
+        private readonly IInvestirService _investirService;
         private readonly IActifService _actifService;
         private readonly IModeleService _modeleService;
         
-        public InvestirViewModel(ITransactionService transactionService, IActifService actifService, IModeleService modeleService)
+        public InvestirViewModel(IInvestirService investirService, IActifService actifService, IModeleService modeleService)
         {
-            _transactionService = transactionService; 
+            _investirService = investirService; 
             _actifService = actifService;
             _modeleService = modeleService;
         }
@@ -20,6 +20,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public IEnumerable<ModeleDto> Modeles { get; set; }
         public IEnumerable<ActifDto> ActifsEnregistre { get; set; }
         private IEnumerable<TransactionDto> ActifsModele { get; set; }
+        public IEnumerable<InvestissementDto> Investissements { get; set; }
         public List<TransactionDto> TransactionsInvestissement { get; set; } = new ();
         
         public DateTime SelectedDateInvest { get; set; } = DateTime.Now;
@@ -32,6 +33,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             await LoadActifs();
             await LoadModeles();
+            await LoadInvestissements();
         }
 
         private async Task LoadModeles()
@@ -56,6 +58,11 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                     Prix = null
                 })
             );
+        }
+
+        private async Task LoadInvestissements()
+        {
+            Investissements = await _investirService.GetInvestissements();
         }
         
         public async Task OnChangeModele(ChangeEventArgs e)
@@ -103,7 +110,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             try
             {
-               await  _transactionService.SaveInvestissement(SelectedIdModele, SelectedDateInvest, TransactionsInvestissement);
+               await  _investirService.SaveInvestissement(SelectedIdModele, SelectedDateInvest, TransactionsInvestissement);
             }
             catch (Exception ex)
             {
@@ -115,13 +122,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             SelectedIdModele = null;
             TransactionsInvestissement = [];
-            // LoadDernierInvestissement();
+            await LoadInvestissements();
         }
-        
-        // public void LoadDernierInvestissement()
-        // {
-        //     ListeDernierInvestissement = _serviceInvestir.GetDernierInvest();
-        //     dateDernierInvest = ListeDernierInvestissement?.FirstOrDefault()?.date;
-        // }
     }
 }

@@ -28,8 +28,9 @@ public class PatrimoineWorker : BackgroundService
                 try 
                 {
                     var valeurPatrimoine = await patrimoineService.CalculerValeurPatrimoineCourante();
+                    var valeurInvestissementTotal = await patrimoineService.CalculerValeurInvestissementTotal();
                     if(valeurPatrimoine == 0) Console.WriteLine("Valeur de 0 pour la patrimoine");
-                    await SaveValeurPatrimoine(valeurPatrimoine);
+                    await SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
                 }
                 catch (Exception ex)
                 {
@@ -41,14 +42,15 @@ public class PatrimoineWorker : BackgroundService
         }
     }
     
-    private async Task SaveValeurPatrimoine(double valeur)
+    private async Task SaveValeurPatrimoine(double valeurPatrimoine, double  valeurInvestissementTotal)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
         var newValeurPatrimoine = new HistoriquePatrimoine
         {
             Date = DateTime.Now,
-            Valeur = valeur,
+            Valeur = valeurPatrimoine,
+            InvestissementTotal = valeurInvestissementTotal
         };
         
         context.HistoriquePatrimoine.Add(newValeurPatrimoine);

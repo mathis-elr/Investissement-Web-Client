@@ -19,7 +19,7 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 // builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 //     options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
 
-builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IInvestirService, InvestirService>();
 builder.Services.AddScoped<IActifService, ActifService>();
 builder.Services.AddScoped<IModeleService, ModeleService>();
 builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();

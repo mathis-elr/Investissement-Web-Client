@@ -6,6 +6,10 @@ namespace Investissement_WebClient.Core.InterfacesServices;
 public interface IPatrimoineService
 {
     Task<double> CalculerValeurPatrimoineCourante();
+    
+    Task<double> CalculerValeurInvestissementTotal();
 
-    Task<VariationsDto> GetVariations(double valeurActuelle);
+    Task<VariationsDto> GetVariations(double valeurActuelle, double valeurInvestissementTotal);
+
+    Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieres();
 }

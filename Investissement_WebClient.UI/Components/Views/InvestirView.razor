@@ -1,4 +1,5 @@
-﻿@using System.Transactions
+﻿@using System.Globalization
+@using System.Transactions
 @using Investissement_WebClient.Core.Modeles.DTO
 @using Investissement_WebClient.UI.Components.ViewsModels;
 @page "/"
@@ -62,22 +63,26 @@
         }
     </div>
 
-    <div class="transactions">
-        <div class="transactions-header">
-            @* <label>Dernières transactions le @(IVM.dateDernierInvest.HasValue? IVM.dateDernierInvest.Value.ToString("dddd d MMMM yyyy") : "")</label> *@
-            <label>Transactions</label>
+    <div class="mes-investissements">
+        <div class="mes-investissements-header">
+            <label>Mes Investissements</label>
         </div>
-        <div class="transactions-content">
-            @* @if (IVM.ListeDernierInvestissement.Count == 0) *@
-            @* { *@
-            @*     <div class="aucune-investisssement">aucune transactions trouvé, commencer à investir demain c'est déjà trop tard</div> *@
-            @* } *@
-            @* @foreach (var transaction in IVM.ListeDernierInvestissement) *@
-            @* { *@
-            @*     <div class="transaction-dernier-invest"> *@
-            @*         <div class="contenu-transaction">@transaction.quantite @transaction.actif à @transaction.prix €  => +@(transaction.prix* transaction.quantite) €</div> *@
-            @*     </div> *@
-            @* } *@
+        <div class="mes-investissements-content">
+            @foreach (InvestissementDto investissement in IVM.Investissements)
+            {
+                <div class="un-investissement">
+                    <label>
+                        @investissement.Transactions.Sum(t => t.Quantite * t.Prix)?.ToString("C2", CultureInfo.CreateSpecificCulture("fr-FR")) le @investissement.Date.ToString("dddd dd MMMM", CultureInfo.CreateSpecificCulture("fr-FR"))
+                        @(investissement.NomModele != null ? "- " + investissement.NomModele : "")
+                    </label>
+                    <div class="transactions-investissement">
+                        @foreach (TransactionDto transaction in investissement.Transactions)
+                        {
+                            <span type="text" class="une-transaction">@transaction.Quantite @transaction.NomActif à @transaction.Prix?.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR"))</span>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>

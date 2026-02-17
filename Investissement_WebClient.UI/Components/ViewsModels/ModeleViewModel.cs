@@ -9,7 +9,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         private readonly IActifService  _actifService;
         private readonly IModeleService _modeleService;
         
-        public ModeleViewModel(IActifService actifService, ITransactionService transactionService, IModeleService modeleService)
+        public ModeleViewModel(IActifService actifService, IInvestirService investirService, IModeleService modeleService)
         {
             _actifService = actifService;
             _modeleService = modeleService;

@@ -1,11 +1,11 @@
 using ApexCharts;
 using Investissement_WebClient.Core.Modeles.DTO;
 
-namespace Investissement_WebClient.UI.Components;
+namespace Investissement_WebClient.UI.Components.Views.Patrimoine;
 
 public static class ChartsOptions
 {
-    public static ApexChartOptions<ValeurPatrimoine> Options = new()
+    public static ApexChartOptions<BougieJournaliere> Options = new()
     {
         
         Stroke = new Stroke
@@ -13,7 +13,8 @@ public static class ChartsOptions
             Curve = Curve.Smooth, Width = 3
         },
 
-        Chart = new Chart {
+        Chart = new Chart
+        {
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Toolbar = new Toolbar { Show = false } ,
@@ -21,8 +22,14 @@ public static class ChartsOptions
             Height = "500px"
         },
 
-        Grid = new Grid {
+        Grid = new Grid
+        {
             BorderColor = "#444" 
-        }
+        },
+        
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark,
+        },
     };
 }

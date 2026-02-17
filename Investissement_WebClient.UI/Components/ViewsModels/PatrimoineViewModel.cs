@@ -13,8 +13,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
         
         public double ValeurPatrimoineCourante { get; set; }
+        private double ValeurInvestissementTotal { get; set; }
         public VariationsDto Variations { get; set; } = new VariationsDto();
-        public IEnumerable<ValeurPatrimoine> ValeursPatrimoine { get; set; } = [];
+        public IEnumerable<BougieJournaliere> BougiesJournalieres { get; set; } = [];
         
         public bool HasError {get; set;} = false;
         public string ErrorMessage {get; set;} = string.Empty;
@@ -33,15 +34,26 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             }
         }
 
+        private async Task LoadValeurInvestissementTotale()
+        {
+            ValeurInvestissementTotal = await _patrimoineService.CalculerValeurInvestissementTotal();
+        }
+
         private async Task LoadVariationsPrix()
         { 
             if (ValeurPatrimoineCourante == 0) return;
-            Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante);
+            Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante,  ValeurInvestissementTotal);
+        }
+
+        public async Task LoadBougieJournalieres()
+        {
+            BougiesJournalieres = await _patrimoineService.GetBougiesJournalieres();
         }
 
         public async Task LoadData()
         {
             await LoadValeurPatrimoineCourante();
+            await LoadValeurInvestissementTotale();
             await LoadVariationsPrix();
         }
 

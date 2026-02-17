@@ -27,6 +27,7 @@ namespace Investissement_WebClient.Data.Services
                     {
                         // "RegularMarketPrice" est le prix actuel (ou le dernier prix de clôture)
                         dictionnairePrix[symbole] = Math.Round((double)data.RegularMarketPrice, 2);
+                        Console.WriteLine($"actif : {symbole} =  {Math.Round(data.RegularMarketPrice, 2)}");
                     }
                     else
                     {

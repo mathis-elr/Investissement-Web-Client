@@ -144,6 +144,8 @@ public class InvestissementDbContext : DbContext
                 .ValueGeneratedOnAdd();
             entity.Property(h => h.Date)
                 .IsRequired();
+            entity.Property(h => h.InvestissementTotal)
+                .IsRequired();
             entity.Property(h => h.Valeur)
                 .IsRequired();
         });

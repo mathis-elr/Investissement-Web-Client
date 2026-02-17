@@ -5,6 +5,7 @@
 
 @page "/patrimoine"
 @rendermode InteractiveServer
+@implements IDisposable
 @inject IToastService TS
 @inject PatrimoineViewModel PVM
 
@@ -39,18 +40,18 @@
     
     <div class="patrimoine-content">
         <div class="patrimoine-candle">
-            <ApexChart TItem="ValeurPatrimoine"
+            <ApexChart TItem="BougieJournaliere"
                        XAxisType="XAxisType.Datetime"
                        Options="ChartsOptions.Options">
 
-                <ApexCandleSeries TItem="ValeurPatrimoine"
-                                  Items="PVM.ValeursPatrimoine"
+                <ApexCandleSeries TItem="BougieJournaliere"
+                                  Items="PVM.BougiesJournalieres"
                                   Name="Apex Stock Price"
                                   XValue="@(e => e.Date)"
-                                  Open="@(e => e.Open)"
-                                  High="@(e => e.High)"
-                                  Low="@(e => e.Low)"
-                                  Close="@(e => e.Close)"
+                                  Open="@(e => e.Ouverture)"
+                                  High="@(e => e.Haut)"
+                                  Low="@(e => e.Bas)"
+                                  Close="@(e => e.Fermeture)"
                                   OrderByDescending="e => e.X"/>
             </ApexChart>
         </div>
@@ -62,12 +63,14 @@
 </div>
 
 @code {
+    private CancellationTokenSource _cts = new();
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await PVM.LoadData();
-            StateHasChanged();
+            _ = LoadData(_cts.Token); //on lance en arrière plan (si on utilisait await ca bloquerait la fonction)
+            await PVM.LoadBougieJournalieres();
         }
 
         if (PVM.HasError)
@@ -75,5 +78,26 @@
             TS.ShowError(PVM.ErrorMessage);
             PVM.HasError = false;
         }
+    }
+
+    private async Task LoadData(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await PVM.LoadData();
+                StateHasChanged();
+            
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            } 
+        }
+        catch(OperationCanceledException){ Console.WriteLine("Arret du chargement de la valeur du patrimoine"); }
+    }
+    
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose(); 
     }
 }

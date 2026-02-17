@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Data.Services;
 
-public class TransactionService : ITransactionService
+public class InvestirService : IInvestirService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
 
-    public TransactionService(IDbContextFactory<InvestissementDbContext> dbContext)
+    public InvestirService(IDbContextFactory<InvestissementDbContext> dbContext)
     {
         _dbFactory = dbContext;
     }
@@ -27,6 +27,29 @@ public class TransactionService : ITransactionService
         }).ToList();
         
         return detailsActifDtos;
+    }
+
+    public async Task<IEnumerable<InvestissementDto>> GetInvestissements()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var investissements = await  context.Investissements
+            .Select(i => new InvestissementDto
+            {
+                Id = i.Id,
+                Date = i.DateInvest,
+                NomModele = i.IdModele != null ? i.Modele.Nom : null,
+                Transactions = i.Transactions.Select(t => new TransactionDto
+                {
+                    IdActif = t.IdActifEnregistre,
+                    NomActif = t.ActifEnregistre.Nom,
+                    Quantite = t.Quantite,
+                    Prix = t.Prix
+                })
+            })
+            .ToArrayAsync();
+
+        return investissements;
     }
 
     public async Task SaveInvestissement(int? idModele, DateTime dateInvest,
