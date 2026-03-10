@@ -8,5 +8,5 @@ public class CompositionModele
     public Modele Modele { get; set; } = null!;
     public int IdModele { get; set; }
     
-    public double? Quantite { get; set; }
+    public decimal? Quantite { get; set; }
 }

@@ -13,8 +13,8 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             _patrimoineService = patrimoineService;
         }
         
-        public double ValeurPatrimoineCourante { get; set; }
-        private double ValeurInvestissementTotal { get; set; }
+        public decimal ValeurPatrimoineCourante { get; set; }
+        private decimal ValeurInvestissementTotal { get; set; }
         public VariationsDto Variations { get; set; } = new VariationsDto();
         public IEnumerable<BougieJournaliere> BougiesJournalieres { get; set; } = [];
 
@@ -77,7 +77,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             await LoadVariationsPrix();
         }
 
-        public string DeterminerSigne(double variationPrix)
+        public string DeterminerSigne(decimal variationPrix)
         {
             return variationPrix switch
             {

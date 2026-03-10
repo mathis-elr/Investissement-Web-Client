@@ -4,11 +4,11 @@ public class Transaction
 {
     public int Id { get; set; }
     
-    public double Quantite { get; set; }
+    public decimal Quantite { get; set; }
     
-    public double Prix { get; set; }
+    public decimal Prix { get; set; }
     
-    public double? Frais { get; set; }
+    public decimal? Frais { get; set; }
 
     public ActifEnregistre ActifEnregistre { get; set; } = null!;
     public int IdActifEnregistre { get; set; }

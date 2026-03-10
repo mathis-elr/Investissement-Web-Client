@@ -6,9 +6,9 @@ public class TransactionDto
     
     public string NomActif { get; set; } = string.Empty;
     
-    public double? Quantite { get; set; }
+    public decimal? Quantite { get; set; }
     
-    public double? Prix { get; set; }
+    public decimal? Prix { get; set; }
     
-    public double? Frais { get; set; }
+    public decimal? Frais { get; set; }
 }

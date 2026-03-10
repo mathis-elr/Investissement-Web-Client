@@ -6,9 +6,9 @@ namespace Investissement_WebClient.Data.Services
 {
     public class YahooDataService : IYahooDataService
     {
-        public async Task<Dictionary<string, double>> GetPrixActuelAsync(List<string> symboles)
+        public async Task<Dictionary<string, decimal>> GetPrixActuelAsync(List<string> symboles)
         {
-            var dictionnairePrix = new Dictionary<string, double>();
+            var dictionnairePrix = new Dictionary<string, decimal>();
             
             if (symboles == null || !symboles.Any())
             {
@@ -26,7 +26,7 @@ namespace Investissement_WebClient.Data.Services
                     if (resultats.TryGetValue(symbole, out Security data))
                     {
                         // "RegularMarketPrice" est le prix actuel (ou le dernier prix de clôture)
-                        dictionnairePrix[symbole] = Math.Round((double)data.RegularMarketPrice, 2);
+                        dictionnairePrix[symbole] = (decimal)Math.Round(data.RegularMarketPrice, 2);
                         Console.WriteLine($"actif : {symbole} =  {Math.Round(data.RegularMarketPrice, 2)}");
                     }
                     else

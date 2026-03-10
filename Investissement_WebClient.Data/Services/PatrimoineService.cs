@@ -19,7 +19,7 @@ public class PatrimoineService : IPatrimoineService
         _yahooDataService = yahooDataService;
     }
 
-    public async Task<double> CalculerValeurPatrimoineCourante()
+    public async Task<decimal> CalculerValeurPatrimoineCourante()
     {
         var detailsActifs = await _actifService.GetDetailsActif();
         
@@ -30,7 +30,7 @@ public class PatrimoineService : IPatrimoineService
         return detailsActifs.Sum(a => a.QuantiteDetenue * prixParActif[a.SymboleActif]);
     }
 
-    public async Task<double> CalculerValeurInvestissementTotal()
+    public async Task<decimal> CalculerValeurInvestissementTotal()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -38,7 +38,7 @@ public class PatrimoineService : IPatrimoineService
             .SumAsync(t => t.Quantite * t.Prix);
     }
 
-    public async Task SaveValeurPatrimoine(double valeurPatrimoine, double valeurInvestissementTotal)
+    public async Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -53,7 +53,7 @@ public class PatrimoineService : IPatrimoineService
         await context.SaveChangesAsync();
     }
 
-    public async Task<VariationsDto> GetVariations(double valeurActuelle, double valeurInvestissementTotal)
+    public async Task<VariationsDto> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
@@ -73,7 +73,7 @@ public class PatrimoineService : IPatrimoineService
         };
     }
 
-    private double CalculVariationPeriode(double valeurActuelle, double valeurInvestissementTotal, List<HistoriquePatrimoine> historique, int periode)
+    private decimal CalculVariationPeriode(decimal valeurActuelle, decimal valeurInvestissementTotal, List<HistoriquePatrimoine> historique, int periode)
     {
         DateTime dateDebutPeriode = DateTime.Now.AddDays(-periode);
         
@@ -83,8 +83,8 @@ public class PatrimoineService : IPatrimoineService
             .Select(h =>  h.Valeur - h.InvestissementTotal)
             .FirstOrDefault();
         
-        double nouveauProfit = valeurActuelle - valeurInvestissementTotal;
-        double variation = (nouveauProfit - ancienProfit) / valeurInvestissementTotal;
+        decimal nouveauProfit = valeurActuelle - valeurInvestissementTotal;
+        decimal variation = (nouveauProfit - ancienProfit) / valeurInvestissementTotal;
         return variation;
     }
 
@@ -119,7 +119,7 @@ public class PatrimoineService : IPatrimoineService
         }).ToList();
     }
 
-    public async Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(double valeurPatrimoineCourant)
+    public async Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -140,11 +140,11 @@ public class PatrimoineService : IPatrimoineService
         return data.Select(t => new ProportionActif
             {
                 Actif = t.Actif,
-                Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out double value) ? value : 0)/ valeurPatrimoineCourant, 2)*100),
+                Proportion = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0)/ valeurPatrimoineCourant, 2)*100,
             }).ToList();
     }
 
-    public async Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(double valeurPatrimoineCourant)
+    public async Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -165,7 +165,7 @@ public class PatrimoineService : IPatrimoineService
         return data.Select(t => new ProportionTypeActif
             {
                 Type = t.Type,
-                Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out double value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
+                Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
             }).ToList();
     }
 }

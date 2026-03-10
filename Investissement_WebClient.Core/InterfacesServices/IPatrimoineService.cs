@@ -5,17 +5,17 @@ namespace Investissement_WebClient.Core.InterfacesServices;
 
 public interface IPatrimoineService
 {
-    Task<double> CalculerValeurPatrimoineCourante();
+    Task<decimal> CalculerValeurPatrimoineCourante();
     
-    Task<double> CalculerValeurInvestissementTotal();
+    Task<decimal> CalculerValeurInvestissementTotal();
 
-    Task SaveValeurPatrimoine(double valeurPatrimoine, double valeurInvestissementTotal);
+    Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal);
 
-    Task<VariationsDto> GetVariations(double valeurActuelle, double valeurInvestissementTotal);
+    Task<VariationsDto> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal);
 
     Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieres();
 
-    Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(double valeurPatrimoineCourant);
+    Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant);
 
-    Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(double valeurPatrimoineCourant);
+    Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant);
 }

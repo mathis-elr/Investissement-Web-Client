@@ -6,7 +6,7 @@ public class HistoriquePatrimoine
     
     public DateTime Date { get; set; }
     
-    public double InvestissementTotal { get; set; }
+    public decimal InvestissementTotal { get; set; }
     
-    public double Valeur { get; set; }
+    public decimal Valeur { get; set; }
 }

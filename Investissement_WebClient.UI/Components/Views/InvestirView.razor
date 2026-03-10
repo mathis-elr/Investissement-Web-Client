@@ -68,19 +68,23 @@
             <label>Mes Investissements</label>
         </div>
         <div class="mes-investissements-content">
-            @foreach (InvestissementDto investissement in IVM.Investissements)
+            @foreach (var investissementsParDate in IVM.Investissements.GroupBy(i => i.Date.Date))
             {
                 <div class="un-investissement">
                     <label>
-                        @investissement.Transactions.Sum(t => t.Quantite * t.Prix)?.ToString("C2", CultureInfo.CreateSpecificCulture("fr-FR")) le @investissement.Date.ToString("dddd dd MMMM", CultureInfo.CreateSpecificCulture("fr-FR"))
-                        @(investissement.NomModele != null ? "- " + investissement.NomModele : "")
+                        @(investissementsParDate.Sum(t => t.Transactions.Sum(tr => tr.Prix * tr.Quantite))?.ToString("C2", System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR")))
+                        @investissementsParDate.Key.ToString("dddd dd MMMM", CultureInfo.CreateSpecificCulture("fr-FR"))
                     </label>
-                    <div class="transactions-investissement">
-                        @foreach (TransactionDto transaction in investissement.Transactions)
-                        {
-                            <span type="text" class="une-transaction">@transaction.Quantite @transaction.NomActif à @transaction.Prix?.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR"))</span>
-                        }
-                    </div>
+                    @foreach(var investissementJour in investissementsParDate)
+                    {
+                        <label>@(investissementJour.NomModele != null ? "- " + investissementJour.NomModele : "")</label>
+                        <div class="transactions-investissement">
+                            @foreach (TransactionDto transaction in investissementJour.Transactions)
+                            {
+                                <span type="text" class="une-transaction">@transaction.Quantite @transaction.NomActif à @transaction.Prix?.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR"))</span>
+                            }
+                        </div>
+                    }
                 </div>
             }
         </div>

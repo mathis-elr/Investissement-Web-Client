@@ -6,5 +6,5 @@ public class DetailsActifDto
     
     public string SymboleActif { get; set; }
     
-    public double QuantiteDetenue { get; set; }
+    public decimal QuantiteDetenue { get; set; }
 }
