@@ -21,9 +21,14 @@
                 <label>Disponibles</label>
                 <select value="@AVM.SelectedActif.Id" @onchange="AVM.OnChangeActif">
                     <option value="0" disabled selected>-- Selectionnez un actif --</option>
-                    @foreach (ActifDto actif in AVM.ActifsDisponibles)
+                    @foreach (var type in AVM.ActifsDisponibles.GroupBy(a => a.Type))
                     {
-                        <option value="@actif.Id">@actif.Nom</option>
+                        <optgroup label="@type.Key">
+                            @foreach (var actif in type)
+                            {
+                                <option value="@actif.Id">@actif.Nom</option>
+                            }
+                        </optgroup>
                     }
                 </select>
             }

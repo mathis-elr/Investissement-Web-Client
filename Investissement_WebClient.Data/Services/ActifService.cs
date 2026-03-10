@@ -22,7 +22,7 @@ public class ActifService : IActifService
             {
                 Id = a.Id,
                 Nom = a.Nom,
-                Type = a.Type.Value,
+                Type = a.Type,
                 Isin = a.Isin,
                 Symbole = a.Symbole,
                 Risque = a.Risque.Value
@@ -39,7 +39,7 @@ public class ActifService : IActifService
             {
                 Id = a.Id,
                 Nom = a.Nom,
-                Type = a.Type.Value,
+                Type = a.Type,
                 Isin = a.Isin,
                 Symbole = a.Symbole,
                 Risque = a.Risque.Value
@@ -59,6 +59,21 @@ public class ActifService : IActifService
         };
     }
 
+    public async Task<IEnumerable<DetailsActifDto>> GetDetailsActif()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        IEnumerable<DetailsActifDto> detailsActifDtos = context.Transactions.GroupBy(t => t.IdActifEnregistre)
+            .Select(a => new DetailsActifDto
+            {
+                NomActif = a.First().ActifEnregistre.Nom,
+                SymboleActif = a.First().ActifEnregistre.Symbole,
+                QuantiteDetenue = a.Sum(t => t.Quantite),
+            }).ToList();
+
+        return detailsActifDtos;
+    }
+
     public async Task SupprimerActifs(List<int> idActifs)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
@@ -73,7 +88,6 @@ public class ActifService : IActifService
         
         var actifEnregistre = new ActifEnregistre
         {
-            Id = actif.Id,
             Nom =  actif.Nom,
             Type = actif.Type,
             Isin =  actif.Isin,

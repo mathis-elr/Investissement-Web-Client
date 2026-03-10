@@ -10,7 +10,9 @@ public interface IActifService
     Task<IEnumerable<ActifDto>> GetActifsDisponibles();
     
     ActifTypesDto GetActifsParType(IEnumerable<ActifDto> actifs);
-    
+
+    Task<IEnumerable<DetailsActifDto>> GetDetailsActif();
+
     Task SupprimerActifs(List<int> idActifs);
     
     Task AjouterActif(ActifDto actif);

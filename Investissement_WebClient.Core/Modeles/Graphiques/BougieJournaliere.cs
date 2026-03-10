@@ -1,4 +1,4 @@
-namespace Investissement_WebClient.Core.Modeles.DTO;
+namespace Investissement_WebClient.Core.Modeles.Graphiques;
 
 public class BougieJournaliere
 {

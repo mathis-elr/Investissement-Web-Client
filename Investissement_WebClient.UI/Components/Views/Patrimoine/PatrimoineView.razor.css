@@ -59,13 +59,84 @@
 
 
 .patrimoine-content {
+    width:100%;
     background-color: #1e1e1e;
     border-radius: 10px;
-    padding: 20px;
     height: 100%;
     opacity: 0.8;
-    min-height: 0;
-    overflow-y: auto;
-    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    position:relative;
 }
 
+.btn-rond {
+    display: flex;
+    align-items: center;
+    height:100%;
+    width:50px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 30px;
+    z-index: 100;
+    color: white;
+    position: absolute;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(173, 173, 173, 0.3);
+    user-select: none;
+    border-radius:15px;
+}
+
+.gauche {
+    justify-content: end;
+    left: 0;
+    transform: translateX(-25px);
+    transition: all 0.2s ease-in-out;
+}
+    .gauche:hover {
+        justify-content: center;
+        transform: translateX(-5px);
+    }
+
+.droite {
+    justify-content: start;
+    right: 0;
+    transform: translateX(25px);
+    transition: all 0.2s ease-in-out;
+}
+    .droite:hover {
+        justify-content: center;
+        transform: translateX(5px);
+    }
+
+.rail {
+    overflow: hidden;
+    display: flex;
+    gap:0;
+    width: 400%;
+    height:100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.page {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    overflow: hidden;
+    width:25%;
+}
+
+.page1 {
+    transform: translateX(0%);
+}
+
+.page2 {
+    transform: translateX(-25%);
+}
+
+.page3 {
+    transform: translateX(-50%);
+}
+
+.page4 {
+    transform: translateX(-75%);
+}

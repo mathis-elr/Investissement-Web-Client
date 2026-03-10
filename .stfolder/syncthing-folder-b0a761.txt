@@ -1,0 +1,5 @@
+# This directory is a Syncthing folder marker.
+# Do not delete.
+
+folderID: lvdjn-gn2zx
+created: 2025-11-29T11:32:17+01:00

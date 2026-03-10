@@ -1,7 +1,6 @@
 ﻿@using System.Globalization
+@using Investissement_WebClient.Core.Modeles.Graphiques
 @using Investissement_WebClient.UI.Components.ViewsModels;
-
-@using Investissement_WebClient.Core.Modeles.DTO
 
 @page "/patrimoine"
 @rendermode InteractiveServer
@@ -37,40 +36,113 @@
             </span>
         </div>
     </div>
-    
-    <div class="patrimoine-content">
-        <div class="patrimoine-candle">
-            <ApexChart TItem="BougieJournaliere"
-                       XAxisType="XAxisType.Datetime"
-                       Options="ChartsOptions.Options">
 
-                <ApexCandleSeries TItem="BougieJournaliere"
-                                  Items="PVM.BougiesJournalieres"
-                                  Name="Apex Stock Price"
-                                  XValue="@(e => e.Date)"
-                                  Open="@(e => e.Ouverture)"
-                                  High="@(e => e.Haut)"
-                                  Low="@(e => e.Bas)"
-                                  Close="@(e => e.Fermeture)"
-                                  OrderByDescending="e => e.X"/>
-            </ApexChart>
-        </div>
-        
-        <div class="patrimoine-pies">
-            
+    <div class="patrimoine-content">
+
+        <div class="btn-rond gauche" @onclick="GraphiquePrecedent">ᐸ</div>
+        <div class="btn-rond droite" @onclick="GraphiqueSuivant">ᐳ</div>
+
+        <div class="rail @(pages[index])">
+            <div class="page">
+                @if (PVM.BougiesJournalieres.Any())
+                {
+                    <div style="flex:1">
+                        <ApexChart TItem="BougieJournaliere"
+                                   XAxisType="XAxisType.Datetime"
+                                   Options="ChartsOptions.OptionsBougieJournaliere">
+
+                            <ApexCandleSeries TItem="BougieJournaliere"
+                                              Items="PVM.BougiesJournalieres"
+                                              Name="Apex Stock Price"
+                                              XValue="@(e => e.Date)"
+                                              Open="@(e => e.Ouverture)"
+                                              High="@(e => e.Haut)"
+                                              Low="@(e => e.Bas)"
+                                              Close="@(e => e.Fermeture)"
+                                              OrderByDescending="e => e.X" />
+                        </ApexChart>
+                    </div>
+                }
+            </div>
+
+            <div class="page">
+                @* Pie : proportion investit par actif par rapport au total investit *@
+                @if (PVM.ProportionParActif.Any())
+                {
+                    <div style="flex:1">
+                        <ApexChart TItem="ProportionActif"
+                                   Title="Proportion investit par actif"
+                                   Options="ChartsOptions.OptionsPieActif">
+
+                            <ApexPointSeries TItem="ProportionActif"
+                                             Items="PVM.ProportionParActif"
+                                             SeriesType="SeriesType.Pie"
+                                             XValue="@(e => e.Actif)"
+                                             YValue="@(e => e.Proportion)"
+                                             OrderByDescending="e => e.Y"/>
+                        </ApexChart>
+                    </div>
+
+                }
+               
+                @* Pie : proportion investit par type par rapport au total investit *@
+                @if (PVM.ProportionParTypeActif.Any())
+                {
+                <div style="flex:1">
+                        <ApexChart TItem="ProportionTypeActif"
+                                   Title="Proportion investit par type d'actif"
+                                   Options="ChartsOptions.OptionsPieType">
+
+                            <ApexPointSeries TItem="ProportionTypeActif"
+                                             Items="PVM.ProportionParTypeActif"
+                                             SeriesType="SeriesType.Pie"
+                                             XValue="@(e => e.Type)"
+                                             YValue="@(e => e.Proportion)"
+                                             OrderByDescending="e => e.Y" />
+                        </ApexChart>
+                    </div>
+                }
+               
+            </div>
+
+            <div class="page">
+                @*Graphique Line : evolution du montant total investit au cours du temps*@  
+            </div>
+
+            <div class="page">
+                @*Graphique 3 lines : prévision d'evolution du patrimoine sur 20 ans basé sur une moyenne investit chaque mois avec une augmentation de +5%, +8% et +10% par ans *@
+            </div>
         </div>
     </div>
 </div>
 
 @code {
+    private List<string> pages = ["page1", "page2", "page3", "page4"];
+    private int index =  0;
+
+    private void GraphiqueSuivant()
+    {
+        index = (index+1) % (pages.Count());
+    }
+    private void GraphiquePrecedent()
+    {
+        index = (index - 1 + pages.Count()) % (pages.Count());
+    }
+
     private CancellationTokenSource _cts = new();
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _ = LoadData(_cts.Token); //on lance en arrière plan (si on utilisait await ca bloquerait la fonction)
+            await PVM.LoadData();
             await PVM.LoadBougieJournalieres();
+            await PVM.LoadDataPies();
+            StateHasChanged();
+
+            if (PVM.BougiesJournalieres.Count() == 0) TS.ShowError("Aucun investissement enregistré, commenssez à investir pour suivre votre patrimoine");
+
+            _ = LoadData(_cts.Token); //on lance en arrière plan avec _ (si on utilisait await ca bloquerait la fin de la fonction)
         }
 
         if (PVM.HasError)
@@ -86,15 +158,17 @@
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
+
                 await PVM.LoadData();
+
                 StateHasChanged();
-            
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             } 
         }
         catch(OperationCanceledException){ Console.WriteLine("Arret du chargement de la valeur du patrimoine"); }
     }
     
+    // déclenchement lors du déclenchement du catch de LoadData (quand on change de page) pour stopper la boucle
     public void Dispose()
     {
         _cts.Cancel();

@@ -1,0 +1,689 @@
+{
+    "Action": [
+        {
+            "name": "ACCOR",
+            "ISIN": "FR0000120404",
+            "symbol": "AC.PA"
+        },
+        {
+            "name": "ADP",
+            "ISIN": "FR0010340141",
+            "symbol": "ADP.PA"
+        },
+        {
+            "name": "AIR FRANCE -KLM",
+            "ISIN": "FR001400J770",
+            "symbol": "AF.PA"
+        },
+        {
+            "name": "AIR LIQUIDE",
+            "ISIN": "FR0000120073",
+            "symbol": "AI.PA"
+        },
+        {
+            "name": "AIRBUS",
+            "ISIN": "NL0000235190",
+            "symbol": "AIR.PA"
+        },
+        {
+            "name": "ALSTOM",
+            "ISIN": "FR0010220475",
+            "symbol": "ALO.PA"
+        },
+        {
+            "name": "ALTAREA",
+            "ISIN": "FR0000033219",
+            "symbol": "ALTA.PA"
+        },
+        {
+            "name": "ALTEN",
+            "ISIN": "FR0000071946",
+            "symbol": "ATE.PA"
+        },
+        {
+            "name": "AMUNDI",
+            "ISIN": "FR0004125920",
+            "symbol": "AMUN.PA"
+        },
+        {
+            "name": "ANTIN INFRA PARTN",
+            "ISIN": "FR0014005AL0",
+            "symbol": "ANTIN.PA"
+        },
+        {
+            "name": "APERAM",
+            "ISIN": "LU0569974404",
+            "symbol": "APAM.PA"
+        },
+        {
+            "name": "ARCELORMITTAL SA",
+            "ISIN": "LU1598757687",
+            "symbol": "MT.PA"
+        },
+        {
+            "name": "ARGAN",
+            "ISIN": "FR0010481960",
+            "symbol": "ARG.PA"
+        },
+        {
+            "name": "ARKEMA",
+            "ISIN": "FR0010313833",
+            "symbol": "AKE.PA"
+        },
+        {
+            "name": "ARTOIS NOM.",
+            "ISIN": "FR0000076952",
+            "symbol": "ARTO.PA"
+        },
+        {
+            "name": "ATOS",
+            "ISIN": "FR001400X2S4",
+            "symbol": "ATO.PA"
+        },
+        {
+            "name": "AXA",
+            "ISIN": "FR0000120628",
+            "symbol": "CS.PA"
+        },
+        {
+            "name": "AYVENS",
+            "ISIN": "FR0013258662",
+            "symbol": "AYV.PA"
+        },
+        {
+            "name": "BAINS MER MONACO",
+            "ISIN": "MC0000031187",
+            "symbol": "BAIN.PA"
+        },
+        {
+            "name": "BIC",
+            "ISIN": "FR0000120966",
+            "symbol": "BB.PA"
+        },
+        {
+            "name": "BIOMERIEUX",
+            "ISIN": "FR0013280286",
+            "symbol": "BIM.PA"
+        },
+        {
+            "name": "BNP PARIBAS ACT.A",
+            "ISIN": "FR0000131104",
+            "symbol": "BNP.PA"
+        },
+        {
+            "name": "BOLLORE",
+            "ISIN": "FR0000039299",
+            "symbol": "BOL.PA"
+        },
+        {
+            "name": "BOUYGUES",
+            "ISIN": "FR0000120503",
+            "symbol": "EN.PA"
+        },
+        {
+            "name": "BUREAU VERITAS",
+            "ISIN": "FR0006174348",
+            "symbol": "BVI.PA"
+        },
+        {
+            "name": "CAMBODGE NOM.",
+            "ISIN": "FR001400SUB7",
+            "symbol": "CBDG.PA"
+        },
+        {
+            "name": "CAPGEMINI",
+            "ISIN": "FR0000125338",
+            "symbol": "CAP.PA"
+        },
+        {
+            "name": "CARMILA",
+            "ISIN": "FR0010828137",
+            "symbol": "CARM.PA"
+        },
+        {
+            "name": "CARREFOUR",
+            "ISIN": "FR0000120172",
+            "symbol": "CA.PA"
+        },
+        {
+            "name": "CHRISTIAN DIOR",
+            "ISIN": "FR0000130403",
+            "symbol": "CDI.PA"
+        },
+        {
+            "name": "COFACE",
+            "ISIN": "FR0010667147",
+            "symbol": "COFA.PA"
+        },
+        {
+            "name": "COMPAGNIE ODET",
+            "ISIN": "FR0000062234",
+            "symbol": "ODET.PA"
+        },
+        {
+            "name": "COVIVIO",
+            "ISIN": "FR0000064578",
+            "symbol": "COV.PA"
+        },
+        {
+            "name": "COVIVIO HOTELS",
+            "ISIN": "FR0000060303",
+            "symbol": "COVH.PA"
+        },
+        {
+            "name": "CREDIT AGRICOLE",
+            "ISIN": "FR0000045072",
+            "symbol": "ACA.PA"
+        },
+        {
+            "name": "DANONE",
+            "ISIN": "FR0000120644",
+            "symbol": "BN.PA"
+        },
+        {
+            "name": "DASSAULT AVIATION",
+            "ISIN": "FR0014004L86",
+            "symbol": "AM.PA"
+        },
+        {
+            "name": "DASSAULT SYSTEMES",
+            "ISIN": "FR0014003TT8",
+            "symbol": "DSY.PA"
+        },
+        {
+            "name": "EDENRED",
+            "ISIN": "FR0010908533",
+            "symbol": "EDEN.PA"
+        },
+        {
+            "name": "EIFFAGE",
+            "ISIN": "FR0000130452",
+            "symbol": "FGR.PA"
+        },
+        {
+            "name": "ELIS",
+            "ISIN": "FR0012435121",
+            "symbol": "ELIS.PA"
+        },
+        {
+            "name": "ENGIE",
+            "ISIN": "FR0010208488",
+            "symbol": "ENGI.PA"
+        },
+        {
+            "name": "ERAMET",
+            "ISIN": "FR0000131757",
+            "symbol": "ERA.PA"
+        },
+        {
+            "name": "ESSILORLUXOTTICA",
+            "ISIN": "FR0000121667",
+            "symbol": "EL.PA"
+        },
+        {
+            "name": "EURAZEO",
+            "ISIN": "FR0000121121",
+            "symbol": "RF.PA"
+        },
+        {
+            "name": "EUROFINS SCIENT.",
+            "ISIN": "FR0014000MR3",
+            "symbol": "ERF.PA"
+        },
+        {
+            "name": "EURONEXT",
+            "ISIN": "NL0006294274",
+            "symbol": "ENX.PA"
+        },
+        {
+            "name": "EUTELSAT COMMUNIC.",
+            "ISIN": "FR0010221234",
+            "symbol": "ETL.PA"
+        },
+        {
+            "name": "EXOSENS",
+            "ISIN": "FR001400Q9V2",
+            "symbol": "EXENS.PA"
+        },
+        {
+            "name": "FDJ UNITED",
+            "ISIN": "FR0013451333",
+            "symbol": "FDJU.PA"
+        },
+        {
+            "name": "FORVIA",
+            "ISIN": "FR0000121147",
+            "symbol": "FRVIA.PA"
+        },
+        {
+            "name": "GECINA",
+            "ISIN": "FR0010040865",
+            "symbol": "GFC.PA"
+        },
+        {
+            "name": "GETLINK SE",
+            "ISIN": "FR0010533075",
+            "symbol": "GET.PA"
+        },
+        {
+            "name": "GTT",
+            "ISIN": "FR0011726835",
+            "symbol": "GTT.PA"
+        },
+        {
+            "name": "HERMES INTL",
+            "ISIN": "FR0000052292",
+            "symbol": "RMS.PA"
+        },
+        {
+            "name": "ICADE",
+            "ISIN": "FR0000035081",
+            "symbol": "ICAD.PA"
+        },
+        {
+            "name": "ID LOGISTICS GROUP",
+            "ISIN": "FR0010929125",
+            "symbol": "IDL.PA"
+        },
+        {
+            "name": "IMERYS",
+            "ISIN": "FR0000120859",
+            "symbol": "NK.PA"
+        },
+        {
+            "name": "INTERPARFUMS",
+            "ISIN": "FR0004024222",
+            "symbol": "ITP.PA"
+        },
+        {
+            "name": "IPSEN",
+            "ISIN": "FR0010259150",
+            "symbol": "IPN.PA"
+        },
+        {
+            "name": "IPSOS",
+            "ISIN": "FR0000073298",
+            "symbol": "IPS.PA"
+        },
+        {
+            "name": "JCDECAUX",
+            "ISIN": "FR0000077919",
+            "symbol": "DEC.PA"
+        },
+        {
+            "name": "KERING",
+            "ISIN": "FR0000121485",
+            "symbol": "KER.PA"
+        },
+        {
+            "name": "KLEPIERRE",
+            "ISIN": "FR0000121964",
+            "symbol": "LI.PA"
+        },
+        {
+            "name": "L'OREAL",
+            "ISIN": "FR0000120321",
+            "symbol": "OR.PA"
+        },
+        {
+            "name": "LAGARDERE SA",
+            "ISIN": "FR0000130213",
+            "symbol": "MMB.PA"
+        },
+        {
+            "name": "LDC",
+            "ISIN": "FR001400SF56",
+            "symbol": "LOUP.PA"
+        },
+        {
+            "name": "LECTRA",
+            "ISIN": "FR0000065484",
+            "symbol": "LSS.PA"
+        },
+        {
+            "name": "LEGRAND",
+            "ISIN": "FR0010307819",
+            "symbol": "LR.PA"
+        },
+        {
+            "name": "LISI",
+            "ISIN": "FR0000050353",
+            "symbol": "FII.PA"
+        },
+        {
+            "name": "LVMH",
+            "ISIN": "FR0000121014",
+            "symbol": "MC.PA"
+        },
+        {
+            "name": "MAUREL ET PROM",
+            "ISIN": "FR0000051070",
+            "symbol": "MAU.PA"
+        },
+        {
+            "name": "MERCIALYS",
+            "ISIN": "FR0010241638",
+            "symbol": "MERY.PA"
+        },
+        {
+            "name": "METROPOLE TV",
+            "ISIN": "FR0000053225",
+            "symbol": "MMT.PA"
+        },
+        {
+            "name": "MICHELIN",
+            "ISIN": "FR001400AJ45",
+            "symbol": "ML.PA"
+        },
+        {
+            "name": "MONCEY (FIN.) NOM.",
+            "ISIN": "FR001400SU99",
+            "symbol": "FMONC.PA"
+        },
+        {
+            "name": "MONTEA",
+            "ISIN": "BE0003853703",
+            "symbol": "MONT.PA"
+        },
+        {
+            "name": "NEURONES",
+            "ISIN": "FR0004050250",
+            "symbol": "NRO.PA"
+        },
+        {
+            "name": "NEXANS",
+            "ISIN": "FR0000044448",
+            "symbol": "NEX.PA"
+        },
+        {
+            "name": "North Atlantic En.",
+            "ISIN": "FR0000120669",
+            "symbol": "NAE.PA"
+        },
+        {
+            "name": "OPMOBILITY",
+            "ISIN": "FR0000124570",
+            "symbol": "OPM.PA"
+        },
+        {
+            "name": "ORANGE",
+            "ISIN": "FR0000133308",
+            "symbol": "ORA.PA"
+        },
+        {
+            "name": "OVH",
+            "ISIN": "FR0014005HJ9",
+            "symbol": "OVH.PA"
+        },
+        {
+            "name": "PERNOD RICARD",
+            "ISIN": "FR0000120693",
+            "symbol": "RI.PA"
+        },
+        {
+            "name": "PEUGEOT INVEST",
+            "ISIN": "FR0000064784",
+            "symbol": "PEUG.PA"
+        },
+        {
+            "name": "PLANISWARE",
+            "ISIN": "FR001400PFU4",
+            "symbol": "PLNW.PA"
+        },
+        {
+            "name": "PLUXEE",
+            "ISIN": "NL0015001W49",
+            "symbol": "PLX.PA"
+        },
+        {
+            "name": "PUBLICIS GROUPE SA",
+            "ISIN": "FR0000130577",
+            "symbol": "PUB.PA"
+        },
+        {
+            "name": "RAMSAY GEN SANTE",
+            "ISIN": "FR0000044471",
+            "symbol": "GDS.PA"
+        },
+        {
+            "name": "REMY COINTREAU",
+            "ISIN": "FR0000130395",
+            "symbol": "RCO.PA"
+        },
+        {
+            "name": "RENAULT",
+            "ISIN": "FR0000131906",
+            "symbol": "RNO.PA"
+        },
+        {
+            "name": "REXEL",
+            "ISIN": "FR0010451203",
+            "symbol": "RXL.PA"
+        },
+        {
+            "name": "ROBERTET",
+            "ISIN": "FR0000039091",
+            "symbol": "RBT.PA"
+        },
+        {
+            "name": "ROBERTET CDV 87",
+            "ISIN": "FR0000045619",
+            "symbol": "CBR.PA"
+        },
+        {
+            "name": "ROBERTET CI",
+            "ISIN": "FR0000045601",
+            "symbol": "CBE.PA"
+        },
+        {
+            "name": "RUBIS",
+            "ISIN": "FR0013269123",
+            "symbol": "RUI.PA"
+        },
+        {
+            "name": "S.E.B.",
+            "ISIN": "FR0000121709",
+            "symbol": "SK.PA"
+        },
+        {
+            "name": "SAFRAN",
+            "ISIN": "FR0000073272",
+            "symbol": "SAF.PA"
+        },
+        {
+            "name": "SAINT GOBAIN",
+            "ISIN": "FR0000125007",
+            "symbol": "SGO.PA"
+        },
+        {
+            "name": "SANOFI",
+            "ISIN": "FR0000120578",
+            "symbol": "SAN.PA"
+        },
+        {
+            "name": "SARTORIUS STED BIO",
+            "ISIN": "FR0013154002",
+            "symbol": "DIM.PA"
+        },
+        {
+            "name": "SCHNEIDER ELECTRIC",
+            "ISIN": "FR0000121972",
+            "symbol": "SU.PA"
+        },
+        {
+            "name": "SCOR SE",
+            "ISIN": "FR0010411983",
+            "symbol": "SCR.PA"
+        },
+        {
+            "name": "SEGRO PLC",
+            "ISIN": "GB00B5ZN1N88",
+            "symbol": "SGRO.PA"
+        },
+        {
+            "name": "SES",
+            "ISIN": "LU0088087324",
+            "symbol": "SESG.PA"
+        },
+        {
+            "name": "SOCIETE GENERALE",
+            "ISIN": "FR0000130809",
+            "symbol": "GLE.PA"
+        },
+        {
+            "name": "SODEXO",
+            "ISIN": "FR0000121220",
+            "symbol": "SW.PA"
+        },
+        {
+            "name": "SOITEC",
+            "ISIN": "FR0013227113",
+            "symbol": "SOI.PA"
+        },
+        {
+            "name": "SOLVAY",
+            "ISIN": "BE0003470755",
+            "symbol": "SOLB.PA"
+        },
+        {
+            "name": "SOPRA STERIA GROUP",
+            "ISIN": "FR0000050809",
+            "symbol": "SOP.PA"
+        },
+        {
+            "name": "SPIE",
+            "ISIN": "FR0012757854",
+            "symbol": "SPIE.PA"
+        },
+        {
+            "name": "STEF",
+            "ISIN": "FR0000064271",
+            "symbol": "STF.PA"
+        },
+        {
+            "name": "STELLANTIS NV",
+            "ISIN": "NL00150001Q9",
+            "symbol": "STLAP.PA"
+        },
+        {
+            "name": "STMICROELECTRONICS",
+            "ISIN": "NL0000226223",
+            "symbol": "STMPA.PA"
+        },
+        {
+            "name": "TECHNIP ENERGIES",
+            "ISIN": "NL0014559478",
+            "symbol": "TE.PA"
+        },
+        {
+            "name": "TELEPERFORMANCE",
+            "ISIN": "FR0000051807",
+            "symbol": "TEP.PA"
+        },
+        {
+            "name": "TF1",
+            "ISIN": "FR0000054900",
+            "symbol": "TFI.PA"
+        },
+        {
+            "name": "THALES",
+            "ISIN": "FR0000121329",
+            "symbol": "HO.PA"
+        },
+        {
+            "name": "TIKEHAU CAPITAL",
+            "ISIN": "FR0013230612",
+            "symbol": "TKO.PA"
+        },
+        {
+            "name": "TITAN S.A.",
+            "ISIN": "BE0974338700",
+            "symbol": "TITC.PA"
+        },
+        {
+            "name": "TOTALENERGIES",
+            "ISIN": "FR0000120271",
+            "symbol": "TTE.PA"
+        },
+        {
+            "name": "TRIGANO",
+            "ISIN": "FR0005691656",
+            "symbol": "TRI.PA"
+        },
+        {
+            "name": "UBISOFT ENTERTAIN",
+            "ISIN": "FR0000054470",
+            "symbol": "UBI.PA"
+        },
+        {
+            "name": "UNIBAIL-RODAMCO-WE",
+            "ISIN": "FR0013326246",
+            "symbol": "URW.PA"
+        },
+        {
+            "name": "VALEO",
+            "ISIN": "FR0013176526",
+            "symbol": "FR.PA"
+        },
+        {
+            "name": "VALLOUREC",
+            "ISIN": "FR0013506730",
+            "symbol": "VK.PA"
+        },
+        {
+            "name": "VEOLIA ENVIRON.",
+            "ISIN": "FR0000124141",
+            "symbol": "VIE.PA"
+        },
+        {
+            "name": "VERALLIA",
+            "ISIN": "FR0013447729",
+            "symbol": "VRLA.PA"
+        },
+        {
+            "name": "VICAT",
+            "ISIN": "FR0000031775",
+            "symbol": "VCT.PA"
+        },
+        {
+            "name": "VINCI",
+            "ISIN": "FR0000125486",
+            "symbol": "DG.PA"
+        },
+        {
+            "name": "VIRBAC",
+            "ISIN": "FR0000031577",
+            "symbol": "VIRP.PA"
+        },
+        {
+            "name": "VIVENDI SE",
+            "ISIN": "FR0000127771",
+            "symbol": "VIV.PA"
+        },
+        {
+            "name": "VOLTALIA",
+            "ISIN": "FR0011995588",
+            "symbol": "VLTSA.PA"
+        },
+        {
+            "name": "Vusion",
+            "ISIN": "FR0010282822",
+            "symbol": "VU.PA"
+        },
+        {
+            "name": "WAVESTONE",
+            "ISIN": "FR0013357621",
+            "symbol": "WAVE.PA"
+        },
+        {
+            "name": "WENDEL",
+            "ISIN": "FR0000121204",
+            "symbol": "MF.PA"
+        },
+        {
+            "name": "WORLDLINE",
+            "ISIN": "FR0011981968",
+            "symbol": "WLN.PA"
+        }
+    ]
+}

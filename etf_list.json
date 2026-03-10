@@ -1,0 +1,494 @@
+{
+    "ETF": [
+        {
+            "name": "Amundi PEA Asie Pacifique (MSCI AC Asia Pacific Ex Japan) UCITS ETF Acc",
+            "ISIN": "FR0011869312",
+            "symbol": "PAEJ.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU ESG Selection - UCITS ETF DR - EUR (D)",
+            "ISIN": "LU2059756325",
+            "symbol": "CMUD.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU ESG Selection - UCITS ETF DR - EUR (C)",
+            "ISIN": "LU1602144575",
+            "symbol": "CMU.PA"
+        },
+        {
+            "name": "Amundi PEA Immobilier Europe (FTSE EPRA\/NAREIT) UCITS ETF Acc",
+            "ISIN": "FR0011869304",
+            "symbol": "PMEH.PA"
+        },
+        {
+            "name": "Amundi PEA Nasdaq-100 UCITS ETF Acc",
+            "ISIN": "FR0011871110",
+            "symbol": "PUST.PA"
+        },
+        {
+            "name": "Amundi PEA S&P 500 UCITS ETF EUR Hedged Acc",
+            "ISIN": "FR0011871136",
+            "symbol": "PSPH.PA"
+        },
+        {
+            "name": "Amundi PEA S&P US Consumer Staples Screened UCITS ETF - Acc",
+            "ISIN": "FR001400KE06",
+            "symbol": "COSE.PA"
+        },
+        {
+            "name": "Amundi PEA MSCI USA Value Advanced UCITS ETF - Acc",
+            "ISIN": "FR001400KH45",
+            "symbol": "USVE.PA"
+        },
+        {
+            "name": "Amundi PEA Luxe Monde UCITS ETF Acc",
+            "ISIN": "FR001400S9V0",
+            "symbol": "MLUX.PA"
+        },
+        {
+            "name": "AMUNDI PEA MONDE MSCI World UCITS ETF Acc",
+            "ISIN": "FR001400U5Q4",
+            "symbol": "DCAM.PA"
+        },
+        {
+            "name": "Amundi PEA Emergent (MSCI Emerging) ESG Transition UCITS ETF S - Acc",
+            "ISIN": "FR001400ZGO4",
+            "symbol": "PEMS.PA"
+        },
+        {
+            "name": "Amundi PEA Nasdaq-100 UCITS ETF S - Acc",
+            "ISIN": "FR001400ZGR7",
+            "symbol": "PNAS.PA"
+        },
+        {
+            "name": "Amundi PEA S&P 500 Screened UCITS ETF S - Acc",
+            "ISIN": "FR001400ZGS5",
+            "symbol": "PSPS.PA"
+        },
+        {
+            "name": "Amundi CAC 40 UCITS ETF Acc",
+            "ISIN": "FR0013380607",
+            "symbol": "CACC.PA"
+        },
+        {
+            "name": "Amundi PEA Chine (MSCI China) Screened UCITS ETF",
+            "ISIN": "FR0011871078",
+            "symbol": "PASI.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU ESG Broad Transition UCITS ETF ACC",
+            "ISIN": "LU0908501058",
+            "symbol": "MFED.PA"
+        },
+        {
+            "name": "Amundi Core MSCI EMU UCITS ETF Dist",
+            "ISIN": "LU1646360971",
+            "symbol": "MFE.PA"
+        },
+        {
+            "name": "Amundi Core MSCI EMU UCITS ETF Acc",
+            "ISIN": "LU1646361276",
+            "symbol": "MFEC.PA"
+        },
+        {
+            "name": "Amundi PEA S&P US Industrials Screened UCITS ETF - Acc",
+            "ISIN": "FR0011869270",
+            "symbol": "PDJE.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU SRI Climate Paris Aligned - UCITS ETF DR (C)",
+            "ISIN": "LU2109787635",
+            "symbol": "EESG.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU Value Factor",
+            "ISIN": "LU1598690169",
+            "symbol": "VAL.PA"
+        },
+        {
+            "name": "Amundi EURO STOXX 50 II UCITS ETF Acc",
+            "ISIN": "FR0007054358",
+            "symbol": "MSE.PA"
+        },
+        {
+            "name": "AMUNDI CAC 40 ESG UCITS ETF Acc",
+            "ISIN": "LU1681046931",
+            "symbol": "C40.PA"
+        },
+        {
+            "name": "Amundi CAC 40 UCITS ETF Dist",
+            "ISIN": "FR0007052782",
+            "symbol": "CAC.PA"
+        },
+        {
+            "name": "AMUNDI CAC TRANSITION CLIMAT UCITS ETF",
+            "ISIN": "FR0010655704",
+            "symbol": "CF1.PA"
+        },
+        {
+            "name": "Amundi DAX II UCITS ETF Acc",
+            "ISIN": "LU0252633754",
+            "symbol": "DAX.PA"
+        },
+        {
+            "name": "AMUNDI ETF DAX UCITS ETF DR",
+            "ISIN": "FR0010655712",
+            "symbol": "CG1.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU High Dividend UCITS ETF Acc",
+            "ISIN": "FR0010717090",
+            "symbol": "CD8.PA"
+        },
+        {
+            "name": "Amundi Core EURO STOXX 50 UCITS ETF EUR Acc",
+            "ISIN": "LU1681047236",
+            "symbol": "C50.PA"
+        },
+        {
+            "name": "Amundi Core EURO STOXX 50 UCITS ETF EUR Dist",
+            "ISIN": "LU1681047319",
+            "symbol": "CD5.PA"
+        },
+        {
+            "name": "Amundi Italy MIB ESG UCITS ETF Acc",
+            "ISIN": "LU1681037518",
+            "symbol": "FMI.PA"
+        },
+        {
+            "name": "Amundi IBEX 35 UCITS ETF - Acc",
+            "ISIN": "FR0010655746",
+            "symbol": "CS1.PA"
+        },
+        {
+            "name": "Amundi PEA MSCI USA ESG Selection UCITS ETF - EUR",
+            "ISIN": "LU1681042864",
+            "symbol": "CU2.PA"
+        },
+        {
+            "name": "Amundi MSCI World Swap UCITS ETF EUR Acc",
+            "ISIN": "LU1681043599",
+            "symbol": "CW8.PA"
+        },
+        {
+            "name": "Amundi Euro Stoxx Banks UCITS ETF Acc",
+            "ISIN": "LU1829219390",
+            "symbol": "BNKE.PA"
+        },
+        {
+            "name": "Amundi S&P Eurozone Climate Paris Aligned UCITS ETF Acc",
+            "ISIN": "LU2195226068",
+            "symbol": "EPAB.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU Climate Paris Aligned UCITS ETF Acc",
+            "ISIN": "LU2182388582",
+            "symbol": "PABZ.PA"
+        },
+        {
+            "name": "Amundi FTSE MIB UCITS ETF Dist",
+            "ISIN": "FR0010010827",
+            "symbol": "MIB.PA"
+        },
+        {
+            "name": "Amundi PEA Inde (MSCI India) UCITS ETF Acc",
+            "ISIN": "FR0011869320",
+            "symbol": "PINR.PA"
+        },
+        {
+            "name": "Amundi PEA Emergent EMEA (MSCI Emerging EMEA) ESG Transition UCITS ETF",
+            "ISIN": "FR0011440478",
+            "symbol": "PLEM.PA"
+        },
+        {
+            "name": "Amundi MSCI Greece UCITS ETF Dist",
+            "ISIN": "FR0010405431",
+            "symbol": "GRE.PA"
+        },
+        {
+            "name": "Amundi MSCI World Swap UCITS ETF EUR Dist",
+            "ISIN": "LU2655993207",
+            "symbol": "EWLD.PA"
+        },
+        {
+            "name": "Amundi PEA Amerique Latine (MSCI Emerging Latin America) Selection UCITS ETF",
+            "ISIN": "FR0013412004",
+            "symbol": "PALAT.PA"
+        },
+        {
+            "name": "Amundi PEA Asie Emergente (MSCI Emerging Asia) Screened UCITS ETF",
+            "ISIN": "FR0013412012",
+            "symbol": "PAASI.PA"
+        },
+        {
+            "name": "Amundi PEA MSCI Europe UCITS ETF Acc",
+            "ISIN": "FR0013412038",
+            "symbol": "PCEU.PA"
+        },
+        {
+            "name": "Amundi PEA Emergent (MSCI Emerging) ESG Transition UCITS ETF",
+            "ISIN": "FR0013412020",
+            "symbol": "PAEEM.PA"
+        },
+        {
+            "name": "Amundi PEA US Tech Screened UCITS ETF - Acc",
+            "ISIN": "FR0013412269",
+            "symbol": "PANX.PA"
+        },
+        {
+            "name": "AMUNDI PEA EURO COURT TERME UCITS ETF",
+            "ISIN": "FR0013346681",
+            "symbol": "OBLI.PA"
+        },
+        {
+            "name": "Amundi PEA S&P 500 Screened UCITS ETF - Acc",
+            "ISIN": "FR0013412285",
+            "symbol": "PE500.PA"
+        },
+        {
+            "name": "Amundi PEA S&P 500 Screened UCITS ETF - EUR Hedged Acc",
+            "ISIN": "FR0013412293",
+            "symbol": "P500H.PA"
+        },
+        {
+            "name": "Amundi PEA Japon (TOPIX) UCITS ETF EUR Acc",
+            "ISIN": "FR0013411980",
+            "symbol": "PTPXE.PA"
+        },
+        {
+            "name": "Amundi PEA Japon (TOPIX) UCITS ETF EUR Hedged Acc",
+            "ISIN": "FR0013411998",
+            "symbol": "PTPXH.PA"
+        },
+        {
+            "name": "AMUNDI RUSSELL 2000 UCITS ETF - EUR",
+            "ISIN": "LU1681038672",
+            "symbol": "RS2K.PA"
+        },
+        {
+            "name": "Amundi MSCI EMU Small Cap ESG Broad Transition UCITS ETF DIST",
+            "ISIN": "LU1598689153",
+            "symbol": "MMS.PA"
+        },
+        {
+            "name": "Amundi PEA S&P 500 UCITS ETF Acc",
+            "ISIN": "FR0011871128",
+            "symbol": "PSP5.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Basic Resources UCITS ETF Acc",
+            "ISIN": "LU1834983550",
+            "symbol": "BRES.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Healthcare UCITS ETF Acc",
+            "ISIN": "LU1834986900",
+            "symbol": "HLT.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Utilities UCITS ETF Acc",
+            "ISIN": "LU1834988864",
+            "symbol": "UTI.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Insurance UCITS ETF Acc",
+            "ISIN": "LU1834987973",
+            "symbol": "INS.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Banks UCITS ETF Acc",
+            "ISIN": "LU1834983477",
+            "symbol": "BNK.PA"
+        },
+        {
+            "name": "Amundi Stoxx Europe Select Dividend 30 - UCITS ETF Dist",
+            "ISIN": "LU1812092168",
+            "symbol": "SEL.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Technology UCITS ETF Acc",
+            "ISIN": "LU1834988518",
+            "symbol": "TNO.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Telecommunications UCITS ETF Acc",
+            "ISIN": "LU1834988609",
+            "symbol": "TELE.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Basic Materials UCITS ETF - Acc",
+            "ISIN": "LU1834983634",
+            "symbol": "CHM.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Consumer Staples UCITS ETF Acc",
+            "ISIN": "LU1834985845",
+            "symbol": "FOO.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Industrials UCITS ETF Acc",
+            "ISIN": "LU1834987890",
+            "symbol": "IND.PA"
+        },
+        {
+            "name": "Amundi STOXX Europe 600 Consumer Discretionary UCITS ETF Acc",
+            "ISIN": "LU1834988781",
+            "symbol": "TRV.PA"
+        },
+        {
+            "name": "Amundi PEA Eau (MSCI Water) UCITS ETF - Capi",
+            "ISIN": "FR0011882364",
+            "symbol": "AWAT.PA"
+        },
+        {
+            "name": "AMUNDI CAC 40 ESG UCITS ETF Dist",
+            "ISIN": "LU1681047079",
+            "symbol": "C4D.PA"
+        },
+        {
+            "name": "BNP Paribas Easy MSCI Emerging SRI PAB UCITS ETF",
+            "ISIN": "LU1659681313",
+            "symbol": "EISR.PA"
+        },
+        {
+            "name": "BNP PARIBAS EASY Bloomberg Europe Defense",
+            "ISIN": "LU3047998896",
+            "symbol": "GUARD.PA"
+        },
+        {
+            "name": "BNP Paribas Easy ESG Eurozone Biodiversity Leaders PAB UCITS ETF cap",
+            "ISIN": "LU2446381555",
+            "symbol": "BIODV.PA"
+        },
+        {
+            "name": "BNP Paribas EASY CAC 40(R) ESG UCITS ETF",
+            "ISIN": "FR0010150458",
+            "symbol": "E40.PA"
+        },
+        {
+            "name": "BNP PARIBAS EASY MSCI EMU Min TE [UCITS ETF, C]",
+            "ISIN": "LU1291098827",
+            "symbol": "EEMU.PA"
+        },
+        {
+            "name": "BNP Paribas Easy MSCI EMU SRI PAB UCITS ETF",
+            "ISIN": "LU1953137681",
+            "symbol": "MUSRI.PA"
+        },
+        {
+            "name": "BNP Paribas Easy Dividend Europe",
+            "ISIN": "LU1615090864",
+            "symbol": "EDEU.PA"
+        },
+        {
+            "name": "BNP PARIBAS EASY Growth Europe [UCITS ETF, C]",
+            "ISIN": "LU2244387887",
+            "symbol": "EGRO.PA"
+        },
+        {
+            "name": "BNP Paribas Easy EURO STOXX 50 UCITS ETF EUR Capitalisation",
+            "ISIN": "FR0012739431",
+            "symbol": "ETDD.PA"
+        },
+        {
+            "name": "BNP Paribas Easy EURO STOXX 50 UCITS ETF EUR Distribution",
+            "ISIN": "FR0012740983",
+            "symbol": "ETBB.PA"
+        },
+        {
+            "name": "BNP PARIBAS EASY Low Vol Europe [UCITS ETF, C]",
+            "ISIN": "LU1377381717",
+            "symbol": "EVOE.PA"
+        },
+        {
+            "name": "BNP Paribas Easy Low Vol Europe",
+            "ISIN": "LU1481201025",
+            "symbol": "VLED.PA"
+        },
+        {
+            "name": "BNP PARIBAS EASY Quality Europe [UCITS ETF, C]",
+            "ISIN": "LU1377382103",
+            "symbol": "EQUA.PA"
+        },
+        {
+            "name": "BNP Paribas Easy Quality Europe",
+            "ISIN": "LU1481201611",
+            "symbol": "QUED.PA"
+        },
+        {
+            "name": "BNP Paribas Easy S&P 500 UCITS ETF EUR Capitalisation",
+            "ISIN": "FR0011550185",
+            "symbol": "ESE.PA"
+        },
+        {
+            "name": "BNP Paribas Easy S&P 500 UCITS ETF EUR Hedged Capitalisation",
+            "ISIN": "FR0013041530",
+            "symbol": "ESEH.PA"
+        },
+        {
+            "name": "BNP Paribas Easy Stoxx Europe 600 UCITS ETF Capitalisation",
+            "ISIN": "FR0011550193",
+            "symbol": "ETZ.PA"
+        },
+        {
+            "name": "BNP Paribas Easy Stoxx Europe 600 UCITS ETF Capitalisation \/ Distribution",
+            "ISIN": "FR0011550672",
+            "symbol": "ETZD.PA"
+        },
+        {
+            "name": "BNP PARIBAS EASY Value Europe [UCITS ETF, C]",
+            "ISIN": "LU1377382285",
+            "symbol": "EVAE.PA"
+        },
+        {
+            "name": "BNP Paribas Easy Value Europe",
+            "ISIN": "LU1481201702",
+            "symbol": "VALD.PA"
+        },
+        {
+            "name": "iShares Diversified Commodity Swap UCITS ETF (DE)",
+            "ISIN": "DE000A0H0728",
+            "symbol": "CMSE.PA"
+        },
+        {
+            "name": "iShares MSCI World Swap PEA UCITS ETF EUR (Acc)",
+            "ISIN": "IE0002XZSHO1",
+            "symbol": "WPEA.PA"
+        },
+        {
+            "name": "iShares MSCI World Swap PEA UCITS ETF EUR Hedged (Acc)",
+            "ISIN": "IE00055B2JD3",
+            "symbol": "WPEH.PA"
+        },
+        {
+            "name": "iShares \u20ac Short Term Swap PEA ETF",
+            "ISIN": "IE000I4R3252",
+            "symbol": "EPEA.PA"
+        },
+        {
+            "name": "iShares S&P 500 Swap PEA UCITS ETF EUR (Acc)",
+            "ISIN": "IE000DQLYVB9",
+            "symbol": "SPEA.PA"
+        },
+        {
+            "name": "Amundi CAC 40 UCITS ETF S - Acc",
+            "ISIN": "FR001400ZGQ9",
+            "symbol": "CA40.PA"
+        },
+        {
+            "name": "Amundi European Strategic Autonomy UCITS ETF Acc",
+            "ISIN": "LU3180074463",
+            "symbol": "INDEP.PA"
+        },
+        {
+            "name": "Amundi MDAX UCITS ETF Dist",
+            "ISIN": "FR0011857234",
+            "symbol": "MDX.PA"
+        },
+        {
+            "name": "Amundi EURO STOXX 50 II UCITS ETF S - Acc",
+            "ISIN": "FR001400ZGP1",
+            "symbol": "MSES.PA"
+        }
+    ]
+}

@@ -1,6 +1,5 @@
 using Investissement_WebClient.Core.InterfacesServices;
 using Microsoft.Extensions.DependencyInjection;
-using Investissement_WebClient.Core.Modeles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
@@ -8,12 +7,10 @@ namespace Investissement_WebClient.Data.Background;
 
 public class PatrimoineWorker : BackgroundService
 {
-    private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
     private readonly IServiceProvider _serviceProvider;
 
-    public PatrimoineWorker(IDbContextFactory<InvestissementDbContext> dbContext,  IServiceProvider serviceProvider)
+    public PatrimoineWorker(IServiceProvider serviceProvider)
     {
-        _dbFactory = dbContext;
         _serviceProvider = serviceProvider;
     }
     
@@ -29,8 +26,7 @@ public class PatrimoineWorker : BackgroundService
                 {
                     var valeurPatrimoine = await patrimoineService.CalculerValeurPatrimoineCourante();
                     var valeurInvestissementTotal = await patrimoineService.CalculerValeurInvestissementTotal();
-                    if(valeurPatrimoine == 0) Console.WriteLine("Valeur de 0 pour la patrimoine");
-                    await SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
+                    if (valeurPatrimoine != 0) await patrimoineService.SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
                 }
                 catch (Exception ex)
                 {
@@ -40,20 +36,5 @@ public class PatrimoineWorker : BackgroundService
             
             await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
         }
-    }
-    
-    private async Task SaveValeurPatrimoine(double valeurPatrimoine, double  valeurInvestissementTotal)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-
-        var newValeurPatrimoine = new HistoriquePatrimoine
-        {
-            Date = DateTime.Now,
-            Valeur = valeurPatrimoine,
-            InvestissementTotal = valeurInvestissementTotal
-        };
-        
-        context.HistoriquePatrimoine.Add(newValeurPatrimoine);
-        await context.SaveChangesAsync();
     }
 }

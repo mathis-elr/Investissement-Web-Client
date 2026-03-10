@@ -92,7 +92,7 @@
     {
         await IVM.LoadData();
     }
-    
+
     async Task Investir()
     {
         await IVM.Investir();
@@ -100,6 +100,8 @@
         if(IVM.HasError)
         {
             TS.ShowError(IVM.ErrorMessage);
+            IVM.HasError = false;
+            IVM.ErrorMessage = string.Empty;
         }
         else
         {

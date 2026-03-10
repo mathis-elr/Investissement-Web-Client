@@ -1,5 +1,6 @@
 ﻿using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles.DTO;
+using Investissement_WebClient.Core.Modeles.Graphiques;
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
 {
@@ -16,7 +17,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         private double ValeurInvestissementTotal { get; set; }
         public VariationsDto Variations { get; set; } = new VariationsDto();
         public IEnumerable<BougieJournaliere> BougiesJournalieres { get; set; } = [];
-        
+
+        public IEnumerable<ProportionActif> ProportionParActif { get; set; } = [];
+        public IEnumerable<ProportionTypeActif> ProportionParTypeActif { get; set; } = [];
+
         public bool HasError {get; set;} = false;
         public string ErrorMessage {get; set;} = string.Empty;
         
@@ -48,6 +52,22 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public async Task LoadBougieJournalieres()
         {
             BougiesJournalieres = await _patrimoineService.GetBougiesJournalieres();
+        }
+
+        private async Task LoadProportionParActif()
+        {
+            ProportionParActif = await _patrimoineService.GetProportionParActifInvestit(ValeurPatrimoineCourante);
+        }
+
+        private async Task LoadProportionParTypeActif()
+        {
+            ProportionParTypeActif = await _patrimoineService.GetProportionParTypeActifInvestit(ValeurPatrimoineCourante);
+        }
+
+        public async Task LoadDataPies()
+        {
+            await LoadProportionParActif();
+            await LoadProportionParTypeActif();
         }
 
         public async Task LoadData()

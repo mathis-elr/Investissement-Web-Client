@@ -1,3 +1,4 @@
+using ApexCharts;
 using Blazored.Toast;
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Data;
@@ -13,11 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
-    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
+//builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
+//    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
 
-// builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
-//     options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
+//builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
+//    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
+
+builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
+
 
 builder.Services.AddScoped<IInvestirService, InvestirService>();
 builder.Services.AddScoped<IActifService, ActifService>();
@@ -33,6 +38,7 @@ builder.Services.AddScoped<BourseViewModel>();
 
 builder.Services.AddHostedService<PatrimoineWorker>();
 
+builder.Services.AddApexCharts();
 builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
@@ -45,7 +51,24 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+List<string> ipAutorisees = ["109.14.14.134", "127.0.0.1"];
+
+
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+
+    if (!ipAutorisees.Contains(remoteIp))
+    {
+        context.Response.StatusCode = 403; 
+        await context.Response.WriteAsync("Acces refuse : Votre IP n'est pas autorisee.");
+        return;
+    }
+
+    await next.Invoke();
+});
 
 app.UseStaticFiles();
 app.UseAntiforgery();

@@ -37,20 +37,19 @@
     opacity: 0.4;
     transition: all 0.3s ease-in-out;
 }
-.mode-ajout:hover,
-.mode-edit:hover{
+    .mode-ajout:hover,
+    .mode-edit:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+.selected {
     opacity: 1;
     box-shadow: 0 4px 12px goldenrod !important;
     border-radius: 50px;
     cursor: pointer;
 }
 
-.selected{
-    opacity: 1;
-    box-shadow: 0 4px 12px gold !important;
-    border-radius: 50px;
-    cursor: pointer;
-}
 
 .ajout-edit-actif ::deep select,
 .ajout-edit-actif ::deep input{

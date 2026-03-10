@@ -1,0 +1,104 @@
+{
+    "Crypto": [
+        {
+            "name": "Bitcoin",
+            "ISIN": "N/A",
+            "symbol": "BTC-USD"
+        },
+        {
+            "name": "Ethereum",
+            "ISIN": "N/A",
+            "symbol": "ETH-USD"
+        },
+        {
+            "name": "Tether",
+            "ISIN": "N/A",
+            "symbol": "USDT-USD"
+        },
+        {
+            "name": "BNB",
+            "ISIN": "N/A",
+            "symbol": "BNB-USD"
+        },
+        {
+            "name": "XRP",
+            "ISIN": "N/A",
+            "symbol": "XRP-USD"
+        },
+        {
+            "name": "Solana",
+            "ISIN": "N/A",
+            "symbol": "SOL-USD"
+        },
+        {
+            "name": "USDC",
+            "ISIN": "N/A",
+            "symbol": "USDC-USD"
+        },
+        {
+            "name": "TRON",
+            "ISIN": "N/A",
+            "symbol": "TRX-USD"
+        },
+        {
+            "name": "Dogecoin",
+            "ISIN": "N/A",
+            "symbol": "DOGE-USD"
+        },
+        {
+            "name": "Cardano",
+            "ISIN": "N/A",
+            "symbol": "ADA-USD"
+        },
+        {
+            "name": "Hyperliquid",
+            "ISIN": "N/A",
+            "symbol": "HYPE-USD"
+        },
+        {
+            "name": "Shiba Inu",
+            "ISIN": "N/A",
+            "symbol": "SHIB-USD"
+        },
+        {
+            "name": "Avalanche",
+            "ISIN": "N/A",
+            "symbol": "AVAX-USD"
+        },
+        {
+            "name": "Chainlink",
+            "ISIN": "N/A",
+            "symbol": "LINK-USD"
+        },
+        {
+            "name": "Polkadot",
+            "ISIN": "N/A",
+            "symbol": "DOT-USD"
+        },
+        {
+            "name": "Pepe",
+            "ISIN": "N/A",
+            "symbol": "PEPE-USD"
+        },
+        {
+            "name": "Uniswap",
+            "ISIN": "N/A",
+            "symbol": "UNI-USD"
+        },
+        {
+            "name": "Near Protocol",
+            "ISIN": "N/A",
+            "symbol": "NEAR-USD"
+        },
+        {
+            "name": "Litecoin",
+            "ISIN": "N/A",
+            "symbol": "LTC-USD"
+        },
+        {
+            "name": "Sui",
+            "ISIN": "N/A",
+            "symbol": "SUI-USD"
+        }
+    ]
+}

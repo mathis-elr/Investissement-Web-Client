@@ -2,6 +2,7 @@ using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Investissement_WebClient.Data.Services;
 
@@ -24,6 +25,10 @@ public class ModeleService : IModeleService
                 Nom = m.Nom,
             })
             .ToListAsync();
+
+        Console.WriteLine(modeles);
+        if (modeles == null) return [];
+
         return modeles;
     }
     

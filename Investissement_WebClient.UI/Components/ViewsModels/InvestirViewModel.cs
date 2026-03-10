@@ -16,17 +16,17 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             _actifService = actifService;
             _modeleService = modeleService;
         }
-        
-        public IEnumerable<ModeleDto> Modeles { get; set; }
-        public IEnumerable<ActifDto> ActifsEnregistre { get; set; }
-        private IEnumerable<TransactionDto> ActifsModele { get; set; }
-        public IEnumerable<InvestissementDto> Investissements { get; set; }
+
+        public IEnumerable<ModeleDto> Modeles { get; set; } = [];
+        public IEnumerable<ActifDto> ActifsEnregistre { get; set; } = [];
+        private IEnumerable<TransactionDto> ActifsModele { get; set; } = [];
+        public IEnumerable<InvestissementDto> Investissements { get; set; } = [];
         public List<TransactionDto> TransactionsInvestissement { get; set; } = new ();
         
         public DateTime SelectedDateInvest { get; set; } = DateTime.Now;
         private int? SelectedIdModele { get; set; } = null;
-        public bool HasError { get; private set; } = false;
-        public string ErrorMessage { get; private set; } = string.Empty;
+        public bool HasError { get; set; } = false;
+        public string ErrorMessage { get; set; } = string.Empty;
         
         
         public async Task LoadData()
@@ -86,19 +86,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task Investir()
         {
-            HasError = false;
-            ErrorMessage = string.Empty;
-
             if (TransactionsInvestissement.Count == 0)
             {
                 HasError = true;
                 ErrorMessage = "Selectionner au moins un actif pour pouvoir investir";
-                return;
-            }
-            if(TransactionsInvestissement.Any(t => t.Quantite == null || t.Prix == null ||  t.Quantite <= 0 || t.Prix <= 0))
-            {
-                HasError = true;
-                ErrorMessage = "La quantité et le prix doivent être des valeur valides (supérieures à 0 et non null).";
                 return;
             }
             if (SelectedDateInvest > DateTime.Now)
@@ -115,8 +106,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             catch (Exception ex)
             {
                 HasError = true;
-                Console.WriteLine(ex.Message);
-                ErrorMessage = "Erreur d'insertion";
+                ErrorMessage = ex.Message;
                 return;
             }
 
