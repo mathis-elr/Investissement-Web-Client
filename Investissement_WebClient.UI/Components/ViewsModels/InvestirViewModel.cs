@@ -9,18 +9,20 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         private readonly IInvestirService _investirService;
         private readonly IActifService _actifService;
         private readonly IModeleService _modeleService;
+        private readonly IPatrimoineService _patrimoineService;
         
-        public InvestirViewModel(IInvestirService investirService, IActifService actifService, IModeleService modeleService)
+        public InvestirViewModel(IInvestirService investirService, IActifService actifService, IModeleService modeleService, IPatrimoineService patrimoineService)
         {
             _investirService = investirService; 
             _actifService = actifService;
             _modeleService = modeleService;
+            _patrimoineService = patrimoineService;
         }
 
         public IEnumerable<ModeleDto> Modeles { get; set; } = [];
         public IEnumerable<ActifDto> ActifsEnregistre { get; set; } = [];
         private IEnumerable<TransactionDto> ActifsModele { get; set; } = [];
-        public IEnumerable<InvestissementDto> Investissements { get; set; } = [];
+        public IEnumerable<InvestissementGetDto> Investissements { get; set; } = [];
         public List<TransactionDto> TransactionsInvestissement { get; set; } = new ();
         
         public DateTime SelectedDateInvest { get; set; } = DateTime.Now;
@@ -112,6 +114,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             SelectedIdModele = null;
             TransactionsInvestissement = [];
+            await LoadInvestissements();
+        }
+
+        public async Task DeleteDernierInvest(InvestissementGetDto investissement)
+        {
+            await _investirService.DeleteDernierInvest(investissement);
+            await _patrimoineService.DeleteHistoriquePatrimoinePeriode(investissement.DateInvest);
             await LoadInvestissements();
         }
     }

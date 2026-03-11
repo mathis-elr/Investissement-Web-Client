@@ -14,16 +14,20 @@
 <div class="investir">
     <div class="investissement">
         <div class="investissement-header">
-            <label>Investissement du</label>
-            <input @bind="IVM.SelectedDateInvest" type="date"/>
-            <label>avec le modèle</label>
-            <select @onchange="IVM.OnChangeModele">
-                <option>Aucun</option>
-                @foreach (ModeleDto modele in IVM.Modeles)
-                {
-                    <option value="@modele.Id">@modele.Nom</option>
-                }
-            </select>
+            <div class="online">
+                <label>Investissement du</label>
+                <input @bind="IVM.SelectedDateInvest" type="date"/>
+            </div>
+            <div class="online">
+                <label>Ajouter le modèle</label>
+                <select @onchange="IVM.OnChangeModele">
+                    <option>Aucun</option>
+                    @foreach (ModeleDto modele in IVM.Modeles)
+                    {
+                        <option value="@modele.Id">@modele.Nom</option>
+                    }
+                </select>
+            </div>
         </div>
 
         <div class="investissement-content">
@@ -41,9 +45,9 @@
                         <div type="button" class="dell" @onclick="() => IVM.DellTransactionInvest(transaction)">✕</div>
                     </div>
                     <div class="valeurs-transaction">
-                        <input @bind="transaction.Quantite" placeholder="Quantité investit"/>
-                        <input @bind="transaction.Prix" placeholder="Prix d'achat (€)"/>
-                        <input @bind="transaction.Frais" placeholder="Frais (€)"/>
+                        <input type="number" @bind="transaction.Quantite" placeholder="Quantité investit"/>
+                        <input type="number" @bind="transaction.Prix" placeholder="Prix d'achat (€)"/>
+                        <input type="number" @bind="transaction.Frais" placeholder="Frais (€)"/>
                     </div>
                 </div>
             }
@@ -68,23 +72,39 @@
             <label>Mes Investissements</label>
         </div>
         <div class="mes-investissements-content">
-            @foreach (var investissementsParDate in IVM.Investissements.GroupBy(i => i.Date.Date))
+            @foreach (var investissementsParDate in IVM.Investissements.GroupBy(i => i.DateInvest.Date))
             {
-                <div class="un-investissement">
-                    <label>
-                        @(investissementsParDate.Sum(t => t.Transactions.Sum(tr => tr.Prix * tr.Quantite))?.ToString("C2", System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR")))
-                        @investissementsParDate.Key.ToString("dddd dd MMMM", CultureInfo.CreateSpecificCulture("fr-FR"))
-                    </label>
-                    @foreach(var investissementJour in investissementsParDate)
-                    {
-                        <label>@(investissementJour.NomModele != null ? "- " + investissementJour.NomModele : "")</label>
-                        <div class="transactions-investissement">
-                            @foreach (TransactionDto transaction in investissementJour.Transactions)
-                            {
-                                <span type="text" class="une-transaction">@transaction.Quantite @transaction.NomActif à @transaction.Prix?.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR"))</span>
-                            }
-                        </div>
-                    }
+                <div class="mes-investissements-journalier">
+                    <div class="date-total-mes-investissement-journalier">
+                        <label>@investissementsParDate.Key.ToString("D", CultureInfo.CreateSpecificCulture("fr-FR")) &nbsp</label>
+                        <span></span>
+                        <label>@(investissementsParDate.Sum(t => t.Transactions.Sum(tr => tr.Prix * tr.Quantite))?.ToString("C2", System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR")))</label>
+                    </div>
+                    <div class="un-investissement-journalier">
+                        @foreach(var investissementJour in investissementsParDate)
+                        {
+                            <div class="mes-transactions-investissement-journalier">
+                                <div class="modele-et-annuler">
+                                    @if (investissementJour.Modele != null)
+                                    {
+                                        <label>@investissementJour.Modele.Nom</label>
+                                    }
+                                    @if (investissementJour.DateInvest.AddHours(3) > DateTime.Now 
+                                         && investissementsParDate.Max(i => i.DateInvest) == investissementJour.DateInvest)
+                                    {
+                                        <div class="btn-annuler-dernier-invest" @onclick="() => DeleteDernierInvest(investissementJour)">Annuler</div>
+                                    }
+                                </div>
+                                @foreach (TransactionDto transaction in investissementJour.Transactions)
+                                {
+                                    <div class="une-transaction-investissement-journalier">
+                                        <span></span>
+                                        <span>@transaction.Quantite @transaction.NomActif à @transaction.Prix?.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR"))</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </div>
@@ -95,6 +115,14 @@
     protected override async Task OnInitializedAsync()
     {
         await IVM.LoadData();
+    }
+
+    async Task DeleteDernierInvest(InvestissementGetDto investissementGetDto)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer le dernier investissement ?"))
+        {
+            await IVM.DeleteDernierInvest(investissementGetDto);
+        }
     }
 
     async Task Investir()

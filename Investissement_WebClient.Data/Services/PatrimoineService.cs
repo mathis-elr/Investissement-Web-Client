@@ -168,4 +168,14 @@ public class PatrimoineService : IPatrimoineService
                 Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
             }).ToList();
     }
+
+    public async Task DeleteHistoriquePatrimoinePeriode(DateTime dateDepart)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        
+        var enregistrementsASupprimer = context.HistoriquePatrimoine.Where(hp => hp.Date >= dateDepart && hp.Date <= DateTime.Now).ToList();
+        
+        context.HistoriquePatrimoine.RemoveRange(enregistrementsASupprimer);
+        await context.SaveChangesAsync();
+    }
 }

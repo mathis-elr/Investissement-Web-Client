@@ -94,6 +94,7 @@
 }
 
 .btn-suppr:hover{
+    box-shadow: 0 4px 12px red;
     transform: translate(-2px,2px);
     color: black;
 }

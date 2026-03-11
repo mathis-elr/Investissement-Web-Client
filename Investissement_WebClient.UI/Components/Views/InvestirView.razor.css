@@ -28,14 +28,19 @@
 }
 
 .investissement:hover,
-.transactions:hover{
+.mes-investissements:hover{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     opacity: 1;
 }
     
 .investissement-header{
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.online{
+    display: inline-flex;
 }
 
 .investissement-header ::deep select,
@@ -181,6 +186,7 @@
 }
 
     .btn-investir:hover {
+        box-shadow: 0 4px 12px goldenrod;
         transform: translate(-2px,2px);
         color: black;
     }
@@ -195,28 +201,93 @@
     font-size: 20px;
 }
 
-.un-investissement{
+.mes-investissements-journalier{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+}
+.date-total-mes-investissement-journalier span{
+    width: 15px;
+    height: 5px;
+    background-color: goldenrod;
+    border-radius: 40px;
+    margin-right: 12px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+}
+.date-total-mes-investissement-journalier{
+    display: flex;
+    align-items: center;
+}
+.date-total-mes-investissement-journalier label:first-child::first-letter{
+    text-transform: uppercase;
 }
 
-.une-transaction {
-    font-size: 20px;
-    padding: 5px;
-    margin: 5px;
-    border-radius: 5px;
-    transition:  0.4s ease-in-out;
-}
-.une-transaction:hover {
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
-}
-
-.transactions-investissement {
+.un-investissement-journalier {
     display: flex;
     flex-direction: column;
-    gap:3px;
-    background-color: #202020;
+    padding:3px;
+    gap:5px;
+    background-color: goldenrod;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+.mes-transactions-investissement-journalier {
+    background-color: #202020;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 7px;
+    transition:  0.25s ease-in-out;
+}
+.mes-transactions-investissement-journalier:hover {
+    box-shadow: 0 4px 12px #202020 !important;
+    transform: translate(2px,-2px);
+}
+.mes-transactions-investissement-journalier label {
+    display: block;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    font-size: 18px;
+    color: #A0A0A0;
+}
+
+.modele-et-annuler{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-annuler-dernier-invest{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+    color: rgb(82, 72, 72);
+    border-radius: 15px;
+    padding: 5px;
+    transition: 0.25s ease-in-out;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: fit-content;
+}
+.btn-annuler-dernier-invest:hover{
+    color: #202020;
+    box-shadow: 0 4px 12px red;
+}
+
+.une-transaction-investissement-journalier{
+    display: flex;
+    align-items: center;
+    gap:5px;
+}
+.une-transaction-investissement-journalier span:first-child {
+    width: 8px;
+    height: 8px;
+    background-color: goldenrod; 
+    border-radius: 50%;
+    margin-right: 12px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+}
+
+

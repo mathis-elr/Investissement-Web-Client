@@ -6,7 +6,9 @@ namespace Investissement_WebClient.Core.InterfacesServices;
 public interface IInvestirService
 {
    
-    Task<IEnumerable<InvestissementDto>> GetInvestissements();
+    Task<IEnumerable<InvestissementGetDto>> GetInvestissements();
     
     Task SaveInvestissement(int? idModele, DateTime dateInvest,List<TransactionDto> transactionsInvestissement);
+
+    Task DeleteDernierInvest(InvestissementGetDto investissementGetDto);
 }

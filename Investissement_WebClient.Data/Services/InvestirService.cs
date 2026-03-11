@@ -14,16 +14,20 @@ public class InvestirService : IInvestirService
         _dbFactory = dbContext;
     }
 
-    public async Task<IEnumerable<InvestissementDto>> GetInvestissements()
+    public async Task<IEnumerable<InvestissementGetDto>> GetInvestissements()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
         var investissements = await  context.Investissements
-            .Select(i => new InvestissementDto
+            .Select(i => new InvestissementGetDto
             {
                 Id = i.Id,
-                Date = i.DateInvest,
-                NomModele = i.IdModele != null ? i.Modele.Nom : null,
+                DateInvest = i.DateInvest,
+                Modele = i.IdModele != null ? new ModeleDto
+                {
+                    Id = i.Modele.Id,
+                    Nom = i.Modele.Nom,
+                } : null,
                 Transactions = i.Transactions.Select(t => new TransactionDto
                 {
                     IdActif = t.IdActifEnregistre,
@@ -32,7 +36,7 @@ public class InvestirService : IInvestirService
                     Prix = t.Prix
                 })
             })
-            .OrderByDescending(i => i.Date)
+            .OrderByDescending(i => i.DateInvest)
             .ToArrayAsync();
 
         return investissements;
@@ -68,5 +72,23 @@ public class InvestirService : IInvestirService
 
         await context.Transactions.AddRangeAsync(transactions);
         await context.SaveChangesAsync();
+    }
+
+    public async Task DeleteDernierInvest(InvestissementGetDto investissementGetDto)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        if (context.Investissements.Any(i => i.Id == investissementGetDto.Id))
+        {
+            Investissement investissement = new Investissement
+            {
+                Id = investissementGetDto.Id,
+                DateInvest = investissementGetDto.DateInvest,
+                IdModele = investissementGetDto.Modele?.Id,
+            };
+            
+            context.Investissements.Remove(investissement);
+            await context.SaveChangesAsync();
+        }
     }
 }
