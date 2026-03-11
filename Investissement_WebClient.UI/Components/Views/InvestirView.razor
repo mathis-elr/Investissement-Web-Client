@@ -27,6 +27,11 @@
                         <option value="@modele.Id">@modele.Nom</option>
                     }
                 </select>
+                @if(IVM.SelectedIdModele == null)
+                {
+                    <label>Note</label>
+                    <input type="text" @bind="IVM.NoteInvestissement"/>
+                }
             </div>
         </div>
 
@@ -88,6 +93,10 @@
                                     @if (investissementJour.Modele != null)
                                     {
                                         <label>@investissementJour.Modele.Nom</label>
+                                    }
+                                    else if(investissementJour.Note != null)
+                                    {
+                                        <label>@investissementJour.Note</label>
                                     }
                                     @if (investissementJour.DateInvest.AddHours(3) > DateTime.Now 
                                          && investissementsParDate.Max(i => i.DateInvest) == investissementJour.DateInvest)

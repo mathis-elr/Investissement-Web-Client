@@ -5,6 +5,8 @@ public class Investissement
     public int Id { get; set; }
 
     public DateTime DateInvest { get; set; }
+
+    public string? Note { get; set; }
     
     public Modele? Modele { get; set; }
     public int? IdModele { get; set; }

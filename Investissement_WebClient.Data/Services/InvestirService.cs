@@ -28,6 +28,7 @@ public class InvestirService : IInvestirService
                     Id = i.Modele.Id,
                     Nom = i.Modele.Nom,
                 } : null,
+                Note = i.Note,
                 Transactions = i.Transactions.Select(t => new TransactionDto
                 {
                     IdActif = t.IdActifEnregistre,
@@ -42,26 +43,23 @@ public class InvestirService : IInvestirService
         return investissements;
     }
 
-    public async Task SaveInvestissement(int? idModele, DateTime dateInvest,
-        List<TransactionDto> transactionsInvestissement)
+    public async Task SaveInvestissement(InvestissementDto investissementDto)
     {
-        if (transactionsInvestissement.Any(t => t.Quantite == null || t.Prix == null || t.Quantite <= 0 || t.Prix <= 0))
-        {
-            throw new Exception("La quantité et le prix doivent être des valeur valides (supérieures à 0 et champs obligatoires).");
-        }
+        
 
 
         await using var context = await _dbFactory.CreateDbContextAsync();
         Investissement investissement = new()
         {
-            DateInvest = dateInvest,
-            IdModele = idModele
+            DateInvest = investissementDto.Date,
+            IdModele = investissementDto.idModele,
+            Note = investissementDto.Note,
         };
 
         context.Investissements.Add(investissement);
         await context.SaveChangesAsync();
 
-        var transactions = transactionsInvestissement.Select(pt => new Transaction
+        var transactions = investissementDto.Transactions.Select(pt => new Transaction
         {
             Quantite = pt.Quantite.Value,
             Prix = pt.Prix.Value,
@@ -85,6 +83,7 @@ public class InvestirService : IInvestirService
                 Id = investissementGetDto.Id,
                 DateInvest = investissementGetDto.DateInvest,
                 IdModele = investissementGetDto.Modele?.Id,
+                Note = investissementGetDto.Note,
             };
             
             context.Investissements.Remove(investissement);

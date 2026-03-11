@@ -26,7 +26,8 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public List<TransactionDto> TransactionsInvestissement { get; set; } = new ();
         
         public DateTime SelectedDateInvest { get; set; } = DateTime.Now;
-        private int? SelectedIdModele { get; set; } = null;
+        public int? SelectedIdModele { get; set; } = null;
+        public string? NoteInvestissement { get; set; } = null;
         public bool HasError { get; set; } = false;
         public string ErrorMessage { get; set; } = string.Empty;
         
@@ -75,6 +76,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 int modeleNotNull = idModele;
                 await LoadCompositionModele(modeleNotNull);
             }
+            else
+            {
+                SelectedIdModele = null;
+                NoteInvestissement = null;
+                ActifsModele = [];
+                TransactionsInvestissement = [];
+            }
         }
 
         public void AddTransactionInvest()
@@ -100,18 +108,25 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 ErrorMessage = "Impossible d'investir dans le futur";
                 return;
             }
-
-            try
-            {
-               await  _investirService.SaveInvestissement(SelectedIdModele, SelectedDateInvest, TransactionsInvestissement);
-            }
-            catch (Exception ex)
+            if (TransactionsInvestissement.Any(t => t.Quantite == null || t.Prix == null || t.Quantite <= 0 || t.Prix <= 0))
             {
                 HasError = true;
-                ErrorMessage = ex.Message;
+
+                ErrorMessage = "La quantité et le prix doivent être des valeur valides (supérieures à 0 et champs obligatoires).";
                 return;
             }
 
+            InvestissementDto investissementDto = new InvestissementDto
+            {
+                Date = SelectedDateInvest,
+                idModele = SelectedIdModele,
+                Note = NoteInvestissement,
+                Transactions = TransactionsInvestissement
+            };
+
+            await _investirService.SaveInvestissement(investissementDto);
+
+            NoteInvestissement = null;
             SelectedIdModele = null;
             TransactionsInvestissement = [];
             await LoadInvestissements();

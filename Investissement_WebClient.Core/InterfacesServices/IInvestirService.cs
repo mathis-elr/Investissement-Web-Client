@@ -8,7 +8,7 @@ public interface IInvestirService
    
     Task<IEnumerable<InvestissementGetDto>> GetInvestissements();
     
-    Task SaveInvestissement(int? idModele, DateTime dateInvest,List<TransactionDto> transactionsInvestissement);
+    Task SaveInvestissement(InvestissementDto investissementDto);
 
     Task DeleteDernierInvest(InvestissementGetDto investissementGetDto);
 }
