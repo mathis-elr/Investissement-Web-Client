@@ -10,6 +10,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "fr-FR" };
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -51,7 +59,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-List<string> ipAutorisees = ["109.14.14.134", "127.0.0.1"];
+List<string> ipAutorisees = ["109.14.14.134", "127.0.0.1", "194.167.154.181"];
 
 
 app.UseHttpsRedirection();
@@ -72,6 +80,8 @@ app.Use(async (context, next) =>
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseRequestLocalization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

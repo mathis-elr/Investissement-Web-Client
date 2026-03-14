@@ -1,8 +1,9 @@
-﻿.investir{
-    display:grid;
-    grid-template-columns:6fr 4fr;
+﻿/* --- LAYOUT PRINCIPAL --- */
+.investir {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
     grid-template-rows: 100%;
-    gap:30px;
+    gap: 30px;
     padding: 20px;
     height: 100%;
     width: 100%;
@@ -11,10 +12,10 @@
 }
 
 .investissement,
-.mes-investissements{
-    display:flex;
+.mes-investissements {
+    display: flex;
     flex-direction: column;
-    gap:30px;
+    gap: 30px;
     min-height: 0;
     max-height: 100%;
     background-color: #1e1e1e;
@@ -27,60 +28,68 @@
     position: relative;
 }
 
-.investissement:hover,
-.mes-investissements:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    opacity: 1;
-}
-    
-.investissement-header{
+    .investissement:hover,
+    .mes-investissements:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
+
+/* --- FORMULAIRE D'AJOUT INVEST (Gauche) --- */
+.investissement-infos {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 20px;
+    background-color: #242424;
+    padding:10px;
+    border-radius : 7px;
 }
 
-.online{
-    display: inline-flex;
+.form-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    align-items: center;
 }
 
-.investissement-header ::deep select,
-.investissement-header ::deep input{
+    .form-grid label {
+        color: #999;
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+select, input {
+    width: 100%;
     transition: 0.4s ease-in-out;
 }
-.investissement-header ::deep input:hover,
-.investissement-header ::deep select:hover,
-.investissement-header ::deep input:focus,
-.investissement-header ::deep select:focus {
+
+.investissement-infos input:hover,
+.investissement-infos select:hover,
+.investissement-infos input:focus,
+.investissement-infos select:focus {
     outline: none !important;
     box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
 }
 
-.investissement-header select,
-.investissement-header input {
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
+/* --- GESTION DES TRANSACTIONS --- */
 .investissement-content {
     display: grid;
     gap: 15px;
 }
 
+    .investissement-content select,
+    .investissement-content input {
+        border: none !important;
+        background-color: #1e1e1e !important;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+        transition: 0.4s ease-in-out;
+    }
 
-.investissement-content select,
-.investissement-content input{
-    border:none !important;
-    background-color:#1e1e1e !important;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
-    transition: 0.4s ease-in-out;
-}
-
-.investissement-content select:focus,
-.investissement-content input:focus{
-    outline: none !important;
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
-}
+        .investissement-content select:focus,
+        .investissement-content input:focus {
+            outline: none !important;
+            border: none !important;
+            box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
+        }
 
 .transaction-investissement {
     display: flex;
@@ -91,12 +100,12 @@
     border: 2px solid goldenrod;
     transition: 0.4s ease-in-out;
 }
-.transaction-investissement:hover{
-    transform: scale(1.009);
-}
 
+    .transaction-investissement:hover {
+        transform: translateY(-2px);
+    }
 
-.actif-transaction{
+.actif-transaction {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
@@ -104,16 +113,16 @@
     padding: 10px;
 }
 
-.valeurs-transaction{    
+.valeurs-transaction {
     display: flex;
     width: 100%;
     padding: 10px;
     gap: 10px;
 }
 
-.valeurs-transaction input{
-    flex:1;
-}
+    .valeurs-transaction input {
+        flex: 1;
+    }
 
 .actif-investissement select,
 .actif-investissement input {
@@ -121,6 +130,7 @@
     border: none;
 }
 
+/* --- BOUTONS ET ACTIONS --- */
 .dell {
     display: flex;
     justify-content: center;
@@ -128,7 +138,7 @@
     width: 25px;
     height: 25px;
     border-radius: 100%;
-    background-color: rgba(255,0,0,0.7);
+    background-color: rgba(255, 0, 0, 0.7);
     color: rgb(45, 41, 41);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3px);
@@ -156,6 +166,7 @@
     cursor: pointer;
     transition: all ease-in-out 0.3s;
 }
+
     .add:hover {
         transform: translateY(4px);
         border: solid goldenrod;
@@ -163,7 +174,7 @@
 
 .investissement-footer {
     position: sticky;
-    bottom: 0;    
+    bottom: 0;
     right: 0;
     z-index: 100;
     padding: 10px;
@@ -187,107 +198,132 @@
 
     .btn-investir:hover {
         box-shadow: 0 4px 12px goldenrod;
-        transform: translate(-2px,2px);
+        transform: translate(-2px, 2px);
         color: black;
     }
 
+/* --- MES INVESTISSEMENTS (Droite) --- */
 .mes-investissements-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.mes-investissements-content label{
-    font-size: 20px;
-}
+    .mes-investissements-content label {
+        font-size: 20px;
+    }
 
-.mes-investissements-journalier{
+.mes-investissements-journalier {
     display: flex;
     flex-direction: column;
 }
-.date-total-mes-investissement-journalier span{
-    width: 15px;
-    height: 5px;
-    background-color: goldenrod;
-    border-radius: 40px;
-    margin-right: 12px;
-    display: inline-block;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
-}
-.date-total-mes-investissement-journalier{
+
+.date-total-mes-investissement-journalier {
     display: flex;
     align-items: center;
 }
-.date-total-mes-investissement-journalier label:first-child::first-letter{
-    text-transform: uppercase;
-}
+
+    .date-total-mes-investissement-journalier span {
+        width: 15px;
+        height: 5px;
+        background-color: goldenrod;
+        border-radius: 40px;
+        margin-right: 12px;
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+    }
+
+    .date-total-mes-investissement-journalier label:first-child::first-letter {
+        text-transform: uppercase;
+    }
 
 .un-investissement-journalier {
     display: flex;
     flex-direction: column;
-    padding:3px;
-    gap:5px;
-    background-color: goldenrod;
+    padding: 7px;
+    gap: 15px;
+    background-color: #242424;
     border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .mes-transactions-investissement-journalier {
     background-color: #202020;
     font-size: 20px;
-    padding: 5px;
     border-radius: 7px;
-    transition:  0.25s ease-in-out;
-}
-.mes-transactions-investissement-journalier:hover {
-    box-shadow: 0 4px 12px #202020 !important;
-    transform: translate(2px,-2px);
-}
-.mes-transactions-investissement-journalier label {
-    display: block;
-    text-transform: uppercase;
-    margin-bottom: 7px;
-    font-size: 18px;
-    color: #A0A0A0;
+    transition: 0.25s ease-in-out;
 }
 
-.modele-et-annuler{
-    display: flex;
-    justify-content: space-between;
-}
-.btn-annuler-dernier-invest{
-    margin-left: auto;
+    .mes-transactions-investissement-journalier:hover {
+        box-shadow: 0 4px 12px #202020 !important;
+        transform: translate(2px, -2px);
+    }
+
+    .mes-transactions-investissement-journalier label {
+        text-transform: uppercase;
+        font-size: 16px;
+        color: #1E1E1E;
+    }
+
+    .mes-transactions-investissement-journalier .header {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        background-color: goldenrod;
+        border-top-right-radius: 7px;
+        border-top-left-radius: 7px;
+        padding: 2px;
+    }
+
+        .mes-transactions-investissement-journalier .header:has(> :only-child) {
+            justify-content: center;
+        }
+
+.btn-annuler-dernier-invest {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: red;
-    color: rgb(82, 72, 72);
+    color: #1E1E1E;
     border-radius: 15px;
-    padding: 5px;
-    transition: 0.25s ease-in-out;
+    padding: 3px;
+    transition: 0.4s ease-in-out;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     width: fit-content;
 }
-.btn-annuler-dernier-invest:hover{
-    color: #202020;
-    box-shadow: 0 4px 12px red;
+
+    .btn-annuler-dernier-invest:hover {
+        color: #121212;
+    }
+
+.mes-transactions-investissement-journalier .content {
+    padding: 5px;
 }
 
-.une-transaction-investissement-journalier{
+    .mes-transactions-investissement-journalier .content label {
+        color: #999;
+        font-size: 16px;
+        text-transform: none;
+    }
+
+.une-transaction-investissement-journalier {
     display: flex;
     align-items: center;
-    gap:5px;
-}
-.une-transaction-investissement-journalier span:first-child {
-    width: 8px;
-    height: 8px;
-    background-color: goldenrod; 
-    border-radius: 50%;
-    margin-right: 12px;
-    display: inline-block;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+    gap: 5px;
 }
 
+    .une-transaction-investissement-journalier span:first-child {
+        width: 8px;
+        height: 8px;
+        background-color: goldenrod;
+        border-radius: 50%;
+        margin-right: 12px;
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+    }
 
+    .une-transaction-investissement-journalier .prix {
+        display: inline-block;
+        color: goldenrod;
+    }
