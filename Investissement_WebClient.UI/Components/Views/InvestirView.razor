@@ -11,9 +11,12 @@
 <PageTitle>Investir</PageTitle>
 
 <div class="investir">
+    
+    @* PARTIE GAUCHE  *@
     <div class="investissement">
         <div class="investissement-header">
             <label>Ajouter un investissement</label>
+            <button disabled="@(IVM.TransactionsInvestissement.Count == 0)" @onclick="Investir" class="btn-investir">Investir</button>
         </div>
         <div class="investissement-infos">
             <div class="form-grid">
@@ -71,15 +74,9 @@
                 </div>
             }
         </div>
-
-        @if (IVM.TransactionsInvestissement.Count != 0)
-        {
-            <div class="investissement-footer">
-                <button @onclick="Investir" class="btn-investir">Investir</button>
-            </div>
-        }
     </div>
 
+    @* PARTIE DROITE  *@
     <div class="mes-investissements">
         <div class="mes-investissements-header">
             <label>Mes Investissements</label>
@@ -94,7 +91,7 @@
                         <label>@(investissementsParDate.Sum(t => t.Transactions.Sum(tr => tr.Prix * tr.Quantite))?.ToString("C2"))</label>
                     </div>
                     <div class="un-investissement-journalier">
-                        @foreach(var investissementJour in investissementsParDate)
+                        @foreach (var investissementJour in investissementsParDate)
                         {
                             <div class="mes-transactions-investissement-journalier">
                                 @if (AfficherHeader(investissementsParDate, investissementJour))
@@ -119,7 +116,8 @@
                                     {
                                         <div class="une-transaction-investissement-journalier">
                                             <span></span>
-                                            <label>@transaction.Quantite @transaction.NomActif à <div class="prix">@transaction.Prix?.ToString("C")</div></label>
+                                            <label>@transaction.Quantite @transaction.NomActif à
+                                                <div class="prix">@transaction.Prix?.ToString("C")</div></label>
                                         </div>
                                     }
                                 </div>
