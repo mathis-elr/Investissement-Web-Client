@@ -6,43 +6,50 @@
     <DataAnnotationsValidator />
 
     <div class="ajout-edit-actif">
-        <div class="choix-mode-actif">
-            <div class="mode-ajout @(AVM.SelectedMode == "Ajouter" ? "selected" : "")" @onclick="AVM.ChangeMode">
-                <label>Ajouter</label>
-            </div>
-            <div class="mode-edit @(AVM.SelectedMode == "Modifier" ? "selected" : "")" @onclick="AVM.ChangeMode">
-                <label>Modifier</label>
-            </div>
+        <div class="ajout-edit-actif-header">
+            <label>@(ModeAjouter() ? "Enregistrer un actif" : "Modifier un actif")</label>
+            <button type="submit" class="btn-ajouter-editer">@AVM.SelectedMode</button>
         </div>
 
-        <div class="ajout-edit-header">
-            @if (AVM.SelectedMode == "Ajouter")
-            {
-                <label>Disponibles</label>
-                <select value="@AVM.SelectedActif.Id" @onchange="AVM.OnChangeActif">
-                    <option value="0" disabled selected>-- Selectionnez un actif --</option>
-                    @foreach (var type in AVM.ActifsDisponibles.GroupBy(a => a.Type))
-                    {
-                        <optgroup label="@type.Key">
-                            @foreach (var actif in type)
-                            {
-                                <option value="@actif.Id">@actif.Nom</option>
-                            }
-                        </optgroup>
-                    }
-                </select>
-            }
-            else
-            {
-                <label>Enregistrés</label>
-                <select value="@AVM.SelectedActifEdit.Id" @onchange="AVM.OnChangeActifEdit">
-                    <option value="0" disabled selected>-- Sélectionnez un actif --</option>
-                    @foreach (ActifDto actif in AVM.ActifsEnregistre)
-                    {
-                        <option value="@actif.Id">@actif.Nom</option>
-                    }
-                </select>
-            }
+        <div class="ajout-edit-actif-infos">
+            <div class="mode">
+                <div class="mode-ajout @(ModeAjouter() ? "selected" : "")" @onclick="AVM.ChangeMode">
+                    <label>Ajouter</label>
+                </div>
+                <div class="mode-edit @(ModeAjouter() ? "" : "selected")" @onclick="AVM.ChangeMode">
+                    <label>Modifier</label>
+                </div>
+            </div>
+                
+            <div class="form-grid">
+                @if (ModeAjouter())
+                {
+                    <label>Disponibles</label>
+                    <select value="@AVM.SelectedActif.Id" @onchange="AVM.OnChangeActif">
+                        <option value="0" disabled selected>-- Selectionnez un actif --</option>
+                        @foreach (var type in AVM.ActifsDisponibles.GroupBy(a => a.Type))
+                        {
+                            <optgroup label="@type.Key">
+                                @foreach (var actif in type)
+                                {
+                                    <option value="@actif.Id">@actif.Nom</option>
+                                }
+                            </optgroup>
+                        }
+                    </select>
+                }
+                else
+                {
+                    <label>Enregistrés</label>
+                    <select value="@AVM.SelectedActifEdit.Id" @onchange="AVM.OnChangeActifEdit">
+                        <option value="0" disabled selected>-- Sélectionnez un actif --</option>
+                        @foreach (ActifDto actif in AVM.ActifsEnregistre)
+                        {
+                            <option value="@actif.Id">@actif.Nom</option>
+                        }
+                    </select>
+                }
+            </div>
         </div>
 
         <div class="ajout-edit-content">
@@ -75,16 +82,17 @@
             </InputSelect>
             <ValidationMessage For="@(() => Mode.Risque)" />
         </div>
-
-        <div class="ajout-edit-footer">
-            <button type="submit" class="btn">@AVM.SelectedMode</button>
-        </div>
     </div>
 </EditForm>
 
 @code{
     [Parameter] public ActifViewModel AVM { get; set; }
     [Parameter] public EventCallback Soumission { get; set; }
+
+    private bool ModeAjouter()
+    {
+        return AVM.SelectedMode == "Ajouter";
+    }
     
-    private ActifDto Mode => AVM.SelectedMode == "Ajouter" ? AVM.SelectedActif : AVM.SelectedActifEdit;
+    private ActifDto Mode => ModeAjouter() ? AVM.SelectedActif : AVM.SelectedActifEdit;
 }

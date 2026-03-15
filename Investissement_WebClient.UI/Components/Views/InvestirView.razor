@@ -1,12 +1,10 @@
-﻿@using System.Globalization
-@using Investissement_WebClient.Core.Modeles.DTO
+﻿@using Investissement_WebClient.Core.Modeles.DTO
 @using Investissement_WebClient.UI.Components.ViewsModels;
 @page "/"
 @rendermode InteractiveServer
 @inject InvestirViewModel IVM
 @inject IJSRuntime JS
 @inject IToastService TS
-
 
 <PageTitle>Investir</PageTitle>
 
@@ -21,12 +19,12 @@
         <div class="investissement-infos">
             <div class="form-grid">
                 <label>Date</label>
-                <div class="field">
+                <div class="info">
                     <input @bind="IVM.SelectedDateInvest" type="date"/>
                 </div>
 
                 <label>Modèle</label>
-                <div class="field">
+                <div class="info">
                     <select @onchange="IVM.OnChangeModele">
                         <option>Aucun</option>
                         @foreach (var modele in IVM.Modeles)
@@ -39,7 +37,7 @@
                 @if (IVM.SelectedIdModele == null)
                 {
                     <label>Note</label>
-                    <div class="field">
+                    <div class="info">
                         <input type="text" @bind="IVM.NoteInvestissement" placeholder="Ajouter une précision..."/>
                     </div>
                 }

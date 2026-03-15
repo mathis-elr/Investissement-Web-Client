@@ -23,81 +23,137 @@
     position: relative;
     transition: all 0.3s ease-in-out;
 }
-.mes-actifs:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    opacity: 1;
-}
+    .mes-actifs:hover{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
 
-.mes-actifs-header {
-    font-size: 20px;
-    font-weight: bold;
-}
-
+    .mes-actifs-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
 .mes-actifs-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.mes-actifs-content label{
-    font-size: 20px;
-}
+    .mes-actifs-content label{
+        text-transform: uppercase;
+        font-size: 20px;
+    }
 
-.type-actif{
+.un-type-actif{
+    display:flex;
+    flex-direction: column;
+    gap: 5px;
+}
+    
+.un-type-actif-content{
     display: flex;
     flex-direction: column;
-    gap:3px;
-    background-color: #202020;
+    padding: 5px;
+    gap: 5px;
+    background-color: #242424;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.un-actif {
-    border: dashed 2px transparent;
-    font-size: 20px;
-    padding: 5px;
-    margin: 5px;
-    border-radius: 5px;
-    transition:  0.4s ease-in-out;
+.un-type-actif span:first-child {
+    width: 8px;
+    height: 8px;
+    background-color: goldenrod;
+    border-radius: 50%;
+    margin-right: 12px;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
 }
 
-.un-actif:hover {
-    border-color: red;
-    cursor: pointer;
+.un-actif-enregistre {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
+    
+    .un-actif-enregistre label{
+        color: #999;
+        font-size: 18px;
+        text-transform: none;
+        border: dashed 2px transparent;
+        border-radius: 10px;
+        transition:  0.3s ease-in-out;
+    }
+    
+    .un-actif-enregistre label:hover {
+        transform: translateX(2px);
+        border-color: red;
+        cursor: pointer;
+    }
 
-.un-actif.active {
+.un-actif-enregistre label.active {
     border : 2px solid red;
 }
 
-.un-actif.active:hover {
-    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
-    border-color: red;
-}
+    .un-actif-enregistre label.active:hover {
+        box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
+        border-color: red;
+    }
+    
 
-
-.mes-actifs-footer{
-    position: sticky;
-    bottom: 0;
-    right: 0;
-    z-index: 100;
+/* --- BOUTONS --- */
+.btns{
+    /*position: sticky;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*z-index: 100;*/
+    display:flex;
+    gap:20px;
 }
 
 .btn-suppr{
-    background-color: red;
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
     color: rgb(82, 72, 72);
-    border: none;
-    border-radius: 5px;
+    background-color: red;
+    border: 1px solid rgba(173, 173, 173, 0.6);
+    border-radius: 20px;
     cursor: pointer;
-    width:100%;
+    width: fit-content;
     transition: ease-in-out 0.3s;
 }
 
-.btn-suppr:hover{
-    box-shadow: 0 4px 12px red;
+    .btn-suppr:hover{
+        box-shadow: 0 4px 12px red;
+        transform: translate(-2px,2px);
+        color: black;
+    }
+
+.btn-effacer-selection{
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: grey;
+    border: 1px solid rgba(173, 173, 173, 0.6);
+    border-radius: 20px;
+    cursor: pointer;
+    width: fit-content;
+    transition: ease-in-out 0.3s;
+}
+
+.btn-effacer-selection:hover{
+    box-shadow: 0 4px 12px grey;
     transform: translate(-2px,2px);
     color: black;
+}
+
+.btn-effacer-selection:disabled,
+.btn-suppr:disabled {
+    background-color: #999;
+    color: #585d60;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none; /*desactive les effets de survol*/
 }

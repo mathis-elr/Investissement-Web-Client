@@ -22,8 +22,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public IEnumerable<string> TypesActif { get; } = Enum.GetNames(typeof(ActifType));
         public IEnumerable<ActifDto> ActifsDisponibles { get; set; } = [];
         public IEnumerable<ActifDto> ActifsEnregistre { get; set; } = [];
-        
-        public ActifTypesDto ActifsParType { get; set; } = new ActifTypesDto();
+
         public List<int> ActifASuppr { get; set; } = [];
         
         public bool HasError { get; set; } = false;
@@ -46,17 +45,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ActifsDisponibles = await _actifService.GetActifsDisponibles();
         }
 
-        private void TrieActifsParType()
-        {
-            if (ActifsEnregistre.Count() == 0) return;
-            ActifsParType = _actifService.GetActifsParType(ActifsEnregistre);
-        }
-
         public async Task LoadData()
         {
             await LoadActifsDisponibles();
             await LoadActifsEnregistre();
-            TrieActifsParType();
         }
 
         public async Task OnChangeActif(ChangeEventArgs e)
@@ -100,7 +92,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
 
-            if (ActifsEnregistre.Any(a => a.Id == SelectedActif.Id))
+            if (ActifsEnregistre.Any(a => a.Nom == SelectedActif.Nom))
             {
                 HasError = true;
                 ErrorMessage = "Vous avez déjà enregistré cet actif";
@@ -137,8 +129,13 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         { 
             await _actifService.SupprimerActifs(ActifASuppr);
 
-            ActifASuppr.Clear();
+            EffacerSelectionSuppresion();
             await LoadData();
+        }
+
+        public void EffacerSelectionSuppresion()
+        {
+            ActifASuppr.Clear();
         }
 
         public void ChangerEtatSuppression(int id)

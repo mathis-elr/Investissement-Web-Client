@@ -16,12 +16,27 @@
         opacity: 1;
     }
 
-.choix-mode-actif{
+.ajout-edit-actif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ajout-edit-actif-infos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background-color: #242424;
+    padding:10px;
+    border-radius : 10px;
+}
+
+.mode{
     display:flex;
     justify-content: space-between;
     align-items: center;
     gap:30px;
-    margin: 0 auto;
     padding:10px;
     width:fit-content;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -50,26 +65,19 @@
     cursor: pointer;
 }
 
-
-.ajout-edit-actif ::deep select,
-.ajout-edit-actif ::deep input{
-    transition: 0.4s ease-in-out;
-}
-.ajout-edit-actif ::deep select:hover,
-.ajout-edit-actif ::deep input:hover,
-.ajout-edit-actif ::deep select:focus,
-.ajout-edit-actif ::deep input:focus{
-    outline: none !important;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
+.form-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
 }
 
-
-.ajout-edit-header{
-    display:flex;
-    gap:10px;
-    font-size: 20px;
-    font-weight: bold;
-}
+    .form-grid label {
+        color: #999;
+        font-size: 20px;
+        font-weight: 500;
+    }
 
 .ajout-edit-content {
     display: grid;
@@ -81,26 +89,33 @@
     justify-content: flex-end;
 }
 
-.btn{
-    background-color: goldenrod;
+.btn-ajouter-editer{
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
     color: rgb(82, 72, 72);
-    border: none;
-    border-radius: 5px;
+    background-color: goldenrod;
+    border: 1px solid rgba(173, 173, 173, 0.6);
+    border-radius: 20px;
     cursor: pointer;
+    width: fit-content;
     transition: ease-in-out 0.3s;
 }
 
-.btn:hover{
-    box-shadow: 0 4px 12px goldenrod;
-    transform: translate(-2px,2px);
-    color: black;
-}
+    .btn-ajouter-editer:hover{
+        box-shadow: 0 4px 12px goldenrod;
+        transform: translate(-2px,2px);
+        color: black;
+    }
 
-select{
-    max-width: 100%;
-    width: 100%;
-    box-sizing: border-box;
+.ajout-edit-actif ::deep select,
+.ajout-edit-actif ::deep input{
+    transition: 0.4s ease-in-out;
+}
+.ajout-edit-actif ::deep select:hover,
+.ajout-edit-actif ::deep input:hover,
+.ajout-edit-actif ::deep select:focus,
+.ajout-edit-actif ::deep input:focus{
+    outline: none !important;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
 }
