@@ -7,22 +7,22 @@
 
     <div class="ajout-edit-actif">
         <div class="ajout-edit-actif-header">
-            <label>@(ModeAjouter() ? "Enregistrer un actif" : "Modifier un actif")</label>
+            <label>@(ModeEnregistrer() ? "Enregistrer un actif" : "Modifier un actif")</label>
             <button type="submit" class="btn-ajouter-editer">@AVM.SelectedMode</button>
         </div>
 
         <div class="ajout-edit-actif-infos">
             <div class="mode">
-                <div class="mode-ajout @(ModeAjouter() ? "selected" : "")" @onclick="AVM.ChangeMode">
-                    <label>Ajouter</label>
+                <div class="mode-ajout @(ModeEnregistrer() ? "selected" : "")" @onclick="AVM.ChangeMode">
+                    <label>Enregistrer</label>
                 </div>
-                <div class="mode-edit @(ModeAjouter() ? "" : "selected")" @onclick="AVM.ChangeMode">
+                <div class="mode-edit @(ModeEnregistrer() ? "" : "selected")" @onclick="AVM.ChangeMode">
                     <label>Modifier</label>
                 </div>
             </div>
                 
             <div class="form-grid">
-                @if (ModeAjouter())
+                @if (ModeEnregistrer())
                 {
                     <label>Disponibles</label>
                     <select value="@AVM.SelectedActif.Id" @onchange="AVM.OnChangeActif">
@@ -89,10 +89,10 @@
     [Parameter] public ActifViewModel AVM { get; set; }
     [Parameter] public EventCallback Soumission { get; set; }
 
-    private bool ModeAjouter()
+    private bool ModeEnregistrer()
     {
-        return AVM.SelectedMode == "Ajouter";
+        return AVM.SelectedMode == "Enregistrer";
     }
     
-    private ActifDto Mode => ModeAjouter() ? AVM.SelectedActif : AVM.SelectedActifEdit;
+    private ActifDto Mode => ModeEnregistrer() ? AVM.SelectedActif : AVM.SelectedActifEdit;
 }

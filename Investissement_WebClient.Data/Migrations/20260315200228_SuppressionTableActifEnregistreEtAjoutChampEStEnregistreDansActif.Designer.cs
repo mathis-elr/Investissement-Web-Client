@@ -4,6 +4,7 @@ using Investissement_WebClient.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Data.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260315200228_SuppressionTableActifEnregistreEtAjoutChampEStEnregistreDansActif")]
+    partial class SuppressionTableActifEnregistreEtAjoutChampEStEnregistreDansActif
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

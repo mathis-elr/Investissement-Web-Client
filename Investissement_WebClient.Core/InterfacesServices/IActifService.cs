@@ -8,14 +8,12 @@ public interface IActifService
     Task<IEnumerable<ActifDto>> GetActifsEnregistres();
     
     Task<IEnumerable<ActifDto>> GetActifsDisponibles();
-    
-    ActifTypesDto GetActifsParType(IEnumerable<ActifDto> actifs);
 
     Task<IEnumerable<DetailsActifDto>> GetDetailsActif();
 
-    Task SupprimerActifs(List<int> idActifs);
+    Task SupprimerActifs(List<ActifDto> idActifs);
     
-    Task AjouterActif(ActifDto actif);
+    Task EnregistrerActif(ActifDto actif);
     
     Task ModifierActif(ActifDto actif);
 }

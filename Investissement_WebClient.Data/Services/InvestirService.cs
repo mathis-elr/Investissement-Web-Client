@@ -32,7 +32,7 @@ public class InvestirService : IInvestirService
                 Transactions = i.Transactions.Select(t => new TransactionDto
                 {
                     IdActif = t.IdActifEnregistre,
-                    NomActif = t.ActifEnregistre.Nom,
+                    NomActif = t.Actif.Nom,
                     Quantite = t.Quantite,
                     Prix = t.Prix
                 })

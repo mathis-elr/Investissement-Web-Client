@@ -31,9 +31,9 @@
                     <div class="un-type-actif-content">
                         @foreach (ActifDto actif in typeActif)
                         {
-                            <div class="un-actif-enregistre" @onclick="() => AVM.ChangerEtatSuppression(actif.Id)">
+                            <div class="un-actif-enregistre" @onclick="() => AVM.ChangerEtatSuppression(actif)">
                                 <span></span>
-                                <label class="@(AVM.ActifASuppr.Contains(actif.Id) ? "active" : "")">@actif.Nom</label>
+                                <label class="@(AVM.ActifASuppr.Contains(actif) ? "active" : "")">@actif.Nom</label>
                             </div>
                         }
                     </div>
@@ -51,9 +51,9 @@
     
     private async Task Soumission()
     {
-        if (AVM.SelectedMode == "Ajouter")
+        if (AVM.SelectedMode == "Enregistrer")
         {
-            await Ajouter();
+            await Enregistrer();
         }
         else
         {
@@ -61,9 +61,9 @@
         }
     }
     
-    private async Task Ajouter()
+    private async Task Enregistrer()
     {
-        await AVM.Ajouter();
+        await AVM.Enregistrer();
 
         if (AVM.HasError)
         {

@@ -128,7 +128,7 @@ public class PatrimoineService : IPatrimoineService
         var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
         var data = await context.Transactions
-            .GroupBy(t => new { t.ActifEnregistre.Nom, t.ActifEnregistre.Symbole})
+            .GroupBy(t => new { t.Actif.Nom, t.Actif.Symbole})
             .Select(groupe => new
             {
                 Actif = groupe.Key.Nom,
@@ -153,7 +153,7 @@ public class PatrimoineService : IPatrimoineService
         var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
         var data = await context.Transactions
-            .GroupBy(t => new { t.ActifEnregistre.Type, t.ActifEnregistre.Symbole })
+            .GroupBy(t => new { t.Actif.Type, t.Actif.Symbole })
             .Select(t => new
             {
                 Type = t.Key.Type,

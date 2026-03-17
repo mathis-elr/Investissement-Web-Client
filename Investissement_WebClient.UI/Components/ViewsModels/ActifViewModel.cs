@@ -12,7 +12,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     {
         private readonly IActifService _actifService;
         
-        public string SelectedMode { get; set; } = "Ajouter";
+        public string SelectedMode { get; set; } = "Enregistrer";
         
         public ActifDto SelectedActif { get; set; } = new ActifDto();
         
@@ -23,9 +23,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public IEnumerable<ActifDto> ActifsDisponibles { get; set; } = [];
         public IEnumerable<ActifDto> ActifsEnregistre { get; set; } = [];
 
-        public List<int> ActifASuppr { get; set; } = [];
+        public List<ActifDto> ActifASuppr { get; set; } = [];
         
-        public bool HasError { get; set; } = false;
+        public bool HasError { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
         
         
@@ -77,10 +77,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public void ChangeMode()
         {
-            SelectedMode = SelectedMode == "Ajouter" ? "Modifier" : "Ajouter";
+            SelectedMode = SelectedMode == "Enregistrer" ? "Modifier" : "Enregistrer";
         }
 
-        public async Task Ajouter()
+        public async Task Enregistrer()
         {
             HasError = false;
             ErrorMessage = string.Empty;
@@ -99,7 +99,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
             
-            await _actifService.AjouterActif(SelectedActif);
+            await _actifService.EnregistrerActif(SelectedActif);
 
             SelectedActif = new ActifDto();
 
@@ -138,15 +138,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ActifASuppr.Clear();
         }
 
-        public void ChangerEtatSuppression(int id)
+        public void ChangerEtatSuppression(ActifDto actif)
         {
-            if(ActifASuppr.Contains(id))
+            if(ActifASuppr.Contains(actif))
             {
-                ActifASuppr.Remove(id);
+                ActifASuppr.Remove(actif);
             }
             else
             {
-                ActifASuppr.Add(id);
+                ActifASuppr.Add(actif);
             }
         }
     }

@@ -10,7 +10,7 @@ public class Transaction
     
     public decimal? Frais { get; set; }
 
-    public ActifEnregistre ActifEnregistre { get; set; } = null!;
+    public Actif Actif { get; set; } = null!;
     public int IdActifEnregistre { get; set; }
     
     public Investissement Investissement { get; set; } = null!;

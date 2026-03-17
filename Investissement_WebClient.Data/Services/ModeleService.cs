@@ -44,7 +44,7 @@ public class ModeleService : IModeleService
                 Composition = m.Composition.Select(c => new TransactionDto
                 {
                     IdActif =  c.IdActifEnregistre,
-                    NomActif = c.ActifEnregistre.Nom,
+                    NomActif = c.Actif.Nom,
                     Quantite = c.Quantite,
                 })
                 .ToList()
@@ -63,7 +63,7 @@ public class ModeleService : IModeleService
             .Select(cm => new TransactionDto()
             {
                 IdActif = cm.IdActifEnregistre, 
-                NomActif = cm.ActifEnregistre.Nom, 
+                NomActif = cm.Actif.Nom, 
                 Quantite = cm.Quantite, 
             })
             .ToListAsync();

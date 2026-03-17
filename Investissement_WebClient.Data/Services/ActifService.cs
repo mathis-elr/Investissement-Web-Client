@@ -17,7 +17,7 @@ public class ActifService : IActifService
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
-        return await context.Actifs
+        return await context.Actifs.Where(a => !a.EstEnregistre)
             .Select(a => new ActifDto
             {
                 Id = a.Id,
@@ -34,7 +34,7 @@ public class ActifService : IActifService
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
-        return await context.ActifEnregistres
+        return await context.Actifs.Where(a => a.EstEnregistre)
             .Select(a => new ActifDto
             {
                 Id = a.Id,
@@ -46,18 +46,6 @@ public class ActifService : IActifService
             })
             .ToListAsync();
     }
-    
-    public ActifTypesDto GetActifsParType(IEnumerable<ActifDto> actifs)
-    {
-        return new ActifTypesDto
-        {
-            Etfs = actifs.Where(a => a.Type == ActifType.ETF),
-            Etcs = actifs.Where(a => a.Type == ActifType.ETC),
-            Cryptos = actifs.Where(a => a.Type == ActifType.Crypto),
-            Actions =  actifs.Where(a => a.Type == ActifType.Action),
-            Obligations =  actifs.Where(a => a.Type == ActifType.Obligation),
-        };
-    }
 
     public async Task<IEnumerable<DetailsActifDto>> GetDetailsActif()
     {
@@ -66,36 +54,30 @@ public class ActifService : IActifService
         IEnumerable<DetailsActifDto> detailsActifDtos = context.Transactions.GroupBy(t => t.IdActifEnregistre)
             .Select(a => new DetailsActifDto
             {
-                NomActif = a.First().ActifEnregistre.Nom,
-                SymboleActif = a.First().ActifEnregistre.Symbole,
+                NomActif = a.First().Actif.Nom,
+                SymboleActif = a.First().Actif.Symbole,
                 QuantiteDetenue = a.Sum(t => t.Quantite),
             }).ToList();
 
         return detailsActifDtos;
     }
 
-    public async Task SupprimerActifs(List<int> idActifs)
+    public async Task EnregistrerActif(ActifDto actif)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
-        context.ActifEnregistres.RemoveRange(context.ActifEnregistres.Where(a => idActifs.Contains(a.Id)));
-        await context.SaveChangesAsync();
-    }
-
-    public async Task AjouterActif(ActifDto actif)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        
-        var actifEnregistre = new ActifEnregistre
+        var actifEnregistre = new Actif
         {
+            Id = actif.Id,
             Nom =  actif.Nom,
             Type = actif.Type,
             Isin =  actif.Isin,
             Symbole = actif.Symbole,
-            Risque = actif.Risque
+            Risque = actif.Risque,
+            EstEnregistre = true
         };
-        context.ActifEnregistres.Add(actifEnregistre);
         
+        context.Actifs.Update(actifEnregistre);
         await context.SaveChangesAsync();
     }
     
@@ -103,17 +85,37 @@ public class ActifService : IActifService
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
-        var actifUpdate = new ActifEnregistre
+        var actifUpdate = new Actif
         {
             Id = actif.Id,
             Nom =  actif.Nom,
             Type = actif.Type,
             Isin =  actif.Isin,
             Symbole = actif.Symbole,
-            Risque = actif.Risque
+            Risque = actif.Risque,
+            EstEnregistre = true
         };
         
-        context.ActifEnregistres.Update(actifUpdate);
+        context.Actifs.Update(actifUpdate);
+        await context.SaveChangesAsync();
+    }
+    
+    public async Task SupprimerActifs(List<ActifDto> actifs)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var actifsNonEnregistre = actifs.Select(a => new Actif
+        {
+            Id = a.Id,
+            Nom = a.Nom,
+            Type = a.Type,
+            Isin = a.Isin,
+            Symbole = a.Symbole,
+            Risque = a.Risque,
+            EstEnregistre = false
+        });
+        
+        context.Actifs.UpdateRange(actifsNonEnregistre);
         await context.SaveChangesAsync();
     }
 }

@@ -10,8 +10,6 @@ public class InvestissementDbContext : DbContext
     {
     }
     
-    public DbSet<ActifEnregistre> ActifEnregistres { get; set; }
-    
     public DbSet<CompositionModele> CompositionModeles { get; set; }
     
     public DbSet<Investissement> Investissements { get; set; }
@@ -29,7 +27,7 @@ public class InvestissementDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<ActifEnregistre>(entity =>
+        modelBuilder.Entity<Actif>(entity =>
         {
             entity.HasKey(e => e.Id);
             
@@ -52,6 +50,8 @@ public class InvestissementDbContext : DbContext
             entity.Property(e => e.Risque)
                 .IsRequired()
                 .HasConversion<string>();
+            entity.Property(e => e.EstEnregistre)
+                .IsRequired();
         });
 
 
@@ -74,7 +74,7 @@ public class InvestissementDbContext : DbContext
                 entity.HasOne(cm => cm.Modele)
                     .WithMany(m => m.Composition)
                     .HasForeignKey(cm => cm.IdModele);
-                entity.HasOne(cm => cm.ActifEnregistre)
+                entity.HasOne(cm => cm.Actif)
                     .WithMany(a => a.Composition)
                     .HasForeignKey(cm => cm.IdActifEnregistre);
             });
@@ -109,32 +109,9 @@ public class InvestissementDbContext : DbContext
             entity.HasOne(t => t.Investissement)
                 .WithMany(i => i.Transactions)
                 .HasForeignKey(t => t.IdInvestissement);
-            entity.HasOne(t => t.ActifEnregistre)
+            entity.HasOne(t => t.Actif)
                 .WithMany(a => a.Transactions)
                 .HasForeignKey(t => t.IdActifEnregistre);
-        });
-
-        modelBuilder.Entity<Actif>(entity =>
-            {
-                entity.HasKey(a => a.Id);
-                entity.Property(a => a.Id)
-                    .ValueGeneratedOnAdd();
-                entity.Property(a => a.Nom)
-                    .IsRequired()
-                    .HasMaxLength(100);
-                entity.Property(a => a.Type)
-                    .IsRequired()
-                    .HasConversion<string>();
-                entity.Property(a => a.Isin)
-                    .HasMaxLength(12);
-                entity.HasIndex(a => a.Isin)
-                    .IsUnique();
-                entity.Property(a => a.Symbole)
-                    .IsRequired()
-                    .HasMaxLength(20);
-                entity.Property(a => a.Risque)
-                    .IsRequired()
-                    .HasConversion<string>();
         });
 
         modelBuilder.Entity<HistoriquePatrimoine>(entity =>
