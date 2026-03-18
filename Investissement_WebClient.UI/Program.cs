@@ -64,19 +64,19 @@ List<string> ipAutorisees = ["109.14.14.134", "127.0.0.1", "194.167.154.181"];
 
 app.UseHttpsRedirection();
 
-app.Use(async (context, next) =>
-{
-    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+//app.Use(async (context, next) =>
+//{
+//    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
 
-    if (!ipAutorisees.Contains(remoteIp))
-    {
-        context.Response.StatusCode = 403; 
-        await context.Response.WriteAsync("Acces refuse : Votre IP n'est pas autorisee.");
-        return;
-    }
+//    if (!ipAutorisees.Contains(remoteIp))
+//    {
+//        context.Response.StatusCode = 403; 
+//        await context.Response.WriteAsync("Acces refuse : Votre IP n'est pas autorisee.");
+//        return;
+//    }
 
-    await next.Invoke();
-});
+//    await next.Invoke();
+//});
 
 app.UseStaticFiles();
 app.UseAntiforgery();

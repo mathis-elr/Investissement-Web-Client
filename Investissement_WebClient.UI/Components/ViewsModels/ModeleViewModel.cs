@@ -148,9 +148,14 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public async Task Supprimer()
         {
             await _modeleService.DeleteModeles(ModelesAsuppr);
-            
-            ModelesAsuppr.Clear();
+
+            EffacerSelectionSuppresion();
             await LoadModeles();
+        }
+
+        public void EffacerSelectionSuppresion()
+        {
+            ModelesAsuppr.Clear();
         }
     }
 }

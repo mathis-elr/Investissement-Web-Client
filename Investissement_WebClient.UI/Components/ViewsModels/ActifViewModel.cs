@@ -133,11 +133,6 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             await LoadData();
         }
 
-        public void EffacerSelectionSuppresion()
-        {
-            ActifASuppr.Clear();
-        }
-
         public void ChangerEtatSuppression(ActifDto actif)
         {
             if(ActifASuppr.Contains(actif))
@@ -148,6 +143,11 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             {
                 ActifASuppr.Add(actif);
             }
+        }
+
+        public void EffacerSelectionSuppresion()
+        {
+            ActifASuppr.Clear();
         }
     }
 }

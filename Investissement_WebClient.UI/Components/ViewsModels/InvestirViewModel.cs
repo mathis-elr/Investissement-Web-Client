@@ -139,4 +139,4 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             await LoadInvestissements();
         }
     }
-}
+} 

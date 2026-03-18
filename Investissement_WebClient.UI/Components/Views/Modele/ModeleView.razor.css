@@ -9,10 +9,10 @@
     min-height: 0;
 }
 
-.mes-modele{
-    display:flex;
+.mes-modele {
+    display: flex;
     flex-direction: column;
-    gap:20px;
+    gap: 20px;
     background-color: #1e1e1e;
     border-radius: 10px;
     padding: 20px;
@@ -20,16 +20,33 @@
     opacity: 0.8;
     position: relative;
     transition: all 0.3s ease-in-out;
+    position: relative;
 }
-.mes-modele:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    opacity: 1;
-}
+    .mes-modele:hover{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
 
-.mes-modele-header {
-    font-size: 20px;
-    font-weight: bold;
+.mes-modeles-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+    /* Ajout d'une ombre en dessous du header */
+    .mes-modeles-header::after {
+        content: "";
+        position: absolute;
+        top: 100%; /* Se place exactement en bas du header */
+        left: 0;
+        width: 100%;
+        height: 50px; /* hauteur de l'ombre */
+        background: linear-gradient( to bottom, #1e1e1e, transparent );
+        pointer-events: none; /* Pour pouvoir cliquer sur les éléments dessous */
+    }
 
 .mes-modeles-content {
     display: flex;
@@ -77,24 +94,56 @@
     z-index: 100;
 }
 
-.btn-suppr{
+
+/* --- BOUTONS --- */
+.btns {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-suppr {
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
     color: rgb(82, 72, 72);
-    border: none;
-    border-radius: 5px;
+    background-color: red;
+    border: 1px solid rgba(173, 173, 173, 0.6);
+    border-radius: 20px;
     cursor: pointer;
-    width: 100%;
+    width: fit-content;
     transition: ease-in-out 0.3s;
 }
 
-.btn-suppr{
-    background-color: red;
+    .btn-suppr:hover {
+        box-shadow: 0 4px 12px red;
+        transform: translate(-2px,2px);
+        color: black;
+    }
+
+.btn-effacer-selection {
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(82, 72, 72);
+    background-color: grey;
+    border: 1px solid rgba(173, 173, 173, 0.6);
+    border-radius: 20px;
+    cursor: pointer;
+    width: fit-content;
+    transition: ease-in-out 0.3s;
 }
 
-.btn-suppr:hover{
-    box-shadow: 0 4px 12px red;
-    transform: translate(-2px,2px);
-    color: black;
-}
+    .btn-effacer-selection:hover {
+        box-shadow: 0 4px 12px grey;
+        transform: translate(-2px,2px);
+        color: black;
+    }
+
+    .btn-effacer-selection:disabled,
+    .btn-suppr:disabled {
+        background-color: #999;
+        color: #585d60;
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none; /*desactive les effets de survol*/
+    }

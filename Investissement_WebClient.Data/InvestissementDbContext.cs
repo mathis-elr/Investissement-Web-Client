@@ -74,9 +74,11 @@ public class InvestissementDbContext : DbContext
                 entity.HasOne(cm => cm.Modele)
                     .WithMany(m => m.Composition)
                     .HasForeignKey(cm => cm.IdModele);
+
                 entity.HasOne(cm => cm.Actif)
                     .WithMany(a => a.Composition)
-                    .HasForeignKey(cm => cm.IdActifEnregistre);
+                    .HasForeignKey(cm => cm.IdActifEnregistre)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
 
@@ -91,7 +93,8 @@ public class InvestissementDbContext : DbContext
             
             entity.HasOne(i => i.Modele)
                 .WithMany(m => m.Investissements)
-                .HasForeignKey(i => i.IdModele);
+                .HasForeignKey(i => i.IdModele)
+                .OnDelete(DeleteBehavior.Restrict); 
         });
 
         modelBuilder.Entity<Transaction>(entity =>
@@ -105,13 +108,16 @@ public class InvestissementDbContext : DbContext
             entity.Property(t => t.Quantite)
                 .IsRequired();
             entity.Property(t => t.Frais);
-            
+
             entity.HasOne(t => t.Investissement)
                 .WithMany(i => i.Transactions)
-                .HasForeignKey(t => t.IdInvestissement);
+                .HasForeignKey(t => t.IdInvestissement)
+                .OnDelete(DeleteBehavior.Cascade);
+
             entity.HasOne(t => t.Actif)
                 .WithMany(a => a.Transactions)
-                .HasForeignKey(t => t.IdActifEnregistre);
+                .HasForeignKey(t => t.IdActifEnregistre)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<HistoriquePatrimoine>(entity =>

@@ -6,37 +6,44 @@
     
     <div class="ajout-edit-modele">
         
-        <div class="choix-ajout-edit-modele">
-            <div class="mode-ajout @(MVM.SelectedMode == "Ajouter" ? "selected" : "")" @onclick="MVM.ChangeMode">
-                <label>Ajouter</label>
-            </div>
-            <div class="mode-edit @(MVM.SelectedMode == "Modifier" ? "selected" : "")" @onclick="MVM.ChangeMode">
-                <label>Modifier</label>
-            </div>
+        <div class="ajout-edit-modele-header">
+            <label>@(ModeleAjouter() ? "Ajouter un modele" : "Modifier un modèle")</label>
+            <button type="submit" class="btn-ajouter-editer">@MVM.SelectedMode</button>
         </div>
+        <div class="ajout-edit-modele-infos">
+            <div class="mode">
+                <div class="mode-ajout @(ModeleAjouter() ? "selected" : "")" @onclick="MVM.ChangeMode">
+                    <label>Ajouter</label>
+                </div>
+                <div class="mode-edit @(ModeleAjouter() ? "" :  " selected")" @onclick="MVM.ChangeMode">
+                    <label>Modifier</label>
+                </div>
+            </div>
 
-        <div class="ajout-edit-header">
-            @if (MVM.SelectedMode == "Modifier")
-            {
-                <label>Modèles</label>
-                <select value="@Mode.Id" @onchange="MVM.OnChangeModeleEdit">
-                    <option value="0" disabled>-- Sélectionnez un modele --</option>
-                    @foreach (ModeleCompositionDto modele in MVM.ModelesComposition)
-                    {
-                        <option value="@modele.Id">@modele.Nom</option>
-                    }
-                </select>
-                if (Mode.Id != 0)
+            <div class="form-grid">
+                @if (!ModeleAjouter())
                 {
-                    <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
+                    <label>Modèles</label>
+                    <select value="@Mode.Id" @onchange="MVM.OnChangeModeleEdit">
+                        <option value="0" disabled>-- Sélectionnez un modele --</option>
+                        @foreach (ModeleCompositionDto modele in MVM.ModelesComposition)
+                        {
+                            <option value="@modele.Id">@modele.Nom</option>
+                        }
+                    </select>
+                    if (Mode.Id != 0)
+                    {
+                        <InputText @bind-Value="Mode.Nom" placeholder="Nom" />
+                    }
                 }
-            }
-            else
-            {
-                <label>Nom du modèle</label> 
-                <InputText @bind-Value="Mode.Nom" placeholder="Nom"/>
-            }
+                else
+                {
+                    <label>Nom du modèle</label>
+                    <InputText @bind-Value="Mode.Nom" placeholder="Nom" />
+                }
             
+            </div>
+
         </div>
 
         <div class="ajout-edit-content">
@@ -61,21 +68,19 @@
                     </div>
                 </div>
             }
-
-            @if (Mode.Id != 0 || MVM.SelectedMode == "Ajouter")
+            
+            @* Mode.Id != 0 || MVM.SelectedMode == "Ajouter" && *@
+            @if (MVM.ActifEnregistre.Count() != 0)
             {
                 <div class="actif-modele-investissement add" @onclick="MVM.AddActifModele">
                     <a>+</a>
                 </div>
             }
+            else
+            {
+                <span>Enregistrer au moins un actif dans la section "Actif" pour @(ModeleAjouter() ? "ajouter" : "modifier") un modèle ...</span>
+            }
         </div>
-
-        @if (CompositionModele.Count() != 0)
-        {
-            <div class="ajout-edit-footer">
-                <button type="submit" class="btn">@MVM.SelectedMode</button>
-            </div>
-        }
     </div>
     
 </EditForm>
@@ -85,6 +90,11 @@
     [Parameter] public ModeleViewModel MVM { get; set; }
     [Parameter] public EventCallback Soumission { get; set; }
 
-    private ModeleDto Mode => MVM.SelectedMode == "Ajouter" ? MVM.SelectedModele : MVM.SelectedModeleEdit;
+    private bool ModeleAjouter()
+    {
+        return MVM.SelectedMode == "Ajouter";
+    }
+
+    private ModeleDto Mode => ModeleAjouter() ?  MVM.SelectedModele : MVM.SelectedModeleEdit;
     private IEnumerable<TransactionDto> CompositionModele => MVM.SelectedMode == "Ajouter" ? MVM.CompositionModele : MVM.CompositionModeleEdit;
 }

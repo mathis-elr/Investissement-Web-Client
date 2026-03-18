@@ -15,8 +15,13 @@
     <Formulaire MVM="MVM" Soumission="Soumission"></Formulaire>
     
     <div class="mes-modele">
-        <div class="mes-modele-header">
+        <div class="mes-modeles-header">
             <label>Modèles enregistrés</label>
+
+            <div class="btns">
+                <button disabled="@(!MVM.ModelesAsuppr.Any())" class="btn-effacer-selection" @onclick="MVM.EffacerSelectionSuppresion">Annuler</button>
+                <button disabled="@(!MVM.ModelesAsuppr.Any())" class="btn-suppr" @onclick="Supprimer">Supprimer</button>
+            </div>
         </div>
         <div class="mes-modeles-content">
             @foreach (ModeleCompositionDto modele in MVM.ModelesComposition)
@@ -36,13 +41,6 @@
                 </div>
             }
         </div>
-
-        @if (MVM.ModelesAsuppr.Count() != 0)
-        {
-            <div class="mes-modeles-footer">
-                <button class="btn-suppr" @onclick="Supprimer">Supprimer</button>
-            </div>
-        }
     </div>
 </div>
 
