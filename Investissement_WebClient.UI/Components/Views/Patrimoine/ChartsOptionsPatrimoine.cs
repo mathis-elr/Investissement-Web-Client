@@ -3,7 +3,7 @@ using Investissement_WebClient.Core.Modeles.Graphiques;
 
 namespace Investissement_WebClient.UI.Components.Views.Patrimoine;
 
-public static class ChartsOptions
+public static class ChartsOptionsPatrimoine
 {
     public static ApexChartOptions<BougieJournaliere> OptionsBougieJournalierePlusOuMoinsValues = new()
     {

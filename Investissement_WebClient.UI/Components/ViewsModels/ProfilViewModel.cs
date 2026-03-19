@@ -17,11 +17,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
 
         /*  PROPRIETES PERSPECTIVES */
-        public decimal EvolutionAnnuellePourcentage { get; set; }
-        public int PerspectiveNbAnnees { get; set; }
+        public double EvolutionAnnuellePourcentage { get; set; } = 8;
+        public int PerspectiveNbAnnees { get; set; } = 10;
+        public List<ValeurParAn> PerspectivesValeurPatrimoineParAn { get; set; } = [];
 
         /* PROPRIETES INVESTISSEMENT */
-        public decimal InvestissementMoyenMensuel {  get; set; }
+        public double InvestissementMoyenMensuel { get; set; } = 800;
         public decimal InvestissementTotal {  get; set; }
         public IEnumerable<ValeurParDate> InvestissementParMois {  get; set; }
 
@@ -32,5 +33,31 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         /*  PROPRIETES EVOLUTION ACTIFS */
         public IEnumerable<EvolutionActifDTO> EvolutionActifs { get; set; }
+
+
+        public void CalculerEvolutionDuPatrimoine()
+        {
+            PerspectivesValeurPatrimoineParAn = [];
+
+            int annee = 0;
+            double investissementCourant = 0;
+            double pourcentageAnnuel = 1 + (EvolutionAnnuellePourcentage / 100);
+            double pourcentageMensuel = Math.Pow(pourcentageAnnuel, 1.0 / 12);
+            double pointFixe = InvestissementMoyenMensuel / (pourcentageMensuel - 1);
+
+            while (annee <= PerspectiveNbAnnees)
+            {
+                var valeurParAn = new ValeurParAn
+                {
+                    Annee = annee,
+                    Valeur = (decimal)Math.Round(pointFixe * (Math.Pow(pourcentageMensuel, annee * 12) - 1), 0),
+                    Investissement = (decimal)investissementCourant
+                };
+                
+                PerspectivesValeurPatrimoineParAn.Add(valeurParAn);
+                annee++;
+                investissementCourant += InvestissementMoyenMensuel * 12;
+            }
+        }
     }
 }

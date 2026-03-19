@@ -191,7 +191,6 @@ select, input {
     }
 
 .btn-investir {
-    /*margin: 20px;*/
     padding: 10px;
     font-size: 20px;
     font-weight: bold;
@@ -202,7 +201,6 @@ select, input {
     cursor: pointer;
     width: fit-content;
     transition: ease-in-out 0.3s;
-    /*width: 100%;*/
 }
     .btn-investir:disabled {
         background-color: #999;

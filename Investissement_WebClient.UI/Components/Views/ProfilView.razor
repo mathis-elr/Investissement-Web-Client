@@ -1,6 +1,11 @@
-﻿@page "/profil"
+﻿@using Investissement_WebClient.UI.Components.ViewsModels
+@using Investissement_WebClient.Core.Modeles.Graphiques;
+
+@page "/profil"
 @rendermode InteractiveServer
+@inject ProfilViewModel PVM
 @inject IJSRuntime JS
+@inject IToastService TS
 
 <PageTitle>Profil</PageTitle>
 
@@ -8,6 +13,51 @@
     <div class="perspectives">
         <div class="header">
             <label>Perspectives</label>
+            <btn @onclick="CalculerEvolutionDuPatrimoine" class="btn-calcul">Calcul</btn>
+        </div>
+
+        <div class="perspectives-infos">
+            <div class="form-grid">
+                <label>Investissement mensuel</label>
+                <div class="info">
+                    <input @bind="PVM.InvestissementMoyenMensuel" />
+                </div>
+                <label>€</label>
+
+                <label>Evolution Annuelle</label>
+                <div class="info">
+                    <input @bind="PVM.EvolutionAnnuellePourcentage" />
+                </div>
+                <label>%</label>
+
+                <label>Nombre d'années</label>
+                <div class="info"> 
+                    <input @bind="PVM.PerspectiveNbAnnees" />
+                </div>
+                <label>ans</label>
+            </div>
+        </div>
+
+        <div class="perspectives-content">
+            <ApexChart @ref="_chart" TItem="ValeurParAn"
+                       Options="ChartOptionsProfil.OptionsValeurParAn">
+
+                <ApexPointSeries TItem="ValeurParAn"
+                                 Items="PVM.PerspectivesValeurPatrimoineParAn"
+                                 SeriesType="SeriesType.Line"
+                                 Name="Valeur Patrimoine"
+                                 YValue="@(e => e.Valeur)"
+                                 XValue="@(e => e.Annee)"
+                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="yellow" })" />
+
+                <ApexPointSeries TItem="ValeurParAn"
+                                 Items="PVM.PerspectivesValeurPatrimoineParAn"
+                                 SeriesType="SeriesType.Line"
+                                 Name="Investissement"
+                                 YValue="@(e => e.Investissement)"
+                                 XValue="@(e => e.Annee)"
+                                 Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
+            </ApexChart>
         </div>
     </div>
 
@@ -29,4 +79,18 @@
         </div>
     </div>
 </div>
+
+@code{
+    private ApexChart<ValeurParAn> _chart;
+    protected override async Task OnInitializedAsync()
+    {
+        PVM.CalculerEvolutionDuPatrimoine();
+    }
+
+    private async Task CalculerEvolutionDuPatrimoine()
+    {
+        PVM.CalculerEvolutionDuPatrimoine();
+        await _chart.UpdateSeriesAsync();
+    }
+}
 
