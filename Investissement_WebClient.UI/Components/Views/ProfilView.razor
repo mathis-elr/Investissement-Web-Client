@@ -39,7 +39,7 @@
         </div>
 
         <div class="perspectives-content">
-            <ApexChart @ref="_chart" TItem="ValeurParAn"
+            <ApexChart @ref="_chartPerspectivesValeurPatrimoineParAn" TItem="ValeurParAn"
                        Options="ChartOptionsProfil.OptionsValeurParAn">
 
                 <ApexPointSeries TItem="ValeurParAn"
@@ -81,16 +81,28 @@
 </div>
 
 @code{
-    private ApexChart<ValeurParAn> _chart;
+
+    private ApexChart<ValeurParAn> _chartPerspectivesValeurPatrimoineParAn;
+
     protected override async Task OnInitializedAsync()
     {
-        PVM.CalculerEvolutionDuPatrimoine();
+        await PVM.CalculerEvolutionDuPatrimoine();
     }
 
     private async Task CalculerEvolutionDuPatrimoine()
     {
-        PVM.CalculerEvolutionDuPatrimoine();
-        await _chart.UpdateSeriesAsync();
+        await PVM.CalculerEvolutionDuPatrimoine();
+
+        if (PVM.HasError) 
+        {
+            TS.ShowError(PVM.ErrorMessage);
+            PVM.HasError = false;
+            PVM.ErrorMessage = string.Empty;
+        }
+        else
+        {
+            await _chartPerspectivesValeurPatrimoineParAn.UpdateSeriesAsync();
+        }
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using Investissement_WebClient.Core.InterfacesServices;
+﻿using ApexCharts;
+using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
 using Investissement_WebClient.Core.Modeles.Graphiques;
@@ -21,10 +22,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public int PerspectiveNbAnnees { get; set; } = 10;
         public List<ValeurParAn> PerspectivesValeurPatrimoineParAn { get; set; } = [];
 
+
         /* PROPRIETES INVESTISSEMENT */
-        public double InvestissementMoyenMensuel { get; set; } = 800;
+        public double InvestissementMoyenMensuel { get; set; } = 900;
         public decimal InvestissementTotal {  get; set; }
         public IEnumerable<ValeurParDate> InvestissementParMois {  get; set; }
+
 
         /* PROPRIETES REVENUS */
         public List<Revenu> Revenus { get; set; }  
@@ -34,10 +37,42 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         /*  PROPRIETES EVOLUTION ACTIFS */
         public IEnumerable<EvolutionActifDTO> EvolutionActifs { get; set; }
 
+        public bool HasError { get; set; } = false;
+        public string ErrorMessage { get; set; } = string.Empty;
 
-        public void CalculerEvolutionDuPatrimoine()
+
+        public async Task CalculerEvolutionDuPatrimoine()
         {
-            PerspectivesValeurPatrimoineParAn = [];
+
+            if (InvestissementMoyenMensuel < 1)
+            {
+                HasError = true;
+                ErrorMessage = "Impossible de calculer l'evolution d'un investissement null";
+                return;
+            }
+            
+
+            if (EvolutionAnnuellePourcentage < 1)
+            {
+                HasError = true;
+                ErrorMessage = "Entrez une évolution annuelle positive";
+                return;
+            }
+
+            if (PerspectiveNbAnnees < 1)
+            {
+                HasError = true;
+                ErrorMessage = "Impossible de calculer l'evolution de moins d'une année";
+                return;
+            }
+            else if (PerspectiveNbAnnees > 100)
+            {
+                HasError = true;
+                ErrorMessage = "Impossible de calculer l'evolution pour plus de 100 ans";
+                return;
+            }
+
+                PerspectivesValeurPatrimoineParAn = [];
 
             int annee = 0;
             double investissementCourant = 0;
