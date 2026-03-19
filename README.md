@@ -2,39 +2,54 @@
 
 <h3>Ce qui est possible de faire : </h3>
 <ul>
-  <h4>💲 <I>Page Investissement</I> 💲</h4>
+  <h4>💰 <I>Page Investissement</I> 💰</h4>
   <li>
-    fonctionalité principale -> pouvoir enregistrer un investissement effectué en ajout le prix d'achat et la quantité des actifs investits avec la possibilité d'inclure un modele pré enregistré
+    Ajouter des investissements (1 ou plusieurs transactions) effectués en ajout le prix d'achat et la quantité des actifs investits avec la possibilité d'inclure un modele pré enregistré.
   </li>
   <li>
-    visualiser les actifs investit lors du dernier investissement ainsi que la date 
-  </li>
-
-   <h4>🪙 <I>Page Actif</I> 🪙</h4>
-  <li>
-    ajouter un actif avec son nom, sont type, son symbole (ex : BTC pour le bitcoin), le risque d'investissement (faible,moyen,fort)
+    Visualiser ces investissements classés par date décroissante, avec le montant total investit par jour mais également la listes de transactions, leur prix d'achat et la quantité investit.
   </li>
   <li>
-    modifier des actifs existant
-  </li>
-  <li>
-    supression de un ou plusieurs actif(s) en simultané par selection
+    Annuler une transaction qui a eu lieu il y a moins de 3h.
   </li>
 
-  <h4>🖇️ <I>Page Modele</I> 🖇️</h4>
+  <h4>💼 <I>Page Actif</I> 💼</h4>
   <li>
-    ajouter un modele = panier d'actifs utilise pour l'investissement en DCA, permet la reutilisation des même actifs et pourquoi pas d'une quantité determiné
+    Enregistrer et modifier facilement un actif pré enregistré parmis une liste d'ETF, ETC, Actions et Crytos disponible
   </li>
   <li>
-    modifier un modele et plus precisement les actifs le composant 
+    Supression de un ou plusieurs actif(s) en simultané par selection
+  </li>
+
+  <h4>📋 <I>Page Modele</I> 📋</h4>
+  <li>
+    Ajouter un modele = panier d'actifs utilise pour l'investissement en DCA, permet la reutilisation des même actifs si on fait souvent les mêmes investissements
   </li>
   <li>
-    supression de un ou plusieurs modele(s) en simultané par selection
+    Modifier un modele et plus precisement les actifs le composant, et la quantité associé
   </li>
+  <li>
+    Supression de un ou plusieurs modele(s) en simultané par selection
+  </li>
+
+  <h4>🙍‍♂️ <I>Page profil</I> 🙍‍♂️</h4>
+  <li>Rien pour le moment voir futurs ajouts</li>
 </ul>
 
 <h3>Futures ajouts : </h3>
-
-
-<h3>Amélioration en vue : </h3>
+<ul>
+  <h4> Page Profil </h4>
+  <li>
+    Infos sur l'investissement moyen, le salaire
+  </li>
+  <li>
+    Perspectives d'evolution positives de la valeur du patrimoine à long terme (5/10/20/40 ans via graphique)
+  </li>
+  <li>
+    Courbe ou plus/moins values ou variations des actifs investits entre le premier investissement et ajd, pour visualiser ce qui marche et ce qui marche moins bien 
+  </li>
+  <li>
+    Autres infos à determiner grace aux données collectées
+  </li>
+</ul>
 
