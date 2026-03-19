@@ -5,7 +5,7 @@ namespace Investissement_WebClient.UI.Components.Views.Patrimoine;
 
 public static class ChartsOptions
 {
-    public static ApexChartOptions<BougieJournaliere> OptionsBougieJournaliere = new()
+    public static ApexChartOptions<BougieJournaliere> OptionsBougieJournalierePlusOuMoinsValues = new()
     {
         
         Stroke = new Stroke
@@ -27,6 +27,35 @@ public static class ChartsOptions
             BorderColor = "#444" 
         },
         
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark,
+        },
+    };
+
+    public static ApexChartOptions<BougieJournaliere> OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal = new()
+    {
+
+        Stroke = new Stroke
+        {
+            Curve = Curve.Smooth,
+            Width = 3
+        },
+
+        Chart = new Chart
+        {
+            ForeColor = "#FFFFFF",
+            Background = "transparent",
+            Toolbar = new Toolbar { Show = false },
+            Width = "100%",
+            Height = "500px"
+        },
+
+        Grid = new Grid
+        {
+            BorderColor = "#444"
+        },
+
         Tooltip = new Tooltip
         {
             Theme = Mode.Dark,

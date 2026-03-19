@@ -88,7 +88,7 @@ public class PatrimoineService : IPatrimoineService
         return variation;
     }
 
-    public async Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieres()
+    public async Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresPlusOuMoinsValues()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
@@ -109,13 +109,21 @@ public class PatrimoineService : IPatrimoineService
             .OrderBy(dg => dg.Date) //on range les jours du plus ancien au plus recent 
             .ToListAsync();
         
-        return donneesGroupes.Select(dg => new BougieJournaliere
-        {
-            Date = dg.Date,
-            Ouverture = (decimal)Math.Round(dg.DonneesJour.First().Valeur - dg.DonneesJour.First().InvestissementTotal,2), //haut de la pile = date la plus ancienne
-            Fermeture = (decimal)Math.Round(dg.DonneesJour.Last().Valeur - dg.DonneesJour.Last().InvestissementTotal, 2),
-            Haut = (decimal)Math.Round(dg.Max, 2),
-            Bas = (decimal)Math.Round(dg.Min, 2)
+        return donneesGroupes.Select(dg => {
+
+            decimal valeurOuverture = dg.DonneesJour.FirstOrDefault()?.Valeur ?? 0;
+            decimal valeurFermeture = dg.DonneesJour.LastOrDefault()?.Valeur ?? 0;
+            decimal investissementOuverture = dg.DonneesJour.FirstOrDefault()?.InvestissementTotal ?? 0;
+            decimal investissementFermeture = dg.DonneesJour.LastOrDefault()?.InvestissementTotal ?? 0;
+
+            return new BougieJournaliere
+            {
+                Date = dg.Date,
+                Ouverture = Math.Round(valeurOuverture - investissementOuverture, 2), //haut de la pile = date la plus ancienne
+                Fermeture = Math.Round(valeurFermeture - investissementFermeture, 2),
+                Haut = Math.Round(dg.Max, 2),
+                Bas = Math.Round(dg.Min, 2),
+            };
         }).ToList();
     }
 
@@ -123,9 +131,9 @@ public class PatrimoineService : IPatrimoineService
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
-        var detailsActifs = await _actifService.GetDetailsActif();
-        var symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-        var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
+        IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
+        IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
+        Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
         var data = await context.Transactions
             .GroupBy(t => new { t.Actif.Nom, t.Actif.Symbole})
@@ -148,9 +156,9 @@ public class PatrimoineService : IPatrimoineService
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
-        var detailsActifs = await _actifService.GetDetailsActif();
-        var symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-        var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
+        IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
+        IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
+        Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
         var data = await context.Transactions
             .GroupBy(t => new { t.Actif.Type, t.Actif.Symbole })
@@ -168,6 +176,36 @@ public class PatrimoineService : IPatrimoineService
                 Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
             }).ToList();
     }
+
+    public async Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var data = await context.HistoriquePatrimoine.GroupBy(hp => hp.Date.Date).Select(hp => new
+        {
+            Date = hp.Key,
+            MaxValeur = hp.Max(t => t.Valeur),
+            MinValeur = hp.Min(t => t.Valeur),
+            DonnesParJour = hp.OrderBy(hp => hp.Date).Select(t => new
+            {
+                t.Valeur,
+                t.InvestissementTotal
+            }),
+            InvestissementTotal = hp.Max(testc => testc.InvestissementTotal)
+        }).OrderBy(hp => hp.Date)
+          .ToListAsync();
+
+        return data.Select(t => new BougieJournaliere
+        {
+            Date = t.Date,
+            Ouverture = t.DonnesParJour.FirstOrDefault()?.Valeur ?? 0,
+            Fermeture = t.DonnesParJour.LastOrDefault()?.Valeur ?? 0,
+            Bas = t.MinValeur,
+            Haut = t.MaxValeur,
+            InvestissementTotal = t.InvestissementTotal,
+        }).ToList();
+    }
+
 
     public async Task DeleteHistoriquePatrimoinePeriode(DateTime dateDepart)
     {

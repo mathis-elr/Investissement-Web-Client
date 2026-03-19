@@ -68,6 +68,16 @@
     position:relative;
 }
 
+    .patrimoine-content span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-style: italic;
+        width: 25%;
+        height: 100%;
+    }
+
 .btn-rond {
     display: flex;
     align-items: center;

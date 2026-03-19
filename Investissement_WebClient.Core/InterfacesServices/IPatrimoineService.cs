@@ -13,11 +13,13 @@ public interface IPatrimoineService
 
     Task<VariationsDto> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal);
 
-    Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieres();
+    Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresPlusOuMoinsValues();
 
     Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant);
 
     Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant);
+
+    Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
 
     Task DeleteHistoriquePatrimoinePeriode(DateTime dateDepart);
 }

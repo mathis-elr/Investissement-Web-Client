@@ -357,6 +357,7 @@ select, input {
         margin-right: 12px;
         display: inline-block;
         box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+        flex-shrink: 0;
     }
 
     .une-transaction-investissement-journalier .prix {

@@ -39,79 +39,126 @@
 
     <div class="patrimoine-content">
 
-        <div class="btn-rond gauche" @onclick="GraphiquePrecedent">ᐸ</div>
-        <div class="btn-rond droite" @onclick="GraphiqueSuivant">ᐳ</div>
+        @if(PVM.ValeurPatrimoineCourante != 0)
+        {
+            <div class="btn-rond gauche" @onclick="GraphiquePrecedent">ᐸ</div>
+            <div class="btn-rond droite" @onclick="GraphiqueSuivant">ᐳ</div>
+        }
 
         <div class="rail @(pages[index])">
-            <div class="page">
-                @if (PVM.BougiesJournalieres.Any())
-                {
-                    <div style="flex:1">
-                        <ApexChart TItem="BougieJournaliere"
-                                   XAxisType="XAxisType.Datetime"
-                                   Options="ChartsOptions.OptionsBougieJournaliere">
 
-                            <ApexCandleSeries TItem="BougieJournaliere"
-                                              Items="PVM.BougiesJournalieres"
-                                              Name="Apex Stock Price"
-                                              XValue="@(e => e.Date)"
-                                              Open="@(e => e.Ouverture)"
-                                              High="@(e => e.Haut)"
-                                              Low="@(e => e.Bas)"
-                                              Close="@(e => e.Fermeture)"
-                                              OrderByDescending="e => e.X" />
-                        </ApexChart>
-                    </div>
-                }
-            </div>
+            @if(DonneesExiste && PVM.ValeurPatrimoineCourante != 0)
+            {
+                <div class="page">
+                    @*Graphique Candle : evolution des plus/moins values au cours du temps par rapport à l'investissement total et à la valeur du patrimoine*@
+                    @if (PVM.BougiesJournalieresPlusOuMoinsValues.Any())
+                    {
+                        <div style="flex:1">
+                            <ApexChart TItem="BougieJournaliere"
+                                       XAxisType="XAxisType.Datetime"
+                                       Options="ChartsOptions.OptionsBougieJournalierePlusOuMoinsValues">
 
-            <div class="page">
-                @* Pie : proportion investit par actif par rapport au total investit *@
-                @if (PVM.ProportionParActif.Any())
-                {
-                    <div style="flex:1">
-                        <ApexChart TItem="ProportionActif"
-                                   Title="Proportion investit par actif"
-                                   Options="ChartsOptions.OptionsPieActif">
+                                <ApexCandleSeries TItem="BougieJournaliere"
+                                                  Items="PVM.BougiesJournalieresPlusOuMoinsValues"
+                                                  Name="Evolution des plus/moins values"
+                                                  XValue="@(e => e.Date)"
+                                                  Open="@(e => e.Ouverture)"
+                                                  High="@(e => e.Haut)"
+                                                  Low="@(e => e.Bas)"
+                                                  Close="@(e => e.Fermeture)"
+                                                  OrderByDescending="e => e.X" />
+                            </ApexChart>
+                        </div>
+                    }
+                    else
+                    {
+                        
+                    }
+                </div>
 
-                            <ApexPointSeries TItem="ProportionActif"
-                                             Items="PVM.ProportionParActif"
-                                             SeriesType="SeriesType.Pie"
-                                             XValue="@(e => e.Actif)"
-                                             YValue="@(e => e.Proportion)"
-                                             OrderByDescending="e => e.Y"/>
-                        </ApexChart>
-                    </div>
+                <div class="page">
+                    @* Pie : proportion investit par actif par rapport au total investit *@
+                    @if (PVM.ProportionParActif.Any())
+                    {
+                        <div style="flex:1">
+                            <ApexChart TItem="ProportionActif"
+                                       Title="Proportion investit par actif"
+                                       Options="ChartsOptions.OptionsPieActif">
 
-                }
+                                <ApexPointSeries TItem="ProportionActif"
+                                                 Items="PVM.ProportionParActif"
+                                                 SeriesType="SeriesType.Pie"
+                                                 XValue="@(e => e.Actif)"
+                                                 YValue="@(e => e.Proportion)"
+                                                 OrderByDescending="e => e.Y" />
+                            </ApexChart>
+                        </div>
+
+                    }
                
-                @* Pie : proportion investit par type par rapport au total investit *@
-                @if (PVM.ProportionParTypeActif.Any())
-                {
-                <div style="flex:1">
-                        <ApexChart TItem="ProportionTypeActif"
-                                   Title="Proportion investit par type d'actif"
-                                   Options="ChartsOptions.OptionsPieType">
+                    @* Pie : proportion investit par type par rapport au total investit *@
+                    @if (PVM.ProportionParTypeActif.Any())
+                    {
+                        <div style="flex:1">
+                            <ApexChart TItem="ProportionTypeActif"
+                                       Title="Proportion investit par type d'actif"
+                                       Options="ChartsOptions.OptionsPieType">
 
-                            <ApexPointSeries TItem="ProportionTypeActif"
-                                             Items="PVM.ProportionParTypeActif"
-                                             SeriesType="SeriesType.Pie"
-                                             XValue="@(e => e.Type)"
-                                             YValue="@(e => e.Proportion)"
-                                             OrderByDescending="e => e.Y" />
-                        </ApexChart>
-                    </div>
-                }
+                                <ApexPointSeries TItem="ProportionTypeActif"
+                                                 Items="PVM.ProportionParTypeActif"
+                                                 SeriesType="SeriesType.Pie"
+                                                 XValue="@(e => e.Type)"
+                                                 YValue="@(e => e.Proportion)"
+                                                 OrderByDescending="e => e.Y" />
+                            </ApexChart>
+                        </div>
+                    }
                
-            </div>
+                </div>
 
-            <div class="page">
-                @*Graphique Line : evolution du montant total investit au cours du temps*@  
-            </div>
+                <div class="page">
+                    @*Graphique Candle + Line : evolution de la valeur du patrimoine (Candle) par rapport à l'invetsissement total (Line) au cours du temps*@
+                    @if (PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
+                    {
+                        <div style="flex:1">
+                            <ApexChart TItem="BougieJournaliere"
+                                       XAxisType="XAxisType.Datetime"
+                                       Options="ChartsOptions.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
 
-            <div class="page">
-                @*Graphique 3 lines : prévision d'evolution du patrimoine sur 20 ans basé sur une moyenne investit chaque mois avec une augmentation de +5%, +8% et +10% par ans *@
-            </div>
+                                <ApexCandleSeries TItem="BougieJournaliere"
+                                                  Items="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
+                                                  Name="Evolution de la valeur du patrimoine"
+                                                  XValue="@(e => e.Date)"
+                                                  Open="@(e => e.Ouverture)"
+                                                  High="@(e => e.Haut)"
+                                                  Low="@(e => e.Bas)"
+                                                  Close="@(e => e.Fermeture)"
+                                                  OrderByDescending="e => e.X" />
+
+                                <ApexPointSeries TItem="BougieJournaliere"
+                                                 Items="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
+                                                 SeriesType="SeriesType.Line"
+                                                 Name="Investissement total"
+                                                 YValue="@(e => e.InvestissementTotal)"
+                                                 XValue="@(e => e.Date)"
+                                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=3, Color="yellow" })" />
+                            </ApexChart>
+                        </div>
+                    }
+                </div>
+
+                <div class="page">
+                    @*Graphique 3 lines : prévision d'evolution du patrimoine sur 20 ans basé sur une moyenne investit chaque mois avec une augmentation de +5%, +8% et +10% par ans *@
+                </div>
+            }
+            else if(DonneesExiste) 
+            {
+                <span>Recherche de données...</span>
+            }
+            else
+            {
+                <span>Aucune données, commencer à investir</span>
+            }
         </div>
     </div>
 </div>
@@ -129,6 +176,7 @@
         index = (index - 1 + pages.Count()) % (pages.Count());
     }
 
+    private bool DonneesExiste { get; set; } = true; /* On part du principe que les données vont exister */
     private CancellationTokenSource _cts = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -136,13 +184,21 @@
         if (firstRender)
         {
             await PVM.LoadData();
-            await PVM.LoadBougieJournalieres();
-            await PVM.LoadDataPies();
-            StateHasChanged();
 
-            if (PVM.BougiesJournalieres.Count() == 0) TS.ShowError("Aucun investissement enregistré, commenssez à investir pour suivre votre patrimoine");
+            if (PVM.ValeurPatrimoineCourante == 0) 
+            {
+                DonneesExiste = false;
+                TS.ShowError("Aucun investissement enregistré, commenssez à investir pour suivre votre patrimoine");
+            }
+            else
+            {
+                DonneesExiste = true;
+                await PVM.LoadDataGraphiques();
+                StateHasChanged();
+            }
 
-            _ = LoadData(_cts.Token); //on lance en arrière plan avec _ (si on utilisait await ca bloquerait la fin de la fonction)
+
+            _ = LoadDataBoucle(_cts.Token); //on lance en arrière plan avec _ (si on utilisait await ca bloquerait la fin de la fonction)
         }
 
         if (PVM.HasError)
@@ -152,7 +208,7 @@
         }
     }
 
-    private async Task LoadData(CancellationToken stoppingToken)
+    private async Task LoadDataBoucle(CancellationToken stoppingToken)
     {
         try
         {

@@ -16,7 +16,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public decimal ValeurPatrimoineCourante { get; set; }
         private decimal ValeurInvestissementTotal { get; set; }
         public VariationsDto Variations { get; set; } = new VariationsDto();
-        public IEnumerable<BougieJournaliere> BougiesJournalieres { get; set; } = [];
+
+        public IEnumerable<BougieJournaliere> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
+        public IEnumerable<BougieJournaliere> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
 
         public IEnumerable<ProportionActif> ProportionParActif { get; set; } = [];
         public IEnumerable<ProportionTypeActif> ProportionParTypeActif { get; set; } = [];
@@ -49,9 +51,14 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante,  ValeurInvestissementTotal);
         }
 
-        public async Task LoadBougieJournalieres()
+        private async Task LoadBougiesJournalieresPlusOuMoinsValues()
         {
-            BougiesJournalieres = await _patrimoineService.GetBougiesJournalieres();
+            BougiesJournalieresPlusOuMoinsValues = await _patrimoineService.GetBougiesJournalieresPlusOuMoinsValues();
+        }
+
+        private async Task LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()
+        {
+            BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _patrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
         }
 
         private async Task LoadProportionParActif()
@@ -64,17 +71,19 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ProportionParTypeActif = await _patrimoineService.GetProportionParTypeActifInvestit(ValeurPatrimoineCourante);
         }
 
-        public async Task LoadDataPies()
-        {
-            await LoadProportionParActif();
-            await LoadProportionParTypeActif();
-        }
-
         public async Task LoadData()
         {
             await LoadValeurPatrimoineCourante();
             await LoadValeurInvestissementTotale();
             await LoadVariationsPrix();
+        }
+
+        public async Task LoadDataGraphiques()
+        {
+            await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
+            await LoadBougiesJournalieresPlusOuMoinsValues();
+            await LoadProportionParActif();
+            await LoadProportionParTypeActif();
         }
 
         public string DeterminerSigne(decimal variationPrix)

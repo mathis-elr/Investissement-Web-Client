@@ -11,4 +11,6 @@ public class BougieJournaliere
     public decimal Haut { get; set; }
     
     public decimal Bas { get; set; }
+
+    public decimal InvestissementTotal { get; set; }
 }

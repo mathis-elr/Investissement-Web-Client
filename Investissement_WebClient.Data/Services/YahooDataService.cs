@@ -6,7 +6,7 @@ namespace Investissement_WebClient.Data.Services
 {
     public class YahooDataService : IYahooDataService
     {
-        public async Task<Dictionary<string, decimal>> GetPrixActuelAsync(List<string> symboles)
+        public async Task<Dictionary<string, decimal>> GetPrixActuelAsync(IEnumerable<string> symboles)
         {
             var dictionnairePrix = new Dictionary<string, decimal>();
             
