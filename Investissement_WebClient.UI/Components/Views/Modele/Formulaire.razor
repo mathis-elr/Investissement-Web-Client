@@ -8,7 +8,7 @@
         
         <div class="ajout-edit-modele-header">
             <label>@(ModeleAjouter() ? "Ajouter un modele" : "Modifier un modèle")</label>
-            <button type="submit" class="btn-ajouter-editer">@MVM.SelectedMode</button>
+            <button disabled="@(!MVM.ActifEnregistre.Any() || !MVM.CompositionModele.Any())" type="submit" class="btn-ajouter-editer">@MVM.SelectedMode</button>
         </div>
         <div class="ajout-edit-modele-infos">
             <div class="mode">
@@ -69,7 +69,6 @@
                 </div>
             }
             
-            @* Mode.Id != 0 || MVM.SelectedMode == "Ajouter" && *@
             @if (MVM.ActifEnregistre.Count() != 0)
             {
                 <div class="actif-modele-investissement add" @onclick="MVM.AddActifModele">

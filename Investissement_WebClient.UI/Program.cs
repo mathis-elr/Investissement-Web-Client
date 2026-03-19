@@ -42,7 +42,7 @@ builder.Services.AddScoped<InvestirViewModel>();
 builder.Services.AddScoped<ActifViewModel>();
 builder.Services.AddScoped<ModeleViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
-builder.Services.AddScoped<BourseViewModel>();
+builder.Services.AddScoped<ProfilViewModel>();
 
 builder.Services.AddHostedService<PatrimoineWorker>();
 

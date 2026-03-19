@@ -47,12 +47,21 @@
 
         <div class="rail @(pages[index])">
 
-            @if(DonneesExiste && PVM.ValeurPatrimoineCourante != 0)
+            @if(!DonneesExiste)
             {
-                <div class="page">
-                    @*Graphique Candle : evolution des plus/moins values au cours du temps par rapport à l'investissement total et à la valeur du patrimoine*@
-                    @if (PVM.BougiesJournalieresPlusOuMoinsValues.Any())
-                    {
+                <span>Recherche de données...</span>
+            }
+            else if (PVM.ValeurPatrimoineCourante == 0)
+            {
+                <span>Aucune données, commencer à investir</span>
+            }
+            else
+            {
+                
+                @*Graphique Candle : evolution des plus/moins values au cours du temps par rapport à l'investissement total et à la valeur du patrimoine*@
+                @if (PVM.BougiesJournalieresPlusOuMoinsValues.Any())
+                {
+                    <div class="page">
                         <div style="flex:1">
                             <ApexChart TItem="BougieJournaliere"
                                        XAxisType="XAxisType.Datetime"
@@ -69,12 +78,9 @@
                                                   OrderByDescending="e => e.X" />
                             </ApexChart>
                         </div>
-                    }
-                    else
-                    {
-                        
-                    }
-                </div>
+                    </div>
+                }
+               
 
                 <div class="page">
                     @* Pie : proportion investit par actif par rapport au total investit *@
@@ -116,10 +122,11 @@
                
                 </div>
 
-                <div class="page">
-                    @*Graphique Candle + Line : evolution de la valeur du patrimoine (Candle) par rapport à l'invetsissement total (Line) au cours du temps*@
-                    @if (PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
-                    {
+               
+                @*Graphique Candle + Line : evolution de la valeur du patrimoine (Candle) par rapport à l'invetsissement total (Line) au cours du temps*@
+                @if (PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
+                {
+                    <div class="page">
                         <div style="flex:1">
                             <ApexChart TItem="BougieJournaliere"
                                        XAxisType="XAxisType.Datetime"
@@ -144,20 +151,13 @@
                                                  Stroke="@(new SeriesStroke{ Width=3, DashSpace=3, Color="yellow" })" />
                             </ApexChart>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
+                
 
                 <div class="page">
                     @*Graphique 3 lines : prévision d'evolution du patrimoine sur 20 ans basé sur une moyenne investit chaque mois avec une augmentation de +5%, +8% et +10% par ans *@
                 </div>
-            }
-            else if(DonneesExiste) 
-            {
-                <span>Recherche de données...</span>
-            }
-            else
-            {
-                <span>Aucune données, commencer à investir</span>
             }
         </div>
     </div>

@@ -105,6 +105,13 @@
         transform: translate(-2px,2px);
         color: black;
     }
+    .btn-ajouter-editer:disabled {
+        background-color: #999;
+        color: #585d60;
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none; /*desactive les effets de survol*/
+    }
 
 .ajout-edit-actif ::deep select,
 .ajout-edit-actif ::deep input{

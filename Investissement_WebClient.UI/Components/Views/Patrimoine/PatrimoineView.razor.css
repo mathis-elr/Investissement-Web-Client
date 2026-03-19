@@ -74,7 +74,7 @@
         align-items: center;
         text-align: center;
         font-style: italic;
-        width: 25%;
+        width: 25%; /* 25% de 400% = 100% = longueur d'une seule page */
         height: 100%;
     }
 

@@ -8,7 +8,7 @@
     <div class="ajout-edit-actif">
         <div class="ajout-edit-actif-header">
             <label>@(ModeEnregistrer() ? "Enregistrer un actif" : "Modifier un actif")</label>
-            <button type="submit" class="btn-ajouter-editer">@AVM.SelectedMode</button>
+            <button disabled="@(ModeEnregistrer() ? AVM.SelectedActif.Id == 0 : !AVM.ActifsEnregistre.Any() || AVM.SelectedActifEdit.Id == 0)" type="submit" class="btn-ajouter-editer">@AVM.SelectedMode</button>
         </div>
 
         <div class="ajout-edit-actif-infos">

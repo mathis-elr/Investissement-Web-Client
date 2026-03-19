@@ -55,7 +55,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             if(int.TryParse(e?.Value.ToString(), out int idActif))
             {
-                SelectedActif = ActifsDisponibles.Where(a => a.Id == idActif).FirstOrDefault();
+                SelectedActif = ActifsDisponibles.FirstOrDefault(a => a.Id == idActif) ?? new ActifDto();
             }
             else
             {
@@ -67,7 +67,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             if(int.TryParse(e?.Value.ToString(), out int idActifEdit))
             {
-                SelectedActifEdit = ActifsEnregistre.Where(a => a.Id == idActifEdit).FirstOrDefault();
+                SelectedActifEdit = ActifsEnregistre.FirstOrDefault(a => a.Id == idActifEdit) ?? new ActifDto();
             }
             else
             {
@@ -85,7 +85,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             HasError = false;
             ErrorMessage = string.Empty;
 
-            if(SelectedActif.Nom == null|| SelectedActif.Symbole == null || SelectedActif.Type == null)
+            if(SelectedActif.Nom == null|| SelectedActif.Symbole == null)
             {
                 HasError = true;
                 ErrorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir ajouter un actif.";
@@ -111,7 +111,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             HasError = false;
             ErrorMessage = string.Empty;
 
-            if (SelectedActifEdit.Nom == null || SelectedActifEdit.Symbole == null || SelectedActifEdit.Type == null || SelectedActifEdit.Risque == null)
+            if (SelectedActifEdit.Nom == null || SelectedActifEdit.Symbole == null)
             {
                 HasError = true;
                 ErrorMessage = "Le nom, le symbole, le type et le niveau de risque doivent être renseignés pour pouvoir modifier un actif.";

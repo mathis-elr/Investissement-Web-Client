@@ -93,6 +93,13 @@
     border-radius: 10px;
 }
 
+    .ajout-edit-content span {
+        display: flex;
+        justify-content: center;
+        font-style: italic;
+        width:100%;
+    }
+
 .actif-modele-investissement {
     display: flex;
     flex-direction: column;
@@ -183,6 +190,13 @@
         box-shadow: 0 4px 12px goldenrod;
         transform: translate(-2px,2px);
         color: black;
+    }
+    .btn-ajouter-editer:disabled{
+        background-color: #999;
+        color: #585d60;
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none; /*desactive les effets de survol*/
     }
 
 
