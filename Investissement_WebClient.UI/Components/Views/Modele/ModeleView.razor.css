@@ -21,6 +21,7 @@
     position: relative;
     transition: all 0.3s ease-in-out;
     position: relative;
+    animation: apparitionDroite 0.8s ease-in forwards;
 }
     .mes-modele:hover{
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -147,3 +148,34 @@
         opacity: 0.5;
         pointer-events: none; /*desactive les effets de survol*/
     }
+
+/* ANIMATIONS APPARITIONS */
+@keyframes apparitionGauche {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes apparitionDroite {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes apparitionBas {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}

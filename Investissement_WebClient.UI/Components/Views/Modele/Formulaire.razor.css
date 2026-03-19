@@ -13,6 +13,7 @@
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
     position: relative;
+    animation: apparitionGauche 0.8s ease-in forwards;
 }
 
     .ajout-edit-modele:hover {
@@ -212,3 +213,35 @@
         outline: none !important;
         box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
     }
+
+
+/* ANIMATIONS APPARITIONS */
+@keyframes apparitionGauche {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes apparitionDroite {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes apparitionBas {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}

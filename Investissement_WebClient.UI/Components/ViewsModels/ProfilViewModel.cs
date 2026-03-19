@@ -72,8 +72,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 return;
             }
 
-                PerspectivesValeurPatrimoineParAn = [];
-
+            PerspectivesValeurPatrimoineParAn = [];
             int annee = 0;
             double investissementCourant = 0;
             double pourcentageAnnuel = 1 + (EvolutionAnnuellePourcentage / 100);

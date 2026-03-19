@@ -47,7 +47,7 @@
 
         <div class="rail @(pages[index])">
 
-            @if(!DonneesExiste)
+            @if (DonneesExiste && PVM.ValeurPatrimoineCourante == 0)
             {
                 <span>Recherche de données...</span>
             }

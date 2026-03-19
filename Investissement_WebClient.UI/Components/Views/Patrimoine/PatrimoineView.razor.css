@@ -13,14 +13,15 @@
     flex-direction: column;
     align-items: center;
     justify-self: center;
-    color:white;
-    padding:15px;
-    gap:5px;
+    color: white;
+    padding: 15px;
+    gap: 5px;
     background-color: #1e1e1e;
     border-radius: 10px;
     opacity: 0.8;
-    width:fit-content;
+    width: fit-content;
     transition: all 0.3s ease-in-out;
+    animation: apparitionDroite 0.8s ease-in forwards;
 }
 .patrimoine-infos:hover,
 .patrimoine-content:hover {
@@ -59,13 +60,14 @@
 
 
 .patrimoine-content {
-    width:100%;
+    width: 100%;
     background-color: #1e1e1e;
     border-radius: 10px;
     height: 100%;
     opacity: 0.8;
     overflow: hidden;
-    position:relative;
+    position: relative;
+    animation: apparitionGauche 0.8s ease-in forwards;
 }
 
     .patrimoine-content span {
@@ -149,4 +151,27 @@
 
 .page4 {
     transform: translateX(-75%);
+}
+
+
+
+/* ANIMATIONS APPARITIONS */
+@keyframes apparitionGauche {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes apparitionDroite {
+    from {
+        transform: translateX(230%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
 }
