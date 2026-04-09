@@ -54,17 +54,24 @@
     animation: apparitionGauche 0.8s ease-in forwards;
 }
 
-.btn-get-transactions {
+button {
     padding: 10px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
-    color: rgb(82, 72, 72);
-    background-color: goldenrod;
-    border: 1px solid rgba(173, 173, 173, 0.6);
-    border-radius: 20px;
+    border-radius: 15px;
     cursor: pointer;
+    border: none;
     width: fit-content;
+    opacity: 0.7;
     transition: ease-in-out 0.3s;
+}
+
+.btn-transactions {
+    background-color: goldenrod;
+}
+
+.btn-verifier {
+    background-color: green;
 }
 
     .btn-get-transactions:disabled {
@@ -75,11 +82,13 @@
         pointer-events: none; /*desactive les effets de survol*/
     }
 
-    .btn-get-transactions:hover {
-        box-shadow: 0 4px 12px goldenrod;
-        transform: translate(-2px, 2px);
-        color: black;
-    }
+.btn-verifier:hover {
+    opacity: 1;
+}
+
+.btn-transactions:hover {
+    opacity: 1;
+}
 
 .transactions-infos {
     display: grid;
@@ -100,6 +109,10 @@
         color: #999;
         font-size: 20px;
         font-weight: 500;
+    }
+
+    .form-grid span {
+        font-style:italic;
     }
 
 select, input {
@@ -130,17 +143,17 @@ select, input {
         font-size: 20px;
     }
 
-.mes-investissements-journalier {
+.mes-transactions-par-jour {
     display: flex;
     flex-direction: column;
 }
 
-.date-total-mes-investissement-journalier {
+.mes-transactions-par-jour-header {
     display: flex;
     align-items: center;
 }
 
-    .date-total-mes-investissement-journalier span {
+    .mes-transactions-par-jour-header span {
         width: 15px;
         height: 5px;
         background-color: goldenrod;
@@ -150,11 +163,11 @@ select, input {
         box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
     }
 
-    .date-total-mes-investissement-journalier label:first-child::first-letter {
+    .mes-transactions-par-jour-header label:first-child::first-letter {
         text-transform: uppercase;
     }
 
-.un-investissement-journalier {
+.mes-transactions-par-jour-content {
     display: flex;
     flex-direction: column;
     padding: 7px;
@@ -163,84 +176,37 @@ select, input {
     border-radius: 10px;
 }
 
-.mes-transactions-investissement-journalier {
+.une-transaction {
+    display:flex;
+    align-items:center;
     background-color: #202020;
-    font-size: 20px;
     border-radius: 7px;
+    padding:5px;
     transition: 0.25s ease-in-out;
 }
 
-    .mes-transactions-investissement-journalier:hover {
-        box-shadow: 0 4px 12px #202020 !important;
-        transform: translate(2px, -2px);
+    .une-transaction:hover {
+        transform: translateX(2px);
     }
 
-    .mes-transactions-investissement-journalier label {
-        text-transform: uppercase;
-        font-size: 16px;
-        color: #1E1E1E;
-    }
 
-    .mes-transactions-investissement-journalier .header {
-        display: flex;
-        justify-content: space-between;
-        background-color: goldenrod;
-        border-top-right-radius: 7px;
-        border-top-left-radius: 7px;
-        padding: 2px;
-    }
-
-        .mes-transactions-investissement-journalier .header:has(> :only-child) {
-            justify-content: center;
-        }
-
-.btn-annuler-dernier-invest {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: red;
-    color: #1E1E1E;
-    border-radius: 15px;
-    padding: 3px;
-    transition: 0.4s ease-in-out;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    width: fit-content;
+.une-transaction span:first-child{
+    width: 8px;
+    height: 8px;
+    background-color: goldenrod;
+    border-radius: 50%;
+    margin-right: 12px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+    flex-shrink: 0;
 }
 
-    .btn-annuler-dernier-invest:hover {
-        color: #121212;
+    .une-transaction .actif {
+        color:#999;
     }
 
-.mes-transactions-investissement-journalier .content {
-    padding: 5px;
-}
-
-    .mes-transactions-investissement-journalier .content label {
-        color: #999;
-        font-size: 16px;
-        text-transform: none;
-    }
-
-.une-transaction-investissement-journalier {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-    .une-transaction-investissement-journalier span:first-child {
-        width: 8px;
-        height: 8px;
-        background-color: goldenrod;
-        border-radius: 50%;
-        margin-right: 12px;
-        display: inline-block;
-        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
-        flex-shrink: 0;
-    }
-
-    .une-transaction-investissement-journalier .prix {
+    .une-transaction .prix,
+    .une-transaction .quantite {
         display: inline-block;
         color: goldenrod;
     }

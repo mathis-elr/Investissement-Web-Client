@@ -34,15 +34,11 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
 
-builder.Services.AddScoped<IInvestirService, InvestirService>();
-builder.Services.AddScoped<IActifService, ActifService>();
-builder.Services.AddScoped<IModeleService, ModeleService>();
+builder.Services.AddScoped<IInvestissementService, InvestissementService>();
 builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();
 builder.Services.AddScoped<IYahooDataService, YahooDataService>();
+builder.Services.AddScoped<ITrTransactionsService, TrTransactionsService>();
 
-builder.Services.AddScoped<InvestirViewModel>();
-builder.Services.AddScoped<ActifViewModel>();
-builder.Services.AddScoped<ModeleViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<ProfilViewModel>();

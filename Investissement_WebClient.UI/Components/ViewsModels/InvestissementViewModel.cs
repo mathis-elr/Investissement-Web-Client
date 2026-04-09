@@ -9,12 +9,14 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     public class InvestissementViewModel
     {
         private readonly IPatrimoineService _patrimoineService;
-        private readonly IInvestirService _investirService;
+        private readonly IInvestissementService _investissementService;
+        private readonly ITrTransactionsService _transactionService;
 
-        public InvestissementViewModel(IPatrimoineService patrimoineService, IInvestirService investirService)
+        public InvestissementViewModel(IPatrimoineService patrimoineService, IInvestissementService investissementService, ITrTransactionsService transactionService)
         {
             _patrimoineService = patrimoineService;
-            _investirService = investirService;
+            _investissementService = investissementService;
+            _transactionService = transactionService;
         }
 
 
@@ -30,36 +32,53 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
 
         /*  PROPRIETES EVOLUTION ACTIFS */
-        public IEnumerable<EvolutionActifDTO> EvolutionActifs { get; set; }
+        //public IEnumerable<EvolutionActifDTO> EvolutionActifs { get; set; }
 
         public bool HasError { get; set; } = false;
         public string ErrorMessage { get; set; } = string.Empty;
 
         /* Transactions */
-        public IEnumerable<InvestissementGetDto> Investissements { get; set; } = [];
+        public IEnumerable<TransactionVM> Transactions { get; set; } = [];
 
+        public string status { get; set; } = "Aucune demande de récupération de transactions en cours ...";
+        public string statusEtat { get; set; } = string.Empty;
+
+        public string colorStatus { get; set; } = "goldenrod";
 
         private async Task LoadInvestissementsParMois()
         {
-            InvestissementsParMois = await _investirService.GetInvestissementParMois(InvestissementMoyenMensuel);
+            //InvestissementsParMois = await _investirService.GetInvestissementParMois(InvestissementMoyenMensuel);
         }
 
-        private async Task LoadInvestissements()
+        private async Task LoadTransactions()
         {
-            Investissements = await _investirService.GetInvestissements();
+            Transactions = await _investissementService.GetTransactions();
         }
 
         public async Task LoadData()
         {
             await LoadInvestissementsParMois();
-            await LoadInvestissements();
+            await LoadTransactions();
         }
 
-        public async Task DeleteDernierInvest(InvestissementGetDto investissement)
+        public async Task RecupererTransactions()
         {
-            await _investirService.DeleteDernierInvest(investissement);
-            await _patrimoineService.DeleteHistoriquePatrimoinePeriode(investissement.DateInvest);
-            await LoadInvestissements();
+            status = "Tentative de connexion avec l'emetteur ...";
+
+            string retour = await _transactionService.GetSms();
+
+            if(retour == "sms_sent")
+            {
+                statusEtat = retour;
+                colorStatus = "green";
+                status = "Demande de sms effectué avec succès, verifier l'application trade republique";
+            }
+            else
+            {
+                statusEtat = "erreur";
+                colorStatus = "red";
+                status = "L'emetteur n'est pas disponible";
+            }
         }
     }
 }

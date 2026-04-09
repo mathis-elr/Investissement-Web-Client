@@ -9,25 +9,22 @@ namespace Investissement_WebClient.Data.Services;
 public class PatrimoineService : IPatrimoineService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-    private readonly IActifService _actifService;
     private readonly IYahooDataService _yahooDataService;
 
-    public PatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext , IActifService actifService, IYahooDataService yahooDataService)
+    public PatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext, IYahooDataService yahooDataService)
     {
         _dbFactory = dbContext;
-        _actifService = actifService;
         _yahooDataService = yahooDataService;
     }
 
     public async Task<decimal> CalculerValeurPatrimoineCourante()
     {
-        var detailsActifs = await _actifService.GetDetailsActif();
+        return 0;
+        //var symboles = _dbFactory.Transactions.Select(d => d.SymboleActif).ToList();
         
-        var symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-        
-        var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
+        //var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
-        return detailsActifs.Sum(a => a.QuantiteDetenue * prixParActif[a.SymboleActif]);
+        //return detailsActifs.Sum(a => a.QuantiteDetenue * prixParActif[a.SymboleActif]);
     }
 
     public async Task<decimal> CalculerValeurInvestissementTotal()
@@ -127,55 +124,55 @@ public class PatrimoineService : IPatrimoineService
         }).ToList();
     }
 
-    public async Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
+    //public async Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant)
+    //{
+    //    await using var context = await _dbFactory.CreateDbContextAsync();
 
-        IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
-        IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-        Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
+    //    IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
+    //    IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
+    //    Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
-        var data = await context.Transactions
-            .GroupBy(t => new { t.Actif.Nom, t.Actif.Symbole})
-            .Select(groupe => new
-            {
-                Actif = groupe.Key.Nom,
-                Symbole = groupe.Key.Symbole,
-                QuantiteTotale = groupe.Sum(t => t.Quantite)
-            })
-            .ToListAsync();
+    //    var data = await context.Transactions
+    //        .GroupBy(t => new { t.Actif.Nom, t.Actif.Symbole})
+    //        .Select(groupe => new
+    //        {
+    //            Actif = groupe.Key.Nom,
+    //            Symbole = groupe.Key.Symbole,
+    //            QuantiteTotale = groupe.Sum(t => t.Quantite)
+    //        })
+    //        .ToListAsync();
 
-        return data.Select(t => new ProportionActif
-            {
-                Actif = t.Actif,
-                Proportion = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0)/ valeurPatrimoineCourant, 2)*100,
-            }).ToList();
-    }
+    //    return data.Select(t => new ProportionActif
+    //        {
+    //            Actif = t.Actif,
+    //            Proportion = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0)/ valeurPatrimoineCourant, 2)*100,
+    //        }).ToList();
+    //}
 
-    public async Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
+    //public async Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant)
+    //{
+    //    await using var context = await _dbFactory.CreateDbContextAsync();
 
-        IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
-        IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-        Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
+    //    IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
+    //    IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
+    //    Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
 
-        var data = await context.Transactions
-            .GroupBy(t => new { t.Actif.Type, t.Actif.Symbole })
-            .Select(t => new
-            {
-                Type = t.Key.Type,
-                Symbole = t.Key.Symbole,
-                QuantiteTotale = t.Sum(t => t.Quantite)
-            })
-            .ToListAsync();
+    //    var data = await context.Transactions
+    //        .GroupBy(t => new { t.Actif.Type, t.Actif.Symbole })
+    //        .Select(t => new
+    //        {
+    //            Type = t.Key.Type,
+    //            Symbole = t.Key.Symbole,
+    //            QuantiteTotale = t.Sum(t => t.Quantite)
+    //        })
+    //        .ToListAsync();
 
-        return data.Select(t => new ProportionTypeActif
-            {
-                Type = t.Type,
-                Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
-            }).ToList();
-    }
+    //    return data.Select(t => new ProportionTypeActif
+    //        {
+    //            Type = t.Type,
+    //            Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
+    //        }).ToList();
+    //}
 
     public async Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
     {

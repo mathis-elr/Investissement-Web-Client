@@ -6,12 +6,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     public class ProfilViewModel
     {
         private readonly IPatrimoineService _patrimoineService;
-        private readonly IInvestirService _investirService;
 
-        public ProfilViewModel(IPatrimoineService patrimoineService, IInvestirService investirService)
+        public ProfilViewModel(IPatrimoineService patrimoineService)
         {
             _patrimoineService = patrimoineService;
-            _investirService = investirService;
         }
 
 

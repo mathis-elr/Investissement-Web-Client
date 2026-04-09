@@ -61,15 +61,15 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _patrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
         }
 
-        private async Task LoadProportionParActif()
-        {
-            ProportionParActif = await _patrimoineService.GetProportionParActifInvestit(ValeurPatrimoineCourante);
-        }
+        //private async Task LoadProportionParActif()
+        //{
+        //    ProportionParActif = await _patrimoineService.GetProportionParActifInvestit(ValeurPatrimoineCourante);
+        //}
 
-        private async Task LoadProportionParTypeActif()
-        {
-            ProportionParTypeActif = await _patrimoineService.GetProportionParTypeActifInvestit(ValeurPatrimoineCourante);
-        }
+        //private async Task LoadProportionParTypeActif()
+        //{
+        //    ProportionParTypeActif = await _patrimoineService.GetProportionParTypeActifInvestit(ValeurPatrimoineCourante);
+        //}
 
         public async Task LoadData()
         {
@@ -82,8 +82,8 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         {
             await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
             await LoadBougiesJournalieresPlusOuMoinsValues();
-            await LoadProportionParActif();
-            await LoadProportionParTypeActif();
+            //await LoadProportionParActif();
+            //await LoadProportionParTypeActif();
         }
 
         public string DeterminerSigne(decimal variationPrix)

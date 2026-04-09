@@ -4,7 +4,7 @@
 
 @page "/investissement"
 @rendermode InteractiveServer
-@inject InvestissementViewModel PVM
+@inject InvestissementViewModel IVM
 @inject IJSRuntime JS
 @inject IToastService TS
 
@@ -14,62 +14,40 @@
     <div class="transactions">
         <div class="header">
             <label>Transactions</label>
-            <button type="button" class="btn-get-transactions">Récuperer les transactions</button>
+            <button type="button" class="btn-transactions" @onclick="IVM.RecupererTransactions">Récuperer les transactions</button>
         </div>
 
         <div class="transactions-infos">
             <div class="form-grid">
-                <label>Code sms</label>
-                <div class="info">
-                    <input type="number" max="9999" placeholder="ex : 1234" />
-                </div>
-                <button type="button" class="btn-get-transactions">Vérifier</button>  
+                @if(IVM.statusEtat == "sms_sent")
+                {
+                    <label>Code sms</label>
+                    <div class="info">
+                        <input type="number" max="9999" placeholder="ex : 1234" />
+                    </div>
+                    <button type="button" class="btn-verifier">Vérifier</button>
+                }
             </div>
-            <span>Récupération des données en cours ...</span>
+            <span class="status" style="color:@IVM.colorStatus">@IVM.status</span>
         </div>
 
         <div class="content">
-            @foreach (var investissementsParDate in PVM.Investissements.GroupBy(i => i.DateInvest.Date))
+            @foreach (var transactionsParDate in IVM.Transactions.GroupBy(i => i.Date.Date))
             {
-                <div class="mes-investissements-journalier">
-                    <div class="date-total-mes-investissement-journalier">
-                        <label>@investissementsParDate.Key.ToString("D") &nbsp</label>
+                <div class="mes-transactions-par-jour">
+                    <div class="mes-transactions-par-jour-header">
+                        <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
                         <span></span>
-                        <label>@(investissementsParDate.Sum(t => t.Transactions.Sum(tr => tr.Prix * tr.Quantite))?.ToString("C2"))</label>
+                        <label>@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite).ToString("C2"))</label>
                     </div>
-                    <div class="un-investissement-journalier">
-                        @foreach (var investissementJour in investissementsParDate)
+                    <div class="mes-transactions-par-jour-content">
+                        @foreach (var transaction in transactionsParDate)
                         {
-                            <div class="mes-transactions-investissement-journalier">
-                                @if (AfficherHeader(investissementsParDate, investissementJour))
-                                {
-                                    <div class="header">
-                                        @if (InvestissementAModele(investissementJour))
-                                        {
-                                            <label>@investissementJour.Modele.Nom</label>
-                                        }
-                                        else if (InvestissementANote(investissementJour))
-                                        {
-                                            <label>@investissementJour.Note</label>
-                                        }
-                                        @if (EstAnnulable(investissementsParDate, investissementJour))
-                                        {
-                                            <div class="btn-annuler-dernier-invest" @onclick="() => DeleteDernierInvest(investissementJour)">Annuler</div>
-                                        }
-                                    </div>
-                                }
-                                <div class="content">
-                                    @foreach (TransactionDto transaction in investissementJour.Transactions)
-                                    {
-                                        <div class="une-transaction-investissement-journalier">
-                                            <span></span>
-                                            <label>
-                                                @transaction.Quantite @transaction.NomActif à
-                                                <div class="prix">@transaction.Prix?.ToString("C")</div>
-                                            </label>
-                                        </div>
-                                    }
-                                </div>
+                            <div class="une-transaction">
+                                    <span></span>
+                                    <span class="quantite">@transaction.Quantite&nbsp</span>
+                                    <span class="actif">@transaction.Actif à&nbsp</span>
+                                    <span class="prix">@transaction.Prix.ToString("C")</span>     
                             </div>
                         }
                     </div>
@@ -85,12 +63,12 @@
                 <div class="form-grid">
                     <label>Investissement moyen</label>
                     <div class="info">
-                        <span>@PVM.InvestissementMoyenMensuel.ToString("C") / mois</span>
+                        <span>@IVM.InvestissementMoyenMensuel.ToString("C") / mois</span>
                     </div>
 
                     <label>Investissement total</label>
                     <div class="info">
-                        <span>@PVM.InvestissementTotal.ToString("C")</span>
+                        <span>@IVM.InvestissementTotal.ToString("C")</span>
                     </div>
                 </div>
             </div>
@@ -101,7 +79,7 @@
                        Options="ChartOptionsProfil.OptionsInvestissementParMois">
 
                 <ApexPointSeries TItem="InvestissementParMois"
-                                 Items="PVM.InvestissementsParMois"
+                                 Items="IVM.InvestissementsParMois"
                                  SeriesType="SeriesType.Line"
                                  Name="Investissement"
                                  YValue="@(e => e.Investissement)"
@@ -109,7 +87,7 @@
                                  Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
 
                 <ApexPointSeries TItem="InvestissementParMois"
-                                 Items="PVM.InvestissementsParMois"
+                                 Items="IVM.InvestissementsParMois"
                                  SeriesType="SeriesType.Line"
                                  Name="Investissement moyen"
                                  YValue="@(e => e.InvestissementMoyen)"
@@ -133,37 +111,9 @@
 
     private ApexChart<InvestissementParMois> _chartInvestissementsParMois;
 
-    private bool AfficherHeader(IGrouping<DateTime, InvestissementGetDto> investissementParDate, InvestissementGetDto investissementJour)
-    {
-        return EstAnnulable(investissementParDate, investissementJour) || InvestissementAModele(investissementJour) || InvestissementANote(investissementJour);
-    }
-    
-    private bool EstAnnulable(IGrouping<DateTime, InvestissementGetDto> investissementParDate, InvestissementGetDto investissementJour)
-    {
-        return investissementJour.DateInvest.AddHours(3) > DateTime.Now && investissementParDate.Max(i => i.DateInvest) == investissementJour.DateInvest;
-    }
-    
-    private bool InvestissementAModele(InvestissementGetDto investissementJour)
-    {
-        return investissementJour.Modele != null;
-    }
-    
-    private bool InvestissementANote(InvestissementGetDto investissementJour)
-    {
-        return investissementJour.Note != null;
-    }
-
     protected override async Task OnInitializedAsync()
     {
-        await PVM.LoadData();
-    }
-
-    async Task DeleteDernierInvest(InvestissementGetDto investissementGetDto)
-    {
-        if (await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer le dernier investissement ?"))
-        {
-            await PVM.DeleteDernierInvest(investissementGetDto);
-        }
+        await IVM.LoadData();
     }
 }
 

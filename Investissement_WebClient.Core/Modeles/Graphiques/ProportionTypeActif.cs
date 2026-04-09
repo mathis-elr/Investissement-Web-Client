@@ -2,7 +2,7 @@
 {
     public class ProportionTypeActif
     {
-        public ActifType Type { get; set; }
+        public string Type { get; set; }
 
         public decimal Proportion { get; set; }
     }
