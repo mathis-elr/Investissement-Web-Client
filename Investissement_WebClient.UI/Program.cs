@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//X-KEY-API : lesapicestcoolencoremieuxquandcestautomatique
+
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[] { "fr-FR" };
@@ -42,6 +44,7 @@ builder.Services.AddScoped<InvestirViewModel>();
 builder.Services.AddScoped<ActifViewModel>();
 builder.Services.AddScoped<ModeleViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
+builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<ProfilViewModel>();
 
 builder.Services.AddHostedService<PatrimoineWorker>();

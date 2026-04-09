@@ -1,6 +1,7 @@
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
+using Investissement_WebClient.Core.Modeles.Graphiques;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Data.Services;
@@ -89,5 +90,19 @@ public class InvestirService : IInvestirService
             context.Investissements.Remove(investissement);
             await context.SaveChangesAsync();
         }
+    }
+
+    public async Task<IEnumerable<InvestissementParMois>> GetInvestissementParMois(double investissementMoyen)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        return await context.Transactions.GroupBy(t => new { t.Investissement.DateInvest.Year, t.Investissement.DateInvest.Month })
+                                      .Select(t => new InvestissementParMois
+                                      {
+                                          Mois = new DateTime(t.Key.Year, t.Key.Month, 1),
+                                          Investissement = t.Sum(t => t.Quantite * t.Prix),
+                                          InvestissementMoyen = (decimal)investissementMoyen
+
+                                      }).ToListAsync();
     }
 }

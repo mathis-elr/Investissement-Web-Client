@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11205.157 d18.0
+VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Investissement_WebClient.UI", "Investissement_WebClient.UI\Investissement_WebClient.UI.csproj", "{C9657AC0-6F76-4FC1-A26E-B04EF8136063}"
 EndProject

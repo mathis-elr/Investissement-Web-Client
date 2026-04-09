@@ -1,9 +1,9 @@
 ﻿@using Investissement_WebClient.UI.Components.ViewsModels
 @using Investissement_WebClient.Core.Modeles.Graphiques;
 
-@page "/profil"
+@page "/"
 @rendermode InteractiveServer
-@inject ProfilViewModel PVM
+@inject ProfilViewModel IVM
 @inject IJSRuntime JS
 @inject IToastService TS
 
@@ -20,19 +20,19 @@
             <div class="form-grid">
                 <label>Investissement mensuel</label>
                 <div class="info">
-                    <input @bind="PVM.InvestissementMoyenMensuel" />
+                    <input @bind="IVM.InvestissementMoyenMensuel" />
                 </div>
                 <label>€</label>
 
                 <label>Evolution Annuelle</label>
                 <div class="info">
-                    <input @bind="PVM.EvolutionAnnuellePourcentage" />
+                    <input @bind="IVM.EvolutionAnnuellePourcentage" />
                 </div>
                 <label>%</label>
 
                 <label>Nombre d'années</label>
-                <div class="info"> 
-                    <input @bind="PVM.PerspectiveNbAnnees" />
+                <div class="info">
+                    <input @bind="IVM.PerspectiveNbAnnees" />
                 </div>
                 <label>ans</label>
             </div>
@@ -43,15 +43,15 @@
                        Options="ChartOptionsProfil.OptionsValeurParAn">
 
                 <ApexPointSeries TItem="ValeurParAn"
-                                 Items="PVM.PerspectivesValeurPatrimoineParAn"
+                                 Items="IVM.PerspectivesValeurPatrimoineParAn"
                                  SeriesType="SeriesType.Line"
                                  Name="Valeur Patrimoine"
                                  YValue="@(e => e.Valeur)"
                                  XValue="@(e => e.Annee)"
-                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="yellow" })" />
+                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
 
                 <ApexPointSeries TItem="ValeurParAn"
-                                 Items="PVM.PerspectivesValeurPatrimoineParAn"
+                                 Items="IVM.PerspectivesValeurPatrimoineParAn"
                                  SeriesType="SeriesType.Line"
                                  Name="Investissement"
                                  YValue="@(e => e.Investissement)"
@@ -62,52 +62,35 @@
     </div>
 
     <div class="investissement">
-        <div class="header">
-            <label>Investissement</label>
-        </div>
-
-        <div class="investissement-content">
-
-        </div>
+        
     </div>
 
     <div class="revenus">
-        <div class="header">
-            <label>Revenus</label>
-        </div>
 
-        <div class="revenus-content">
-        </div>
     </div>
 
     <div class="evolution-actifs">
-        <div class="header">
-            <label>Evolution actifs</label>
-        </div>
 
-        <div class="evolution-actif-content">
-        </div>
     </div>
 </div>
 
-@code{
-
+@code {
     private ApexChart<ValeurParAn> _chartPerspectivesValeurPatrimoineParAn;
 
     protected override async Task OnInitializedAsync()
     {
-        await PVM.CalculerEvolutionDuPatrimoine();
+        await IVM.CalculerEvolutionDuPatrimoine();
     }
 
     private async Task CalculerEvolutionDuPatrimoine()
     {
-        await PVM.CalculerEvolutionDuPatrimoine();
+        await IVM.CalculerEvolutionDuPatrimoine();
 
-        if (PVM.HasError) 
+        if (IVM.HasError)
         {
-            TS.ShowError(PVM.ErrorMessage);
-            PVM.HasError = false;
-            PVM.ErrorMessage = string.Empty;
+            TS.ShowError(IVM.ErrorMessage);
+            IVM.HasError = false;
+            IVM.ErrorMessage = string.Empty;
         }
         else
         {
@@ -115,4 +98,3 @@
         }
     }
 }
-
