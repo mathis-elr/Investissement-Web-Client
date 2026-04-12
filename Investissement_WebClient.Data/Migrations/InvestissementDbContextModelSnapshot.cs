@@ -22,6 +22,29 @@ namespace Investissement_WebClient.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxBancaire", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("Date")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Expediteur")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Montant")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FluxBancaires");
+                });
+
             modelBuilder.Entity("Investissement_WebClient.Core.Modeles.HistoriquePatrimoine", b =>
                 {
                     b.Property<int>("Id")
@@ -46,46 +69,42 @@ namespace Investissement_WebClient.Data.Migrations
 
             modelBuilder.Entity("Investissement_WebClient.Core.Modeles.Transaction", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Actif")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Date")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal>("Frais")
+                    b.Property<decimal?>("Frais")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ISIN")
-                        .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("nchar(12)")
                         .IsFixedLength();
 
-                    b.Property<decimal>("Prix")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal?>("Prix")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
-                    b.Property<decimal>("Quantite")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal?>("Quantite")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("decimal(18,8)");
 
                     b.Property<string>("Ticker")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Total")
+                    b.Property<decimal?>("Total")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ISIN")
-                        .IsUnique();
 
                     b.ToTable("Transactions");
                 });

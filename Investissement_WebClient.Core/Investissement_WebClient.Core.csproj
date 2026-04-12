@@ -7,8 +7,4 @@
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Modeles\DTO\" />
-  </ItemGroup>
-
 </Project>

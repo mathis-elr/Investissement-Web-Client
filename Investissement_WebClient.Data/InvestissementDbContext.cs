@@ -12,6 +12,8 @@ public class InvestissementDbContext : DbContext
     
     public DbSet<Transaction> Transactions { get; set; }
     
+    public DbSet<FluxBancaire> FluxBancaires { get; set; }
+    
     public DbSet<HistoriquePatrimoine>  HistoriquePatrimoine { get; set; }
     
 
@@ -28,8 +30,23 @@ public class InvestissementDbContext : DbContext
             entity.Property(e => e.ISIN)
                 .HasMaxLength(12)
                 .IsFixedLength();
-            entity.HasIndex(a => a.ISIN)
-                .IsUnique();
+            
+            entity.Property(e => e.Quantite)
+                .HasPrecision(18, 8);
+            entity.Property(e => e.Prix)
+                .HasPrecision(18, 4);
+            entity.Property(e => e.Total)
+                .HasPrecision(18, 2);
+        });
+        
+        modelBuilder.Entity<FluxBancaire>(entity =>
+        {
+            entity.HasKey(t => t.Id);
+            entity.Property(t => t.Id)
+                .ValueGeneratedNever();
+            
+            entity.Property(e => e.Montant)
+                .HasPrecision(18, 2);
         });
 
         modelBuilder.Entity<HistoriquePatrimoine>(entity =>

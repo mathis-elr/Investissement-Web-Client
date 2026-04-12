@@ -2,23 +2,23 @@ namespace Investissement_WebClient.Core.Modeles;
 
 public class Transaction
 {
-    public int Id { get; set; }
+    public string? Id { get; init; }
 
-    public DateTime Date { get; set; }
+    public DateTimeOffset? Date { get; init; }
 
-    public string Type { get; set; }
+    public string? Type { get; init; }
 
-    public string Actif {  get; set; }
+    public string? Actif {  get; init; }
 
-    public string ISIN { get; set; }
+    public string? ISIN { get; init; }
 
-    public string Ticker { get; set; }
+    public string? Ticker { get; set; }
 
-    public decimal Prix { get; set; }
+    public decimal? Prix { get; init; }
 
-    public decimal Quantite { get; set; }
+    public decimal? Quantite { get; init; }
     
-    public decimal Frais { get; set; }
+    public decimal? Frais { get; init; }
 
-    public decimal Total { get; set; }
+    public decimal? Total { get; init; }
 }

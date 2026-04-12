@@ -20,14 +20,39 @@ namespace Investissement_WebClient.Data.Services
 
         public async Task<IEnumerable<TransactionVM>> GetTransactions()
         {
+            //await using var context = await _dbFactory.CreateDbContextAsync();
+            //return await context.Transactions.Select(t => new TransactionVM
+            //{
+            //    Date = t.Date ,
+            //    Actif = t.Actif,
+            //    Prix = t.Prix,
+            //    Quantite = t.Quantite,
+            //}).ToListAsync();
+            return [];
+        }
+
+        public async Task AddTransactionsRange(IEnumerable<Transaction> transactions)
+        {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.Transactions.Select(t => new TransactionVM
+            foreach (var transaction in transactions)
             {
-                Date = t.Date,
-                Actif = t.Actif,
-                Prix = t.Prix,
-                Quantite = t.Quantite,
-            }).ToListAsync();
+                if (await context.Transactions.AnyAsync(t => t.Id != transaction.Id))
+                    await context.Transactions.AddAsync(transaction);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task AddFluxBancairesRange(IEnumerable<FluxBancaire> fluxBancaires)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            foreach (var transaction in fluxBancaires)
+            {
+                if (await context.FluxBancaires.AnyAsync(t => t.Id != transaction.Id))
+                    await context.FluxBancaires.AddAsync(transaction);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

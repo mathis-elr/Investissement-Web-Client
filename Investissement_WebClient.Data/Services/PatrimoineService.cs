@@ -29,10 +29,12 @@ public class PatrimoineService : IPatrimoineService
 
     public async Task<decimal> CalculerValeurInvestissementTotal()
     {
-        await using var context = await _dbFactory.CreateDbContextAsync();
+        //await using var context = await _dbFactory.CreateDbContextAsync();
 
-        return await context.Transactions
-            .SumAsync(t => t.Quantite * t.Prix);
+        //var valeur = await context.Transactions
+        //    .SumAsync(t => t.Quantite * t.Prix);
+        //return valeur ?? 0;
+        return 0;
     }
 
     public async Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal)

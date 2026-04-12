@@ -10,5 +10,9 @@ namespace Investissement_WebClient.Core.InterfacesServices
     public interface IInvestissementService
     {
         Task<IEnumerable<TransactionVM>> GetTransactions();
+
+        Task AddTransactionsRange(IEnumerable<Transaction> transactions);
+        
+        Task AddFluxBancairesRange(IEnumerable<FluxBancaire> fluxBancaires);
     }
 }

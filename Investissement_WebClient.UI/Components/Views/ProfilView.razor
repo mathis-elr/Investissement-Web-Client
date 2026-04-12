@@ -2,7 +2,7 @@
 @using Investissement_WebClient.Core.Modeles.Graphiques;
 
 @page "/"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject ProfilViewModel IVM
 @inject IJSRuntime JS
 @inject IToastService TS

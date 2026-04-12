@@ -3,7 +3,8 @@
 @using Investissement_WebClient.Core.Modeles.Graphiques;
 
 @page "/investissement"
-@rendermode InteractiveServer
+@* @rendermode InteractiveServer *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject InvestissementViewModel IVM
 @inject IJSRuntime JS
 @inject IToastService TS
@@ -14,21 +15,25 @@
     <div class="transactions">
         <div class="header">
             <label>Transactions</label>
-            <button type="button" class="btn-transactions" @onclick="IVM.RecupererTransactions">Récuperer les transactions</button>
+            <button type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer les transactions</button>
         </div>
 
         <div class="transactions-infos">
             <div class="form-grid">
-                @if(IVM.statusEtat == "sms_sent")
+                @if(IVM.Etat == "sms-requis")
                 {
                     <label>Code sms</label>
                     <div class="info">
-                        <input type="number" max="9999" placeholder="ex : 1234" />
+                        <input type="text" inputmode="numeric" maxlength="4" @bind="IVM.CodeSms" placeholder="ex : 1234" />
                     </div>
-                    <button type="button" class="btn-verifier">Vérifier</button>
+                    <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">Vérifier</button>
+                }
+                else if(IVM.Etat == "neutre")
+                {
+                    <span>@IVM.Message</span>
                 }
             </div>
-            <span class="status" style="color:@IVM.colorStatus">@IVM.status</span>
+           
         </div>
 
         <div class="content">
@@ -38,7 +43,7 @@
                     <div class="mes-transactions-par-jour-header">
                         <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
                         <span></span>
-                        <label>@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite).ToString("C2"))</label>
+                        <label>@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
                     </div>
                     <div class="mes-transactions-par-jour-content">
                         @foreach (var transaction in transactionsParDate)
@@ -47,7 +52,7 @@
                                     <span></span>
                                     <span class="quantite">@transaction.Quantite&nbsp</span>
                                     <span class="actif">@transaction.Actif à&nbsp</span>
-                                    <span class="prix">@transaction.Prix.ToString("C")</span>     
+                                    <span class="prix">@transaction.Prix?.ToString("C")</span>     
                             </div>
                         }
                     </div>
@@ -114,6 +119,55 @@
     protected override async Task OnInitializedAsync()
     {
         await IVM.LoadData();
+    }
+
+    private async Task RecupererTransactions()
+    {
+        await IVM.DemandeCodeSms();
+
+        if(IVM.HasError)
+        {
+            TS.ShowError(IVM.ErrorMessage);
+            IVM.ErrorMessage = string.Empty;
+            IVM.HasError = false;
+            return;
+        }
+
+        TS.ShowSuccess(IVM.Message);
+    }
+
+
+    private async Task VerifierCodeSms()
+    {
+        await IVM.VerfierCodeSms();
+
+        if (IVM.HasError)
+        {
+            TS.ShowError(IVM.ErrorMessage);
+            IVM.ErrorMessage = string.Empty;
+            IVM.HasError = false;
+            return;
+        }
+
+        TS.ShowSuccess(IVM.Message);
+
+        await ChargerTransactions();
+    }
+
+    private async Task ChargerTransactions()
+    {
+        await IVM.ChargerTransactions();
+
+        if (IVM.HasError)
+        {
+            TS.ShowError(IVM.ErrorMessage);
+            IVM.ErrorMessage = string.Empty;
+            IVM.HasError = false;
+            return;
+        }
+
+        TS.ShowSuccess("Les transactions on été chargées correctement.");
+        IVM.Message = "Aucune demande de récupération de transactions en cours ...";
     }
 }
 
