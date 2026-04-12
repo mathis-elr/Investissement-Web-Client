@@ -11,30 +11,10 @@ public class PatrimoineService : IPatrimoineService
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
     private readonly IYahooDataService _yahooDataService;
 
-    public PatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext, IYahooDataService yahooDataService)
+    public PatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext, IYahooDataService yahooDataService, IInvestissementService investissementService)
     {
         _dbFactory = dbContext;
         _yahooDataService = yahooDataService;
-    }
-
-    public async Task<decimal> CalculerValeurPatrimoineCourante()
-    {
-        return 0;
-        //var symboles = _dbFactory.Transactions.Select(d => d.SymboleActif).ToList();
-        
-        //var prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
-
-        //return detailsActifs.Sum(a => a.QuantiteDetenue * prixParActif[a.SymboleActif]);
-    }
-
-    public async Task<decimal> CalculerValeurInvestissementTotal()
-    {
-        //await using var context = await _dbFactory.CreateDbContextAsync();
-
-        //var valeur = await context.Transactions
-        //    .SumAsync(t => t.Quantite * t.Prix);
-        //return valeur ?? 0;
-        return 0;
     }
 
     public async Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal)

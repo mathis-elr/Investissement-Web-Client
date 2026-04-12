@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Investissement_WebClient.Core.InterfacesServices
 {
-    public interface ITrTransactionsService
+    public interface ITradeRepublicDataService
     {
         Task<(string message, int codeHTTP)> GetSms();
 

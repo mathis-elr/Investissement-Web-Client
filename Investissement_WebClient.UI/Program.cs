@@ -37,7 +37,7 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 builder.Services.AddScoped<IInvestissementService, InvestissementService>();
 builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();
 builder.Services.AddScoped<IYahooDataService, YahooDataService>();
-builder.Services.AddScoped<ITrTransactionsService, TrTransactionsService>();
+builder.Services.AddScoped<ITradeRepublicDataService, TradeRepublicDataService>();
 
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();

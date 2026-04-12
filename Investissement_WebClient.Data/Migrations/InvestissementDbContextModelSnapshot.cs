@@ -91,8 +91,8 @@ namespace Investissement_WebClient.Data.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal?>("Quantite")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<string>("Ticker")
                         .HasColumnType("nvarchar(max)");

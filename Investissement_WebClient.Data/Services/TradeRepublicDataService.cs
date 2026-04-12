@@ -7,7 +7,7 @@ using Investissement_WebClient.Core.Modeles.DTO;
 
 namespace Investissement_WebClient.Data.Services
 {
-    public class TrTransactionsService : ITrTransactionsService
+    public class TradeRepublicDataService : ITradeRepublicDataService
     {
         private readonly IInvestissementService _investissementService;
         
@@ -23,7 +23,7 @@ namespace Investissement_WebClient.Data.Services
             Timeout = TimeSpan.FromSeconds(30) // Important car Selenium peut être lent
         };
 
-        public TrTransactionsService(IInvestissementService investissementService, IYahooDataService yahooDataService)
+        public TradeRepublicDataService(IInvestissementService investissementService, IYahooDataService yahooDataService)
         {
             _investissementService = investissementService;
             _yahooDataService = yahooDataService;

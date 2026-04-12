@@ -32,7 +32,7 @@ public class InvestissementDbContext : DbContext
                 .IsFixedLength();
             
             entity.Property(e => e.Quantite)
-                .HasPrecision(18, 8);
+                .HasPrecision(18, 6);
             entity.Property(e => e.Prix)
                 .HasPrecision(18, 4);
             entity.Property(e => e.Total)

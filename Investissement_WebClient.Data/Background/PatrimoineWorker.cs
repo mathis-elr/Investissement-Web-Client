@@ -20,12 +20,13 @@ public class PatrimoineWorker : BackgroundService
         {
             using (var scope = _serviceProvider.CreateScope())
             {
+                var investissementService = scope.ServiceProvider.GetRequiredService<IInvestissementService>();
                 var patrimoineService = scope.ServiceProvider.GetRequiredService<IPatrimoineService>();
                 
                 try 
                 {
-                    var valeurPatrimoine = await patrimoineService.CalculerValeurPatrimoineCourante();
-                    var valeurInvestissementTotal = await patrimoineService.CalculerValeurInvestissementTotal();
+                    var valeurPatrimoine = await investissementService.CalculerValeurCourante();
+                    var valeurInvestissementTotal = await investissementService.CalculerValeurInvestissementTotal();
                     if (valeurPatrimoine != 0) await patrimoineService.SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
                 }
                 catch (Exception ex)

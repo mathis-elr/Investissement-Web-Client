@@ -3,26 +3,20 @@
 @rendermode InteractiveServer
 
 <BlazoredToasts Position="ToastPosition.TopRight"
-                Timeout="5"
+                Timeout="10"
                 IconType="IconType.FontAwesome"/>
 
 <nav>
-    @* <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-        <div class="page">Investir</div></NavLink>
-    <NavLink class="nav-link" href="actif">
-        <div class="page">Actif</div></NavLink>
-    <NavLink class="nav-link" href="modele">
-        <div class="page">Modele</div></NavLink> *@
-    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-        <div class="page">Profil</div>
-    </NavLink>
-
     <NavLink class="nav-link" href="/investissement">
         <div class="page">Investissement</div>
     </NavLink>
-
-    <NavLink class="nav-link" href="patrimoine" >
+    
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
         <div class="page">Patrimoine</div>
+    </NavLink>
+
+    <NavLink class="nav-link" href="/profil">
+        <div class="page">Profil</div>
     </NavLink>
 </nav>
 

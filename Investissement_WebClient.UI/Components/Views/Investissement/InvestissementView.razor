@@ -15,7 +15,7 @@
     <div class="transactions">
         <div class="header">
             <label>Transactions</label>
-            <button type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer les transactions</button>
+            <button disabled="@(IVM.Etat != "neutre")" type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer les transactions</button>
         </div>
 
         <div class="transactions-infos">
@@ -28,22 +28,22 @@
                     </div>
                     <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">Vérifier</button>
                 }
-                else if(IVM.Etat == "neutre")
+                else if(IVM.Etat == "neutre" || IVM.Etat == "recherche")
                 {
-                    <span>@IVM.Message</span>
+                    <span class="message">@IVM.Message</span>
                 }
             </div>
            
         </div>
 
         <div class="content">
-            @foreach (var transactionsParDate in IVM.Transactions.GroupBy(i => i.Date.Date))
+            @foreach (var transactionsParDate in IVM.Transactions.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key))
             {
                 <div class="mes-transactions-par-jour">
                     <div class="mes-transactions-par-jour-header">
                         <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
                         <span></span>
-                        <label>@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
+                        <label>@(transactionsParDate?.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
                     </div>
                     <div class="mes-transactions-par-jour-content">
                         @foreach (var transaction in transactionsParDate)
@@ -66,12 +66,12 @@
             <label>Investissement</label>
             <div class="investissement-infos">
                 <div class="form-grid">
-                    <label>Investissement moyen</label>
-                    <div class="info">
-                        <span>@IVM.InvestissementMoyenMensuel.ToString("C") / mois</span>
+                    <label>Moyen mensuel</label>
+                    <div class="info" style="text-align: end">
+                        <span>@IVM.InvestissementMoyenMensuel.ToString("C")</span>
                     </div>
 
-                    <label>Investissement total</label>
+                    <label>Total</label>
                     <div class="info">
                         <span>@IVM.InvestissementTotal.ToString("C")</span>
                     </div>
@@ -79,27 +79,31 @@
             </div>
         </div>
 
-        <div class="investissement-content">
-            <ApexChart @ref="_chartInvestissementsParMois" TItem="InvestissementParMois"
-                       Options="ChartOptionsProfil.OptionsInvestissementParMois">
+        @if (IVM.InvestissementsParMois.Any())
+        {
+            <div class="investissement-content">
+                <ApexChart TItem="InvestissementParMois"
+                           XAxisType="XAxisType.Datetime"
+                           Options="ChartOptionsProfil.OptionsInvestissementParMois">
 
-                <ApexPointSeries TItem="InvestissementParMois"
-                                 Items="IVM.InvestissementsParMois"
-                                 SeriesType="SeriesType.Line"
-                                 Name="Investissement"
-                                 YValue="@(e => e.Investissement)"
-                                 XValue="@(e => e.Mois.ToString("MMMM yy"))"
-                                 Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
+                    <ApexPointSeries TItem="InvestissementParMois"
+                                     Items="IVM.InvestissementsParMois"
+                                     SeriesType="SeriesType.Line"
+                                     Name="Investissement"
+                                     YValue="@(e => e.Investissement)"
+                                     XValue="@(e => e.Date)"
+                                     Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })"/>
 
-                <ApexPointSeries TItem="InvestissementParMois"
-                                 Items="IVM.InvestissementsParMois"
-                                 SeriesType="SeriesType.Line"
-                                 Name="Investissement moyen"
-                                 YValue="@(e => e.InvestissementMoyen)"
-                                 XValue="@(e => e.Mois.ToString("MMMM yy"))"
-                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
-            </ApexChart>
-        </div>
+                    <ApexPointSeries TItem="InvestissementParMois"
+                                     Items="IVM.InvestissementsParMois"
+                                     SeriesType="SeriesType.Line"
+                                     Name="Investissement moyen"
+                                     YValue="@(e => e.InvestissementMoyen)"
+                                     XValue="@(e => e.Date)"
+                                     Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="grey" })"/>
+                </ApexChart>
+            </div>
+        }
     </div>
 
     <div class="evolution-actifs">
@@ -114,15 +118,24 @@
 
 @code{
 
-    private ApexChart<InvestissementParMois> _chartInvestissementsParMois;
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await IVM.LoadData();
+        if (firstRender)
+        {
+            await IVM.LoadData();
+            StateHasChanged();
+        }
     }
+
+    private bool _demandeEnCours = false;
 
     private async Task RecupererTransactions()
     {
+        if(_demandeEnCours)
+            TS.ShowError("Veuillez patientez une demande est déjà en cours");
+        
+        _demandeEnCours = true;
+        
         await IVM.DemandeCodeSms();
 
         if(IVM.HasError)
@@ -130,6 +143,7 @@
             TS.ShowError(IVM.ErrorMessage);
             IVM.ErrorMessage = string.Empty;
             IVM.HasError = false;
+            FinDeDemande();
             return;
         }
 
@@ -146,6 +160,7 @@
             TS.ShowError(IVM.ErrorMessage);
             IVM.ErrorMessage = string.Empty;
             IVM.HasError = false;
+            FinDeDemande();
             return;
         }
 
@@ -158,6 +173,8 @@
     {
         await IVM.ChargerTransactions();
 
+        FinDeDemande();
+        
         if (IVM.HasError)
         {
             TS.ShowError(IVM.ErrorMessage);
@@ -165,9 +182,14 @@
             IVM.HasError = false;
             return;
         }
-
         TS.ShowSuccess("Les transactions on été chargées correctement.");
+    }
+
+    private void FinDeDemande()
+    {
+        IVM.Etat = "neutre";
         IVM.Message = "Aucune demande de récupération de transactions en cours ...";
+        _demandeEnCours = false;
     }
 }
 

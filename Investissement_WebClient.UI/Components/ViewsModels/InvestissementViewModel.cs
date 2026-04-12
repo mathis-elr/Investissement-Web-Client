@@ -11,17 +11,12 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     {
         private readonly IPatrimoineService _patrimoineService;
         private readonly IInvestissementService _investissementService;
-        private readonly ITrTransactionsService _transactionService;
+        private readonly ITradeRepublicDataService _transactionService;
 
         /* PROPRIETES INVESTISSEMENT */
-        public double InvestissementMoyenMensuel { get; set; }
+        public decimal InvestissementMoyenMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMois> InvestissementsParMois { get; set; }
-
-
-        /* PROPRIETES REVENUS */
-        public List<Revenu> Revenus { get; set; }
-        public decimal PartInvestissement { get; set; }
 
 
         /*  PROPRIETES EVOLUTION ACTIFS */
@@ -41,7 +36,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public InvestissementViewModel(IPatrimoineService patrimoineService, 
                                        IInvestissementService investissementService, 
-                                       ITrTransactionsService transactionService)
+                                       ITradeRepublicDataService transactionService)
         {
             _patrimoineService = patrimoineService;
             _investissementService = investissementService;
@@ -56,22 +51,33 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             ErrorMessage = string.Empty;
             HasError = false;
         }
-
-
-        private async Task LoadInvestissementsParMois()
-        {
-            //InvestissementsParMois = await _investirService.GetInvestissementParMois(InvestissementMoyenMensuel);
-        }
-
+        
         private async Task LoadTransactions()
         {
             Transactions = await _investissementService.GetTransactions();
         }
 
+        private async Task LoadInvestissementMoyenMensuel()
+        {
+            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
+        }
+        
+        private async Task LoadInvestissementTotal()
+        {
+            InvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
+        }
+
+        private async Task LoadInvestissementsParMois()
+        {
+            InvestissementsParMois = await _investissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
+        }
+
         public async Task LoadData()
         {
-            await LoadInvestissementsParMois();
             await LoadTransactions();
+            await LoadInvestissementMoyenMensuel();
+            await LoadInvestissementTotal();
+            await LoadInvestissementsParMois();
         }
 
         public async Task DemandeCodeSms()
@@ -100,7 +106,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task VerfierCodeSms()
         {
-            Etat = "neutre";
+            Etat = "verification";
 
             if(int.TryParse(CodeSms, out int codeSmsString) && CodeSms.Length!=4)
             {
@@ -132,7 +138,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task ChargerTransactions()
         {
-            Etat = "neutre";
+            Etat = "recherche";
             Message = "Récupération des transactions ...";
 
             try

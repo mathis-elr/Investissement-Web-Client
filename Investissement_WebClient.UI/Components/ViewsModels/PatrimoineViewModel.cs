@@ -7,11 +7,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     public class PatrimoineViewModel
     {
         private readonly IPatrimoineService _patrimoineService;
-        
-        public PatrimoineViewModel(IPatrimoineService patrimoineService)
-        {
-            _patrimoineService = patrimoineService;
-        }
+        private readonly IInvestissementService _investissementService;
         
         public decimal ValeurPatrimoineCourante { get; set; }
         private decimal ValeurInvestissementTotal { get; set; }
@@ -27,11 +23,18 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public string ErrorMessage {get; set;} = string.Empty;
         
         
+        public PatrimoineViewModel(IPatrimoineService patrimoineService, IInvestissementService investissementService)
+        {
+            _patrimoineService = patrimoineService;
+            _investissementService = investissementService;
+        }
+        
+        
         private async Task LoadValeurPatrimoineCourante()
         {
             try
             {
-                ValeurPatrimoineCourante = await _patrimoineService.CalculerValeurPatrimoineCourante();
+                ValeurPatrimoineCourante = await _investissementService.CalculerValeurCourante();
             }
             catch (Exception ex)
             {
@@ -42,7 +45,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         private async Task LoadValeurInvestissementTotale()
         {
-            ValeurInvestissementTotal = await _patrimoineService.CalculerValeurInvestissementTotal();
+            ValeurInvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
         }
 
         private async Task LoadVariationsPrix()

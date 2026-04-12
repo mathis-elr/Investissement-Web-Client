@@ -5,10 +5,6 @@ namespace Investissement_WebClient.Core.InterfacesServices;
 
 public interface IPatrimoineService
 {
-    Task<decimal> CalculerValeurPatrimoineCourante();
-    
-    Task<decimal> CalculerValeurInvestissementTotal();
-
     Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal);
 
     Task<VariationsDto> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal);

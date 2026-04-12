@@ -2,7 +2,7 @@
 {
     public class InvestissementParMois
     {
-        public DateTime Mois { get; set; }
+        public DateTime Date { get; set; }
 
         public decimal Investissement { get; set; }
 
