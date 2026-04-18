@@ -21,7 +21,6 @@
     opacity: 0.8;
     width: fit-content;
     transition: all 0.3s ease-in-out;
-    animation: apparitionDroite 0.8s ease-in forwards;
 }
 .patrimoine-infos:hover,
 .patrimoine-content:hover {
@@ -67,7 +66,6 @@
     opacity: 0.8;
     overflow: hidden;
     position: relative;
-    animation: apparitionGauche 0.8s ease-in forwards;
 }
 
     .patrimoine-content span {
@@ -156,22 +154,13 @@
 
 
 /* ANIMATIONS APPARITIONS */
-@keyframes apparitionGauche {
+@keyframes apparition {
     from {
-        transform: translateX(-100%);
+        transform: scale(0);
     }
 
     to {
-        transform: translateX(0);
+        transform: scale(1);
     }
 }
 
-@keyframes apparitionDroite {
-    from {
-        transform: translateX(230%);
-    }
-
-    to {
-        transform: translateX(0);
-    }
-}

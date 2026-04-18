@@ -2,7 +2,7 @@
 @using Investissement_WebClient.Core.Modeles.Graphiques
 @using Investissement_WebClient.UI.Components.ViewsModels;
 
-@page "/"
+@page "/patrimoine"
 @rendermode InteractiveServer
 @implements IDisposable
 @inject IToastService TS
@@ -179,6 +179,7 @@
     private bool DonneesExiste { get; set; } = true; /* On part du principe que les données vont exister */
     private CancellationTokenSource _cts = new();
 
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -194,11 +195,9 @@
             {
                 DonneesExiste = true;
                 await PVM.LoadDataGraphiques();
-                StateHasChanged();
+                _ = LoadDataBoucle(_cts.Token);  
             }
-
-
-            _ = LoadDataBoucle(_cts.Token); //on lance en arrière plan avec _ (si on utilisait await ca bloquerait la fin de la fonction)
+            StateHasChanged();
         }
 
         if (PVM.HasError)
@@ -214,11 +213,9 @@
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
-
                 await PVM.LoadData();
-
                 StateHasChanged();
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
             } 
         }
         catch(OperationCanceledException){ Console.WriteLine("Arret du chargement de la valeur du patrimoine"); }

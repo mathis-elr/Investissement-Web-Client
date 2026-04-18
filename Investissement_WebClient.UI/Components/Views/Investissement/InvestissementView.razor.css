@@ -263,6 +263,70 @@ span{
     animation: apparitionBas 0.8s ease-in forwards;
 }
 
+.evolution-actifs-content {
+    display: flex;
+    align-items: center;
+}
+
+.mes-actifs{
+    display:flex;
+    gap: 15px;
+    animation: defilement linear 60s infinite;
+}
+
+.mes-actifs:hover{
+    animation-play-state:paused;
+}
+
+.un-actif {
+    display: grid;
+    gap: 2px;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: #242424;
+    flex-shrink: 0;
+    text-wrap: nowrap;
+}
+
+    .un-actif .header {
+        display: flex;
+        justify-content:space-between;
+        gap:20px;
+    }
+
+    .un-actif .content {
+        display: grid;
+        gap:3px;
+    }
+
+    .un-actif .item{
+        display:flex;
+        justify-content:space-between;
+        gap:30px;
+    }
+
+    .un-actif label {
+        color: white;
+        font-size: 18px;
+    }
+
+    .un-actif span {
+        color: white;
+        font-size: 16px;
+    }
+
+    .un-actif.neutre {
+        background-color: grey;
+    }
+
+    .un-actif.positive {
+        background-color: green;
+    }
+
+    .un-actif.negative {
+        background-color: red;
+    }
+
 
 
 /* ANIMATIONS APPARITIONS */
@@ -293,5 +357,19 @@ span{
 
     to {
         transform: translateY(0);
+    }
+}
+
+@keyframes defilement {
+    0% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-78%);
+    }
+
+    100% {
+        transform: translateX(0);
     }
 }

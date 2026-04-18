@@ -1,6 +1,7 @@
 using Investissement_WebClient.Core.InterfacesServices;
-using Microsoft.Extensions.DependencyInjection;
+using Investissement_WebClient.Data.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Investissement_WebClient.Data.Background;
@@ -25,7 +26,8 @@ public class PatrimoineWorker : BackgroundService
                 
                 try 
                 {
-                    var valeurPatrimoine = await investissementService.CalculerValeurCourante();
+                    var prixParActif = await investissementService.GetPrixParActif();
+                    var valeurPatrimoine = await investissementService.CalculerValeurCourante(prixParActif);
                     var valeurInvestissementTotal = await investissementService.CalculerValeurInvestissementTotal();
                     if (valeurPatrimoine != 0) await patrimoineService.SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
                 }
@@ -35,7 +37,7 @@ public class PatrimoineWorker : BackgroundService
                 }
             }
             
-            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
         }
     }
 }

@@ -6,23 +6,42 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
     public class ProfilViewModel
     {
         private readonly IPatrimoineService _patrimoineService;
+        private readonly IInvestissementService _investissementService;
+        
+        /*  PROPRIETES PERSPECTIVES */
+        public decimal InvestissementMoyenMensuel { get; set; }
+        public decimal EvolutionAnnuellePourcentage { get; set; }
+        public int PerspectiveNbAnnees { get; set; }
+        public List<ValeurParAn> PerspectivesValeurPatrimoineParAn { get; set; }
 
-        public ProfilViewModel(IPatrimoineService patrimoineService)
+        public bool HasError { get; set; }
+        public string ErrorMessage { get; set; }
+
+        public ProfilViewModel(IPatrimoineService patrimoineService, IInvestissementService investissementService)
         {
             _patrimoineService = patrimoineService;
+            _investissementService = investissementService;
+            
+            EvolutionAnnuellePourcentage = 8;
+            PerspectiveNbAnnees = 15;
+            PerspectivesValeurPatrimoineParAn = [];
+            
+            HasError = false;
+            ErrorMessage = string.Empty;
         }
 
+        private async Task LoadInvestissementMoyenMensuel()
+        {
+            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
+        }
 
-        /*  PROPRIETES PERSPECTIVES */
-        public double InvestissementMoyenMensuel { get; set; } = 900;
-        public double EvolutionAnnuellePourcentage { get; set; } = 8;
-        public int PerspectiveNbAnnees { get; set; } = 10;
-        public List<ValeurParAn> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+        public async Task LoadData()
+        {
+            await LoadInvestissementMoyenMensuel();
+            CalculerEvolutionDuPatrimoine();
+        }
 
-        public bool HasError { get; set; } = false;
-        public string ErrorMessage { get; set; } = string.Empty;
-
-        public async Task CalculerEvolutionDuPatrimoine()
+        public void CalculerEvolutionDuPatrimoine()
         {
 
             if (InvestissementMoyenMensuel < 1)
@@ -31,22 +50,19 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 ErrorMessage = "Impossible de calculer l'evolution d'un investissement null";
                 return;
             }
-
-
             if (EvolutionAnnuellePourcentage < 1)
             {
                 HasError = true;
                 ErrorMessage = "Entrez une évolution annuelle positive";
                 return;
             }
-
             if (PerspectiveNbAnnees < 1)
             {
                 HasError = true;
                 ErrorMessage = "Impossible de calculer l'evolution de moins d'une année";
                 return;
             }
-            else if (PerspectiveNbAnnees > 100)
+            if (PerspectiveNbAnnees > 100)
             {
                 HasError = true;
                 ErrorMessage = "Impossible de calculer l'evolution pour plus de 100 ans";
@@ -55,10 +71,10 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             PerspectivesValeurPatrimoineParAn = [];
             int annee = 0;
-            double investissementCourant = 0;
-            double pourcentageAnnuel = 1 + (EvolutionAnnuellePourcentage / 100);
-            double pourcentageMensuel = Math.Pow(pourcentageAnnuel, 1.0 / 12);
-            double pointFixe = InvestissementMoyenMensuel / (pourcentageMensuel - 1);
+            decimal investissementCourant = 0;
+            decimal pourcentageAnnuel = 1 + (EvolutionAnnuellePourcentage / 100);
+            double pourcentageMensuel = Math.Pow((double)pourcentageAnnuel, 1.0 / 12);
+            double pointFixe = (double)InvestissementMoyenMensuel / (pourcentageMensuel - 1);
 
             while (annee <= PerspectiveNbAnnees)
             {
@@ -66,7 +82,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 {
                     Annee = annee,
                     Valeur = (decimal)Math.Round(pointFixe * (Math.Pow(pourcentageMensuel, annee * 12) - 1), 0),
-                    Investissement = (decimal)investissementCourant
+                    Investissement = investissementCourant
                 };
 
                 PerspectivesValeurPatrimoineParAn.Add(valeurParAn);

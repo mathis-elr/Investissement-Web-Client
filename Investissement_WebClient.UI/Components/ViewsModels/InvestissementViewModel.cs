@@ -3,6 +3,7 @@ using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
 using Investissement_WebClient.Core.Modeles.Graphiques;
+using Investissement_WebClient.Core.Modeles.ViewsModels;
 using System.Text.Json;
 
 namespace Investissement_WebClient.UI.Components.ViewsModels
@@ -34,6 +35,9 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public string CodeSms { get; set; }
 
+        /* Evolution actifs */
+        public IEnumerable<InfoInvestParActif> InfoInvestParActif { get; set; }
+
         public InvestissementViewModel(IPatrimoineService patrimoineService, 
                                        IInvestissementService investissementService, 
                                        ITradeRepublicDataService transactionService)
@@ -44,6 +48,8 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
             Transactions = [];
             InvestissementsParMois = [];
+
+            InfoInvestParActif = [];
 
             Message = "Aucune demande de récupération de transactions en cours ...";
             Etat = "neutre";
@@ -62,7 +68,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
         }
         
-        private async Task LoadInvestissementTotal()
+        private async Task LoadInvestissementTotal(Dictionary<string, decimal> prixParActif)
         {
             InvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
         }
@@ -72,13 +78,33 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
             InvestissementsParMois = await _investissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
         }
 
+        public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
+        {
+            InfoInvestParActif = await _investissementService.CalculerInfosInvestParActif(prixParActif);
+        }
+
+        private async Task<Dictionary<string, decimal>> LoadPrixParActif()
+        {
+            return await _investissementService.GetPrixParActif();
+        }
+
         public async Task LoadData()
         {
+            var prixParActif = await LoadPrixParActif();
             await LoadTransactions();
             await LoadInvestissementMoyenMensuel();
-            await LoadInvestissementTotal();
+            await LoadInvestissementTotal(prixParActif);
             await LoadInvestissementsParMois();
+            await LoadInfosInvestParActif(prixParActif);
         }
+
+        public async Task LoadDataPrixParActif()
+        {
+            var prixParActif = await LoadPrixParActif();
+            await LoadInfosInvestParActif(prixParActif);
+        }
+
+
 
         public async Task DemandeCodeSms()
         {
@@ -139,7 +165,7 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         public async Task ChargerTransactions()
         {
             Etat = "recherche";
-            Message = "Récupération des transactions ...";
+            Message = "Récupération des transactions, cette opération peut-être plus ou moins longue selon de la connexion ...";
 
             try
             {
@@ -158,6 +184,16 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
                 HasError = true;
                 return;
             }
+        }
+
+        public string DeterminerSigne(decimal valeur)
+        {
+            return valeur switch
+            {
+                > 0 => "positive",
+                < 0 => "negative",
+                _ => "neutre"
+            };
         }
     }
 }

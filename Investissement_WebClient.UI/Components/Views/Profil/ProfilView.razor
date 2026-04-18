@@ -13,52 +13,55 @@
     <div class="perspectives">
         <div class="header">
             <label>Perspectives</label>
-            <btn @onclick="CalculerEvolutionDuPatrimoine" class="btn-calcul">Calcul</btn>
+            @* <btn @onclick="CalculerEvolutionDuPatrimoine" class="btn-calcul">Calcul</btn> *@
         </div>
 
         <div class="perspectives-infos">
             <div class="form-grid">
                 <label>Investissement mensuel</label>
                 <div class="info">
-                    <input @bind="IVM.InvestissementMoyenMensuel" />
+                    <input @bind="IVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                 </div>
                 <label>€</label>
 
                 <label>Evolution Annuelle</label>
                 <div class="info">
-                    <input @bind="IVM.EvolutionAnnuellePourcentage" />
+                    <input @bind="IVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                 </div>
                 <label>%</label>
 
                 <label>Nombre d'années</label>
                 <div class="info">
-                    <input @bind="IVM.PerspectiveNbAnnees" />
+                    <input @bind="IVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                 </div>
                 <label>ans</label>
             </div>
         </div>
 
-        <div class="perspectives-content">
-            <ApexChart @ref="_chartPerspectivesValeurPatrimoineParAn" TItem="ValeurParAn"
-                       Options="ChartOptionsProfil.OptionsValeurParAn">
+        @if (IVM.PerspectivesValeurPatrimoineParAn.Any())
+        {
+            <div class="perspectives-content">
+                <ApexChart @ref="_chartPerspectivesValeurPatrimoineParAn" TItem="ValeurParAn"
+                           Options="ChartOptionsProfil.OptionsValeurParAn">
 
-                <ApexPointSeries TItem="ValeurParAn"
-                                 Items="IVM.PerspectivesValeurPatrimoineParAn"
-                                 SeriesType="SeriesType.Line"
-                                 Name="Valeur Patrimoine"
-                                 YValue="@(e => e.Valeur)"
-                                 XValue="@(e => e.Annee)"
-                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
+                    <ApexPointSeries TItem="ValeurParAn"
+                                     Items="IVM.PerspectivesValeurPatrimoineParAn"
+                                     SeriesType="SeriesType.Line"
+                                     Name="Valeur Patrimoine"
+                                     YValue="@(e => e.Valeur)"
+                                     XValue="@(e => e.Annee)"
+                                     Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
 
-                <ApexPointSeries TItem="ValeurParAn"
-                                 Items="IVM.PerspectivesValeurPatrimoineParAn"
-                                 SeriesType="SeriesType.Line"
-                                 Name="Investissement"
-                                 YValue="@(e => e.Investissement)"
-                                 XValue="@(e => e.Annee)"
-                                 Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
-            </ApexChart>
-        </div>
+                    <ApexPointSeries TItem="ValeurParAn"
+                                     Items="IVM.PerspectivesValeurPatrimoineParAn"
+                                     SeriesType="SeriesType.Line"
+                                     Name="Investissement"
+                                     YValue="@(e => e.Investissement)"
+                                     XValue="@(e => e.Annee)"
+                                     Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
+                </ApexChart>
+            </div>
+        }
     </div>
 
     <div class="investissement">
@@ -79,12 +82,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await IVM.CalculerEvolutionDuPatrimoine();
+        await IVM.LoadData();
+        StateHasChanged();
     }
 
     private async Task CalculerEvolutionDuPatrimoine()
     {
-        await IVM.CalculerEvolutionDuPatrimoine();
+        IVM.CalculerEvolutionDuPatrimoine();
 
         if (IVM.HasError)
         {

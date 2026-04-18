@@ -1,11 +1,13 @@
 ﻿@using Investissement_WebClient.Core.Modeles.DTO
 @using Investissement_WebClient.UI.Components.ViewsModels
 @using Investissement_WebClient.Core.Modeles.Graphiques;
+@using System.Globalization
 
-@page "/investissement"
+@page "/"
 @* @rendermode InteractiveServer *@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject InvestissementViewModel IVM
+@implements IDisposable
 @inject IJSRuntime JS
 @inject IToastService TS
 
@@ -111,19 +113,52 @@
             <label>Evolution actifs</label>
         </div>
 
-        <div class="evolution-actif-content">
+        <div class="mes-actifs">
+            @foreach (var actif in IVM.InfoInvestParActif)
+            {
+                <div class="un-actif @(IVM.DeterminerSigne(actif.VariationPourcentage.Value))">
+                    <div class="header">
+                        <label>@actif.Actif</label>
+                        <label>
+                            @((actif.VariationPourcentage.Value > 0 ? "+" : ""))@actif.VariationPourcentage %
+                        </label>
+                    </div>
+                    <div class="content">
+                        <div class="item">
+                            <span>Prix d'achat moyen</span>
+                            <span>@actif.PrixAchatMoyen.Value.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))</span>
+                        </div>
+
+                        <div class="item">
+                            <span>Prix actuel</span>
+                            <span>@actif.PrixActuel.Value.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))</span>
+                        </div>
+
+                        <div class="item">
+                            <span>Valeur</span>
+                            <span>@actif.ValeurDetenue.Value.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))</span>
+                        </div>
+
+                        <div class="item">
+                            <span>Quantite Totale</span>
+                            <span>@actif.QuantiteDetenue</span>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @code{
+    private CancellationTokenSource _cts = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if(firstRender)
         {
             await IVM.LoadData();
-            StateHasChanged();
+            _ = LoadDataBoucle(_cts.Token);
         }
     }
 
@@ -133,9 +168,9 @@
     {
         if(_demandeEnCours)
             TS.ShowError("Veuillez patientez une demande est déjà en cours");
-        
+
         _demandeEnCours = true;
-        
+
         await IVM.DemandeCodeSms();
 
         if(IVM.HasError)
@@ -174,7 +209,7 @@
         await IVM.ChargerTransactions();
 
         FinDeDemande();
-        
+
         if (IVM.HasError)
         {
             TS.ShowError(IVM.ErrorMessage);
@@ -183,6 +218,8 @@
             return;
         }
         TS.ShowSuccess("Les transactions on été chargées correctement.");
+
+        await IVM.LoadData();
     }
 
     private void FinDeDemande()
@@ -190,6 +227,28 @@
         IVM.Etat = "neutre";
         IVM.Message = "Aucune demande de récupération de transactions en cours ...";
         _demandeEnCours = false;
+    }
+
+    private async Task LoadDataBoucle(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await IVM.LoadDataPrixParActif();
+                StateHasChanged();
+
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            }
+        }
+        catch (OperationCanceledException) { Console.WriteLine("Arret du chargement investissement"); }
+    }
+
+    // déclenchement lors du déclenchement du catch de LoadData (quand on change de page) pour stopper la boucle
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
     }
 }
 

@@ -30,11 +30,11 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
         }
         
         
-        private async Task LoadValeurPatrimoineCourante()
+        private async Task LoadValeurPatrimoineCourante(Dictionary<string, decimal> prixParActif)
         {
             try
             {
-                ValeurPatrimoineCourante = await _investissementService.CalculerValeurCourante();
+                ValeurPatrimoineCourante = await _investissementService.CalculerValeurCourante(prixParActif);
             }
             catch (Exception ex)
             {
@@ -76,7 +76,8 @@ namespace Investissement_WebClient.UI.Components.ViewsModels
 
         public async Task LoadData()
         {
-            await LoadValeurPatrimoineCourante();
+            var prixParActif = await _investissementService.GetPrixParActif();
+            await LoadValeurPatrimoineCourante(prixParActif);
             await LoadValeurInvestissementTotale();
             await LoadVariationsPrix();
         }
