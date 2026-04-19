@@ -134,7 +134,7 @@ namespace Investissement_WebClient.Data.Services
                 }
                 
                 await _investissementService.AddTransactionsRange(responseBody.Transactions ?? new());
-                await _investissementService.AddFluxBancairesRange(responseBody.FluxBancaires ?? new());
+                await _investissementService.AddFluxTradeRepublicRange(responseBody.FluxBancaires ?? new());
 
                 return codeStatus;
             }

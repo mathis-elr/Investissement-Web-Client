@@ -122,7 +122,7 @@
     overflow: hidden;
     display: flex;
     gap:0;
-    width: 400%;
+    width: 300%;
     height:100%;
     transition: transform 0.5s ease-in-out;
 }
@@ -140,15 +140,11 @@
 }
 
 .page2 {
-    transform: translateX(-25%);
+    transform: translateX(-33.33%);
 }
 
 .page3 {
-    transform: translateX(-50%);
-}
-
-.page4 {
-    transform: translateX(-75%);
+    transform: translateX(-66.66%);
 }
 
 

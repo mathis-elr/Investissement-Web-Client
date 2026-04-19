@@ -21,7 +21,7 @@ namespace Investissement_WebClient.Data.Services
         public async Task<IEnumerable<TransactionVM>> GetTransactions()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.Transactions.Select(t => new TransactionVM
+            return await context.Transaction.Select(t => new TransactionVM
             {
                 Date = t.Date.Value,
                 Actif = t.Actif,
@@ -58,7 +58,7 @@ namespace Investissement_WebClient.Data.Services
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            return await context.Transactions
+            return await context.Transaction
                 .SumAsync(t => t.Type == "Achat" ? t.Total : -t.Total) ?? 0;
         }
         
@@ -93,7 +93,7 @@ namespace Investissement_WebClient.Data.Services
         public async Task<IEnumerable<InfoInvestParActif>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            var rawData = await context.Transactions
+            var rawData = await context.Transaction
                 .GroupBy(t => new { t.Actif, t.Ticker })
                 .Select(g => new
                 {
@@ -127,14 +127,14 @@ namespace Investissement_WebClient.Data.Services
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var idsExistants = await context.Transactions.Select(t => t.Id).ToListAsync();
+            var idsExistants = await context.Transaction.Select(t => t.Id).ToListAsync();
             var hashSetIds = new HashSet<string>(idsExistants);
 
             foreach (var transaction in transactions)
             {
                 if (!hashSetIds.Contains(transaction.Id))
                 {
-                    await context.Transactions.AddAsync(transaction);
+                    await context.Transaction.AddAsync(transaction);
                     hashSetIds.Add(transaction.Id);
                 }
             }
@@ -142,18 +142,18 @@ namespace Investissement_WebClient.Data.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task AddFluxBancairesRange(IEnumerable<FluxBancaire> fluxBancaires)
+        public async Task AddFluxTradeRepublicRange(IEnumerable<FluxTradeRepublic> fluxBancaires)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var idsExistants = await context.FluxBancaires.Select(t => t.Id).ToListAsync();
+            var idsExistants = await context.FluxTradeRepublic.Select(t => t.Id).ToListAsync();
             var hashSetIds = new HashSet<string>(idsExistants);
 
             foreach (var flux in fluxBancaires)
             {
                 if (!hashSetIds.Contains(flux.Id))
                 {
-                    await context.FluxBancaires.AddAsync(flux);
+                    await context.FluxTradeRepublic.AddAsync(flux);
                     hashSetIds.Add(flux.Id);
                 }
             }
@@ -164,14 +164,14 @@ namespace Investissement_WebClient.Data.Services
         private async Task<IEnumerable<string>> GetTickers()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return context.Transactions.GroupBy(t => t.Actif).Select(d => d.First().Ticker).ToList();
+            return context.Transaction.GroupBy(t => t.Actif).Select(d => d.First().Ticker).ToList();
         }
 
         private async Task<List<InvestissementParMois>> CalculerInvestissementParMois()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var rawData = await context.Transactions
+            var rawData = await context.Transaction
                 .GroupBy(t => new { t.Date.Value.Year, t.Date.Value.Month })
                 .Select(d => new
                 {

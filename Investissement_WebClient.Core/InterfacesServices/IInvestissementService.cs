@@ -27,6 +27,6 @@ namespace Investissement_WebClient.Core.InterfacesServices
 
         Task AddTransactionsRange(IEnumerable<Transaction> transactions);
         
-        Task AddFluxBancairesRange(IEnumerable<FluxBancaire> fluxBancaires);
+        Task AddFluxTradeRepublicRange(IEnumerable<FluxTradeRepublic> fluxBancaires);
     }
 }

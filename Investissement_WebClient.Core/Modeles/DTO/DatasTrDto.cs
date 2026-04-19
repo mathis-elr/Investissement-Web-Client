@@ -4,5 +4,5 @@ public class DatasTrDto
 {
     public List<Transaction> Transactions { get; init; } = new();
     
-    public List<FluxBancaire> FluxBancaires { get; init; } = new();
+    public List<FluxTradeRepublic> FluxBancaires { get; init; } = new();
 }

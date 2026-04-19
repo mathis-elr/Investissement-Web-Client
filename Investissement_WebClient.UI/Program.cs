@@ -1,6 +1,7 @@
 using ApexCharts;
 using Blazored.Toast;
 using Investissement_WebClient.Core.InterfacesServices;
+using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Data;
 using Investissement_WebClient.Data.Background;
 using Investissement_WebClient.Data.Services;
@@ -9,8 +10,6 @@ using Investissement_WebClient.UI.Components.ViewsModels;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-//X-KEY-API : lesapicestcoolencoremieuxquandcestautomatique
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
@@ -24,20 +23,20 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-//builder.Services.AddDbContextFactory<InvestissementDbContext>(options => 
-//    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringUbuntu")));
-
-//builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
-//    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStringWindows")));
-
 builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
+var section = builder.Configuration.GetSection("PowensApiAcces");
+PowensAPIAcces.ClientId = section["client_id"];
+PowensAPIAcces.ClientSecret = section["client_secret"];
 
 builder.Services.AddScoped<IInvestissementService, InvestissementService>();
 builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();
+builder.Services.AddScoped<IFluxCreditCoopService, FluxCreditCoopService>();
+
 builder.Services.AddScoped<IYahooDataService, YahooDataService>();
 builder.Services.AddScoped<ITradeRepublicDataService, TradeRepublicDataService>();
+builder.Services.AddScoped<IPowensDataService, PowensDataService>();
 
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();

@@ -1,6 +1,6 @@
 namespace Investissement_WebClient.Core.Modeles;
 
-public class FluxBancaire
+public class FluxTradeRepublic
 {
     public string? Id { get; init; }
     

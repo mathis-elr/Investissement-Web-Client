@@ -22,7 +22,128 @@ namespace Investissement_WebClient.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxBancaire", b =>
+            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.CategorieFlux", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategorieFlux");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Libelle = "Alimentation"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Libelle = "Transport"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Libelle = "Virement emis"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Libelle = "Virement reçu"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Libelle = "Virement emis livret A"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Libelle = "Virement reçu livret A"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Libelle = "Shopping"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Libelle = "Sport"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Libelle = "Salaire"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Libelle = "APL"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Libelle = "Autre"
+                        });
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.CreditCoopAcces", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccesToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreation")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CreditCoopAcces");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxCreditCoop", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategorieId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LibelleRecu")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LibelleSupplementaire")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Valeur")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategorieId");
+
+                    b.ToTable("FluxCreditCoop");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxTradeRepublic", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -42,7 +163,7 @@ namespace Investissement_WebClient.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FluxBancaires");
+                    b.ToTable("FluxTradeRepublic");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Core.Modeles.HistoriquePatrimoine", b =>
@@ -106,7 +227,16 @@ namespace Investissement_WebClient.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxCreditCoop", b =>
+                {
+                    b.HasOne("Investissement_WebClient.Core.Modeles.CategorieFlux", "Categorie")
+                        .WithMany()
+                        .HasForeignKey("CategorieId");
+
+                    b.Navigation("Categorie");
                 });
 #pragma warning restore 612, 618
         }
