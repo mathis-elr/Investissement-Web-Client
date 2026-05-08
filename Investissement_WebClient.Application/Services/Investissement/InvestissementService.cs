@@ -1,5 +1,5 @@
-﻿using Investissement_WebClient.Application.Services.YahooFinance;
-using Investissement_WebClient.Application.ViewsModels;
+﻿using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.Services.YahooFinance;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
@@ -18,10 +18,10 @@ namespace Investissement_WebClient.Application.Services.Investissement
             _yahooDataService = yahooDataService;
         }
 
-        public async Task<IEnumerable<TransactionVM>> GetTransactions()
+        public async Task<IEnumerable<TransactionDto>> GetTransactions()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.Transaction.Select(t => new TransactionVM
+            return await context.Transaction.Select(t => new TransactionDto
             {
                 Date = t.Date.Value,
                 Actif = t.Actif,
@@ -31,7 +31,7 @@ namespace Investissement_WebClient.Application.Services.Investissement
             }).ToListAsync();
         }
 
-        public async Task<IEnumerable<InvestissementParMois>> GetInvestissementParMois(decimal investissementMoyenMensuel)
+        public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var investissementParMois =  await CalculerInvestissementParMois();
@@ -90,7 +90,7 @@ namespace Investissement_WebClient.Application.Services.Investissement
             return Math.Round(investissementParMois.Average(i => i.Investissement), 0);
         }
 
-        public async Task<IEnumerable<InfoInvestParActifVM>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif)
+        public async Task<IEnumerable<InfoInvestParActifDto>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var rawData = await context.Transaction
@@ -109,7 +109,7 @@ namespace Investissement_WebClient.Application.Services.Investissement
                 var prixActuel = prixParActif[t.Ticker];
                 var valeurDetenue = t.TotalQuantite * prixActuel;
 
-                return new InfoInvestParActifVM
+                return new InfoInvestParActifDto
                 {
                     Actif = t.Actif,
                     QuantiteDetenue = t.TotalQuantite,
@@ -167,7 +167,7 @@ namespace Investissement_WebClient.Application.Services.Investissement
             return context.Transaction.GroupBy(t => t.Actif).Select(d => d.First().Ticker).ToList();
         }
 
-        private async Task<List<InvestissementParMois>> CalculerInvestissementParMois()
+        private async Task<List<InvestissementParMoisVM>> CalculerInvestissementParMois()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -182,7 +182,7 @@ namespace Investissement_WebClient.Application.Services.Investissement
                 .ToListAsync();
 
             return rawData
-                .Select(d => new InvestissementParMois
+                .Select(d => new InvestissementParMoisVM
                 {
                     Date = new DateTime(d.Annee, d.Mois, 1),
                     Investissement = d.TotalInvesti

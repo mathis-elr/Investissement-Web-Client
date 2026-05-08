@@ -69,7 +69,7 @@ public class PatrimoineService : IPatrimoineService
         return variation;
     }
 
-    public async Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresPlusOuMoinsValues()
+    public async Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresPlusOuMoinsValues()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
@@ -97,7 +97,7 @@ public class PatrimoineService : IPatrimoineService
             decimal investissementOuverture = dg.DonneesJour.FirstOrDefault()?.InvestissementTotal ?? 0;
             decimal investissementFermeture = dg.DonneesJour.LastOrDefault()?.InvestissementTotal ?? 0;
 
-            return new BougieJournaliere
+            return new BougieJournaliereVM
             {
                 Date = dg.Date,
                 Ouverture = Math.Round(valeurOuverture - investissementOuverture, 2), //haut de la pile = date la plus ancienne
@@ -158,7 +158,7 @@ public class PatrimoineService : IPatrimoineService
     //        }).ToList();
     //}
 
-    public async Task<IEnumerable<BougieJournaliere>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
+    public async Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -176,7 +176,7 @@ public class PatrimoineService : IPatrimoineService
         }).OrderBy(hp => hp.Date)
           .ToListAsync();
 
-        return data.Select(t => new BougieJournaliere
+        return data.Select(t => new BougieJournaliereVM
         {
             Date = t.Date,
             Ouverture = t.DonnesParJour.FirstOrDefault()?.Valeur ?? 0,

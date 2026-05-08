@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace Investissement_WebClient.Application.DTO;
+namespace Investissement_WebClient.Application.ApiResponse;
 
-public class FluxCreditCoopDto
+public class FluxCreditCoopApiResponse
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }

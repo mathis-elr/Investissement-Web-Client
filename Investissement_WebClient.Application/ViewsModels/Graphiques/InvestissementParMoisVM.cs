@@ -1,6 +1,6 @@
 ﻿namespace Investissement_WebClient.Application.ViewsModels.Graphiques
 {
-    public class InvestissementParMois
+    public class InvestissementParMoisVM
     {
         public DateTime Date { get; set; }
 

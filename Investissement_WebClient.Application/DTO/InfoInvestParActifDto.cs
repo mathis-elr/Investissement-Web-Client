@@ -1,6 +1,6 @@
-﻿namespace Investissement_WebClient.Application.ViewsModels
+﻿namespace Investissement_WebClient.Application.DTO
 {
-    public class InfoInvestParActifVM
+    public class InfoInvestParActifDto
     {
         public string? Actif { get; set; }
 

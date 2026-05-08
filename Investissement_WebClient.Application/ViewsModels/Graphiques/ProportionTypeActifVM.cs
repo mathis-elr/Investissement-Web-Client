@@ -1,8 +1,8 @@
 ﻿namespace Investissement_WebClient.Application.ViewsModels.Graphiques
 {
-    public class ProportionActif
+    public class ProportionTypeActifVM
     {
-        public string Actif { get; set; }
+        public string Type { get; set; }
 
         public decimal Proportion { get; set; }
     }

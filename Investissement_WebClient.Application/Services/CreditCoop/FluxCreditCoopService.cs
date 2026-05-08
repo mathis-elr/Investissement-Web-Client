@@ -1,3 +1,4 @@
+using Investissement_WebClient.Application.ApiResponse;
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Domain.Modeles;
@@ -15,7 +16,7 @@ public class FluxCreditCoopService : IFluxCreditCoopService
         _dbFactory = dbFactory;
     }
 
-    public async Task<List<FluxCreditCoopVM>> GetFlux()
+    public async Task<List<ViewsModels.FluxCreditCoopVM>> GetFlux()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         return await context.FluxCreditCoop.Select(f => new FluxCreditCoopVM
@@ -28,11 +29,11 @@ public class FluxCreditCoopService : IFluxCreditCoopService
         }).ToListAsync();
     }
 
-    public async Task<IEnumerable<CategorieFluxVM>> GetCategorieFlux()
+    public async Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         return await context.CategorieFlux
-            .Select(c => new CategorieFluxVM
+            .Select(c => new CategorieFluxDto
             {
                 Id = c.Id,
                 Libelle = c.Libelle,    
@@ -41,7 +42,7 @@ public class FluxCreditCoopService : IFluxCreditCoopService
             .ToListAsync();
     }
 
-    public async Task AddFluxCreditCoop(List<FluxCreditCoopDto>? fluxCreditCoop)
+    public async Task AddFluxCreditCoop(List<FluxCreditCoopApiResponse>? fluxCreditCoop)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -69,7 +70,7 @@ public class FluxCreditCoopService : IFluxCreditCoopService
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateFluxCreditCoopMensuel(List<FluxCreditCoopVM> fluxMensuelVM)
+    public async Task UpdateFluxCreditCoopMensuel(List<ViewsModels.FluxCreditCoopVM> fluxMensuelVM)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 

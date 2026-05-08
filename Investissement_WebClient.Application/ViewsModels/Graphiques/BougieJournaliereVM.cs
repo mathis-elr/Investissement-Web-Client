@@ -1,6 +1,6 @@
 namespace Investissement_WebClient.Application.ViewsModels.Graphiques;
 
-public class BougieJournaliere
+public class BougieJournaliereVM
 {
     public DateTime Date { get; set; }
     

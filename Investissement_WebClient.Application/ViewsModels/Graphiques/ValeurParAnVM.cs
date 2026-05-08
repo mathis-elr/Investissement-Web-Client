@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Investissement_WebClient.Application.ViewsModels.Graphiques
 {
-    public class ValeurParAn
+    public class ValeurParAnVM
     {
         public int Annee {  get; set; }
 

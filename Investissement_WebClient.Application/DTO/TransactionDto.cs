@@ -1,6 +1,6 @@
-﻿namespace Investissement_WebClient.Application.ViewsModels
+﻿namespace Investissement_WebClient.Application.DTO
 {
-    public class TransactionVM
+    public class TransactionDto
     {
         public DateTimeOffset Date { get; set; }
 

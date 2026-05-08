@@ -1,8 +1,8 @@
 ﻿using Investissement_WebClient.Domain.Enums;
 
-namespace Investissement_WebClient.Application.ViewsModels
+namespace Investissement_WebClient.Application.DTO
 {
-    public class StatutMoisVM
+    public class StatutMoisDto
     {
         public DateTime Date { get; set; }
         public Statut Statut { get; set; }

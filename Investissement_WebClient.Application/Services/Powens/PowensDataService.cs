@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.ApiResponse;
 using Investissement_WebClient.Application.Services.CreditCoop;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
@@ -101,7 +101,7 @@ public class PowensDataService : IPowensDataService
         VerifierContenueReponse(reponse, codeStatus);
         
         var reponseString = await reponse.Content.ReadAsStringAsync();
-        var transactions = JsonSerializer.Deserialize<PowensTransactionsResponse>(reponseString);
+        var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
 
         await _fluxCreditCoopService.AddFluxCreditCoop(transactions?.Transactions);
     }
