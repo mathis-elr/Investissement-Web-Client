@@ -34,9 +34,9 @@
                 break;
         }
 
-        var estActif = Model.DateSelectionnee.HasValue
-                    && Model.DateSelectionnee.Value.Year == unMois.Date.Year
-                    && Model.DateSelectionnee.Value.Month == unMois.Date.Month;
+        var estActif = Model.DateActive.HasValue
+                    && Model.DateActive.Value.Year == unMois.Date.Year
+                    && Model.DateActive.Value.Month == unMois.Date.Month;
 
         <div class="un-mois @(estIndisponible ? "disabled" : estActif ? "active" : "")" 
                             @onclick="async () => { if (!estIndisponible) { await Model.LoadFluxUnMois(unMois); } }">

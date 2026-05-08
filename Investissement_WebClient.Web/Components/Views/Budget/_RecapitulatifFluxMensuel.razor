@@ -1,4 +1,5 @@
 ﻿@using Investissement_WebClient.Application.ViewsModels
+@using Investissement_WebClient.Application.ViewsModels.Graphiques
 @using Investissement_WebClient.Domain.Enums
 @using Investissement_WebClient.Web.Components.ViewsModels
 
@@ -9,22 +10,22 @@
 
 <div class="recapitulatif">
     <div class="content">
-        <ApexChart TItem="FluxCreditCoopVM"
+        <ApexChart TItem="StatistiqueCategorieVM"
                    Options="ChartsOptionsRecapBudgetMensuel.OptionsRecapitulatifBudgetMensuel">
 
-            <ApexPointSeries TItem="FluxCreditCoopVM"
-                             Items="@Model.FluxMensuel.Where(f => f.Valeur >= 0)"
+            <ApexPointSeries TItem="StatistiqueCategorieVM"
+                             Items="Model.StatsGraphique"
                              Name="Crédits"
-                             XValue="@(e => Model.Categories.FirstOrDefault(c => c.Id == e.IdCategorie).Libelle)"
-                             YAggregate="@(e => e.Sum(f => f.Valeur))"
+                             XValue="@(e =>  e.NomCategorie)"
+                             YValue="@(e => e.TotalCredit)"
                              SeriesType="SeriesType.Bar"
                              Color="#00FF00" />
 
-            <ApexPointSeries TItem="FluxCreditCoopVM"
-                             Items="@Model.FluxMensuel.Where(f => f.Valeur < 0)"
+            <ApexPointSeries TItem="StatistiqueCategorieVM"
+                             Items="Model.StatsGraphique"
                              Name="Débits"
-                             XValue="@(e => Model.Categories.FirstOrDefault(c => c.Id == e.IdCategorie).Libelle)"
-                             YAggregate="@(e => Math.Abs(e.Sum(f => f.Valeur)))"
+                             XValue="@(e => e.NomCategorie)"
+                             YValue="@(e => e.TotalDebit)"
                              SeriesType="SeriesType.Bar"
                              Color="#FF0000"/>
         </ApexChart>

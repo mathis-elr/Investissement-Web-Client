@@ -3,8 +3,8 @@
 @inject IToastService TS
 
 <div class="header">
-    <label>Flux @DateString</label>
-    <button type="button" class="btn-transactions" @onclick="() => UpdateFluxMensuel()">Enregistrer les modifications</button>
+    <label>Flux @Model.DateActiveString</label>
+    <button type="button" class="btn-transactions" @onclick="UpdateFluxMensuel">Enregistrer les modifications</button>
 </div>
 
 <div class="content">
@@ -22,7 +22,6 @@
 @code {
     [Parameter] public required BudgetViewModel Model { get; set; }
     private DateTime Date => Model.DateEditMensuel;
-    private string DateString => Model.DateEditMensuel.ToString("MMMM yyyy");
 
     private async Task GetTransactions()
     {
@@ -36,10 +35,7 @@
             return;
         }
 
-        TS.ShowSuccess($"Données de {DateString} récupéré avec succès");
-
-        await Model.LoadFluxCreditCoop();
-        await Model.LoadFluxUnMois(Model.StatutMoisActif!);
+        TS.ShowSuccess($"Données de {Model.DateActiveString} récupéré avec succès");
     }
 
     private async Task UpdateFluxMensuel()
@@ -54,9 +50,6 @@
             return;
         }
 
-        TS.ShowSuccess("Données enregistrées avec succès");
-
-        await Model.LoadFluxCreditCoop();
-        await Model.LoadFluxUnMois(Model.StatutMoisActif!);
+        TS.ShowSuccess("Données mises à jour avec succès");
     }
 }
