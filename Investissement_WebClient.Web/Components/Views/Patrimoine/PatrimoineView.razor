@@ -1,0 +1,230 @@
+﻿@using System.Globalization
+@using Investissement_WebClient.Application.ViewsModels.Graphiques
+@using Investissement_WebClient.Web.Components.Views.Patrimoine
+@using Investissement_WebClient.Web.Components.ViewsModels
+
+@page "/patrimoine"
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IToastService TS
+@inject PatrimoineViewModel PVM
+
+<PageTitle>Patrimoine</PageTitle>
+
+<div class="patrimoine">
+    <div class="patrimoine-infos">
+        <span class="valeur-totale-courante">
+            <label>
+                @(PVM.ValeurPatrimoineCourante == 0 ? "-----,--" : PVM.ValeurPatrimoineCourante.ToString("C2", CultureInfo.GetCultureInfo("fr-FR")))
+            </label>
+        </span>
+        <div class="variations-prix">
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix24H)">
+                <label>24H :</label>
+                    @(PVM.Variations.VariationPrix24H == 0 ? "--,--" : @PVM.Variations.VariationPrix24H.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
+            </span>
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix7J)">
+                <label>7J :</label>
+                @(PVM.Variations.VariationPrix7J == 0 ? "--,--" : @PVM.Variations.VariationPrix7J.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
+            </span>
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix1M)">
+                <label>1M :</label>
+                    @(PVM.Variations.VariationPrix1M == 0 ? "--,--" : @PVM.Variations.VariationPrix1M.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
+            </span>
+            <span class="variation-prix @PVM.DeterminerSigne(PVM.Variations.VariationPrix1A)">
+                <label>1A :</label>
+                    @(PVM.Variations.VariationPrix1A == 0 ? "--,--" : @PVM.Variations.VariationPrix1A.ToString("P2",CultureInfo.GetCultureInfo("fr-FR")))
+            </span>
+        </div>
+    </div>
+
+    <div class="patrimoine-content">
+
+        @if(PVM.ValeurPatrimoineCourante != 0)
+        {
+            <div class="btn-rond gauche" @onclick="GraphiquePrecedent">ᐸ</div>
+            <div class="btn-rond droite" @onclick="GraphiqueSuivant">ᐳ</div>
+        }
+
+        <div class="rail @(pages[index])">
+
+            @if (DonneesExiste && PVM.ValeurPatrimoineCourante == 0)
+            {
+                <div class="page">
+                    <span>Recherche de données...</span>
+                </div>
+            }
+            else if (PVM.ValeurPatrimoineCourante == 0)
+            {
+                <div class="page">
+                    <span>Aucune données, commencer à investir</span>
+                </div>
+            }
+            else
+            {
+                
+                @*Graphique Candle : evolution des plus/moins values au cours du temps par rapport à l'investissement total et à la valeur du patrimoine*@
+                @if (PVM.BougiesJournalieresPlusOuMoinsValues.Any())
+                {
+                    <div class="page">
+                        <div style="flex:1">
+                            <ApexChart TItem="BougieJournaliere"
+                                       XAxisType="XAxisType.Datetime"
+                                       Options="ChartsOptionsPatrimoine.OptionsBougieJournalierePlusOuMoinsValues">
+
+                                <ApexCandleSeries TItem="BougieJournaliere"
+                                                  Items="PVM.BougiesJournalieresPlusOuMoinsValues"
+                                                  Name="Evolution des plus/moins values"
+                                                  XValue="@(e => e.Date)"
+                                                  Open="@(e => e.Ouverture)"
+                                                  High="@(e => e.Haut)"
+                                                  Low="@(e => e.Bas)"
+                                                  Close="@(e => e.Fermeture)"
+                                                  OrderByDescending="e => e.X" />
+                            </ApexChart>
+                        </div>
+                    </div>
+                }
+               
+
+                <div class="page">
+                    @* Pie : proportion investit par actif par rapport au total investit *@
+                    @if (PVM.ProportionParActif.Any())
+                    {
+                        <div style="flex:1">
+                            <ApexChart TItem="ProportionActif"
+                                       Title="Proportion investit par actif"
+                                       Options="ChartsOptionsPatrimoine.OptionsPieActif">
+
+                                <ApexPointSeries TItem="ProportionActif"
+                                                 Items="PVM.ProportionParActif"
+                                                 SeriesType="SeriesType.Pie"
+                                                 XValue="@(e => e.Actif)"
+                                                 YValue="@(e => e.Proportion)"
+                                                 OrderByDescending="e => e.Y" />
+                            </ApexChart>
+                        </div>
+
+                    }
+               
+                    @* Pie : proportion investit par type par rapport au total investit *@
+                    @if (PVM.ProportionParTypeActif.Any())
+                    {
+                        <div style="flex:1">
+                            <ApexChart TItem="ProportionTypeActif"
+                                       Title="Proportion investit par type d'actif"
+                                       Options="ChartsOptionsPatrimoine.OptionsPieType">
+
+                                <ApexPointSeries TItem="ProportionTypeActif"
+                                                 Items="PVM.ProportionParTypeActif"
+                                                 SeriesType="SeriesType.Pie"
+                                                 XValue="@(e => e.Type)"
+                                                 YValue="@(e => e.Proportion)"
+                                                 OrderByDescending="e => e.Y" />
+                            </ApexChart>
+                        </div>
+                    }
+               
+                </div>
+
+               
+                @*Graphique Candle + Line : evolution de la valeur du patrimoine (Candle) par rapport à l'invetsissement total (Line) au cours du temps*@
+                @if (PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
+                {
+                    <div class="page">
+                        <div style="flex:1">
+                            <ApexChart TItem="BougieJournaliere"
+                                       XAxisType="XAxisType.Datetime"
+                                       Options="ChartsOptionsPatrimoine.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
+
+                                <ApexCandleSeries TItem="BougieJournaliere"
+                                                  Items="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
+                                                  Name="Evolution de la valeur du patrimoine"
+                                                  XValue="@(e => e.Date)"
+                                                  Open="@(e => e.Ouverture)"
+                                                  High="@(e => e.Haut)"
+                                                  Low="@(e => e.Bas)"
+                                                  Close="@(e => e.Fermeture)"
+                                                  OrderByDescending="e => e.X" />
+
+                                <ApexPointSeries TItem="BougieJournaliere"
+                                                 Items="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
+                                                 SeriesType="SeriesType.Line"
+                                                 Name="Investissement total"
+                                                 YValue="@(e => e.InvestissementTotal)"
+                                                 XValue="@(e => e.Date)"
+                                                 Stroke="@(new SeriesStroke{ Width=3, DashSpace=3, Color="yellow" })" />
+                            </ApexChart>
+                        </div>
+                    </div>
+                }  
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string> pages = ["page1", "page2", "page3"];
+    private int index =  0;
+
+    private void GraphiqueSuivant()
+    {
+        index = (index+1) % (pages.Count());
+    }
+    private void GraphiquePrecedent()
+    {
+        index = (index - 1 + pages.Count()) % (pages.Count());
+    }
+
+    private bool DonneesExiste { get; set; } = true; /* On part du principe que les données vont exister */
+    private CancellationTokenSource _cts = new();
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await PVM.LoadData();
+
+            if (PVM.ValeurPatrimoineCourante == 0) 
+            {
+                DonneesExiste = false;
+                TS.ShowError("Aucun investissement enregistré, commenssez à investir pour suivre votre patrimoine");
+            }
+            else
+            {
+                DonneesExiste = true;
+                await PVM.LoadDataGraphiques();
+                _ = LoadDataBoucle(_cts.Token);  
+            }
+            StateHasChanged();
+        }
+
+        if (PVM.HasError)
+        {
+            TS.ShowError(PVM.ErrorMessage);
+            PVM.HasError = false;
+        }
+    }
+
+    private async Task LoadDataBoucle(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await PVM.LoadData();
+                StateHasChanged();
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
+            } 
+        }
+        catch(OperationCanceledException){ Console.WriteLine("Arret du chargement de la valeur du patrimoine"); }
+    }
+    
+    // déclenchement lors du déclenchement du catch de LoadData (quand on change de page) pour stopper la boucle
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose(); 
+    }
+}

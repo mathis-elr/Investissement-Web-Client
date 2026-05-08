@@ -1,0 +1,75 @@
+@using System.Runtime.InteropServices.JavaScript
+@using Investissement_WebClient.Domain.Enums
+@using Investissement_WebClient.Web.Components.ViewsModels
+
+@page "/budget"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject BudgetViewModel BVM
+@inject IToastService TS
+
+<PageTitle>Budget</PageTitle>
+
+<div class="budget">
+    <div class="flux">
+        <div class="header">
+            <label>Historique</label>
+        </div>
+
+        <button type="button" class="btn-transactions" @onclick="BVM.SetStatsMode">Statistiques</button>
+
+        <div class="content">
+            @foreach (var unMois in BVM.StatutsMois)
+            {
+                var estIndisponible = false;
+                var icon = string.Empty;
+                var statut = string.Empty;
+                @switch (unMois.Statut)
+                {
+                    case Statut.indisponible:
+                        estIndisponible = true;
+                        icon = "🚫";
+                        statut = "indisponible";
+                        break;
+                    case Statut.en_cours:
+                        icon = "🕒";
+                        statut = "en cours";
+                        break;
+                    case Statut.complete:
+                        icon = "✅";
+                        statut = "completé";
+                        break;
+                    case Statut.aucune_donnees:
+                        icon = "❌";
+                        statut = "aucune données";
+                        break;
+                }
+
+                var estActif = BVM.DateSelectionnee.HasValue 
+                            && BVM.DateSelectionnee.Value.Year == unMois.Date.Year 
+                            && BVM.DateSelectionnee.Value.Month == unMois.Date.Month;
+
+                <div class="un-mois @(estIndisponible ? "disabled" : estActif ? "active" : "")">
+                    <span @onclick="async () => { if(!estIndisponible) { await BVM.LoadFluxUnMois(unMois.Date); } }">@(icon + " " + unMois.Date.ToString("MMMM yyyy") + " - " + statut)</span>
+                </div>
+            }      
+        </div>
+
+    </div>
+    <div class="stats">
+        @if (BVM.ModeStatistique)
+        {
+            <_Statistiques/>
+        }
+        else
+        {
+            <_EditionFluxMensuel Model="@BVM" Date="@BVM.DateEditMensuel" OnDataChanged="StateHasChanged"/>
+        }
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await BVM.StartLoadData();
+    }
+}
