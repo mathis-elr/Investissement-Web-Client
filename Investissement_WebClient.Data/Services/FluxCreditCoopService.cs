@@ -1,6 +1,7 @@
 using Investissement_WebClient.Core.InterfacesServices;
 using Investissement_WebClient.Core.Modeles;
 using Investissement_WebClient.Core.Modeles.DTO;
+using Investissement_WebClient.Core.Modeles.ViewsModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Data.Services;
@@ -12,6 +13,32 @@ public class FluxCreditCoopService : IFluxCreditCoopService
     public FluxCreditCoopService(IDbContextFactory<InvestissementDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
+    }
+
+    public async Task<List<FluxCreditCoopVM>> GetFlux()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        return await context.FluxCreditCoop.Select(f => new FluxCreditCoopVM
+        {
+            Id = f.Id,
+            Date = f.Date,
+            Valeur = f.Valeur,
+            LibelleRecu = f.LibelleRecu,
+            IdCategorie = f.Categorie == null ? 0 : f.Categorie.Id
+        }).ToListAsync();
+    }
+
+    public async Task<IEnumerable<CategorieFluxVM>> GetCategorieFlux()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        return await context.CategorieFlux
+            .Select(c => new CategorieFluxVM
+            {
+                Id = c.Id,
+                Libelle = c.Libelle,    
+            })
+            .OrderBy(f => f.Libelle)
+            .ToListAsync();
     }
 
     public async Task AddFluxCreditCoop(List<FluxCreditCoopDto>? fluxCreditCoop)
@@ -29,7 +56,7 @@ public class FluxCreditCoopService : IFluxCreditCoopService
             .ToListAsync();
 
         var nvFlux = fluxCreditCoop
-            .Where(f => idsExistants.Contains(f.Id))
+            .Where(f => !idsExistants.Contains(f.Id))
             .Select(f => new FluxCreditCoop
             {
                 Id = f.Id,
@@ -39,6 +66,30 @@ public class FluxCreditCoopService : IFluxCreditCoopService
             });
 
         context.FluxCreditCoop.AddRange(nvFlux);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task UpdateFluxCreditCoopMensuel(List<FluxCreditCoopVM> fluxMensuelVM)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var idVM = fluxMensuelVM.Select(f => f.Id);
+
+        var fluxMensuelEnregistree = await context.FluxCreditCoop
+            .Where(f => idVM.Contains(f.Id))
+            .ToListAsync();
+
+        var fluxDic = fluxMensuelEnregistree.ToDictionary(e => e.Id);
+
+        foreach (var fluxVm in fluxMensuelVM)
+        {
+            if (fluxDic.TryGetValue(fluxVm.Id, out var _fluxEnregistre))
+            {
+                _fluxEnregistre.LibelleRecu = fluxVm.LibelleRecu;
+                _fluxEnregistre.IdCategorie = fluxVm.IdCategorie == 0 ? null : fluxVm.IdCategorie;
+            }
+        }
+
         await context.SaveChangesAsync();
     }
 }

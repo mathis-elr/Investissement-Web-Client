@@ -4,6 +4,7 @@ using Investissement_WebClient.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Data.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260426170746_CleanCategories")]
+    partial class CleanCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,93 +40,6 @@ namespace Investissement_WebClient.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CategorieFlux");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Libelle = "Alimentation"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Libelle = "Transport"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Libelle = "Avance Livret A"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Libelle = "Dette Livret A"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Libelle = "Shopping"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Libelle = "Sport"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Libelle = "Salaire"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Libelle = "Aide"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Libelle = "Autre"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Libelle = "Investissement Trade Republic"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Libelle = "Abonnement"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Libelle = "Logement"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Libelle = "Cadeaux"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Libelle = "Achat plaisir"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Libelle = "Investissement AV"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Libelle = "Vacances"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Libelle = "Santé"
-                        });
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Core.Modeles.CreditCoopAcces", b =>

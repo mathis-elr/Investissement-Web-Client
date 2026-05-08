@@ -49,11 +49,15 @@
 
             @if (DonneesExiste && PVM.ValeurPatrimoineCourante == 0)
             {
-                <span>Recherche de données...</span>
+                <div class="page">
+                    <span>Recherche de données...</span>
+                </div>
             }
             else if (PVM.ValeurPatrimoineCourante == 0)
             {
-                <span>Aucune données, commencer à investir</span>
+                <div class="page">
+                    <span>Aucune données, commencer à investir</span>
+                </div>
             }
             else
             {
@@ -152,12 +156,7 @@
                             </ApexChart>
                         </div>
                     </div>
-                }
-                
-
-                <div class="page">
-                    @*Graphique 3 lines : prévision d'evolution du patrimoine sur 20 ans basé sur une moyenne investit chaque mois avec une augmentation de +5%, +8% et +10% par ans *@
-                </div>
+                }  
             }
         </div>
     </div>

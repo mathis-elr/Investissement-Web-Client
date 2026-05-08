@@ -18,7 +18,6 @@ public static class ChartsOptionsPatrimoine
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Toolbar = new Toolbar { Show = false } ,
-            Width = "100%",
             Height = "500px"
         },
 

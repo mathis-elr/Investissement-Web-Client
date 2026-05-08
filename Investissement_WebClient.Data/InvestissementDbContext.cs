@@ -74,6 +74,10 @@ public class InvestissementDbContext : DbContext
                 .IsRequired();
             entity.Property(h => h.Valeur)
                 .IsRequired();
+            entity.HasOne(h => h.Categorie)
+                .WithMany()
+                .HasForeignKey(h => h.IdCategorie)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<CategorieFlux>().HasData(
@@ -90,47 +94,75 @@ public class InvestissementDbContext : DbContext
             new CategorieFlux
             {
                 Id = 3,
-                Libelle = "Virement emis"
+                Libelle = "Avance Livret A"
             },
             new CategorieFlux
             {
                 Id = 4,
-                Libelle = "Virement reçu"
+                Libelle = "Dette Livret A"
             },
             new CategorieFlux
             {
                 Id = 5,
-                Libelle = "Virement emis livret A"
-            },
-            new CategorieFlux
-            {
-                Id = 6,
-                Libelle = "Virement reçu livret A"
-            },
-            new CategorieFlux
-            {
-                Id = 7,
                 Libelle = "Shopping"
             },
             new CategorieFlux
             {
-                Id = 8,
+                Id = 6,
                 Libelle = "Sport"
-            } ,
+            },
             new CategorieFlux
             {
-                Id = 9,
+                Id = 7,
                 Libelle = "Salaire"
             },
             new CategorieFlux
             {
+                Id = 8,
+                Libelle = "Aide"
+            },
+            new CategorieFlux
+            {
+                Id = 9,
+                Libelle = "Autre"
+            },
+            new CategorieFlux
+            {
                 Id = 10,
-                Libelle = "APL"
+                Libelle = "Investissement Trade Republic"
             },
             new CategorieFlux
             {
                 Id = 11,
-                Libelle = "Autre"
+                Libelle = "Abonnement"
+            },
+            new CategorieFlux
+            {
+                Id = 12,
+                Libelle = "Logement"
+            }, new CategorieFlux
+            {
+                Id = 13,
+                Libelle = "Cadeaux"
+            }, new CategorieFlux
+            {
+                Id = 14,
+                Libelle = "Achat plaisir"
+            },
+            new CategorieFlux
+            {
+                Id = 15,
+                Libelle = "Investissement AV"
+            },
+            new CategorieFlux
+            {
+                Id = 16,
+                Libelle = "Vacances"
+            },
+            new CategorieFlux
+            {
+                Id = 17,
+                Libelle = "Santé"
             }
         );
     }

@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject NavigationManager NavManager
 @rendermode InteractiveServer
 
 <BlazoredToasts Position="ToastPosition.TopRight"
@@ -13,6 +12,10 @@
 
     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
         <div class="page">Investissement</div>
+    </NavLink>
+    
+    <NavLink class="nav-link" href="/budget">
+        <div class="page">Budget</div>
     </NavLink>
 
     <NavLink class="nav-link" href="/profil">

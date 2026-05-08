@@ -96,7 +96,7 @@ public class PowensDataService : IPowensDataService
             new AuthenticationHeaderValue("Bearer", creditCoopAcces.AccesToken);
         var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
         var dateFinString = dateFin.ToString("yyyy-MM-dd");
-        var reponse = await Client.GetAsync($"users/me/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500");
+        var reponse = await Client.GetAsync($"users/me/accounts/10/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500");
         
         var codeStatus = (int)reponse.StatusCode;
         VerifierContenueReponse(reponse, codeStatus);

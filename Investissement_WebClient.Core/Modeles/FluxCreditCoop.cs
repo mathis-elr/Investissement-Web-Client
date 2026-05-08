@@ -8,9 +8,8 @@ public class FluxCreditCoop
     
     public decimal Valeur { get; set; }
     
-    public string LibelleRecu { get; set; }
-    
-    public string? LibelleSupplementaire { get; set; }
-    
+    public required string LibelleRecu { get; set; }
+
+    public int? IdCategorie { get; set; }
     public CategorieFlux? Categorie { get; set; }
 }

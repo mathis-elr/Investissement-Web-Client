@@ -40,6 +40,7 @@ builder.Services.AddScoped<IPowensDataService, PowensDataService>();
 
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();
+builder.Services.AddScoped<BudgetViewModel>();
 builder.Services.AddScoped<ProfilViewModel>();
 
 builder.Services.AddHostedService<PatrimoineWorker>();

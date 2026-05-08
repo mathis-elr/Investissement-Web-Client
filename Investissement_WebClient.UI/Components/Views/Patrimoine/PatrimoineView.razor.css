@@ -121,18 +121,20 @@
 .rail {
     overflow: hidden;
     display: flex;
-    gap:0;
+    gap: 0;
     width: 300%;
-    height:100%;
+    height: 100%;
     transition: transform 0.5s ease-in-out;
 }
+
 
 .page {
     display: flex;
     flex-direction: row;
     padding: 10px;
     overflow: hidden;
-    width:25%;
+    flex-shrink: 0;
+    width: 33.333%;
 }
 
 .page1 {
@@ -140,11 +142,11 @@
 }
 
 .page2 {
-    transform: translateX(-33.33%);
+    transform: translateX(-33.333%);
 }
 
 .page3 {
-    transform: translateX(-66.66%);
+    transform: translateX(-66.666%);
 }
 
 

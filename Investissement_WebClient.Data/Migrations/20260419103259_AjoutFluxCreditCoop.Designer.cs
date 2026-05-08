@@ -4,6 +4,7 @@ using Investissement_WebClient.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Data.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260419103259_AjoutFluxCreditCoop")]
+    partial class AjoutFluxCreditCoop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,77 +55,47 @@ namespace Investissement_WebClient.Data.Migrations
                         new
                         {
                             Id = 3,
-                            Libelle = "Avance Livret A"
+                            Libelle = "Virement emis"
                         },
                         new
                         {
                             Id = 4,
-                            Libelle = "Dette Livret A"
+                            Libelle = "Virement reçu"
                         },
                         new
                         {
                             Id = 5,
-                            Libelle = "Shopping"
+                            Libelle = "Virement emis livret A"
                         },
                         new
                         {
                             Id = 6,
-                            Libelle = "Sport"
+                            Libelle = "Virement reçu livret A"
                         },
                         new
                         {
                             Id = 7,
-                            Libelle = "Salaire"
+                            Libelle = "Shopping"
                         },
                         new
                         {
                             Id = 8,
-                            Libelle = "Aide"
+                            Libelle = "Sport"
                         },
                         new
                         {
                             Id = 9,
-                            Libelle = "Autre"
+                            Libelle = "Salaire"
                         },
                         new
                         {
                             Id = 10,
-                            Libelle = "Investissement Trade Republic"
+                            Libelle = "APL"
                         },
                         new
                         {
                             Id = 11,
-                            Libelle = "Abonnement"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Libelle = "Logement"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Libelle = "Cadeaux"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Libelle = "Achat plaisir"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Libelle = "Investissement AV"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Libelle = "Vacances"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Libelle = "Santé"
+                            Libelle = "Autre"
                         });
                 });
 
@@ -150,14 +123,17 @@ namespace Investissement_WebClient.Data.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategorieId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdCategorie")
-                        .HasColumnType("int");
-
                     b.Property<string>("LibelleRecu")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LibelleSupplementaire")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Valeur")
@@ -165,7 +141,7 @@ namespace Investissement_WebClient.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdCategorie");
+                    b.HasIndex("CategorieId");
 
                     b.ToTable("FluxCreditCoop");
                 });
@@ -261,8 +237,7 @@ namespace Investissement_WebClient.Data.Migrations
                 {
                     b.HasOne("Investissement_WebClient.Core.Modeles.CategorieFlux", "Categorie")
                         .WithMany()
-                        .HasForeignKey("IdCategorie")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CategorieId");
 
                     b.Navigation("Categorie");
                 });

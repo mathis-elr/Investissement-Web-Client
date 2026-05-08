@@ -1,0 +1,15 @@
+﻿.credits-debits {
+    display: grid;
+    gap: 10px;
+    background-color: #242424;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.un-flux {
+    display: grid;
+    grid-template-columns: 100px 100px 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
