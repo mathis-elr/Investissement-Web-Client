@@ -34,15 +34,15 @@ public static class ChartsOptionsRecapBudgetMensuel
                 DataLabels = new PlotOptionsBarDataLabels
                 {
                     Position = BarDataLabelPosition.Top
-                }
+                },
+
+                BorderRadius = 6,
             }
         },
 
         Yaxis = new List<YAxis>
         {
             new YAxis { Min = 0 }
-
-
         },
 
         Xaxis = new XAxis

@@ -93,13 +93,8 @@ public class InvestissementDbContext : DbContext
             },
             new CategorieFlux
             {
-                Id = 3,
-                Libelle = "Avance Livret A"
-            },
-            new CategorieFlux
-            {
                 Id = 4,
-                Libelle = "Dette Livret A"
+                Libelle = "Livret A"
             },
             new CategorieFlux
             {
@@ -129,7 +124,7 @@ public class InvestissementDbContext : DbContext
             new CategorieFlux
             {
                 Id = 10,
-                Libelle = "Investissement Trade Republic"
+                Libelle = "Investissement TR"
             },
             new CategorieFlux
             {

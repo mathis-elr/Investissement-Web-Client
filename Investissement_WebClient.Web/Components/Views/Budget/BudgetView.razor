@@ -26,7 +26,7 @@
                 <_EditionFluxMensuel Model="@BVM" />
                 break;
             case Statut.complete:
-                <_RecapitulatifFluxMensuel Model="@BVM" />
+                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" /> //la cle permet de forcer la mise à jour
                 break;
             case Statut.aucune_donnees:
                 <_BudgetGetFlux Model="@BVM" />
