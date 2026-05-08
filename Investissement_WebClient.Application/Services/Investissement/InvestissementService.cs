@@ -12,6 +12,12 @@ namespace Investissement_WebClient.Application.Services.Investissement
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
         private readonly IYahooDataService _yahooDataService;
 
+        private Dictionary<string, string> MappingsActifs = new Dictionary<string, string>
+        {
+            { "PEA MSCI Emerging Markets ESG EUR (Acc)", "ETF Emerging Markets" },
+            { "Pea Monde MSCI World EUR (Acc)", "ETF MSCI World" }
+        };
+
         public InvestissementService(IDbContextFactory<InvestissementDbContext> dbContext,  IYahooDataService yahooDataService)
         {
             _dbFactory = dbContext;
@@ -112,12 +118,9 @@ namespace Investissement_WebClient.Application.Services.Investissement
                 return new InfoInvestParActifDto
                 {
                     Actif = t.Actif,
-                    QuantiteDetenue = t.TotalQuantite,
-                    PrixAchatMoyen = Math.Round((decimal)(t.TotalInvesti / t.TotalQuantite), 2),
-                    PrixActuel = prixActuel,
-                    ValeurDetenue = Math.Round((decimal)(t.TotalQuantite * prixParActif[t.Ticker]),2),
-                    VariationValeur = Math.Round((decimal)(valeurDetenue - t.TotalInvesti), 2),
-                    VariationPourcentage = Math.Round((decimal)((valeurDetenue - t.TotalInvesti) / t.TotalInvesti * 100), 2)
+                    ValeurDetenue = Math.Round(valeurDetenue, 2),
+                    VariationValeur = Math.Round(valeurDetenue - t.TotalInvesti, 2),
+                    VariationPourcentage = Math.Round((valeurDetenue - t.TotalInvesti) / t.TotalInvesti * 100, 2)
 
                 };
             }).ToList();
@@ -134,6 +137,9 @@ namespace Investissement_WebClient.Application.Services.Investissement
             {
                 if (!hashSetIds.Contains(transaction.Id))
                 {
+                    if(MappingsActifs.ContainsKey(transaction.Actif))
+                        transaction.Actif = MappingsActifs[transaction.Actif];    
+
                     await context.Transaction.AddAsync(transaction);
                     hashSetIds.Add(transaction.Id);
                 }

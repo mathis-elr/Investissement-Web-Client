@@ -8,7 +8,7 @@ public class Transaction
 
     public string? Type { get; init; }
 
-    public string? Actif {  get; init; }
+    public string? Actif {  get; set; }
 
     public string? ISIN { get; init; }
 

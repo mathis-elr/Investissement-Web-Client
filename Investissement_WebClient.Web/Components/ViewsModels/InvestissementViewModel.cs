@@ -17,10 +17,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; }
 
+        public bool DemandeEnCours = false;
 
-        /*  PROPRIETES EVOLUTION ACTIFS */
-        //public IEnumerable<EvolutionActifDTO> EvolutionActifs { get; set; }
-
+        // GESTION D'ERREUR
         public bool HasError { get; set; }
         public string ErrorMessage { get; set; }
 
@@ -184,14 +183,27 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
-        public string DeterminerSigne(decimal valeur)
+        public (string, string) DeterminerSigne(decimal valeur)
         {
             return valeur switch
             {
-                > 0 => "positive",
-                < 0 => "negative",
-                _ => "neutre"
+                > 0 => ("vert", "+"),
+                < 0 => ("rouge", ""),
+                _ => ("gris", "")
             };
         }
+
+        public void ReinitiliserGestionErreur()
+        {
+            ErrorMessage = string.Empty;
+            HasError = false;
+        }
+        public void FinDeDemande()
+        {
+            Etat = "neutre";
+            Message = "Aucune demande de récupération de transactions en cours ...";
+            DemandeEnCours = false;
+        }
+
     }
 }
