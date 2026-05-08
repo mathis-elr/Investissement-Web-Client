@@ -43,10 +43,10 @@
         {
             <div class="perspectives-content">
                 <ApexChart @ref="_chartPerspectivesValeurPatrimoineParAn" 
-                           TItem="ValeurParAn"
+                           TItem="ValeurParAnVM"
                            Options="ChartOptionsProfil.OptionsValeurParAn">
 
-                    <ApexPointSeries TItem="ValeurParAn"
+                    <ApexPointSeries TItem="ValeurParAnVM"
                                      Items="IVM.PerspectivesValeurPatrimoineParAn"
                                      SeriesType="SeriesType.Line"
                                      Name="Valeur Patrimoine"
@@ -54,7 +54,7 @@
                                      XValue="@(e => e.Annee)"
                                      Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
 
-                    <ApexPointSeries TItem="ValeurParAn"
+                    <ApexPointSeries TItem="ValeurParAnVM"
                                      Items="IVM.PerspectivesValeurPatrimoineParAn"
                                      SeriesType="SeriesType.Line"
                                      Name="Investissement"
@@ -80,7 +80,7 @@
 </div>
 
 @code {
-    private ApexChart<ValeurParAn> _chartPerspectivesValeurPatrimoineParAn;
+    private ApexChart<ValeurParAnVM> _chartPerspectivesValeurPatrimoineParAn;
 
     protected override async Task OnInitializedAsync()
     {

@@ -68,11 +68,11 @@
                 {
                     <div class="page">
                         <div style="flex:1">
-                            <ApexChart TItem="BougieJournaliere"
+                            <ApexChart TItem="BougieJournaliereVM"
                                        XAxisType="XAxisType.Datetime"
-                                       Options="ChartsOptionsPatrimoine.OptionsBougieJournalierePlusOuMoinsValues">
+                                       Options="ChartsOptionsRecapBudgetMensuel.OptionsBougieJournalierePlusOuMoinsValues">
 
-                                <ApexCandleSeries TItem="BougieJournaliere"
+                                <ApexCandleSeries TItem="BougieJournaliereVM"
                                                   Items="PVM.BougiesJournalieresPlusOuMoinsValues"
                                                   Name="Evolution des plus/moins values"
                                                   XValue="@(e => e.Date)"
@@ -92,11 +92,11 @@
                     @if (PVM.ProportionParActif.Any())
                     {
                         <div style="flex:1">
-                            <ApexChart TItem="ProportionActif"
+                            <ApexChart TItem="ProportionActifVM"
                                        Title="Proportion investit par actif"
-                                       Options="ChartsOptionsPatrimoine.OptionsPieActif">
+                                       Options="ChartsOptionsRecapBudgetMensuel.OptionsPieActif">
 
-                                <ApexPointSeries TItem="ProportionActif"
+                                <ApexPointSeries TItem="ProportionActifVM"
                                                  Items="PVM.ProportionParActif"
                                                  SeriesType="SeriesType.Pie"
                                                  XValue="@(e => e.Actif)"
@@ -111,11 +111,11 @@
                     @if (PVM.ProportionParTypeActif.Any())
                     {
                         <div style="flex:1">
-                            <ApexChart TItem="ProportionTypeActif"
+                            <ApexChart TItem="ProportionTypeActifVM"
                                        Title="Proportion investit par type d'actif"
-                                       Options="ChartsOptionsPatrimoine.OptionsPieType">
+                                       Options="ChartsOptionsRecapBudgetMensuel.OptionsPieType">
 
-                                <ApexPointSeries TItem="ProportionTypeActif"
+                                <ApexPointSeries TItem="ProportionTypeActifVM"
                                                  Items="PVM.ProportionParTypeActif"
                                                  SeriesType="SeriesType.Pie"
                                                  XValue="@(e => e.Type)"
@@ -133,11 +133,11 @@
                 {
                     <div class="page">
                         <div style="flex:1">
-                            <ApexChart TItem="BougieJournaliere"
+                            <ApexChart TItem="BougieJournaliereVM"
                                        XAxisType="XAxisType.Datetime"
-                                       Options="ChartsOptionsPatrimoine.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
+                                       Options="ChartsOptionsRecapBudgetMensuel.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
 
-                                <ApexCandleSeries TItem="BougieJournaliere"
+                                <ApexCandleSeries TItem="BougieJournaliereVM"
                                                   Items="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
                                                   Name="Evolution de la valeur du patrimoine"
                                                   XValue="@(e => e.Date)"
@@ -147,7 +147,7 @@
                                                   Close="@(e => e.Fermeture)"
                                                   OrderByDescending="e => e.X" />
 
-                                <ApexPointSeries TItem="BougieJournaliere"
+                                <ApexPointSeries TItem="BougieJournaliereVM"
                                                  Items="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
                                                  SeriesType="SeriesType.Line"
                                                  Name="Investissement total"

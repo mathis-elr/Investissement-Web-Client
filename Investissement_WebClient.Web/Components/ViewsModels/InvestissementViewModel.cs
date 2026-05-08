@@ -1,7 +1,7 @@
-﻿using Investissement_WebClient.Application.Services.Investissement;
+﻿using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.Services.Investissement;
 using Investissement_WebClient.Application.Services.Patrimoine;
 using Investissement_WebClient.Application.Services.TradeRepublic;
-using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -15,7 +15,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         /* PROPRIETES INVESTISSEMENT */
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
-        public IEnumerable<InvestissementParMois> InvestissementsParMois { get; set; }
+        public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; }
 
 
         /*  PROPRIETES EVOLUTION ACTIFS */
@@ -25,7 +25,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public string ErrorMessage { get; set; }
 
         /* Transactions */
-        public IEnumerable<TransactionVM> Transactions { get; set; }
+        public IEnumerable<TransactionDto> Transactions { get; set; }
 
         public string Message { get; set; }
 
@@ -34,7 +34,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public string CodeSms { get; set; }
 
         /* Evolution actifs */
-        public IEnumerable<InfoInvestParActifVM> InfoInvestParActif { get; set; }
+        public IEnumerable<InfoInvestParActifDto> InfoInvestParActif { get; set; }
 
         public InvestissementViewModel(IPatrimoineService patrimoineService, 
                                        IInvestissementService investissementService, 

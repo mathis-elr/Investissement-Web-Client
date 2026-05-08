@@ -13,7 +13,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal EvolutionAnnuellePourcentage { get; set; }
         public int PerspectiveNbAnnees { get; set; }
-        public List<ValeurParAn> PerspectivesValeurPatrimoineParAn { get; set; }
+        public List<ValeurParAnVM> PerspectivesValeurPatrimoineParAn { get; set; }
 
         public bool HasError { get; set; }
         public string ErrorMessage { get; set; }
@@ -79,7 +79,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             while (annee <= PerspectiveNbAnnees)
             {
-                var valeurParAn = new ValeurParAn
+                var valeurParAn = new ValeurParAnVM
                 {
                     Annee = annee,
                     Valeur = (decimal)Math.Round(pointFixe * (Math.Pow(pourcentageMensuel, annee * 12) - 1), 0),

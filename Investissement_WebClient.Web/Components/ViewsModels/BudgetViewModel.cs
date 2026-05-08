@@ -1,7 +1,9 @@
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.Services.CreditCoop;
 using Investissement_WebClient.Application.Services.Powens;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Domain.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels;
 
@@ -10,15 +12,17 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     private readonly IFluxCreditCoopService _fluxCreditCoopService = fluxCreditCoopService;
     private readonly IPowensDataService _powensDataService = powensDataService;
 
+    public event Action OnChange;
+    private void NotifyStateChanged() => OnChange?.Invoke();
+
     public List<FluxCreditCoopVM> FluxCreditCoop { get; set; } = [];
 
     // STATISTIQUES
-    public bool ModeStatistique { get; set; } = true;
 
     // HISTORIQUE MENSUEL
     public DateTime DateDebut { get; set; } = DateTime.Now.AddMonths(-3);
-    public List<StatutMoisVM> StatutsMois { get; set; } = [];
-
+    public List<StatutMoisDto> StatutsMois { get; set; } = [];
+    public StatutMoisDto? StatutMoisActif { get; set; } = null;
     public DateTime? DateSelectionnee { get; set; } = null;
 
     // ENREGISTREMENT MENSUEL
@@ -26,9 +30,9 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     public List<FluxCreditCoopVM> FluxMensuel { get; set; } = [];
     public List<FluxCreditCoopVM> CreditsFluxMensuel{ get; set; } = [];
     public List<FluxCreditCoopVM> DebitsFluxMensuel { get; set; } = [];
-    public IEnumerable<CategorieFluxVM> Categories { get; set; } = [];
+    public IEnumerable<CategorieFluxDto> Categories { get; set; } = [];
 
-
+    // GESTION D'ERREUR
     public string MessageErreur { get; set; } = string.Empty;
     public bool HasErreur { get; set; } = false;
 
@@ -43,12 +47,17 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
 
     public void SetStatsMode()
     {
-        ModeStatistique = true;
         DateSelectionnee = null;
+        StatutMoisActif = null;
+
+        NotifyStateChanged();
     }
 
-    public async Task LoadFluxUnMois(DateTime date)
+    public async Task LoadFluxUnMois(StatutMoisDto statutMoisDto)
     {
+        StatutMoisActif = statutMoisDto;
+        var date = statutMoisDto.Date;   
+
         DateSelectionnee = date;
         if(!Categories.Any())
             await LoadCategories();
@@ -61,7 +70,14 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
 
         LoadCreditFluxMensuel();
         LoadDebitsFluxMensuel();
-        ModeStatistique = false;
+
+        NotifyStateChanged();
+    }
+
+    public void EditerMoisComplete()
+    {
+        StatutMoisActif.Statut = Statut.en_cours;
+        NotifyStateChanged();
     }
 
     private void LoadCreditFluxMensuel()
@@ -79,9 +95,11 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
         Categories = await _fluxCreditCoopService.GetCategorieFlux();
     }
 
-    private async Task LoadFluxCreditCoop()
+    public async Task LoadFluxCreditCoop()
     {
         FluxCreditCoop = await _fluxCreditCoopService.GetFlux();
+
+        NotifyStateChanged();
     }
 
     private void LoadDateDebut()
@@ -97,7 +115,7 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
         while (dateCourante.Year >= DateDebut.Year && dateCourante.Month >= DateDebut.Month)
         {
             var DateLocale = dateCourante;
-            var unMois = new StatutMoisVM { Date = DateLocale };
+            var unMois = new StatutMoisDto { Date = DateLocale };
             bool estIndisponible = (DateLocale.Year == DateTime.Now.Year && DateLocale.Month == DateTime.Now.Month);
             var fluxDuMois = FluxCreditCoop.Where(f => f.Date.Year == DateLocale.Year && f.Date.Month == DateLocale.Month).ToList();
             var fluxExiste = fluxDuMois.Count != 0;
@@ -116,6 +134,13 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
 
             dateCourante = dateCourante.AddMonths(-1);
         }
+
+        if (DateSelectionnee.HasValue)
+        {
+            StatutMoisActif = StatutsMois.FirstOrDefault(m =>
+                m.Date.Month == DateSelectionnee.Value.Month &&
+                m.Date.Year == DateSelectionnee.Value.Year);
+        }
     }
 
     public async Task GetFluxMensuel(DateTime date)
@@ -125,6 +150,8 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
         var dateFin = new DateTime(date.Year, date.Month, dernierJourDuMois);
 
         await _powensDataService.GetFlux(dateDebut, dateFin);
+
+        NotifyStateChanged();
     }
 
     public async Task UpdateFluxMensuel()
@@ -133,5 +160,9 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
             throw new Exception("Aucune données mensuel");
 
         await _fluxCreditCoopService.UpdateFluxCreditCoopMensuel(FluxMensuel);
+
+        DeterminerStatutMois();
+
+        NotifyStateChanged();
     }
 }

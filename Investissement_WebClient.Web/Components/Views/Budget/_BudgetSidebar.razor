@@ -1,0 +1,51 @@
+﻿@using Investissement_WebClient.Domain.Enums
+@using Investissement_WebClient.Web.Components.ViewsModels
+
+<div class="header">
+    <label>Historique</label>
+</div>
+
+<button type="button" class="btn-transactions" @onclick="Model.SetStatsMode">Statistiques</button>
+
+<div class="content">
+    @foreach (var unMois in Model.StatutsMois)
+    {
+        var estIndisponible = false;
+        var icon = string.Empty;
+        var statut = string.Empty;
+        @switch (unMois.Statut)
+        {
+            case Statut.indisponible:
+                estIndisponible = true;
+                icon = "🚫";
+                statut = "indisponible";
+                break;
+            case Statut.en_cours:
+                icon = "🕒";
+                statut = "en cours";
+                break;
+            case Statut.complete:
+                icon = "✅";
+                statut = "completé";
+                break;
+            case Statut.aucune_donnees:
+                icon = "❌";
+                statut = "aucune données";
+                break;
+        }
+
+        var estActif = Model.DateSelectionnee.HasValue
+                    && Model.DateSelectionnee.Value.Year == unMois.Date.Year
+                    && Model.DateSelectionnee.Value.Month == unMois.Date.Month;
+
+        <div class="un-mois @(estIndisponible ? "disabled" : estActif ? "active" : "")" 
+                            @onclick="async () => { if (!estIndisponible) { await Model.LoadFluxUnMois(unMois); } }">
+            <span>@(icon + " " + unMois.Date.ToString("MMMM yyyy") + " - " + statut)</span>
+        </div>
+    }
+</div>
+
+
+@code{
+    [Parameter] public required BudgetViewModel Model { get; set; }
+}

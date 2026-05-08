@@ -3,9 +3,9 @@ using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
 namespace Investissement_WebClient.Web.Components.Views.Patrimoine;
 
-public static class ChartsOptionsPatrimoine
+public static class ChartsOptionsRecapBudgetMensuel
 {
-    public static ApexChartOptions<BougieJournaliere> OptionsBougieJournalierePlusOuMoinsValues = new()
+    public static ApexChartOptions<BougieJournaliereVM> OptionsBougieJournalierePlusOuMoinsValues = new()
     {
         
         Stroke = new Stroke
@@ -32,7 +32,7 @@ public static class ChartsOptionsPatrimoine
         },
     };
 
-    public static ApexChartOptions<BougieJournaliere> OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal = new()
+    public static ApexChartOptions<BougieJournaliereVM> OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal = new()
     {
 
         Stroke = new Stroke
@@ -61,7 +61,7 @@ public static class ChartsOptionsPatrimoine
         },
     };
 
-    public static ApexChartOptions<ProportionActif> OptionsPieActif = new()
+    public static ApexChartOptions<ProportionActifVM> OptionsPieActif = new()
     {
         Chart = new Chart
         {
@@ -120,7 +120,7 @@ public static class ChartsOptionsPatrimoine
         }
     };
 
-    public static ApexChartOptions<ProportionTypeActif> OptionsPieType = new()
+    public static ApexChartOptions<ProportionTypeActifVM> OptionsPieType = new()
     {
         Chart = new Chart
         {

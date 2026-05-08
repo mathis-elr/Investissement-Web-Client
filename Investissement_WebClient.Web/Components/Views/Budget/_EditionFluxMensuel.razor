@@ -4,49 +4,25 @@
 
 <div class="header">
     <label>Flux @DateString</label>
-    @if (!DonneesExiste)
-    {
-        <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">Récupérer les transactions de @DateString</button>
-    }
-    else if (Model.FluxMensuel.All(f => f.IdCategorie != 0))
-    {
-        <button type="button" class="btn-transactions">Modifier les flux</button>
-    }
-    else
-    {
-        <button type="button" class="btn-transactions" @onclick="() => UpdateFluxMensuel()">Enregistrer les modifications</button>
-    }
+    <button type="button" class="btn-transactions" @onclick="() => UpdateFluxMensuel()">Enregistrer les modifications</button>
 </div>
 
 <div class="content">
-    @if (!DonneesExiste)
-    {
-        <p>Aucune données ...</p>
-    }
-    else if (Model.FluxMensuel.All(f => f.IdCategorie != 0))
-    {
-        <_RecapitulatifFluxMensuel FluxMensuel="@Model.FluxMensuel" Categories="@Model.Categories" />
-    }
-    else
-    {
-        <_SectionFlux Titre="Crédits"
-                      IsCredit="true"
-                      Flux="@Model.CreditsFluxMensuel"
-                      Categories="@Model.Categories" />
+    <_SectionFlux Titre="Crédits"
+                  IsCredit="true"
+                  Flux="@Model.CreditsFluxMensuel"
+                  Categories="@Model.Categories" />
 
-        <_SectionFlux Titre="Débits"
-                      IsCredit="false"
-                      Flux="@Model.DebitsFluxMensuel"
-                      Categories="@Model.Categories" />
-    }
+    <_SectionFlux Titre="Débits"
+                  IsCredit="false"
+                  Flux="@Model.DebitsFluxMensuel"
+                  Categories="@Model.Categories" />
 </div>
 
 @code {
-    [Parameter] public EventCallback OnDataChanged { get; set; }
     [Parameter] public required BudgetViewModel Model { get; set; }
-    [Parameter] public DateTime Date { get; set; }
-    private string DateString => Date.ToString("MMMM yyyy");
-    private bool DonneesExiste => Model.FluxMensuel != null && Model.FluxMensuel.Any();
+    private DateTime Date => Model.DateEditMensuel;
+    private string DateString => Model.DateEditMensuel.ToString("MMMM yyyy");
 
     private async Task GetTransactions()
     {
@@ -61,10 +37,9 @@
         }
 
         TS.ShowSuccess($"Données de {DateString} récupéré avec succès");
-        //await Model.LoadFluxCreditCoop();
-        await Model.LoadFluxUnMois(Date);
 
-        await OnDataChanged.InvokeAsync(); //pour rafraichir la vue parente 
+        await Model.LoadFluxCreditCoop();
+        await Model.LoadFluxUnMois(Model.StatutMoisActif!);
     }
 
     private async Task UpdateFluxMensuel()
@@ -80,6 +55,8 @@
         }
 
         TS.ShowSuccess("Données enregistrées avec succès");
-        await OnDataChanged.InvokeAsync();
+
+        await Model.LoadFluxCreditCoop();
+        await Model.LoadFluxUnMois(Model.StatutMoisActif!);
     }
 }

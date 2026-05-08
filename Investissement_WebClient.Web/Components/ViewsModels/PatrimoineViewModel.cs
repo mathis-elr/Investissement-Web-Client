@@ -14,11 +14,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         private decimal ValeurInvestissementTotal { get; set; }
         public VariationsDto Variations { get; set; } = new VariationsDto();
 
-        public IEnumerable<BougieJournaliere> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
-        public IEnumerable<BougieJournaliere> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+        public IEnumerable<BougieJournaliereVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
+        public IEnumerable<BougieJournaliereVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
 
-        public IEnumerable<ProportionActif> ProportionParActif { get; set; } = [];
-        public IEnumerable<ProportionTypeActif> ProportionParTypeActif { get; set; } = [];
+        public IEnumerable<ProportionActifVM> ProportionParActif { get; set; } = [];
+        public IEnumerable<ProportionTypeActifVM> ProportionParTypeActif { get; set; } = [];
 
         public bool HasError {get; set;} = false;
         public string ErrorMessage {get; set;} = string.Empty;

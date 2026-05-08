@@ -83,11 +83,11 @@
         @if (IVM.InvestissementsParMois.Any())
         {
             <div class="investissement-content">
-                <ApexChart TItem="InvestissementParMois"
+                <ApexChart TItem="InvestissementParMoisVM"
                            XAxisType="XAxisType.Datetime"
                            Options="ChartOptionsProfil.OptionsInvestissementParMois">
 
-                    <ApexPointSeries TItem="InvestissementParMois"
+                    <ApexPointSeries TItem="InvestissementParMoisVM"
                                      Items="IVM.InvestissementsParMois"
                                      SeriesType="SeriesType.Line"
                                      Name="Investissement"
@@ -95,7 +95,7 @@
                                      XValue="@(e => e.Date)"
                                      Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })"/>
 
-                    <ApexPointSeries TItem="InvestissementParMois"
+                    <ApexPointSeries TItem="InvestissementParMoisVM"
                                      Items="IVM.InvestissementsParMois"
                                      SeriesType="SeriesType.Line"
                                      Name="Investissement moyen"

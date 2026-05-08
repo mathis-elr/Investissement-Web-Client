@@ -1,4 +1,5 @@
-﻿@using Investissement_WebClient.Application.ViewsModels
+﻿@using Investissement_WebClient.Application.DTO
+@using Investissement_WebClient.Application.ViewsModels
 
 <div class="credits-debits">
     <label>@Titre</label>
@@ -21,7 +22,7 @@
 
 @code {
     [Parameter] public required List<FluxCreditCoopVM> Flux { get; set; }
-    [Parameter] public required IEnumerable<CategorieFluxVM> Categories { get; set; }
+    [Parameter] public required IEnumerable<CategorieFluxDto> Categories { get; set; }
     [Parameter] public required string Titre { get; set; }
     [Parameter] public required bool IsCredit { get; set; }
 }

@@ -1,0 +1,36 @@
+﻿@using Investissement_WebClient.Web.Components.ViewsModels
+
+@inject IToastService TS
+
+<div class="header">
+    <label>Flux @DateString</label>
+    <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">Récupérer les transactions de @DateString</button>
+</div>
+
+<div class="content">
+    <p>Aucune données ...</p>
+</div>
+
+@code {
+    [Parameter] public required BudgetViewModel Model { get; set; }
+    [Parameter] public DateTime Date { get; set; }
+    private string DateString => Date.ToString("MMMM yyyy");
+
+    private async Task GetTransactions()
+    {
+        try
+        {
+            await Model.GetFluxMensuel(Date);
+        }
+        catch (Exception e)
+        {
+            TS.ShowError(e.Message);
+            return;
+        }
+
+        TS.ShowSuccess($"Données de {DateString} récupéré avec succès");
+
+        await Model.LoadFluxCreditCoop();
+        await Model.LoadFluxUnMois(Model.StatutMoisActif!);
+    }
+}

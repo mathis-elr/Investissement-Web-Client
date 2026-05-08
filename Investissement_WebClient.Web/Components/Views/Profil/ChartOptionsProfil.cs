@@ -5,7 +5,7 @@ namespace Investissement_WebClient.Web.Components.Views.Profil
 {
     public static class ChartOptionsProfil
     {
-        public static ApexChartOptions<ValeurParAn> OptionsValeurParAn = new()
+        public static ApexChartOptions<ValeurParAnVM> OptionsValeurParAn = new()
         {
 
             Stroke = new Stroke
@@ -34,7 +34,7 @@ namespace Investissement_WebClient.Web.Components.Views.Profil
             },
         };
 
-        public static ApexChartOptions<InvestissementParMois> OptionsInvestissementParMois = new()
+        public static ApexChartOptions<InvestissementParMoisVM> OptionsInvestissementParMois = new()
         {
 
             Stroke = new Stroke

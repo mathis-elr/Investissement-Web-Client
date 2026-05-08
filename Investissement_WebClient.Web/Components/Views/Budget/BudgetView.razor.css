@@ -14,7 +14,7 @@
 /* COMMUN BLOCS */
 
 .flux,
-.stats {
+.flux-stats {
     height: 100%;
     gap: 30px;
     padding: 20px;
@@ -29,13 +29,13 @@
 }
 
     .flux:hover,
-    .stats:hover {
+    .flux-stats:hover {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         opacity: 1;
     }
 
 
-.stats {
+.flux-stats {
     display: grid;
     grid-template-rows: auto 1fr;
 }
@@ -45,13 +45,13 @@
     grid-template-rows: auto auto 1fr;
 }
 
-.header {
+::deep .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-button {
+::deep button {
     padding: 10px;
     font-size: 16px;
     font-weight: bold;
@@ -62,111 +62,18 @@ button {
     transition: ease-in-out 0.3s;
 }
 
-.btn-transactions {
+::deep .btn-transactions {
     background-color: goldenrod;
 }
 
-.btn-verifier {
-    background-color: green;
-}
+    ::deep .btn-transactions:hover {
+        background-color: darkgoldenrod;
+        transform: scale(0.99);
+    }
 
-.btn-get-transactions:disabled {
-    background-color: #999;
-    color: #585d60;
-    cursor: not-allowed;
-    opacity: 0.5;
-    pointer-events: none; /*desactive les effets de survol*/
-}
-
-.btn-verifier:hover {
-    background-color: darkgreen;
-    transform: scale(0.95);
-}
-
-.btn-transactions:hover {
-    background-color: darkgoldenrod;
-    transform: scale(0.95);
-}
-
-.transactions-infos {
+::deep .content {
     display: grid;
-    background-color: #242424;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-.transactions-infos .form-grid {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 10px;
-    align-items: center;
-    width: 100%
-}
-
-.form-grid .message {
-    display: flex;
-    justify-content: center;
-    font-size: 18px;
-    font-style: italic;
-    color: goldenrod;
-}
-
-.form-grid label {
-    color: #999;
-    font-size: 20px;
-    font-weight: 500;
-}
-
-
-select, input {
-    width: 100%;
-    transition: 0.4s ease-in-out;
-}
-
-.transactions-infos input:hover,
-.transactions-infos select:hover,
-.transactions-infos input:focus,
-.transactions-infos select:focus {
-    outline: none !important;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
-}
-
-.flux .content {
-    background-color: #242424;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    border-radius: 10px;
-    padding: 20px;
+    height: 100%;
+    gap: 30px;
     overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.transactions .content label {
-    font-size: 20px;
-}
-
-.un-mois{
-    display:flex;
-    align-items:center;
-    background-color: #202020;
-    border-radius: 7px;
-    padding:5px;
-    transition: 0.25s ease-in-out;
-}
-    .un-mois:not(.disabled):hover {
-        background-color: goldenrod;
-        color: white;
-        cursor: pointer;
-        transform: translateX(4px);
-    }
-
-    .disabled {
-        color: grey;
-        opacity: 0,5;
-    }
-
-.active {
-    transform: translateX(4px);
-    background-color: goldenrod;
 }
