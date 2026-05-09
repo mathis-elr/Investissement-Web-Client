@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <BlazoredToasts Position="ToastPosition.TopRight"
                 Timeout="10"
