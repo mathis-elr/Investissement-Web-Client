@@ -1,0 +1,47 @@
+﻿.un-actif {
+    display: grid;
+    gap: 2px;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: #242424;
+    width: 300px;
+}
+
+    .un-actif .header {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .un-actif .content {
+        display: grid;
+        gap: 3px;
+    }
+
+    .un-actif .item {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+    }
+
+    .un-actif label {
+        color: white;
+        font-size: 18px;
+    }
+
+    .un-actif span {
+        color: white;
+        font-size: 16px;
+    }
+
+    .un-actif .gris {
+        color: grey;
+    }
+
+    .un-actif .vert {
+        color: green;
+    }
+
+    .un-actif .rouge {
+        color: red;
+    }

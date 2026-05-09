@@ -1,0 +1,101 @@
+﻿@using Investissement_WebClient.Web.Components.ViewsModels
+
+@inject IToastService TS
+
+<div class="header">
+    <label>Transactions</label>
+    <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer les transactions</button>
+</div>
+
+<div class="transactions-infos">
+    <div class="form-grid">
+        @if (Model.Etat == "sms-requis")
+        {
+            <label>Code sms</label>
+            <div class="info">
+                <input type="text" inputmode="numeric" maxlength="4" @bind="Model.CodeSms" placeholder="ex : 1234" />
+            </div>
+            <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">Vérifier</button>
+        }
+        else if (Model.Etat == "neutre" || Model.Etat == "recherche")
+        {
+            <span class="message">@Model.Message</span>
+        }
+    </div>
+</div>
+
+<div class="content">
+    @foreach (var transactionsParDate in Model.Transactions.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key))
+    {
+        <div class="mes-transactions-par-jour">
+            <div class="mes-transactions-par-jour-header">
+                <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
+                <span></span>
+                <label>@(transactionsParDate?.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
+            </div>
+            <div class="mes-transactions-par-jour-content">
+                @foreach (var transaction in transactionsParDate)
+                {
+                    <div class="une-transaction">
+                        <span></span>
+                        <span class="quantite">@transaction.Quantite&nbsp</span>
+                        <span class="actif">@transaction.Actif à&nbsp</span>
+                        <span class="prix">@transaction.Prix?.ToString("C")</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public InvestissementViewModel Model { get; set; }
+
+    private async Task RecupererTransactions()
+    {
+        if (Model.DemandeEnCours)
+            TS.ShowError("Veuillez patientez une demande est déjà en cours");
+
+        await Model.DemandeCodeSms();
+
+        if (Model.HasError)
+        {
+            TS.ShowError(Model.ErrorMessage);
+            Model.ReinitiliserGestionErreur();
+            Model.FinDeDemande();
+            return;
+        }
+
+        TS.ShowSuccess(Model.Message);
+    }
+
+
+    private async Task VerifierCodeSms()
+    {
+        await Model.VerfierCodeSms();
+
+        if (Model.HasError)
+        {
+            TS.ShowError(Model.ErrorMessage);
+            Model.ReinitiliserGestionErreur();
+            Model.FinDeDemande();
+            return;
+        }
+
+        TS.ShowSuccess(Model.Message);
+    }
+
+    private async Task ChargerTransactions()
+    {
+        await Model.ChargerTransactions();
+
+        if (Model.HasError)
+        {
+            TS.ShowError(Model.ErrorMessage);
+            Model.ReinitiliserGestionErreur();
+            return;
+        }
+
+        TS.ShowSuccess("Les transactions on été chargées correctement.");
+    }
+}

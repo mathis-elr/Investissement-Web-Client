@@ -1,79 +1,37 @@
 ﻿using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.Services.Investissement;
-using Investissement_WebClient.Application.Services.Patrimoine;
 using Investissement_WebClient.Application.Services.TradeRepublic;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class InvestissementViewModel
+    public class InvestissementViewModel(IInvestissementService investissementService,
+                                         ITradeRepublicDataService transactionService)
     {
-        private readonly IPatrimoineService _patrimoineService;
-        private readonly IInvestissementService _investissementService;
-        private readonly ITradeRepublicDataService _transactionService;
+        private readonly IInvestissementService _investissementService = investissementService;
+        private readonly ITradeRepublicDataService _transactionService = transactionService;
 
-        /* PROPRIETES INVESTISSEMENT */
+        public event Action OnChange;
+        public void NotifyStateChanged() => OnChange?.Invoke();
+
+        // TRANSACTIONS
+        public IEnumerable<TransactionDto> Transactions { get; set; } = [];
+        public string Message { get; set; } = "Aucune demande de récupération de transactions en cours ...";
+        public string Etat { get; set; } = "neutre";
+        public string CodeSms { get; set; } = string.Empty;
+        public bool DemandeEnCours { get; set; } = false;
+
+        // INVESTISSEMENT MOYEN
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
-        public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; }
+        public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
 
-        public bool DemandeEnCours = false;
+        // EVOLUTION ACTIFS
+        public IEnumerable<InfoInvestParActifDto> InfoInvestParActif { get; set; } = [];
 
         // GESTION D'ERREUR
-        public bool HasError { get; set; }
-        public string ErrorMessage { get; set; }
-
-        /* Transactions */
-        public IEnumerable<TransactionDto> Transactions { get; set; }
-
-        public string Message { get; set; }
-
-        public string Etat { get; set; }
-
-        public string CodeSms { get; set; }
-
-        /* Evolution actifs */
-        public IEnumerable<InfoInvestParActifDto> InfoInvestParActif { get; set; }
-
-        public InvestissementViewModel(IPatrimoineService patrimoineService, 
-                                       IInvestissementService investissementService, 
-                                       ITradeRepublicDataService transactionService)
-        {
-            _patrimoineService = patrimoineService;
-            _investissementService = investissementService;
-            _transactionService = transactionService;
-
-            Transactions = [];
-            InvestissementsParMois = [];
-
-            InfoInvestParActif = [];
-
-            Message = "Aucune demande de récupération de transactions en cours ...";
-            Etat = "neutre";
-
-            ErrorMessage = string.Empty;
-            HasError = false;
-        }
-        
-        private async Task LoadTransactions()
-        {
-            Transactions = await _investissementService.GetTransactions();
-        }
-
-        private async Task LoadInvestissementMoyenMensuel()
-        {
-            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
-        }
-        
-        private async Task LoadInvestissementTotal(Dictionary<string, decimal> prixParActif)
-        {
-            InvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
-        }
-
-        private async Task LoadInvestissementsParMois()
-        {
-            InvestissementsParMois = await _investissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
-        }
+        public bool HasError { get; set; } = false;
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
         {
@@ -101,10 +59,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             await LoadInfosInvestParActif(prixParActif);
         }
 
-
-
         public async Task DemandeCodeSms()
         {
+            DemandeEnCours = true;
             Message = "Tentative de connexion avec l'emetteur ...";
 
             try
@@ -112,6 +69,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 (string messageRecu, int CodeHtpp) = await _transactionService.GetSms();
                 Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? "sms-requis" : "error";
                 Message = messageRecu;
+
+                NotifyStateChanged();
             }
             catch (HttpRequestException ex)
             {
@@ -130,8 +89,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public async Task VerfierCodeSms()
         {
             Etat = "verification";
+            Message = "Vérification de la conformité du code ...";
 
-            if(int.TryParse(CodeSms, out int codeSmsString) && CodeSms.Length!=4)
+            if (int.TryParse(CodeSms, out int codeSmsString) && CodeSms.Length!=4)
             {
                 Etat = "sms-requis";
                 ErrorMessage = "Le code doit être composé de 4 chiffres.";
@@ -144,6 +104,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 (string messageRecu, int CodeHtpp) = await _transactionService.ConfirmSms(CodeSms);
                 Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? "succes" : "error";
                 Message = messageRecu;
+
+                await ChargerTransactions();
+                NotifyStateChanged();
             }
             catch (HttpRequestException ex)
             {
@@ -162,12 +125,15 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public async Task ChargerTransactions()
         {
             Etat = "recherche";
-            Message = "Récupération des transactions, cette opération peut-être plus ou moins longue selon de la connexion ...";
+            Message = "Récupération des transactions, cette opération peut durer quelque minutes ...";
 
             try
             {
                 int CodeHtpp = await _transactionService.ChargerTransactions();
                 Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? "succes" : "error";
+
+                await LoadData();
+                FinDeDemande();
             }
             catch (HttpRequestException ex)
             {
@@ -183,16 +149,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
-        public (string, string) DeterminerSigne(decimal valeur)
-        {
-            return valeur switch
-            {
-                > 0 => ("vert", "+"),
-                < 0 => ("rouge", ""),
-                _ => ("gris", "")
-            };
-        }
-
         public void ReinitiliserGestionErreur()
         {
             ErrorMessage = string.Empty;
@@ -203,7 +159,28 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             Etat = "neutre";
             Message = "Aucune demande de récupération de transactions en cours ...";
             DemandeEnCours = false;
+
+            NotifyStateChanged();
         }
 
+        private async Task LoadTransactions()
+        {
+            Transactions = await _investissementService.GetTransactions();
+        }
+
+        private async Task LoadInvestissementMoyenMensuel()
+        {
+            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
+        }
+
+        private async Task LoadInvestissementTotal(Dictionary<string, decimal> prixParActif)
+        {
+            InvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
+        }
+
+        private async Task LoadInvestissementsParMois()
+        {
+            InvestissementsParMois = await _investissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
+        }
     }
 }

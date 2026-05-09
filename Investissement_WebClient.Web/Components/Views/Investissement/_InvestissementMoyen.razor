@@ -1,0 +1,50 @@
+﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques
+@using Investissement_WebClient.Web.Components.Views.Profil
+@using Investissement_WebClient.Web.Components.ViewsModels
+
+<div class="header">
+    <label>Investissement</label>
+    <div class="investissement-infos">
+        <div class="form-grid">
+            <label>Moyen mensuel</label>
+            <div class="info" style="text-align: end">
+                <span>@Model.InvestissementMoyenMensuel.ToString("C")</span>
+            </div>
+
+            <label>Total</label>
+            <div class="info">
+                <span>@Model.InvestissementTotal.ToString("C")</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.InvestissementsParMois.Any())
+{
+    <div class="investissement-content">
+        <ApexChart TItem="InvestissementParMoisVM"
+                   XAxisType="XAxisType.Datetime"
+                   Options="ChartOptionsProfil.OptionsInvestissementParMois">
+
+            <ApexPointSeries TItem="InvestissementParMoisVM"
+                             Items="Model.InvestissementsParMois"
+                             SeriesType="SeriesType.Line"
+                             Name="Investissement"
+                             YValue="@(e => e.Investissement)"
+                             XValue="@(e => e.Date)"
+                             Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })" />
+
+            <ApexPointSeries TItem="InvestissementParMoisVM"
+                             Items="Model.InvestissementsParMois"
+                             SeriesType="SeriesType.Line"
+                             Name="Investissement moyen"
+                             YValue="@(e => e.InvestissementMoyen)"
+                             XValue="@(e => e.Date)"
+                             Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="grey" })" />
+        </ApexChart>
+    </div>
+}
+
+@code {
+    [Parameter] public InvestissementViewModel Model { get; set; }
+}

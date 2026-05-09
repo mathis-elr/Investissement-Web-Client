@@ -12,7 +12,6 @@
 }
 
 /* COMMUN BLOCS */
-
 .investissement-moyen,
 .transactions,
 .evolution-actifs {
@@ -35,14 +34,7 @@
         opacity: 1;
     }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
-/* BLOC PERSPECTIVES */
+/* BLOC TRANSACTIONS */
 .transactions {
     display: grid;
     grid-template-rows: auto auto 1fr;
@@ -53,170 +45,6 @@
     overflow: hidden;
 }
 
-button {
-    padding: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 15px;
-    cursor: pointer;
-    border: none;
-    width: fit-content;
-    transition: ease-in-out 0.3s;
-}
-
-.btn-transactions {
-    background-color: goldenrod;
-}
-
-.btn-verifier {
-    background-color: green;
-}
-
-    .btn-get-transactions:disabled {
-        background-color: #999;
-        color: #585d60;
-        cursor: not-allowed;
-        opacity: 0.5;
-        pointer-events: none; /*desactive les effets de survol*/
-    }
-
-.btn-verifier:hover {
-    background-color: darkgreen;
-    transform:scale(0.95);
-}
-
-.btn-transactions:hover {
-    background-color: darkgoldenrod;
-    transform: scale(0.95);
-}
-
-.transactions-infos {
-    display: grid;
-    background-color: #242424;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-    .transactions-infos .form-grid {
-        display: grid;
-        grid-template-columns: auto auto auto auto;
-        gap: 10px;
-        align-items: center;
-        width: 100%
-    }
-
-.form-grid .message {
-    display: flex;
-    justify-content: center;
-    font-size: 18px;
-    font-style: italic;
-    color: goldenrod;
-}
-
-    .form-grid label {
-        color: #999;
-        font-size: 20px;
-        font-weight: 500;
-    }
-
-
-select, input {
-    width: 100%;
-    transition: 0.4s ease-in-out;
-}
-
-.transactions-infos input:hover,
-.transactions-infos select:hover,
-.transactions-infos input:focus,
-.transactions-infos select:focus {
-    outline: none !important;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
-}
-
-.transactions .content {
-    background-color: #242424;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    border-radius:10px;
-    padding: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-    .transactions .content label {
-        font-size: 20px;
-    }
-
-.mes-transactions-par-jour {
-    display: flex;
-    flex-direction: column;
-}
-
-.mes-transactions-par-jour-header {
-    display: flex;
-    align-items: center;
-}
-
-    .mes-transactions-par-jour-header span {
-        width: 15px;
-        height: 5px;
-        background-color: goldenrod;
-        border-radius: 40px;
-        margin-right: 12px;
-        display: inline-block;
-        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
-    }
-
-    .mes-transactions-par-jour-header label:first-child::first-letter {
-        text-transform: uppercase;
-    }
-
-.mes-transactions-par-jour-content {
-    display: flex;
-    flex-direction: column;
-    padding: 7px;
-    gap: 15px;
-    background-color: #242424;
-    border-radius: 10px;
-}
-
-.une-transaction {
-    display:flex;
-    align-items:center;
-    background-color: #202020;
-    border-radius: 7px;
-    padding:5px;
-    transition: 0.25s ease-in-out;
-}
-
-    .une-transaction:hover {
-        transform: translateX(2px);
-    }
-
-
-.une-transaction span:first-child{
-    width: 8px;
-    height: 8px;
-    background-color: goldenrod;
-    border-radius: 50%;
-    margin-right: 12px;
-    display: inline-block;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
-    flex-shrink: 0;
-}
-
-    .une-transaction .actif {
-        color:#999;
-    }
-
-    .une-transaction .prix,
-    .une-transaction .quantite {
-        display: inline-block;
-        color: goldenrod;
-    }
-
-
 /* BLOC INVESTISSEMENT */
 .investissement-moyen {
     display: grid;
@@ -226,32 +54,6 @@ select, input {
     grid-row: 1;
     overflow:hidden;
 }
-
-.investissement-infos {
-    display: flex;
-    background-color: #242424;
-    padding: 5px;
-    border-radius: 10px;
-}
-
-    .investissement-infos .form-grid {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 5px 40px;
-        align-items: center;
-        width: 100%
-    }
-
-        .investissement-infos .form-grid label {
-            color: #999;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-span{
-    color:goldenrod;
-}
-
 
 /* BLOC EVOLUTION ACTIFS */
 .evolution-actifs {
@@ -265,71 +67,29 @@ span{
     gap: 15px;
     animation: defilement linear 30s infinite;
 }
-
-.mes-actifs:hover{
-    animation-play-state:paused;
-}
-
-.un-actif {
-    display: grid;
-    gap: 2px;
-    border-radius: 10px;
-    padding: 5px;
-    background-color: #242424;
-    width:300px;
-}
-
-    .un-actif .header {
-        display: flex;
-        justify-content:space-between;
-        gap:20px;
+    .mes-actifs:hover {
+        animation-play-state: paused;
     }
 
-        .un-actif .header:last-child {
-            color:goldenrod;
-        }
 
-        .un-actif .content {
-            display: grid;
-            gap: 3px;
-        }
+@keyframes defilement {
+    0% {
+        transform: translateX(0);
+    }
 
-        .un-actif .item {
-            display: flex;
-            justify-content: space-between;
-            gap: 30px;
-        }
-
-        .un-actif label {
-            color: white;
-            font-size: 18px;
-        }
-
-        .un-actif span {
-            color: white;
-            font-size: 16px;
-        }
-
-        .un-actif .gris {
-            color: grey;
-        }
-
-        .un-actif .vert {
-            color: green;
-        }
-
-        .un-actif .rouge {
-            color: red;
-        }
+    100% {
+        transform: translateX(-50%);
+    }
+}
 
 
 
-        @keyframes defilement {
-            0% {
-                transform: translateX(0);
-            }
+::deep .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-            100% {
-                transform: translateX(-50%);
-            }
-        }
+::deep span {
+    color: goldenrod;
+}
