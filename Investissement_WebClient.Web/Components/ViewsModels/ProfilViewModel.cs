@@ -1,48 +1,30 @@
 ﻿using Investissement_WebClient.Application.Services.Investissement;
-using Investissement_WebClient.Application.Services.Patrimoine;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class ProfilViewModel
+    public class ProfilViewModel(IInvestissementService investissementService)
     {
-        private readonly IPatrimoineService _patrimoineService;
-        private readonly IInvestissementService _investissementService;
+        private readonly IInvestissementService _investissementService = investissementService;
         
-        /*  PROPRIETES PERSPECTIVES */
+        // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }
-        public decimal EvolutionAnnuellePourcentage { get; set; }
-        public int PerspectiveNbAnnees { get; set; }
-        public List<ValeurParAnVM> PerspectivesValeurPatrimoineParAn { get; set; }
+        public decimal EvolutionAnnuellePourcentage { get; set; } = 8;
+        public int PerspectiveNbAnnees { get; set; } = 15;
+        public List<ValeurParAnVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
 
-        public bool HasError { get; set; }
-        public string ErrorMessage { get; set; }
+        // GESTION D'ERREUR
+        public bool HasError { get; set; } = false;
+        public string ErrorMessage { get; set; } = string.Empty;
 
-        public ProfilViewModel(IPatrimoineService patrimoineService, IInvestissementService investissementService)
-        {
-            _patrimoineService = patrimoineService;
-            _investissementService = investissementService;
-            
-            EvolutionAnnuellePourcentage = 8;
-            PerspectiveNbAnnees = 15;
-            PerspectivesValeurPatrimoineParAn = [];
-            
-            HasError = false;
-            ErrorMessage = string.Empty;
-        }
-
-        private async Task LoadInvestissementMoyenMensuel()
-        {
-            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
-        }
 
         public async Task LoadData()
         {
             await LoadInvestissementMoyenMensuel();
-            CalculerEvolutionDuPatrimoine();
+            await CalculerEvolutionDuPatrimoine();
         }
 
-        public void CalculerEvolutionDuPatrimoine()
+        public async Task CalculerEvolutionDuPatrimoine()
         {
 
             if (InvestissementMoyenMensuel < 1)
@@ -90,6 +72,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 annee++;
                 investissementCourant += InvestissementMoyenMensuel * 12;
             }
+        }
+
+        private async Task LoadInvestissementMoyenMensuel()
+        {
+            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
         }
     }
 }

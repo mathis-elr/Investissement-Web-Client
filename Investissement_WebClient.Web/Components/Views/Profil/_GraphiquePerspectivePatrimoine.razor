@@ -1,0 +1,38 @@
+﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques
+
+@if (PerspectivesValeurPatrimoineParAn.Any())
+{
+    <ApexChart @ref="_chart"
+               TItem="ValeurParAnVM"
+               Options="ChartOptionsProfil.OptionsValeurParAn">
+
+        <ApexPointSeries TItem="ValeurParAnVM"
+                         Items="PerspectivesValeurPatrimoineParAn"
+                         SeriesType="SeriesType.Line"
+                         Name="Valeur Patrimoine"
+                         YValue="@(e => e.Valeur)"
+                         XValue="@(e => e.Annee)"
+                         Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
+
+        <ApexPointSeries TItem="ValeurParAnVM"
+                         Items="PerspectivesValeurPatrimoineParAn"
+                         SeriesType="SeriesType.Line"
+                         Name="Investissement"
+                         YValue="@(e => e.Investissement)"
+                         XValue="@(e => e.Annee)"
+                         Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
+    </ApexChart>
+}
+
+@code {
+    [Parameter] public List<ValeurParAnVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+    private ApexChart<ValeurParAnVM>? _chart { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_chart != null)
+        {
+            await _chart.UpdateSeriesAsync();
+        }
+    }
+}

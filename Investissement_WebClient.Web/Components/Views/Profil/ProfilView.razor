@@ -14,7 +14,6 @@
     <div class="perspectives">
         <div class="header">
             <label>Perspectives</label>
-            @* <btn @onclick="CalculerEvolutionDuPatrimoine" class="btn-calcul">Calcul</btn> *@
         </div>
 
         <div class="perspectives-infos">
@@ -39,68 +38,31 @@
             </div>
         </div>
 
-        @if (IVM.PerspectivesValeurPatrimoineParAn.Any())
-        {
-            <div class="perspectives-content">
-                <ApexChart @ref="_chartPerspectivesValeurPatrimoineParAn" 
-                           TItem="ValeurParAnVM"
-                           Options="ChartOptionsProfil.OptionsValeurParAn">
-
-                    <ApexPointSeries TItem="ValeurParAnVM"
-                                     Items="IVM.PerspectivesValeurPatrimoineParAn"
-                                     SeriesType="SeriesType.Line"
-                                     Name="Valeur Patrimoine"
-                                     YValue="@(e => e.Valeur)"
-                                     XValue="@(e => e.Annee)"
-                                     Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
-
-                    <ApexPointSeries TItem="ValeurParAnVM"
-                                     Items="IVM.PerspectivesValeurPatrimoineParAn"
-                                     SeriesType="SeriesType.Line"
-                                     Name="Investissement"
-                                     YValue="@(e => e.Investissement)"
-                                     XValue="@(e => e.Annee)"
-                                     Stroke="@(new SeriesStroke{ Width=3, Color="grey" })" />
-                </ApexChart>
-            </div>
-        }
+        <div class="perspectives-graphique">
+            <_GraphiquePerspectivePatrimoine PerspectivesValeurPatrimoineParAn="@IVM.PerspectivesValeurPatrimoineParAn" />
+        </div>
     </div>
 
-    <div class="investissement">
-        
-    </div>
-
-    <div class="revenus">
-
-    </div>
-
-    <div class="evolution-actifs">
-
-    </div>
+    <div class="bloc2"></div>
+    <div class="bloc3"></div>
+    <div class="bloc4"></div>
 </div>
 
 @code {
-    private ApexChart<ValeurParAnVM> _chartPerspectivesValeurPatrimoineParAn;
-
     protected override async Task OnInitializedAsync()
     {
         await IVM.LoadData();
-        StateHasChanged();
     }
 
     private async Task CalculerEvolutionDuPatrimoine()
     {
-        IVM.CalculerEvolutionDuPatrimoine();
+        await IVM.CalculerEvolutionDuPatrimoine();
 
         if (IVM.HasError)
         {
             TS.ShowError(IVM.ErrorMessage);
             IVM.HasError = false;
             IVM.ErrorMessage = string.Empty;
-        }
-        else
-        {
-            await _chartPerspectivesValeurPatrimoineParAn.UpdateSeriesAsync();
         }
     }
 }
