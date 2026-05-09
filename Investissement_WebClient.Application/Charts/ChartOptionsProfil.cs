@@ -1,7 +1,7 @@
 ﻿using ApexCharts;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
-namespace Investissement_WebClient.Web.Components.Views.Profil
+namespace Investissement_WebClient.Application.Charts
 {
     public static class ChartOptionsProfil
     {

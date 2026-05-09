@@ -1,0 +1,27 @@
+﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques
+
+@*Graphique Candle : evolution des plus/moins values au cours du temps par rapport à l'investissement total et à la valeur du patrimoine*@
+
+@if (BougiesJournalieresPlusOuMoinsValues.Any())
+{
+    <div style="flex:1">
+        <ApexChart TItem="BougieJournaliereVM"
+                   XAxisType="XAxisType.Datetime"
+                   Options="ChartsOptionsPatrimoine.OptionsBougieJournalierePlusOuMoinsValues">
+
+            <ApexCandleSeries TItem="BougieJournaliereVM"
+                              Items="BougiesJournalieresPlusOuMoinsValues"
+                              Name="Evolution des plus/moins values"
+                              XValue="@(e => e.Date)"
+                              Open="@(e => e.Ouverture)"
+                              High="@(e => e.Haut)"
+                              Low="@(e => e.Bas)"
+                              Close="@(e => e.Fermeture)"
+                              OrderByDescending="e => e.X" />
+        </ApexChart>
+    </div>
+}
+
+@code {
+    [Parameter] public IEnumerable<BougieJournaliereVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
+}

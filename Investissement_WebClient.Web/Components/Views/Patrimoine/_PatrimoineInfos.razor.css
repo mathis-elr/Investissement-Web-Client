@@ -1,0 +1,28 @@
+﻿.valeur-totale-courante label {
+    line-height: 1;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.variations-prix {
+    display: flex;
+    gap: 20px;
+}
+
+.variation-prix label {
+    font-size: 14px;
+    font-weight: normal;
+    color: grey;
+}
+
+.variation-prix.gris {
+    color: grey;
+}
+
+.variation-prix.vert {
+    color: green;
+}
+
+.variation-prix.rouge {
+    color: red;
+}

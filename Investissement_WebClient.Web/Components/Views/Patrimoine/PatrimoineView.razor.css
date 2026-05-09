@@ -23,42 +23,12 @@
     transition: all 0.3s ease-in-out;
 }
 .patrimoine-infos:hover,
-.patrimoine-content:hover {
+.patrimoine-graphiques:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     opacity: 1;
 }
 
-.valeur-totale-courante label {
-    line-height: 1;
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.variations-prix{
-    display: flex;
-    gap:20px;
-}
-
-.variation-prix label {
-    font-size: 14px;
-    font-weight: normal;
-    color: grey;
-}
-
-.variation-prix.neutre{
-    color:grey;
-}
-
-.variation-prix.positive{
-    color:green;
-}
-
-.variation-prix.negative {
-    color:red;
-}
-
-
-.patrimoine-content {
+.patrimoine-graphiques {
     width: 100%;
     background-color: #1e1e1e;
     border-radius: 10px;
@@ -67,16 +37,6 @@
     overflow: hidden;
     position: relative;
 }
-
-    .patrimoine-content span {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-style: italic;
-        width: 25%; /* 25% de 400% = 100% = longueur d'une seule page */
-        height: 100%;
-    }
 
 .btn-rond {
     display: flex;
@@ -96,24 +56,24 @@
     border-radius:15px;
 }
 
-.gauche {
+.precedent {
     justify-content: end;
     left: 0;
     transform: translateX(-25px);
     transition: all 0.2s ease-in-out;
 }
-    .gauche:hover {
+    .precedent:hover {
         justify-content: center;
         transform: translateX(-5px);
     }
 
-.droite {
+.suivant {
     justify-content: start;
     right: 0;
     transform: translateX(25px);
     transition: all 0.2s ease-in-out;
 }
-    .droite:hover {
+    .suivant:hover {
         justify-content: center;
         transform: translateX(5px);
     }
@@ -136,29 +96,26 @@
     flex-shrink: 0;
     width: 33.333%;
 }
+    .page .recherche-donnee {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.page1 {
+    .page span{
+        color: grey;
+    }
+
+.graph1 {
     transform: translateX(0%);
 }
 
-.page2 {
+.graph2 {
     transform: translateX(-33.333%);
 }
 
-.page3 {
+.graph3 {
     transform: translateX(-66.666%);
-}
-
-
-
-/* ANIMATIONS APPARITIONS */
-@keyframes apparition {
-    from {
-        transform: scale(0);
-    }
-
-    to {
-        transform: scale(1);
-    }
 }
 

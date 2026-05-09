@@ -1,0 +1,20 @@
+﻿@using Investissement_WebClient.Web.Components.ViewsModels
+
+<span class="valeur-totale-courante">
+    <label>
+        @Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2")
+    </label>
+</span>
+<div class="variations-prix">
+    @foreach (var variation in Model.Variations)
+    {
+        <span class="variation-prix @Model.DeterminerClasse(variation.Valeur)">
+            <label>@variation.Label</label>
+            @Model.ToStringPourcentage(variation.Valeur, "P2")
+        </span>
+    }
+</div>
+
+@code {
+    [Parameter] public PatrimoineViewModel Model { get; set; }
+}

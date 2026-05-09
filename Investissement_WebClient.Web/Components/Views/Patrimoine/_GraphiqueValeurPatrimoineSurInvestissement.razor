@@ -1,0 +1,35 @@
+﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques
+
+@*Graphique Candle + Line : evolution de la valeur du patrimoine (Candle) par rapport à l'invetsissement total (Line) au cours du temps*@
+
+@if (BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
+{
+    <div style="flex:1">
+        <ApexChart TItem="BougieJournaliereVM"
+                   XAxisType="XAxisType.Datetime"
+                   Options="ChartsOptionsPatrimoine.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
+
+            <ApexCandleSeries TItem="BougieJournaliereVM"
+                              Items="BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
+                              Name="Evolution de la valeur du patrimoine"
+                              XValue="@(e => e.Date)"
+                              Open="@(e => e.Ouverture)"
+                              High="@(e => e.Haut)"
+                              Low="@(e => e.Bas)"
+                              Close="@(e => e.Fermeture)"
+                              OrderByDescending="e => e.X" />
+
+            <ApexPointSeries TItem="BougieJournaliereVM"
+                             Items="BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
+                             SeriesType="SeriesType.Line"
+                             Name="Investissement total"
+                             YValue="@(e => e.InvestissementTotal)"
+                             XValue="@(e => e.Date)"
+                             Stroke="@(new SeriesStroke{ Width=3, DashSpace=3, Color="yellow" })" />
+        </ApexChart>
+    </div>      
+}
+
+@code {
+    [Parameter] public IEnumerable<BougieJournaliereVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+}

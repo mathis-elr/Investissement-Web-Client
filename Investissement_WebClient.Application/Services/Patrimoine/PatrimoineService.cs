@@ -34,7 +34,7 @@ public class PatrimoineService : IPatrimoineService
         await context.SaveChangesAsync();
     }
 
-    public async Task<VariationsDto> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal)
+    public async Task<IEnumerable<VariationDto>> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
@@ -45,12 +45,12 @@ public class PatrimoineService : IPatrimoineService
             .OrderByDescending(h => h.Date)
             .ToListAsync();
 
-        return new VariationsDto
+        return new List<VariationDto>
         {
-            VariationPrix24H = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 1),
-            VariationPrix7J = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 7),
-            VariationPrix1M = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 30),
-            VariationPrix1A = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 365),
+            new() {Label = "24H", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 1)},
+            new() {Label = "7J", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 7)},
+            new() {Label = "1M", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 30)},
+            new() {Label = "1A", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 365)}
         };
     }
 

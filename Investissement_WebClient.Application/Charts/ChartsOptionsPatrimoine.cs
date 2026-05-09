@@ -1,9 +1,9 @@
 using ApexCharts;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
-namespace Investissement_WebClient.Web.Components.Views.Patrimoine;
+namespace Investissement_WebClient.Application.Charts;
 
-public static class ChartsOptionsRecapBudgetMensuel
+public static class ChartsOptionsPatrimoine
 {
     public static ApexChartOptions<BougieJournaliereVM> OptionsBougieJournalierePlusOuMoinsValues = new()
     {
@@ -18,7 +18,8 @@ public static class ChartsOptionsRecapBudgetMensuel
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Toolbar = new Toolbar { Show = false } ,
-            Height = "500px"
+            Width = "100%",
+            Height = "100%",
         },
 
         Grid = new Grid
@@ -47,7 +48,7 @@ public static class ChartsOptionsRecapBudgetMensuel
             Background = "transparent",
             Toolbar = new Toolbar { Show = false },
             Width = "100%",
-            Height = "500px"
+            Height = "100%",
         },
 
         Grid = new Grid
@@ -69,7 +70,7 @@ public static class ChartsOptionsRecapBudgetMensuel
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Width = "100%",
-            Height = "500px",
+            Height = "100%",
         },
         Theme = new Theme
         {
@@ -128,7 +129,7 @@ public static class ChartsOptionsRecapBudgetMensuel
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Width = "100%",
-            Height = "500px",
+            Height = "100%",
         },
         Theme = new Theme
         {

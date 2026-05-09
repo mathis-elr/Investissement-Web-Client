@@ -7,7 +7,7 @@ public interface IPatrimoineService
 {
     Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal);
 
-    Task<VariationsDto> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal);
+    Task<IEnumerable<VariationDto>> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal);
 
     Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresPlusOuMoinsValues();
 
