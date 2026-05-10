@@ -30,6 +30,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
+
 var section = builder.Configuration.GetSection("PowensApiAcces");
 PowensAPIAcces.ClientId = section["client_id"];
 PowensAPIAcces.ClientSecret = section["client_secret"];
@@ -62,24 +63,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-List<string> ipAutorisees = ["109.14.14.134", "127.0.0.1", "194.167.154.181"];
-
 
 app.UseHttpsRedirection();
-
-//app.Use(async (context, next) =>
-//{
-//    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-
-//    if (!ipAutorisees.Contains(remoteIp))
-//    {
-//        context.Response.StatusCode = 403; 
-//        await context.Response.WriteAsync("Acces refuse : Votre IP n'est pas autorisee.");
-//        return;
-//    }
-
-//    await next.Invoke();
-//});
 
 app.UseStaticFiles();
 app.UseAntiforgery();
@@ -88,5 +73,12 @@ app.UseRequestLocalization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+// requette vide pour cron job
+app.MapGet("/api/update-data", async (BudgetViewModel bvm) =>
+{
+    await bvm.StartLoadData();
+    return Results.Empty; 
+});
 
 app.Run();
