@@ -4,8 +4,6 @@
     {
         public string NomCategorie { get; set; } = string.Empty;
 
-        public decimal TotalCredit { get; set; }
-
-        public decimal TotalDebit { get; set; }
+        public decimal Valeur { get; set; }
     }
 }

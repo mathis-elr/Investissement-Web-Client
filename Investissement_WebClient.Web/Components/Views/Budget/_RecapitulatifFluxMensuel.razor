@@ -9,29 +9,36 @@
 </div>
 
 <div class="recapitulatif">
-    <div class="content">
+    <div class="content"> 
         <ApexChart TItem="StatistiqueCategorieVM"
                    Options="ChartsOptionsRecapBudgetMensuel.OptionsRecapitulatifBudgetMensuel">
 
             <ApexPointSeries TItem="StatistiqueCategorieVM"
                              Items="Model.StatsGraphique"
-                             Name="Crédits"
+                             Name="Valeur"
                              XValue="@(e =>  e.NomCategorie)"
-                             YValue="@(e => e.TotalCredit)"
-                             SeriesType="SeriesType.Bar" ShowDataLabels
-                             Color="#00FF00" />
-
-            <ApexPointSeries TItem="StatistiqueCategorieVM"
-                             Items="Model.StatsGraphique"
-                             Name="Débits"
-                             XValue="@(e => e.NomCategorie)"
-                             YValue="@(e => e.TotalDebit)"
-                             SeriesType="SeriesType.Bar" ShowDataLabels
-                             Color="#FF0000"/>
+                             YValue="@(e => e.Valeur)"
+                             Color="#00FF00"
+                             SeriesType="SeriesType.Bar" 
+                             DataPointMutator="PointMutator" 
+                             ShowDataLabels />
         </ApexChart>
     </div>
 </div>
 
 @code{
     [Parameter] public required BudgetViewModel Model { get; set; }
+
+    private void PointMutator(IDataPoint<StatistiqueCategorieVM> point)
+    {
+        var dataPoint = (DataPoint<StatistiqueCategorieVM>)point;
+        if (dataPoint.Y > 0)
+        {
+            dataPoint.FillColor = "#00FF00";
+        }
+        else
+        {
+            dataPoint.FillColor = "#FF0000";
+        }
+    }
 }

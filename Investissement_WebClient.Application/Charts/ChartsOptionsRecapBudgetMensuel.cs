@@ -12,7 +12,8 @@ public static class ChartsOptionsRecapBudgetMensuel
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Toolbar = new Toolbar { Show = false },
-            Height = "500px",
+            Width = "100%",
+            Height = "100%"
         },
 
         Grid = new Grid
@@ -23,8 +24,9 @@ public static class ChartsOptionsRecapBudgetMensuel
         Tooltip = new Tooltip
         {
             Theme = Mode.Dark,
-            Shared = true,    // Affiche Crédit ET Débit en même temps dans un seul tooltip
-            Intersect = false // Permet de détecter le survol sur toute la colonne X
+            Intersect = false,
+            Shared = false,
+            Marker = new TooltipMarker { Show = false }
         },
 
         PlotOptions = new PlotOptions
@@ -33,16 +35,11 @@ public static class ChartsOptionsRecapBudgetMensuel
             {
                 DataLabels = new PlotOptionsBarDataLabels
                 {
-                    Position = BarDataLabelPosition.Top
+                    Position = BarDataLabelPosition.Center
                 },
 
-                BorderRadius = 6,
-            }
-        },
-
-        Yaxis = new List<YAxis>
-        {
-            new YAxis { Min = 0 }
+                BorderRadius = 7
+            },
         },
 
         Xaxis = new XAxis

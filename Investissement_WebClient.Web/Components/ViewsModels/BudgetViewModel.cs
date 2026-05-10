@@ -135,9 +135,9 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
             .Select(g => new StatistiqueCategorieVM
             {
                 NomCategorie = Categories.FirstOrDefault(c => c.Id == g.Key)?.Libelle ?? "Inconnu",
-                TotalCredit = g.Where(f => f.Valeur > 0).Sum(f => f.Valeur),
-                TotalDebit = Math.Abs(g.Where(f => f.Valeur < 0).Sum(f => f.Valeur))
+                Valeur = g.Sum(f => f.Valeur),
             })
+            .OrderByDescending(x => x.Valeur)
             .ToList();
     }
 
