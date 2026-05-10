@@ -9,6 +9,8 @@ public interface IPatrimoineService
 
     Task<IEnumerable<VariationDto>> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal);
 
+    Task<DateTime?> GetDateDernierEnregistrement();
+
     Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresPlusOuMoinsValues();
 
     //Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant);

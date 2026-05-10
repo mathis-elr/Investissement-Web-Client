@@ -20,19 +20,24 @@ public class PatrimoineWorker : BackgroundService
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var investissementService = scope.ServiceProvider.GetRequiredService<IInvestissementService>();
                 var patrimoineService = scope.ServiceProvider.GetRequiredService<IPatrimoineService>();
-                
-                try 
+                var dateDernierHistorique = await patrimoineService.GetDateDernierEnregistrement();
+
+                if (dateDernierHistorique == null || (DateTime.Now - dateDernierHistorique.Value) >= TimeSpan.FromHours(1))
                 {
-                    var prixParActif = await investissementService.GetPrixParActif();
-                    var valeurPatrimoine = await investissementService.CalculerValeurCourante(prixParActif);
-                    var valeurInvestissementTotal = await investissementService.CalculerValeurInvestissementTotal();
-                    if (valeurPatrimoine != 0) await patrimoineService.SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erreur d'enregistrement d'un historique de patrimoine : {ex.Message}");
+                    var investissementService = scope.ServiceProvider.GetRequiredService<IInvestissementService>();
+
+                    try
+                    {                 
+                        var prixParActif = await investissementService.GetPrixParActif();
+                        var valeurPatrimoine = await investissementService.CalculerValeurCourante(prixParActif);
+                        var valeurInvestissementTotal = await investissementService.CalculerValeurInvestissementTotal();
+                        if (valeurPatrimoine != 0) await patrimoineService.SaveValeurPatrimoine(valeurPatrimoine, valeurInvestissementTotal);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Erreur d'enregistrement d'un historique de patrimoine : {ex.Message}");
+                    }
                 }
             }
             

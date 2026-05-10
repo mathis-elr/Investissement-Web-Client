@@ -54,6 +54,15 @@ public class PatrimoineService : IPatrimoineService
         };
     }
 
+    public async Task<DateTime?> GetDateDernierEnregistrement()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        return await context.HistoriquePatrimoine
+                               .OrderByDescending(h => h.Date)
+                               .Select(f  => f.Date)
+                               .FirstOrDefaultAsync();
+    }
+
     private decimal CalculVariationPeriode(decimal valeurActuelle, decimal valeurInvestissementTotal, List<HistoriquePatrimoine> historique, int periode)
     {
         DateTime dateDebutPeriode = DateTime.Now.AddDays(-periode);
