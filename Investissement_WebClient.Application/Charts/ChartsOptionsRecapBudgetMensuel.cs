@@ -12,7 +12,7 @@ public static class ChartsOptionsRecapBudgetMensuel
             ForeColor = "#FFFFFF",
             Background = "transparent",
             Toolbar = new Toolbar { Show = false },
-            Height = "500px"
+            Height = "500px",
         },
 
         Grid = new Grid
@@ -55,5 +55,39 @@ public static class ChartsOptionsRecapBudgetMensuel
                 }
             }
         }
-    };  
+    };
+
+    public static ApexChartOptions<BudgetCategorieParMoisVM> OptionBudgetLineChart = new()
+    {
+        Theme = new Theme
+        {
+            Mode = Mode.Dark,
+            Palette = PaletteType.Palette1
+        },
+
+        Stroke = new Stroke
+        {
+            Curve = Curve.Smooth,
+            Width = 3
+        },
+
+        Chart = new Chart
+        {
+            ForeColor = "#FFFFFF",
+            Background = "transparent",
+            Toolbar = new Toolbar { Show = false },
+            Width = "100%",
+            Height = "100%"
+        },
+
+        Grid = new Grid
+        {
+            BorderColor = "#444"
+        },
+
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark,
+        },
+    };
 }

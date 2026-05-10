@@ -18,7 +18,7 @@
                              Name="Crédits"
                              XValue="@(e =>  e.NomCategorie)"
                              YValue="@(e => e.TotalCredit)"
-                             SeriesType="SeriesType.Bar"
+                             SeriesType="SeriesType.Bar" ShowDataLabels
                              Color="#00FF00" />
 
             <ApexPointSeries TItem="StatistiqueCategorieVM"
@@ -26,7 +26,7 @@
                              Name="Débits"
                              XValue="@(e => e.NomCategorie)"
                              YValue="@(e => e.TotalDebit)"
-                             SeriesType="SeriesType.Bar"
+                             SeriesType="SeriesType.Bar" ShowDataLabels
                              Color="#FF0000"/>
         </ApexChart>
     </div>

@@ -1,9 +1,32 @@
+@using Investissement_WebClient.Application.ViewsModels.Graphiques
+@using Investissement_WebClient.Web.Components.ViewsModels
+
 <div class="header">
     <label>Statistique</label>
 </div>
 <div class="content">
-    <p>Aucune statistiques ...</p>
+    @if (Model.BudgetLineCharts.Any())
+    {
+        <div class="investissement-content">
+            <ApexChart TItem="BudgetCategorieParMoisVM"
+                       XAxisType="XAxisType.Datetime"
+                       Options="ChartsOptionsRecapBudgetMensuel.OptionBudgetLineChart">
+
+                @foreach (var categorie in Model.BudgetLineCharts)
+                {
+                    <ApexPointSeries TItem="BudgetCategorieParMoisVM"
+                                     Items="categorie.BudgetCategorieParMois"
+                                     Name="@categorie.Categorie"
+                                     SeriesType="SeriesType.Area"
+                                     YValue="@(e => e.Budget)"
+                                     XValue="@(e => e.Date)"/>
+                }
+
+            </ApexChart>
+        </div>
+    }
 </div>
 
 @code {
+    [Parameter] public BudgetViewModel Model { get; set; }
 }

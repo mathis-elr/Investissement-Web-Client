@@ -36,7 +36,7 @@ public class PatrimoineWorker : BackgroundService
                 }
             }
             
-            await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
         }
     }
 }

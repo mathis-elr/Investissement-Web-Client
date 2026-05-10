@@ -19,13 +19,13 @@
         @switch (BVM.StatutMoisActif?.Statut)
         {
             case null:
-                <_Statistiques />
+                <_Statistiques Model="@BVM" />
                 break;
             case Statut.en_cours:
                 <_EditionFluxMensuel Model="@BVM" />
                 break;
             case Statut.complete:
-                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" /> //la cle permet de forcer la mise à jour
+                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" /> // la cle permet de forcer la mise à jour
                 break;
             case Statut.aucune_donnees:
                 <_BudgetGetFlux Model="@BVM" />

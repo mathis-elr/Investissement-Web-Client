@@ -19,6 +19,7 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     public List<FluxCreditCoopVM> FluxCreditCoop { get; set; } = [];
 
     // STATISTIQUES
+    public IEnumerable<BudgetLineChartVM> BudgetLineCharts { get; set; } = [];
 
     // HISTORIQUE MENSUEL
     public DateTime DateDebut { get; set; } = DateTime.Now.AddMonths(-3);
@@ -43,6 +44,8 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     public async Task StartLoadData()
     {
         await LoadFluxCreditCoop();
+
+        await LoadBudgetParCategorie();
 
         DateDebut = FluxCreditCoop.Count != 0 ? FluxCreditCoop.Min(f => f.Date) : DateDebut;
         DeterminerStatutMois();
@@ -111,6 +114,11 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     {
         StatutMoisActif.Statut = Statut.en_cours;
         NotifyStateChanged();
+    }
+
+    private async Task LoadBudgetParCategorie()
+    {
+        BudgetLineCharts = await _fluxCreditCoopService.CalculerBudgetCategorieParMois();
     }
 
     private async Task RefreshData()

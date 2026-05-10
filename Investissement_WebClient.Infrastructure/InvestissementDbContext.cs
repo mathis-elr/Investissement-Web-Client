@@ -84,80 +84,115 @@ public class InvestissementDbContext : DbContext
             new CategorieFlux
             {
                 Id = 1,
-                Libelle = "Alimentation"
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Alimentation"
             },
             new CategorieFlux
             {
                 Id = 2,
-                Libelle = "Transport"
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Transport"
             },
             new CategorieFlux
             {
                 Id = 4,
-                Libelle = "Livret A"
+                MicroCategorie = "Livret A"
             },
             new CategorieFlux
             {
                 Id = 5,
-                Libelle = "Shopping"
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Achat de nécéssité"
             },
             new CategorieFlux
             {
                 Id = 6,
-                Libelle = "Sport"
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Sport"
             },
             new CategorieFlux
             {
                 Id = 7,
-                Libelle = "Salaire"
+                MacroCategorie = "Revenus",
+                MicroCategorie = "Salaire"
             },
             new CategorieFlux
             {
                 Id = 8,
-                Libelle = "Aide"
+                MacroCategorie = "Revenus",
+                MicroCategorie = "Aide"
             },
             new CategorieFlux
             {
                 Id = 9,
-                Libelle = "Autre"
+                MacroCategorie = "Autre",
+                MicroCategorie = "Autre"
             },
             new CategorieFlux
             {
                 Id = 10,
-                Libelle = "Investissement TR"
+                MacroCategorie = "Patrimoine",
+                MicroCategorie = "Investissement TR"
             },
             new CategorieFlux
             {
                 Id = 11,
-                Libelle = "Abonnement"
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Abonnement fixe"
             },
             new CategorieFlux
             {
                 Id = 12,
-                Libelle = "Logement"
-            }, new CategorieFlux
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Logement"
+            },
+            new CategorieFlux
             {
                 Id = 13,
-                Libelle = "Cadeaux"
-            }, new CategorieFlux
+                MacroCategorie = "Revenus",
+                MicroCategorie = "Cadeau reçu"
+            },
+            new CategorieFlux
             {
                 Id = 14,
-                Libelle = "Achat plaisir"
+                MacroCategorie = "Loisirs/Plaisirs",
+                MicroCategorie = "Achat plaisir"
             },
             new CategorieFlux
             {
                 Id = 15,
-                Libelle = "Investissement AV"
+                MacroCategorie = "Patrimoine",
+                MicroCategorie = "Investissement AV"
             },
             new CategorieFlux
             {
                 Id = 16,
-                Libelle = "Vacances"
+                MacroCategorie = "Loisirs/Plaisirs",
+                MicroCategorie = "Vacances"
             },
             new CategorieFlux
             {
                 Id = 17,
-                Libelle = "Santé"
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Santé"
+            },
+            new CategorieFlux
+            {
+                Id = 18,
+                MacroCategorie = "Loisirs/Plaisirs",
+                MicroCategorie = "Abonnement plaisir"
+            },
+            new CategorieFlux
+            {
+                Id = 19,
+                MacroCategorie = "Patrimoine",
+                MicroCategorie = "Epargne"
+            },
+            new CategorieFlux
+            {
+                Id = 20,
+                MacroCategorie = "Loisirs/Plaisirs",
+                MicroCategorie = "Achat cadeau"
             }
         );
     }

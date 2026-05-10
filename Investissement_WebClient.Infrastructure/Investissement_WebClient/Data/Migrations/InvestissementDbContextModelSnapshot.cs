@@ -4,7 +4,6 @@ using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Data.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    [Migration("20260419174746_CategorieNonNullable")]
-    partial class CategorieNonNullable
+    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace Investissement_WebClient.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.CategorieFlux", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CategorieFlux", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,7 +30,10 @@ namespace Investissement_WebClient.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Libelle")
+                    b.Property<string>("MacroCategorie")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MicroCategorie")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -45,61 +45,119 @@ namespace Investissement_WebClient.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Libelle = "Alimentation"
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Alimentation"
                         },
                         new
                         {
                             Id = 2,
-                            Libelle = "Transport"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Libelle = "Virement emis"
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Transport"
                         },
                         new
                         {
                             Id = 4,
-                            Libelle = "Virement reçu"
+                            MicroCategorie = "Livret A"
                         },
                         new
                         {
                             Id = 5,
-                            Libelle = "Virement emis livret A"
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Achat de nécéssité"
                         },
                         new
                         {
                             Id = 6,
-                            Libelle = "Virement reçu livret A"
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Sport"
                         },
                         new
                         {
                             Id = 7,
-                            Libelle = "Shopping"
+                            MacroCategorie = "Revenus",
+                            MicroCategorie = "Salaire"
                         },
                         new
                         {
                             Id = 8,
-                            Libelle = "Sport"
+                            MacroCategorie = "Revenus",
+                            MicroCategorie = "Aide"
                         },
                         new
                         {
                             Id = 9,
-                            Libelle = "Salaire"
+                            MacroCategorie = "Autre",
+                            MicroCategorie = "Autre"
                         },
                         new
                         {
                             Id = 10,
-                            Libelle = "APL"
+                            MacroCategorie = "Patrimoine",
+                            MicroCategorie = "Investissement TR"
                         },
                         new
                         {
                             Id = 11,
-                            Libelle = "Autre"
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Abonnement fixe"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Logement"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            MacroCategorie = "Revenus",
+                            MicroCategorie = "Cadeau reçu"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            MacroCategorie = "Loisirs/Plaisirs",
+                            MicroCategorie = "Achat plaisir"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            MacroCategorie = "Patrimoine",
+                            MicroCategorie = "Investissement AV"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            MacroCategorie = "Loisirs/Plaisirs",
+                            MicroCategorie = "Vacances"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Santé"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            MacroCategorie = "Loisirs/Plaisirs",
+                            MicroCategorie = "Abonnement plaisir"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            MacroCategorie = "Patrimoine",
+                            MicroCategorie = "Epargne"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            MacroCategorie = "Loisirs/Plaisirs",
+                            MicroCategorie = "Achat cadeau"
                         });
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.CreditCoopAcces", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CreditCoopAcces", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,22 +176,18 @@ namespace Investissement_WebClient.Data.Migrations
                     b.ToTable("CreditCoopAcces");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxCreditCoop", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxCreditCoop", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategorieId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LibelleRecu")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("IdCategorie")
+                        .HasColumnType("int");
 
-                    b.Property<string>("LibelleSupplementaire")
+                    b.Property<string>("LibelleRecu")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -142,12 +196,12 @@ namespace Investissement_WebClient.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategorieId");
+                    b.HasIndex("IdCategorie");
 
                     b.ToTable("FluxCreditCoop");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxTradeRepublic", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxTradeRepublic", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -170,7 +224,7 @@ namespace Investissement_WebClient.Data.Migrations
                     b.ToTable("FluxTradeRepublic");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.HistoriquePatrimoine", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.HistoriquePatrimoine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,7 +246,7 @@ namespace Investissement_WebClient.Data.Migrations
                     b.ToTable("HistoriquePatrimoine");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.Transaction", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Transaction", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -234,13 +288,12 @@ namespace Investissement_WebClient.Data.Migrations
                     b.ToTable("Transaction");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Core.Modeles.FluxCreditCoop", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxCreditCoop", b =>
                 {
-                    b.HasOne("Investissement_WebClient.Core.Modeles.CategorieFlux", "Categorie")
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.CategorieFlux", "Categorie")
                         .WithMany()
-                        .HasForeignKey("CategorieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdCategorie")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Categorie");
                 });

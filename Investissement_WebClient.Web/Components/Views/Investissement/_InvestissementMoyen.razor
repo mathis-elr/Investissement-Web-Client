@@ -32,7 +32,7 @@
                              Name="Investissement"
                              YValue="@(e => e.Investissement)"
                              XValue="@(e => e.Date)"
-                             Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })" />
+                             Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })" ShowDataLabels />
 
             <ApexPointSeries TItem="InvestissementParMoisVM"
                              Items="Model.InvestissementsParMois"
