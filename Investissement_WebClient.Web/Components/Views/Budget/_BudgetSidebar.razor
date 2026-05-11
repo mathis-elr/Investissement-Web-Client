@@ -1,13 +1,29 @@
-﻿@using Investissement_WebClient.Domain.Enums
+﻿@using Investissement_WebClient.Domain
+@using Investissement_WebClient.Domain.Enums
 @using Investissement_WebClient.Web.Components.ViewsModels
+
+@inject NavigationManager Nav
 
 <div class="header">
     <label>Historique</label>
+
+    @if (Model.ConnexionBanqueRequise)
+    {
+        <button type="button" class="btn-sync-banque"
+                @onclick="RedirigerVersPowens"
+                title="Votre accès bancaire doit être renouvelé pour récupérer les derniers flux (sécurité tous les 90 jours).">
+            🔄 Synchroniser ma banque 🔄
+        </button>
+    }
 </div>
 
-<button type="button" class="btn-transactions" @onclick="Model.SetStatsMode">Statistiques</button>
-
 <div class="content">
+
+    <div class="un-mois recap @(Model.DateActive == null ? "active-recapitulatif-global " : "")"
+                        @onclick="Model.SetRecapGlobalMode">
+        <span>📊 Récapitulatif global 📊</span>
+    </div>
+
     @foreach (var unMois in Model.StatutsMois)
     {
         var estIndisponible = false;
@@ -17,7 +33,7 @@
         {
             case Statut.indisponible:
                 estIndisponible = true;
-                icon = "🚫";
+                icon = "⛔";
                 statut = "indisponible";
                 break;
             case Statut.en_cours:
@@ -29,7 +45,7 @@
                 statut = "completé";
                 break;
             case Statut.aucune_donnees:
-                icon = "❌";
+                icon = "🔍";
                 statut = "aucune données";
                 break;
         }
@@ -48,4 +64,9 @@
 
 @code{
     [Parameter] public required BudgetViewModel Model { get; set; }
+
+    public void RedirigerVersPowens()
+    {
+        Nav.NavigateTo(PowensAPIAcces.GetConnexionUrl(), forceLoad: true);
+    }
 }

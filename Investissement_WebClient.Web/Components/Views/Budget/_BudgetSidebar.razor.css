@@ -1,7 +1,8 @@
 ﻿.header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction:column;
+    align-items:start;
+    gap: 20px;
 }
 
 button {
@@ -15,12 +16,16 @@ button {
     transition: ease-in-out 0.3s;
 }
 
-.btn-transactions {
-    background-color: goldenrod;
-}
+    button:hover,
+    .recap:hover,
+    .active-recapitulatif-global {
+        background-color: darkgoldenrod;
+        transform: scale(0.98);
+    }
 
-.btn-verifier {
-    background-color: green;
+.btn-sync-banque {
+    background-color:goldenrod;
+    width: 100%;
 }
 
 .btn-get-transactions:disabled {
@@ -31,15 +36,6 @@ button {
     pointer-events: none; /*desactive les effets de survol*/
 }
 
-.btn-verifier:hover {
-    background-color: darkgreen;
-    transform: scale(0.95);
-}
-
-.btn-transactions:hover {
-    background-color: darkgoldenrod;
-    transform: scale(0.95);
-}
 
 .transactions-infos {
     display: grid;
@@ -108,7 +104,17 @@ select, input {
     transition: 0.25s ease-in-out;
 }
 
-    .un-mois:not(.disabled):hover {
+.recap {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-size: 18px;
+    background-color: goldenrod;
+}
+
+    .un-mois:not(.disabled, .recap):hover {
         background-color: goldenrod;
         color: white;
         cursor: pointer;

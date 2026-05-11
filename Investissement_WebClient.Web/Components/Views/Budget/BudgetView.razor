@@ -19,7 +19,7 @@
         @switch (BVM.StatutMoisActif?.Statut)
         {
             case null:
-                <_Statistiques Model="@BVM" />
+                <_RecapitulatifGlobal Model="@BVM" />
                 break;
             case Statut.en_cours:
                 <_EditionFluxMensuel Model="@BVM" />
@@ -35,10 +35,18 @@
 
 </div>
 
+
 @code {
+    [Parameter][SupplyParameterFromQuery(Name = "sync")] public string? SyncStatus { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         BVM.OnChange += StateHasChanged;
+        if(SyncStatus == "ok")
+        {
+            TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
+        }
+
         await BVM.StartLoadData();
     }
 

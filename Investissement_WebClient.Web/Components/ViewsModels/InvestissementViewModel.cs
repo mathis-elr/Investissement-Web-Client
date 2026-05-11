@@ -1,15 +1,18 @@
 ﻿using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.Services.Investissement;
+using Investissement_WebClient.Application.Services.Powens;
 using Investissement_WebClient.Application.Services.TradeRepublic;
 using Investissement_WebClient.Application.ViewsModels.Graphiques;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
     public class InvestissementViewModel(IInvestissementService investissementService,
-                                         ITradeRepublicDataService transactionService)
+                                         ITradeRepublicDataService transactionService,
+                                         IPowensDataService powensDataService)
     {
         private readonly IInvestissementService _investissementService = investissementService;
         private readonly ITradeRepublicDataService _transactionService = transactionService;
+        private readonly IPowensDataService _powensDataService = powensDataService;
 
         public event Action OnChange;
         public void NotifyStateChanged() => OnChange?.Invoke();
@@ -32,6 +35,19 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
         public string ErrorMessage { get; set; } = string.Empty;
+
+        public async Task FinaliserConnexionBanque(string codeRetour)
+        {
+            try
+            {
+                await _powensDataService.GetToken(codeRetour);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = ex.Message;
+            }
+        }
 
         public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
         {

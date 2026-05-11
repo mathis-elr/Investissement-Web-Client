@@ -1,8 +1,0 @@
-namespace Investissement_WebClient.Domain.Modeles;
-
-public static class PowensAPIAcces
-{
-    public static string ClientId { get; set; }
-    
-    public static string ClientSecret { get; set; }
-}

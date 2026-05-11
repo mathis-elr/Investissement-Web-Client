@@ -2,6 +2,7 @@
 @using System.Globalization
 
 @page "/"
+@inject NavigationManager Nav
 @inject InvestissementViewModel IVM
 @implements IDisposable
 @inject IJSRuntime JS
@@ -27,12 +28,21 @@
 </div>
 
 @code{
+    [Parameter][SupplyParameterFromQuery(Name = "code")] public string? CodeRetour { get; set; }
     private CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
         IVM.OnChange += StateHasChanged;
-        await IVM.LoadData();
+
+        if (CodeRetour != null)
+        {
+            await FinaliserConnexionBanque();
+        }
+        else
+        {
+            await IVM.LoadData();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -41,6 +51,18 @@
         {
             _ = LoadDataBoucle(_cts.Token);
         }
+    }
+
+    private async Task FinaliserConnexionBanque()
+    {
+        await IVM.FinaliserConnexionBanque(CodeRetour);
+        if (IVM.HasError)
+        {
+            TS.ShowError(IVM.ErrorMessage);
+            return;
+        }
+
+        Nav.NavigateTo("/budget?sync=ok", replace: true);
     }
 
     private async Task LoadDataBoucle(CancellationToken stoppingToken)

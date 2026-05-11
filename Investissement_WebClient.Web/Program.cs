@@ -7,7 +7,7 @@ using Investissement_WebClient.Application.Services.Patrimoine;
 using Investissement_WebClient.Application.Services.Powens;
 using Investissement_WebClient.Application.Services.TradeRepublic;
 using Investissement_WebClient.Application.Services.YahooFinance;
-using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Domain;
 using Investissement_WebClient.Infrastructure;
 using Investissement_WebClient.Web.Components;
 using Investissement_WebClient.Web.Components.ViewsModels;
@@ -34,6 +34,9 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 var section = builder.Configuration.GetSection("PowensApiAcces");
 PowensAPIAcces.ClientId = section["client_id"];
 PowensAPIAcces.ClientSecret = section["client_secret"];
+PowensAPIAcces.BaseUrl = section["BaseUrl"];
+PowensAPIAcces.RedirectUri = section["RedirectUri"];
+PowensAPIAcces.ConnectUrl = section["ConnectUrl"];
 
 builder.Services.AddScoped<IInvestissementService, InvestissementService>();
 builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();

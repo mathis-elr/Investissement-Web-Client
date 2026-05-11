@@ -1,10 +1,12 @@
-using System.Net.Http.Headers;
-using System.Text.Json;
+using ApexCharts;
 using Investissement_WebClient.Application.ApiResponse;
 using Investissement_WebClient.Application.Services.CreditCoop;
+using Investissement_WebClient.Domain;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace Investissement_WebClient.Application.Services.Powens;
 
@@ -25,9 +27,19 @@ public class PowensDataService : IPowensDataService
         _fluxCreditCoopService = fluxCreditCoopService;
     }
 
+    public async Task<bool> ConnexionRequise()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        var acces = await context.CreditCoopAcces.FirstOrDefaultAsync();
+        return acces == null || acces.DateExpiration < DateTime.Now;
+    }
+
     public async Task GetToken(string code)
     {
         if (string.IsNullOrEmpty(code)) throw new ArgumentNullException(nameof(code));
+
+
+        Console.WriteLine("Code : " + code);
 
         var accesDictionnary = new Dictionary<string, string>();
         accesDictionnary.Add("client_id", PowensAPIAcces.ClientId);
@@ -50,7 +62,8 @@ public class PowensDataService : IPowensDataService
                 if (rootReponse.TryGetProperty("access_token", out var accessToken))
                 {
                     var token = accessToken.GetString() ?? string.Empty;
-                    await SaveToken(token);
+                    var idCompteCourant = await GetIdCompteCourant(token);
+                    await SaveToken(token, idCompteCourant);
                 }
                 else
                 {
@@ -91,19 +104,70 @@ public class PowensDataService : IPowensDataService
         if(creditCoopAcces == null)
             throw new  Exception("Aucune instance du token est enregistré");
         
-        Client.DefaultRequestHeaders.Authorization = 
-            new AuthenticationHeaderValue("Bearer", creditCoopAcces.AccesToken);
         var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
         var dateFinString = dateFin.ToString("yyyy-MM-dd");
-        var reponse = await Client.GetAsync($"users/me/accounts/10/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500");
-        
-        var codeStatus = (int)reponse.StatusCode;
-        VerifierContenueReponse(reponse, codeStatus);
+        var requete = $"users/me/accounts/{creditCoopAcces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
+
+        var reponse = await RequeteGetAvecToken(creditCoopAcces.AccesToken, requete);
         
         var reponseString = await reponse.Content.ReadAsStringAsync();
         var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
 
         await _fluxCreditCoopService.AddFluxCreditCoop(transactions?.Transactions);
+    }
+
+    private async Task SaveToken(string token, int idCompteCourant)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var anciens = await context.CreditCoopAcces.ToListAsync();
+        context.CreditCoopAcces.RemoveRange(anciens);
+
+        var newAcces = new CreditCoopAcces
+        {
+            AccesToken = token,
+            IdCompteCourant = idCompteCourant,
+            DateCreation = DateTime.Now,
+            DateExpiration = DateTime.Now.AddDays(90)
+        };
+
+        await context.CreditCoopAcces.AddAsync(newAcces);
+        await context.SaveChangesAsync();
+    }
+
+    private async Task<CreditCoopAcces?> GetToken()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        return context.CreditCoopAcces.FirstOrDefault();
+    }
+
+    private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)
+    {
+        Client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        var reponse = await Client.GetAsync(requete);
+
+        var codeStatus = (int)reponse.StatusCode;
+        VerifierContenueReponse(reponse, codeStatus);
+
+        return reponse;
+    }
+
+    private async Task<int> GetIdCompteCourant(string token)
+    {
+        var reponse = await RequeteGetAvecToken(token, "users/me/accounts");
+        var reponseString = await reponse.Content.ReadAsStringAsync();
+        var comptes = JsonSerializer.Deserialize<PowensComptesApiResponse>(reponseString);
+
+        if (comptes?.Comptes == null || !comptes.Comptes.Any())
+            throw new Exception("L'API n'a renvoyé aucun compte pour cet utilisateur.");
+
+        var compteId = comptes.Comptes.FirstOrDefault(c => c.Type == "market")?.Id
+                    ?? comptes.Comptes.FirstOrDefault(c => c.Type == "checking")?.Id
+                    ?? comptes.Comptes.First().Id;
+
+        return compteId;
     }
 
     private void VerifierContenueReponse(HttpResponseMessage reponse, int codeStatus)
@@ -122,36 +186,5 @@ public class PowensDataService : IPowensDataService
             default:
                 throw new Exception("Erreur inconnue, code erreur:" + codeStatus);
         }
-    }
-
-    private async Task SaveToken(string token)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        var creditCoopAcces = await GetToken();
-        if(creditCoopAcces == null)
-            throw new  Exception("Aucune instance du token est enregistré");
-
-        if (creditCoopAcces.AccesToken == null)
-        {
-            var newAcces = new CreditCoopAcces
-            {
-                AccesToken = token,
-                DateCreation = DateTime.Now,
-            };
-            await context.CreditCoopAcces.AddAsync(newAcces);
-        }
-        else
-        {
-            creditCoopAcces.AccesToken = token;
-            creditCoopAcces.DateCreation = DateTime.Now;
-        }
-
-        await context.SaveChangesAsync();
-    }
-
-    private async Task<CreditCoopAcces?> GetToken()
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        return context.CreditCoopAcces.FirstOrDefault();
     }
 }

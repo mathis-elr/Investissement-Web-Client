@@ -18,7 +18,7 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
 
     public List<FluxCreditCoopVM> FluxCreditCoop { get; set; } = [];
 
-    // STATISTIQUES
+    // RECAPITULATIF GLOBAL
     public IEnumerable<BudgetLineChartVM> BudgetLineCharts { get; set; } = [];
 
     // HISTORIQUE MENSUEL
@@ -29,6 +29,7 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     public string? DateActiveString => DateActive?.ToString("MMMM yyyy");
 
     // ENREGISTREMENT MENSUEL
+    public bool ConnexionBanqueRequise { get; set; }
     public DateTime DateEditMensuel { get; set; } = DateTime.Now;
     public List<FluxCreditCoopVM> FluxMensuel { get; set; } = [];
     public List<FluxCreditCoopVM> CreditsFluxMensuel => FluxMensuel.Where(f => f.Valeur >= 0).ToList();
@@ -40,18 +41,22 @@ public class BudgetViewModel(IFluxCreditCoopService fluxCreditCoopService, IPowe
     public string MessageErreur { get; set; } = string.Empty;
     public bool HasErreur { get; set; } = false;
 
-
     public async Task StartLoadData()
     {
+        await LoadConnexionBanqueNecessaire();
         await LoadFluxCreditCoop();
-
         await LoadBudgetParCategorie();
 
         DateDebut = FluxCreditCoop.Count != 0 ? FluxCreditCoop.Min(f => f.Date) : DateDebut;
         DeterminerStatutMois();
     }
 
-    public void SetStatsMode()
+    public async Task LoadConnexionBanqueNecessaire()
+    {
+        ConnexionBanqueRequise = await _powensDataService.ConnexionRequise();
+    }
+
+    public void SetRecapGlobalMode()
     {
         DateActive = null;
         StatutMoisActif = null;
