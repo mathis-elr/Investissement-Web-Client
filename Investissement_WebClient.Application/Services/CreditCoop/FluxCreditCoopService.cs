@@ -60,17 +60,19 @@ public class FluxCreditCoopService : IFluxCreditCoopService
             })
             .ToListAsync();
 
+        var moisPossibles = rawData.GroupBy(f => f.Date).Select(r => r.Key).OrderBy(d => d.Date);
+
         return rawData
             .GroupBy(r => r.Categorie)
             .Select(r => new BudgetLineChartVM
             {
                 Categorie = r.Key,
-                BudgetCategorieParMois = r.Select(r => new BudgetCategorieParMoisVM
+                BudgetCategorieParMois = moisPossibles.Select(m => new BudgetCategorieParMoisVM
                 {
-                    Date = r.Date,
-                    Budget = r.BudgetCategorie
-                }).OrderBy(r => r.Date).ToList()
-            })
+                    Date = m.Date,
+                    Budget = r.FirstOrDefault(r => r.Date == m.Date)?.BudgetCategorie ?? 0
+                }).OrderBy(m => m.Date).ToList()
+            }).OrderByDescending(f => f.BudgetCategorieParMois.Sum(b => b.Budget))
             .ToList();
     }
 

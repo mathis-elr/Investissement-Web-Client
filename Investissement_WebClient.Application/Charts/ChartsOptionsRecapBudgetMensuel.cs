@@ -56,6 +56,7 @@ public static class ChartsOptionsRecapBudgetMensuel
 
     public static ApexChartOptions<BudgetCategorieParMoisVM> OptionBudgetLineChart = new()
     {
+
         Theme = new Theme
         {
             Mode = Mode.Dark,
@@ -85,6 +86,13 @@ public static class ChartsOptionsRecapBudgetMensuel
         Tooltip = new Tooltip
         {
             Theme = Mode.Dark,
+        },
+
+        Markers = new Markers
+        {
+            Size = 4, 
+            StrokeWidth = 0,
+            Hover = new MarkersHover { Size = 6 }
         },
     };
 }
