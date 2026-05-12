@@ -1,15 +1,17 @@
-﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques
+﻿@using Investissement_WebClient.Application.ChartsOptions
+@using Investissement_WebClient.Application.ViewsModels.Graphiques
+@using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines
 
 @*Graphique Candle + Line : evolution de la valeur du patrimoine (Candle) par rapport à l'invetsissement total (Line) au cours du temps*@
 
 @if (BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
 {
     <div style="flex:1">
-        <ApexChart TItem="BougieJournaliereVM"
+        <ApexChart TItem="BougieJournaliereCandleChartVM"
                    XAxisType="XAxisType.Datetime"
-                   Options="ChartsOptionsPatrimoine.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
+                   Options="PatrimoineChartsOptions.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
 
-            <ApexCandleSeries TItem="BougieJournaliereVM"
+            <ApexCandleSeries TItem="BougieJournaliereCandleChartVM"
                               Items="BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
                               Name="Evolution de la valeur du patrimoine"
                               XValue="@(e => e.Date)"
@@ -19,7 +21,7 @@
                               Close="@(e => e.Fermeture)"
                               OrderByDescending="e => e.X" />
 
-            <ApexPointSeries TItem="BougieJournaliereVM"
+            <ApexPointSeries TItem="BougieJournaliereCandleChartVM"
                              Items="BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
                              SeriesType="SeriesType.Line"
                              Name="Investissement total"
@@ -31,5 +33,5 @@
 }
 
 @code {
-    [Parameter] public IEnumerable<BougieJournaliereVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+    [Parameter] public IEnumerable<BougieJournaliereCandleChartVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
 }

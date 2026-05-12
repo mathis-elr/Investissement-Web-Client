@@ -42,12 +42,11 @@
     protected override async Task OnInitializedAsync()
     {
         BVM.OnChange += StateHasChanged;
-        if(SyncStatus == "ok")
-        {
-            TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
-        }
+        if(SyncStatus == "ok") TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
 
         await BVM.StartLoadData();
+
+        if (BVM.ConnexionBanqueRequise) TS.ShowWarning("ℹ️ Synchronisation avec vôtre banque requise pour récuperer les flux mensuel.");
     }
 
     public void Dispose()

@@ -4,7 +4,7 @@
 
 <div class="header">
     <label>Transactions</label>
-    <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer les transactions</button>
+    <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer mes transactions</button>
 </div>
 
 <div class="transactions-infos">
@@ -25,26 +25,33 @@
 </div>
 
 <div class="content">
-    @foreach (var transactionsParDate in Model.Transactions.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key))
+    @if (Model.FluxInvestissement.Any())
     {
-        <div class="mes-transactions-par-jour">
-            <div class="mes-transactions-par-jour-header">
-                <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
-                <span></span>
-                <label>@(transactionsParDate?.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
+        @foreach (var transactionsParDate in Model.FluxInvestissement.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key))
+        {
+            <div class="mes-transactions-par-jour">
+                <div class="mes-transactions-par-jour-header">
+                    <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
+                    <span></span>
+                    <label>@(transactionsParDate?.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
+                </div>
+                <div class="mes-transactions-par-jour-content">
+                    @foreach (var transaction in transactionsParDate)
+                    {
+                        <div class="une-transaction">
+                            <span></span>
+                            <span class="quantite">@transaction.Quantite&nbsp</span>
+                            <span class="actif">@transaction.Actif à&nbsp</span>
+                            <span class="prix">@transaction.Prix?.ToString("C")</span>
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="mes-transactions-par-jour-content">
-                @foreach (var transaction in transactionsParDate)
-                {
-                    <div class="une-transaction">
-                        <span></span>
-                        <span class="quantite">@transaction.Quantite&nbsp</span>
-                        <span class="actif">@transaction.Actif à&nbsp</span>
-                        <span class="prix">@transaction.Prix?.ToString("C")</span>
-                    </div>
-                }
-            </div>
-        </div>
+        }
+    }
+    else
+    {
+        <p>Commencez dès maintenant à suivre vos investissement en cliquant sur le bouton "Récuperer mes transactions"</p>
     }
 </div>
 

@@ -1,4 +1,5 @@
 ﻿@using Investissement_WebClient.Domain
+@using Investissement_WebClient.Domain.Configurations
 @using Investissement_WebClient.Domain.Enums
 @using Investissement_WebClient.Web.Components.ViewsModels
 
@@ -24,7 +25,7 @@
         <span>📊 Récapitulatif global 📊</span>
     </div>
 
-    @foreach (var unMois in Model.StatutsMois)
+    @foreach (var unMois in Model.StatutsParMois)
     {
         var estIndisponible = false;
         var icon = string.Empty;
@@ -54,8 +55,8 @@
                     && Model.DateActive.Value.Year == unMois.Date.Year
                     && Model.DateActive.Value.Month == unMois.Date.Month;
 
-        <div class="un-mois @(estIndisponible ? "disabled" : estActif ? "active" : "")" 
-                            @onclick="async () => { if (!estIndisponible) { await Model.LoadFluxUnMois(unMois); } }">
+        <div class="un-mois @(estIndisponible || Model.ConnexionBanqueRequise ? "disabled" : estActif ? "active" : "")"
+             @onclick="async () => { if (!estIndisponible && !Model.ConnexionBanqueRequise) { await Model.LoadFluxUnMois(unMois); } }">
             <span>@(icon + " " + unMois.Date.ToString("MMMM yyyy") + " - " + statut)</span>
         </div>
     }
@@ -67,6 +68,6 @@
 
     public void RedirigerVersPowens()
     {
-        Nav.NavigateTo(PowensAPIAcces.GetConnexionUrl(), forceLoad: true);
+        Nav.NavigateTo(PowensConfiguration.GetConnexionUrl(), forceLoad: true);
     }
 }

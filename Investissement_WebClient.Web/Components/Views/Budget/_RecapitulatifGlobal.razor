@@ -1,4 +1,5 @@
-@using Investissement_WebClient.Application.ViewsModels.Graphiques
+@using Investissement_WebClient.Application.ChartsOptions
+@using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets
 @using Investissement_WebClient.Web.Components.ViewsModels
 
 <div class="header">
@@ -8,13 +9,13 @@
     @if (Model.BudgetLineCharts.Any())
     {
         <div class="investissement-content">
-            <ApexChart TItem="BudgetCategorieParMoisVM"
+            <ApexChart TItem="BudgetParMoisLineChartVM"
                        XAxisType="XAxisType.Datetime"
-                       Options="ChartsOptionsRecapBudgetMensuel.OptionBudgetLineChart">
+                       Options="BudgetChartsOptions.OptionBudgetLineChart">
 
                 @foreach (var categorie in Model.BudgetLineCharts)
                 {
-                    <ApexPointSeries TItem="BudgetCategorieParMoisVM"
+                    <ApexPointSeries TItem="BudgetParMoisLineChartVM"
                                      Items="categorie.BudgetCategorieParMois"
                                      Name="@categorie.Categorie"
                                      SeriesType="SeriesType.Line"
@@ -27,7 +28,7 @@
     }
     else
     {
-        <span>Aucune données enregistrées</span>
+        <p>Aucune données enregistrées, récuperer et completer les flux d'une période au minimum pour visualiser le récapitulatif</p>
     }
 </div>
 

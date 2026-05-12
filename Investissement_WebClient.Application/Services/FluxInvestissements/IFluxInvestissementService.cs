@@ -1,0 +1,25 @@
+﻿using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+using Investissement_WebClient.Domain.Modeles;
+
+namespace Investissement_WebClient.Application.Services.FluxInvestissements
+{
+    public interface IFluxInvestissementService
+    {
+        Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement();
+
+        Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel);
+
+        Task<Dictionary<string, decimal>> GetPrixParActif();
+
+        Task<decimal> CalculerValeurCourante(Dictionary<string, decimal> prixParActif);
+    
+        Task<decimal> CalculerValeurInvestissementTotal();
+
+        Task<decimal> CalculerInvestissementMoyenMensuel();
+
+        Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif);
+
+        Task AddFluxInvestissementRange(IEnumerable<FluxInvestissement> transactions);
+    }
+}

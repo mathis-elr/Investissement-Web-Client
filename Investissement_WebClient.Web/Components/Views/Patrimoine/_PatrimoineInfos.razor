@@ -2,7 +2,7 @@
 
 <span class="valeur-totale-courante">
     <label>
-        @Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2")
+        @(Model.ValeurPatrimoineCourante == 0 ? "--,--" : Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2"))
     </label>
 </span>
 <div class="variations-prix">

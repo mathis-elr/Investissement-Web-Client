@@ -1,27 +1,19 @@
 using ApexCharts;
 using Blazored.Toast;
-using Investissement_WebClient.Application.Background;
-using Investissement_WebClient.Application.Services.CreditCoop;
-using Investissement_WebClient.Application.Services.Investissement;
-using Investissement_WebClient.Application.Services.Patrimoine;
-using Investissement_WebClient.Application.Services.Powens;
-using Investissement_WebClient.Application.Services.TradeRepublic;
-using Investissement_WebClient.Application.Services.YahooFinance;
-using Investissement_WebClient.Domain;
+using Investissement_WebClient.Application.Workers;
+using Investissement_WebClient.Application.Services.FluxBancaires;
+using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.Services.PowensApi;
+using Investissement_WebClient.Application.Services.TradeRepublicApi;
+using Investissement_WebClient.Application.Services.ValeurPatrimoines;
+using Investissement_WebClient.Application.Services.YahooFinanceApi;
 using Investissement_WebClient.Infrastructure;
 using Investissement_WebClient.Web.Components;
 using Investissement_WebClient.Web.Components.ViewsModels;
 using Microsoft.EntityFrameworkCore;
+using Investissement_WebClient.Domain.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { "fr-FR" };
-    options.SetDefaultCulture(supportedCultures[0])
-        .AddSupportedCultures(supportedCultures)
-        .AddSupportedUICultures(supportedCultures);
-});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -32,26 +24,26 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 
 
 var section = builder.Configuration.GetSection("PowensApiAcces");
-PowensAPIAcces.ClientId = section["client_id"];
-PowensAPIAcces.ClientSecret = section["client_secret"];
-PowensAPIAcces.BaseUrl = section["BaseUrl"];
-PowensAPIAcces.RedirectUri = section["RedirectUri"];
-PowensAPIAcces.ConnectUrl = section["ConnectUrl"];
+PowensConfiguration.ClientId = section["client_id"];
+PowensConfiguration.ClientSecret = section["client_secret"];
+PowensConfiguration.BaseUrl = section["BaseUrl"];
+PowensConfiguration.RedirectUri = section["RedirectUri"];
+PowensConfiguration.ConnectUrl = section["ConnectUrl"];
 
-builder.Services.AddScoped<IInvestissementService, InvestissementService>();
-builder.Services.AddScoped<IPatrimoineService, PatrimoineService>();
-builder.Services.AddScoped<IFluxCreditCoopService, FluxCreditCoopService>();
+builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
+builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
+builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
 
-builder.Services.AddScoped<IYahooDataService, YahooDataService>();
-builder.Services.AddScoped<ITradeRepublicDataService, TradeRepublicDataService>();
-builder.Services.AddScoped<IPowensDataService, PowensDataService>();
+builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
+builder.Services.AddScoped<ITradeRepublicApiService, TradeRepublicApiService>();
+builder.Services.AddScoped<IPowensApiService, PowensApiService>();
 
-builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();
+builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<BudgetViewModel>();
 builder.Services.AddScoped<ProfilViewModel>();
 
-builder.Services.AddHostedService<PatrimoineWorker>();
+builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 
 builder.Services.AddApexCharts();
 builder.Services.AddBlazoredToast();

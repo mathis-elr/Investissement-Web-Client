@@ -103,10 +103,6 @@
         align-items: center;
     }
 
-    .page span{
-        color: grey;
-    }
-
 .graph1 {
     transform: translateX(0%);
 }

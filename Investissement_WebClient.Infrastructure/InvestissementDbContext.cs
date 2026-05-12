@@ -10,24 +10,22 @@ public class InvestissementDbContext : DbContext
     {
     }
 
-    public DbSet<Transaction> Transaction { get; set; }
-
-    public DbSet<FluxTradeRepublic> FluxTradeRepublic { get; set; }
+    public DbSet<FluxInvestissement> FluxInvestissement { get; set; }
 
     public DbSet<CategorieFlux> CategorieFlux { get; set; }
 
-    public DbSet<FluxCreditCoop> FluxCreditCoop { get; set; }
+    public DbSet<FluxBancaire> FluxBancaire { get; set; }
 
-    public DbSet<HistoriquePatrimoine> HistoriquePatrimoine { get; set; }
+    public DbSet<ValeurPatrimoine> ValeurPatrimoine { get; set; }
 
-    public DbSet<CreditCoopAcces> CreditCoopAcces { get; set; }
+    public DbSet<BanqueAcces> BanqueAcces { get; set; }
     
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Transaction>(entity =>
+        modelBuilder.Entity<FluxInvestissement>(entity =>
         {
             entity.Property(t => t.Id)
                 .ValueGeneratedNever();
@@ -44,17 +42,7 @@ public class InvestissementDbContext : DbContext
                 .HasPrecision(18, 2);
         });
 
-        modelBuilder.Entity<FluxTradeRepublic>(entity =>
-        {
-            entity.HasKey(t => t.Id);
-            entity.Property(t => t.Id)
-                .ValueGeneratedNever();
-
-            entity.Property(e => e.Montant)
-                .HasPrecision(18, 2);
-        });
-
-        modelBuilder.Entity<HistoriquePatrimoine>(entity =>
+        modelBuilder.Entity<ValeurPatrimoine>(entity =>
         {
             entity.Property(h => h.Id)
                 .ValueGeneratedOnAdd();
@@ -66,7 +54,7 @@ public class InvestissementDbContext : DbContext
                 .IsRequired();
         });
 
-        modelBuilder.Entity<FluxCreditCoop>(entity =>
+        modelBuilder.Entity<FluxBancaire>(entity =>
         {
             entity.Property(h => h.Id)
                 .ValueGeneratedNever();

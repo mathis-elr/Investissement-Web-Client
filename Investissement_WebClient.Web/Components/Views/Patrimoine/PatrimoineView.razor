@@ -30,23 +30,24 @@
             {
                 <div class="page">
                     <div class="recherche-donnee">
-                        <span>Recherche de données...</span>
+                        <p>Récuperer vos flux pour commencer à visualiser l'évolution de vôtre patrimoine.</p>
                     </div>
                 </div>
             }
+            else
+            {
+                <div class="page">
+                    <_GraphiqueEvolutionPlusValue BougiesJournalieresPlusOuMoinsValues="@PVM.BougiesJournalieresPlusOuMoinsValues" />
+                </div>
 
-            <div class="page">
-                <_GraphiqueEvolutionPlusValue BougiesJournalieresPlusOuMoinsValues="@PVM.BougiesJournalieresPlusOuMoinsValues" />
-            </div>
+                <div class="page">
+                    <_GraphiqueRepartitionActifs ValeurParActifInvestit="@PVM.ValeurParActifInvestit" />
+                </div>
 
-            <div class="page">
-                <_GraphiqueRepartitionActifs ValeurParActifInvestit="@PVM.ValeurParActifInvestit" />
-            </div>
-
-            <div class="page">
-                <_GraphiqueValeurPatrimoineSurInvestissement BougiesJournalieresValeurPatrimoineSurInvestissementTotal="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal" />
-            </div>
-
+                <div class="page">
+                    <_GraphiqueValeurPatrimoineSurInvestissement BougiesJournalieresValeurPatrimoineSurInvestissementTotal="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal" />
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -59,6 +60,8 @@
     protected override async Task OnInitializedAsync()
     {
         await PVM.StartLoadData();
+
+        if (PVM.ValeurPatrimoineCourante == 0) TS.ShowWarning("ℹ️ Commencez à recupérer vos flux dans 'Investissement' pour pouvoir suivre l'évolution de vôtre patrimoine");
 
         if (PVM.HasError)
         {

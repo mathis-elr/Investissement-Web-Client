@@ -16,13 +16,20 @@
     </div>
 
     <div class="investissement-moyen">
-        <_InvestissementMoyen Model="@IVM"/>
+        <_InvestissementMoyen Model="@IVM" />
     </div>
 
     <div class="evolution-actifs">
-        <div class="mes-actifs">
-            <_EvolutionActifs InfoInvestParActif="@IVM.InfoInvestParActif" />
-            <_EvolutionActifs InfoInvestParActif="@IVM.InfoInvestParActif" />
+        <div class="@(IVM.InfoInvestParActif.Any() ? "mes-actifs" : "")">
+            @if (IVM.InfoInvestParActif.Any())
+            {
+                <_EvolutionActifs InfoInvestParActif="@IVM.InfoInvestParActif" />
+                <_EvolutionActifs InfoInvestParActif="@IVM.InfoInvestParActif" />
+            }
+            else
+            {
+                <p>Ici vous pourrez voir l'évolution de tous les actifs dans lesquels vous investissez...</p>
+            }
         </div>
     </div>
 </div>
@@ -42,12 +49,13 @@
         else
         {
             await IVM.LoadData();
+            if (!IVM.FluxInvestissement.Any()) TS.ShowWarning("ℹ️ Cliquez sur 'Récuperer mes transactions' pour commencer à suivre vos investissements.");
         }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender && IVM.FluxInvestissement.Any())
         {
             _ = LoadDataBoucle(_cts.Token);
         }

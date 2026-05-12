@@ -1,24 +1,24 @@
 ﻿using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.Services.Investissement;
-using Investissement_WebClient.Application.Services.Powens;
-using Investissement_WebClient.Application.Services.TradeRepublic;
-using Investissement_WebClient.Application.ViewsModels.Graphiques;
+using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.Services.PowensApi;
+using Investissement_WebClient.Application.Services.TradeRepublicApi;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class InvestissementViewModel(IInvestissementService investissementService,
-                                         ITradeRepublicDataService transactionService,
-                                         IPowensDataService powensDataService)
+    public class InvestissementViewModel(IFluxInvestissementService fluxInvestissementService,
+                                         ITradeRepublicApiService transactionService,
+                                         IPowensApiService powensDataService)
     {
-        private readonly IInvestissementService _investissementService = investissementService;
-        private readonly ITradeRepublicDataService _transactionService = transactionService;
-        private readonly IPowensDataService _powensDataService = powensDataService;
+        private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
+        private readonly ITradeRepublicApiService _transactionService = transactionService;
+        private readonly IPowensApiService _powensDataService = powensDataService;
 
         public event Action OnChange;
         public void NotifyStateChanged() => OnChange?.Invoke();
 
         // TRANSACTIONS
-        public IEnumerable<TransactionDto> Transactions { get; set; } = [];
+        public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
         public string Message { get; set; } = "Aucune demande de récupération de transactions en cours ...";
         public string Etat { get; set; } = "neutre";
         public string CodeSms { get; set; } = string.Empty;
@@ -30,7 +30,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
 
         // EVOLUTION ACTIFS
-        public IEnumerable<InfoInvestParActifDto> InfoInvestParActif { get; set; } = [];
+        public IEnumerable<InfoValeurParActifDto> InfoInvestParActif { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
@@ -51,19 +51,23 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
         {
-            InfoInvestParActif = await _investissementService.CalculerInfosInvestParActif(prixParActif);
+            InfoInvestParActif = await _fluxInvestissementService.CalculerInfosInvestParActif(prixParActif);
         }
 
         private async Task<Dictionary<string, decimal>> LoadPrixParActif()
         {
-            return await _investissementService.GetPrixParActif();
+            return await _fluxInvestissementService.GetPrixParActif();
         }
 
         public async Task LoadData()
         {
-            var prixParActif = await LoadPrixParActif();
-            await LoadTransactions();
+            await LoadFluxInvestissement();
+            if (!FluxInvestissement.Any())
+                return;
+            
             await LoadInvestissementMoyenMensuel();
+
+            var prixParActif = await LoadPrixParActif();
             await LoadInvestissementTotal(prixParActif);
             await LoadInvestissementsParMois();
             await LoadInfosInvestParActif(prixParActif);
@@ -179,24 +183,24 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             NotifyStateChanged();
         }
 
-        private async Task LoadTransactions()
+        private async Task LoadFluxInvestissement()
         {
-            Transactions = await _investissementService.GetTransactions();
+            FluxInvestissement = await _fluxInvestissementService.GetFluxInvestissement();
         }
 
         private async Task LoadInvestissementMoyenMensuel()
         {
-            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
+            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel();
         }
 
         private async Task LoadInvestissementTotal(Dictionary<string, decimal> prixParActif)
         {
-            InvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
+            InvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal();
         }
 
         private async Task LoadInvestissementsParMois()
         {
-            InvestissementsParMois = await _investissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
+            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
         }
     }
 }

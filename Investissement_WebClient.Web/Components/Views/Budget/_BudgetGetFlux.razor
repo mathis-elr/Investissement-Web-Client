@@ -3,18 +3,17 @@
 @inject IToastService TS
 
 <div class="header">
-    <label>Flux @DateString</label>
-    <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">Récupérer les transactions de @DateString</button>
+    <label>Flux @Model.DateActiveString</label>
+    <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">Récupérer les transactions de @Model.DateActiveString</button>
 </div>
 
 <div class="content">
-    <p>Aucune données ...</p>
+    <p>Pour visualiser vos flux du mois, cliquez sur le bouton "Récuperer les transactions de @Model.DateActiveString".</p>
 </div>
 
 @code {
     [Parameter] public required BudgetViewModel Model { get; set; }
     [Parameter] public DateTime Date { get; set; }
-    private string DateString => Date.ToString("MMMM yyyy");
 
     private async Task GetTransactions()
     {
@@ -25,10 +24,12 @@
         catch (Exception e)
         {
             TS.ShowError(e.Message);
+            Model.HasErreur = false;
+            Model.MessageErreur = string.Empty;
             return;
         }
 
-        TS.ShowSuccess($"Données de {DateString} récupéré avec succès");
+        TS.ShowSuccess($"Données de {Model.DateActiveString} récupéré avec succès");
 
         await Model.LoadFluxCreditCoop();
         await Model.LoadFluxUnMois(Model.StatutMoisActif!);

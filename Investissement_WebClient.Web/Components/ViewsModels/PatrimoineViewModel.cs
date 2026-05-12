@@ -1,15 +1,15 @@
 ﻿using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.Services.Investissement;
-using Investissement_WebClient.Application.Services.Patrimoine;
-using Investissement_WebClient.Application.ViewsModels.Graphiques;
+using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.Services.ValeurPatrimoines;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class PatrimoineViewModel(IPatrimoineService patrimoineService, IInvestissementService investissementService)
+    public class PatrimoineViewModel(IValeurPatrimoineService valeurPatrimoineService, IFluxInvestissementService fluxInvestissementService)
     {
-        private readonly IPatrimoineService _patrimoineService = patrimoineService;
-        private readonly IInvestissementService _investissementService = investissementService;
+        private readonly IValeurPatrimoineService _valeurPatrimoineService = valeurPatrimoineService;
+        private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
         
         // DATAS INFOS PATRIMOINE
         public decimal ValeurPatrimoineCourante { get; set; }
@@ -17,8 +17,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public IEnumerable<VariationDto> Variations { get; set; } = [];
 
         // DATAS GRAPHIQUES
-        public IEnumerable<BougieJournaliereVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
-        public IEnumerable<BougieJournaliereVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+        public IEnumerable<BougieJournaliereCandleChartVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
+        public IEnumerable<BougieJournaliereCandleChartVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
         public IEnumerable<ValeurTotaleParActifVM> ValeurParActifInvestit { get; set; } = [];
 
         // GESTION D'ERREUR
@@ -28,17 +28,21 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
-            var prixParActif = await _investissementService.GetPrixParActif();
+            var prixParActif = await _fluxInvestissementService.GetPrixParActif();
+
             await LoadValeurPatrimoineCourante(prixParActif);
-            await LoadValeurInvestissementTotale();
-            await LoadVariationsPrix();
 
-            // GRAPHIQUES
-            await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
-            await LoadBougiesJournalieresPlusOuMoinsValues();
-            await LoadProportionParActif(prixParActif);
+            if(ValeurPatrimoineCourante != 0)
+            {
+                await LoadValeurInvestissementTotale();
+                await LoadVariationsPrix();
+
+                // GRAPHIQUES
+                await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
+                await LoadBougiesJournalieresPlusOuMoinsValues();
+                await LoadProportionParActif(prixParActif);
+            }
         }
-
 
         public string DeterminerClasse(decimal variationPrix)
         {
@@ -59,7 +63,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         {
             try
             {
-                ValeurPatrimoineCourante = await _investissementService.CalculerValeurCourante(prixParActif);
+                ValeurPatrimoineCourante = await _fluxInvestissementService.CalculerValeurCourante(prixParActif);
             }
             catch (Exception ex)
             {
@@ -70,28 +74,28 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadValeurInvestissementTotale()
         {
-            ValeurInvestissementTotal = await _investissementService.CalculerValeurInvestissementTotal();
+            ValeurInvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal();
         }
 
         private async Task LoadVariationsPrix()
         {
             if (ValeurPatrimoineCourante == 0) return;
-            Variations = await _patrimoineService.GetVariations(ValeurPatrimoineCourante, ValeurInvestissementTotal);
+            Variations = await _valeurPatrimoineService.GetVariations(ValeurPatrimoineCourante, ValeurInvestissementTotal);
         }
 
         private async Task LoadBougiesJournalieresPlusOuMoinsValues()
         {
-            BougiesJournalieresPlusOuMoinsValues = await _patrimoineService.GetBougiesJournalieresPlusOuMoinsValues();
+            BougiesJournalieresPlusOuMoinsValues = await _valeurPatrimoineService.GetBougiesJournalieresPlusOuMoinsValues();
         }
 
         private async Task LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()
         {
-            BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _patrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
+            BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _valeurPatrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
         }
 
         private async Task LoadProportionParActif(Dictionary<string, decimal> prixParActif)
         {
-            ValeurParActifInvestit = await _patrimoineService.GetValeurParActifInvestit(prixParActif);
+            ValeurParActifInvestit = await _valeurPatrimoineService.GetValeurParActifInvestit(prixParActif);
         }
     }
 }

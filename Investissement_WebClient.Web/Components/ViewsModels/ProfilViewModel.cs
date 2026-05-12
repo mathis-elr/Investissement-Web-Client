@@ -1,17 +1,17 @@
-﻿using Investissement_WebClient.Application.Services.Investissement;
-using Investissement_WebClient.Application.ViewsModels.Graphiques;
+﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class ProfilViewModel(IInvestissementService investissementService)
+    public class ProfilViewModel(IFluxInvestissementService fluxInvestissementService)
     {
-        private readonly IInvestissementService _investissementService = investissementService;
+        private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
         
         // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal EvolutionAnnuellePourcentage { get; set; } = 8;
         public int PerspectiveNbAnnees { get; set; } = 15;
-        public List<ValeurParAnVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+        public List<ValeurParAnLineChartVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
@@ -61,7 +61,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             while (annee <= PerspectiveNbAnnees)
             {
-                var valeurParAn = new ValeurParAnVM
+                var valeurParAn = new ValeurParAnLineChartVM
                 {
                     Annee = annee,
                     Valeur = (decimal)Math.Round(pointFixe * (Math.Pow(pourcentageMensuel, annee * 12) - 1), 0),
@@ -76,7 +76,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadInvestissementMoyenMensuel()
         {
-            InvestissementMoyenMensuel = await _investissementService.CalculerInvestissementMoyenMensuel();
+            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel();
+            if (InvestissementMoyenMensuel == 0) InvestissementMoyenMensuel = 100;
         }
     }
 }

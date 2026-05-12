@@ -1,4 +1,5 @@
-﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques
+﻿@using Investissement_WebClient.Application.ChartsOptions
+@using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines
 
     @* Pie : proportion investit par actif par rapport au total investit *@
 
@@ -7,7 +8,7 @@
         <div style="flex:1">
         <ApexChart TItem="ValeurTotaleParActifVM"
                        Title="Répartition investissement par actif"
-                       Options="ChartsOptionsPatrimoine.OptionsPieActif">
+                       Options="PatrimoineChartsOptions.OptionsPieActif">
 
             <ApexPointSeries TItem="ValeurTotaleParActifVM"
                              Items="ValeurParActifInvestit"
