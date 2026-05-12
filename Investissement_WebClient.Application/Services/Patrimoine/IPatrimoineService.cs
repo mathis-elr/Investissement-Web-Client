@@ -13,9 +13,8 @@ public interface IPatrimoineService
 
     Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresPlusOuMoinsValues();
 
-    //Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant);
+    Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif);
 
-    //Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant);
 
     Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
 

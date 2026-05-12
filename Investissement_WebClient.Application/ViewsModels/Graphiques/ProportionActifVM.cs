@@ -1,9 +1,9 @@
 ﻿namespace Investissement_WebClient.Application.ViewsModels.Graphiques
 {
-    public class ProportionActifVM
+    public class ValeurTotaleParActifVM
     {
-        public string Actif { get; set; }
+        public string Actif { get; set; } =  string.Empty;
 
-        public decimal Proportion { get; set; }
+        public decimal Valeur { get; set; }
     }
 }

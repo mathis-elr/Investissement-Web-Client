@@ -19,29 +19,26 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // DATAS GRAPHIQUES
         public IEnumerable<BougieJournaliereVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
         public IEnumerable<BougieJournaliereVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
-        public IEnumerable<ProportionActifVM> ProportionParActif { get; set; } = [];
-        public IEnumerable<ProportionTypeActifVM> ProportionParTypeActif { get; set; } = [];
+        public IEnumerable<ValeurTotaleParActifVM> ValeurParActifInvestit { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError {get; set;} = false;
         public string ErrorMessage {get; set;} = string.Empty;
 
 
-        public async Task LoadData()
+        public async Task StartLoadData()
         {
             var prixParActif = await _investissementService.GetPrixParActif();
             await LoadValeurPatrimoineCourante(prixParActif);
             await LoadValeurInvestissementTotale();
             await LoadVariationsPrix();
-        }
 
-        public async Task LoadDataGraphiques()
-        {
+            // GRAPHIQUES
             await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
             await LoadBougiesJournalieresPlusOuMoinsValues();
-            //await LoadProportionParActif();
-            //await LoadProportionParTypeActif();
+            await LoadProportionParActif(prixParActif);
         }
+
 
         public string DeterminerClasse(decimal variationPrix)
         {
@@ -92,14 +89,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _patrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
         }
 
-        //private async Task LoadProportionParActif()
-        //{
-        //    ProportionParActif = await _patrimoineService.GetProportionParActifInvestit(ValeurPatrimoineCourante);
-        //}
-
-        //private async Task LoadProportionParTypeActif()
-        //{
-        //    ProportionParTypeActif = await _patrimoineService.GetProportionParTypeActifInvestit(ValeurPatrimoineCourante);
-        //}
+        private async Task LoadProportionParActif(Dictionary<string, decimal> prixParActif)
+        {
+            ValeurParActifInvestit = await _patrimoineService.GetValeurParActifInvestit(prixParActif);
+        }
     }
 }

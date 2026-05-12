@@ -2,24 +2,25 @@
 
     @* Pie : proportion investit par actif par rapport au total investit *@
 
-    @if (ProportionParActif.Any())
+    @if (ValeurParActifInvestit.Any())
     {
         <div style="flex:1">
-            <ApexChart TItem="ProportionActifVM"
-                       Title="Proportion investit par actif"
+        <ApexChart TItem="ValeurTotaleParActifVM"
+                       Title="Répartition investissement par actif"
                        Options="ChartsOptionsPatrimoine.OptionsPieActif">
 
-                <ApexPointSeries TItem="ProportionActifVM"
-                                 Items="ProportionParActif"
-                                 SeriesType="SeriesType.Pie"
-                                 XValue="@(e => e.Actif)"
-                                 YValue="@(e => e.Proportion)"
-                                 OrderByDescending="e => e.Y" />
+            <ApexPointSeries TItem="ValeurTotaleParActifVM"
+                             Items="ValeurParActifInvestit"
+                             SeriesType="SeriesType.Pie"
+                             XValue="@(e => e.Actif)"
+                             YValue="@(e => e.Valeur)"
+                             OrderByDescending="e => e.Y" 
+                             ShowDataLabels />
             </ApexChart>
         </div>
     }
                
 
 @code {
-    [Parameter] public IEnumerable<ProportionActifVM> ProportionParActif { get; set; } = [];
+    [Parameter] public IEnumerable<ValeurTotaleParActifVM> ValeurParActifInvestit { get; set; } = [];
 }

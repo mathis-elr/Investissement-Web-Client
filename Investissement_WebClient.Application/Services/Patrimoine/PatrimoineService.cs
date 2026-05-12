@@ -11,12 +11,10 @@ namespace Investissement_WebClient.Application.Services.Patrimoine;
 public class PatrimoineService : IPatrimoineService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-    private readonly IYahooDataService _yahooDataService;
 
-    public PatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext, IYahooDataService yahooDataService, IInvestissementService investissementService)
+    public PatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext)
     {
         _dbFactory = dbContext;
-        _yahooDataService = yahooDataService;
     }
 
     public async Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal)
@@ -117,55 +115,26 @@ public class PatrimoineService : IPatrimoineService
         }).ToList();
     }
 
-    //public async Task<IEnumerable<ProportionActif>> GetProportionParActifInvestit(decimal valeurPatrimoineCourant)
-    //{
-    //    await using var context = await _dbFactory.CreateDbContextAsync();
+    public async Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
 
-    //    IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
-    //    IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-    //    Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
+        var data = await context.Transaction
+            .GroupBy(t => new { t.Actif, t.Ticker })
+            .Select(groupe => new
+            {
+                Actif = groupe.Key.Actif,
+                Ticker = groupe.Key.Ticker,
+                QuantiteTotale = groupe.Sum(t => t.Type == "Achat" ? t.Quantite : -t.Quantite)
+            })
+            .ToListAsync();
 
-    //    var data = await context.Transactions
-    //        .GroupBy(t => new { t.Actif.Nom, t.Actif.Symbole})
-    //        .Select(groupe => new
-    //        {
-    //            Actif = groupe.Key.Nom,
-    //            Symbole = groupe.Key.Symbole,
-    //            QuantiteTotale = groupe.Sum(t => t.Quantite)
-    //        })
-    //        .ToListAsync();
-
-    //    return data.Select(t => new ProportionActif
-    //        {
-    //            Actif = t.Actif,
-    //            Proportion = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0)/ valeurPatrimoineCourant, 2)*100,
-    //        }).ToList();
-    //}
-
-    //public async Task<IEnumerable<ProportionTypeActif>> GetProportionParTypeActifInvestit(decimal valeurPatrimoineCourant)
-    //{
-    //    await using var context = await _dbFactory.CreateDbContextAsync();
-
-    //    IEnumerable<DetailsActifDto> detailsActifs = await _actifService.GetDetailsActif();
-    //    IEnumerable<string> symboles = detailsActifs.Select(d => d.SymboleActif).ToList();
-    //    Dictionary<string, decimal> prixParActif = await _yahooDataService.GetPrixActuelAsync(symboles);
-
-    //    var data = await context.Transactions
-    //        .GroupBy(t => new { t.Actif.Type, t.Actif.Symbole })
-    //        .Select(t => new
-    //        {
-    //            Type = t.Key.Type,
-    //            Symbole = t.Key.Symbole,
-    //            QuantiteTotale = t.Sum(t => t.Quantite)
-    //        })
-    //        .ToListAsync();
-
-    //    return data.Select(t => new ProportionTypeActif
-    //        {
-    //            Type = t.Type,
-    //            Proportion = (decimal)(Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Symbole, out decimal value) ? value : 0) / valeurPatrimoineCourant, 2) * 100),
-    //        }).ToList();
-    //}
+        return data.Where(t => t.QuantiteTotale != 0).Select(t => new ValeurTotaleParActifVM
+        {
+            Actif = t.Actif,
+            Valeur = Math.Round((decimal)(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0)), 2)
+        }).ToList();
+    }
 
     public async Task<IEnumerable<BougieJournaliereVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
     {

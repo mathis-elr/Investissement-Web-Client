@@ -40,8 +40,7 @@
             </div>
 
             <div class="page">
-                <_GraphiqueRepartitionActifs ProportionParActif="@PVM.ProportionParActif" />
-                <_GraphiqueRepartitionActifParType ProportionParTypeActif="@PVM.ProportionParTypeActif" />
+                <_GraphiqueRepartitionActifs ValeurParActifInvestit="@PVM.ValeurParActifInvestit" />
             </div>
 
             <div class="page">
@@ -59,8 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await PVM.LoadData();
-        await PVM.LoadDataGraphiques();
+        await PVM.StartLoadData();
 
         if (PVM.HasError)
         {
@@ -83,7 +81,7 @@
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await PVM.LoadData();
+                await PVM.StartLoadData();
                 StateHasChanged();
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
             } 
