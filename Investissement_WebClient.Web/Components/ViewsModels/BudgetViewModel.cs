@@ -13,8 +13,8 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
     private readonly IPowensApiService _powensApiService = powensApiService;
 
     //MAJ VUE
-    public event Action OnChange;
-    private void NotifyStateChanged() => OnChange?.Invoke();
+    public event Action OnChange = null!;
+    private void NotifyStateChanged() => OnChange.Invoke();
 
     public List<FluxBancaireVM> FluxCreditCoop { get; set; } = [];
 
@@ -124,7 +124,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     public void EditerMoisComplete()
     {
-        StatutMoisActif.Statut = Statut.en_cours;
+        StatutMoisActif!.Statut = Statut.en_cours;
         NotifyStateChanged();
     }
 

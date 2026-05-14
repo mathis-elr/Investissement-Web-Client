@@ -8,7 +8,7 @@
         <div class="un-flux">
             <span>@flux.Date.ToString("dd MMM")</span>
             <span class="@(IsCredit ? "credit" : "debit")">@flux.Valeur €</span>
-            <input type="text" @bind="@flux.LibelleRecu" />
+            <input type="text" @bind="@flux.Libelle" />
             <select type="text" @bind="@flux.IdCategorie">
                 <option value="0"></option>
                 @foreach (var categorie in Categories)

@@ -27,13 +27,13 @@
 <div class="content">
     @if (Model.FluxInvestissement.Any())
     {
-        @foreach (var transactionsParDate in Model.FluxInvestissement.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key))
+        @foreach (var transactionsParDate in Model.FluxInvestissement.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key)!)
         {
             <div class="mes-transactions-par-jour">
                 <div class="mes-transactions-par-jour-header">
                     <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
                     <span></span>
-                    <label>@(transactionsParDate?.Sum(tr => tr.Prix * tr.Quantite)?.ToString("C2"))</label>
+                    <label>@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite).ToString("C2"))</label>
                 </div>
                 <div class="mes-transactions-par-jour-content">
                     @foreach (var transaction in transactionsParDate)
@@ -42,7 +42,7 @@
                             <span></span>
                             <span class="quantite">@transaction.Quantite&nbsp</span>
                             <span class="actif">@transaction.Actif à&nbsp</span>
-                            <span class="prix">@transaction.Prix?.ToString("C")</span>
+                            <span class="prix">@transaction.Prix.ToString("C")</span>
                         </div>
                     }
                 </div>
@@ -56,7 +56,7 @@
 </div>
 
 @code {
-    [Parameter] public InvestissementViewModel Model { get; set; }
+    [Parameter] public required InvestissementViewModel Model { get; set; }
 
     private async Task RecupererTransactions()
     {

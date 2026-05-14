@@ -5,5 +5,5 @@ namespace Investissement_WebClient.Application.ApiResponse.Powens;
 public class PowensTransactionsApiResponse
 {
     [JsonPropertyName("transactions")]
-    public List<PowensFluxApiResponse>? Transactions { get; set; }
+    public List<PowensFluxApiResponse> Transactions { get; set; } = [];
 }

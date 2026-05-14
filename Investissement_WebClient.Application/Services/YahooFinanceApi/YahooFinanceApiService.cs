@@ -32,9 +32,8 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
                 
                 foreach (var symbole in symboles)
                 {
-                    if (resultats.TryGetValue(symbole, out Security data))
+                    if (resultats.TryGetValue(symbole, out var data))
                     {
-                        // "RegularMarketPrice" est le prix actuel (ou le dernier prix de clôture)
                         dictionnairePrix[symbole] = (decimal)Math.Round(data.RegularMarketPrice, 2);
                     }
                     else

@@ -9,7 +9,7 @@ public class FluxBancaireVM
 
     public decimal Valeur { get; set; }
     
-    public string LibelleRecu { get; set; }
+    public required string Libelle { get; set; }
     
     public int IdCategorie { get; set; }
 }

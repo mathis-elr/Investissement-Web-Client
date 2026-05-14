@@ -14,8 +14,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         private readonly ITradeRepublicApiService _transactionService = transactionService;
         private readonly IPowensApiService _powensDataService = powensDataService;
 
-        public event Action OnChange;
-        public void NotifyStateChanged() => OnChange?.Invoke();
+        public event Action OnChange = null!;
+        public void NotifyStateChanged() => OnChange.Invoke();
 
         // TRANSACTIONS
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];

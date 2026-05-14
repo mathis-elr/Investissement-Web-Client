@@ -2,6 +2,6 @@
 {
     public static class YahooFinanceApiConfiguration
     {
-        public static string BaseUri { get; set; }
+        public static string BaseUri { get; set; } = null!;
     }
 }

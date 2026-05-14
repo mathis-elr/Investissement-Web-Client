@@ -25,19 +25,19 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 
 
 var sectionPowens = builder.Configuration.GetSection("PowensApi");
-PowensApiConfiguration.ClientId = sectionPowens["client_id"];
-PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"];
-PowensApiConfiguration.BaseUrl = sectionPowens["BaseUrl"];
-PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"];
-PowensApiConfiguration.ConnectUrl = sectionPowens["ConnectUrl"];
+PowensApiConfiguration.ClientId = sectionPowens["client_id"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientId' est absente."); ;
+PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientSecret' est absente."); ;
+PowensApiConfiguration.BaseUrl = sectionPowens["BaseUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:BaseUrl' est absente."); ;
+PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"] ?? throw new InvalidOperationException("La config 'PowensApi:RedirectUri' est absente."); ;
+PowensApiConfiguration.ConnectUrl = sectionPowens["ConnectUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:ConnectUrl' est absente."); ;
 
 var sectionTR = builder.Configuration.GetSection("TradeRepublicApi");
-TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"];
-TradeRepublicApiConfiguration.Key = sectionTR["key"];
-TradeRepublicApiConfiguration.Value = sectionTR["value"];
+TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:BaseUri' est absente."); ;
+TradeRepublicApiConfiguration.Key = sectionTR["key"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Key' est absente."); ;
+TradeRepublicApiConfiguration.Value = sectionTR["value"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Value' est absente."); ;
 
 var sectionYahoo = builder.Configuration.GetSection("YahooFinanceApi");
-YahooFinanceApiConfiguration.BaseUri = sectionTR["BaseUri"];
+YahooFinanceApiConfiguration.BaseUri = sectionYahoo["BaseUri"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:BaseUri' est absente."); ;
 
 
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();

@@ -2,7 +2,7 @@
 {
     public class ValeurTotaleParActifVM
     {
-        public string Actif { get; set; } =  string.Empty;
+        public required string Actif { get; set; }
 
         public decimal Valeur { get; set; }
     }

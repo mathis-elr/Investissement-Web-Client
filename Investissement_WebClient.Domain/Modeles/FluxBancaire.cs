@@ -8,7 +8,7 @@ public class FluxBancaire
     
     public decimal Valeur { get; set; }
     
-    public required string LibelleRecu { get; set; }
+    public required string Libelle { get; set; }
 
     public int? IdCategorie { get; set; }
     public CategorieFlux? Categorie { get; set; }

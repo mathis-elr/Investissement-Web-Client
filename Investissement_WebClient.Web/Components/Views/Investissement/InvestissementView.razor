@@ -63,7 +63,7 @@
 
     private async Task FinaliserConnexionBanque()
     {
-        await IVM.FinaliserConnexionBanque(CodeRetour);
+        await IVM.FinaliserConnexionBanque(CodeRetour!);
         if (IVM.HasError)
         {
             TS.ShowError(IVM.ErrorMessage);

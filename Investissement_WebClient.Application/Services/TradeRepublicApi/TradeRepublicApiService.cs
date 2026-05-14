@@ -128,10 +128,10 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                 
                 foreach (var transaction in responseBody.Transactions)
                 {
-                    transaction.Ticker = await _yahooFinanceApiService.GetTickerByIsinAsync(transaction.ISIN);
+                    transaction.Ticker = await _yahooFinanceApiService.GetTickerByIsinAsync(transaction.ISIN!);
                 }
                 
-                await _fluxInvestissementService.MapperTransactions(responseBody.Transactions ?? new());
+                await _fluxInvestissementService.MapperTransactions(responseBody.Transactions);
 
                 return codeStatus;
             }

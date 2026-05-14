@@ -35,7 +35,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 .Select(t => new FluxInvestissementDto
                 {
                     Date = t.Date,
-                    Actif = t.Actif.Libelle,
+                    Actif = t.Actif!.Libelle,
                     Ticker = t.Actif.Ticker,
                     Prix = t.Prix,
                     Quantite = t.Type == TypeFlux.Achat ? t.Quantite : -t.Quantite,
@@ -62,7 +62,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
             var data = await context.FluxInvestissement
                 .Include(f => f.Actif)
-                .GroupBy(t => new { t.Actif.Libelle, t.Actif.Ticker })
+                .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
                 .Select(groupe => new
                 {
                     groupe.Key.Libelle,
@@ -84,7 +84,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
             var transactions = await GetFluxInvestissement();
 
-            return transactions.Sum(a => a.Quantite * prixParActif[a.Ticker]) ?? 0;
+            return transactions.Sum(a => a.Quantite * prixParActif[a.Ticker!]);
         }
 
         public async Task<decimal> CalculerValeurInvestissementTotal()
@@ -121,7 +121,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var rawData = await context.FluxInvestissement
-                .GroupBy(t => new { t.Actif.Libelle, t.Actif.Ticker })
+                .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
                 .Select(g => new
                 {
                     g.Key.Libelle,
@@ -200,9 +200,9 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             var idsExistants = await context.FluxInvestissement.Select(t => t.Id).ToListAsync();
-            var hashSetIds = new HashSet<string>(idsExistants);
+            var hashSetIds = new HashSet<string>(idsExistants!);
 
-            var nouveauxFlux = flux.Where(f => !hashSetIds.Contains(f.Id)).ToList();
+            var nouveauxFlux = flux.Where(f => !hashSetIds.Contains(f.Id!)).ToList();
 
             if (nouveauxFlux.Count != 0)
             {

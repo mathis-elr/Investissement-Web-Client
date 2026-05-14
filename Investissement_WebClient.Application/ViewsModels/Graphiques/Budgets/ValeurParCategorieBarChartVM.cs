@@ -2,7 +2,7 @@
 {
     public class ValeurParCategorieBarChartVM
     {
-        public string Categorie { get; set; } = string.Empty;
+        public required string Categorie { get; set; }
 
         public decimal Valeur { get; set; }
     }

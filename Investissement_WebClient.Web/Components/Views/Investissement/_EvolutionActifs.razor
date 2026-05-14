@@ -7,17 +7,17 @@
         <div class="header">
             <label>@actif.Actif</label>
             <label>
-                @actif.ValeurDetenue.Value.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))
+                @actif.ValeurDetenue.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))
             </label>
         </div>
         <div class="content">
             <div class="item">
                 @{
-                    (string couleurVarVal, string signeVarVal) = DeterminerSigne(actif.VariationValeur.Value);
-                    (string couleurVarPour, string signeVarPour) = DeterminerSigne(actif.VariationPourcentage.Value);
+                    (string couleurVarVal, string signeVarVal) = DeterminerSigne(actif.VariationValeur);
+                    (string couleurVarPour, string signeVarPour) = DeterminerSigne(actif.VariationPourcentage);
                 }
                 <span class="@couleurVarVal">
-                    @(signeVarVal + actif.VariationValeur.Value.ToString("C", CultureInfo.GetCultureInfo("fr-FR")))
+                    @(signeVarVal + actif.VariationValeur.ToString("C", CultureInfo.GetCultureInfo("fr-FR")))
                 </span>
                 <span class="@couleurVarPour">
                     @(signeVarVal + actif.VariationPourcentage + "%")

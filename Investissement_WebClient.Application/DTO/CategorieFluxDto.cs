@@ -4,5 +4,5 @@ public class CategorieFluxDto
 {
     public int Id { get; set; }
     
-    public string Libelle { get; set; }
+    public required string Libelle { get; set; }
 }

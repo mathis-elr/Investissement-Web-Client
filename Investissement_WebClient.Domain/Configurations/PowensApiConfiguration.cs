@@ -2,15 +2,15 @@ namespace Investissement_WebClient.Domain.Configurations;
 
 public static class PowensApiConfiguration
 {
-    public static string ClientId { get; set; }
-    
-    public static string ClientSecret { get; set; }
+    public static string ClientId { get; set; } = null!;
 
-    public static string BaseUrl { get; set; }
+    public static string ClientSecret { get; set; } = null!;
 
-    public static string RedirectUri { get; set; }
+    public static string BaseUrl { get; set; } = null!;
 
-    public static string ConnectUrl { get; set; }
+    public static string RedirectUri { get; set; } = null!;
+
+    public static string ConnectUrl { get; set; } = null!;
 
     public static string GetConnexionUrl()
     {

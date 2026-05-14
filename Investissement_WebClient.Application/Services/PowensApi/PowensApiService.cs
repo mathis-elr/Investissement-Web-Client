@@ -16,7 +16,7 @@ public class PowensApiService : IPowensApiService
 
     private readonly HttpClient Client = new HttpClient
     {
-        BaseAddress = new Uri("https://investissement-sandbox.biapi.pro/2.0/"),
+        BaseAddress = new Uri(PowensApiConfiguration.BaseUrl),
         Timeout = TimeSpan.FromSeconds(10)
     };
 
@@ -84,9 +84,6 @@ public class PowensApiService : IPowensApiService
                         default:
                             var hasDescrErreur =
                                 rootReponse.TryGetProperty("description", out var descriptionErreur);
-                            Console.WriteLine(hasDescrErreur
-                                ? descriptionErreur.ToString()
-                                : "Aucune infos supplémentaires.");
                             throw new Exception("Une erreur est survenue lors de la requete.");
                     }
                 }
@@ -99,10 +96,7 @@ public class PowensApiService : IPowensApiService
 
     public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
     {
-        var tokenAcces = await GetToken();
-        if(tokenAcces == null)
-            throw new Exception("Aucune instance du token est enregistré");
-        
+        var tokenAcces = await GetToken() ?? throw new Exception("Aucune instance du token est enregistré");
         var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
         var dateFinString = dateFin.ToString("yyyy-MM-dd");
         var requete = $"users/me/accounts/{tokenAcces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
@@ -171,19 +165,15 @@ public class PowensApiService : IPowensApiService
 
     private void VerifierContenueReponse(HttpResponseMessage reponse, int codeStatus)
     {
-        if (reponse.Content.Headers.ContentType.MediaType == "application/json")
+        if (reponse.Content?.Headers?.ContentType?.MediaType == "application/json")
             return;
 
-        switch (codeStatus)
+        throw codeStatus switch
         {
-            case 403:
-                throw new Exception("Erreur de pare feu.");
-            case 404:
-                throw new Exception("Erreur dans l'URL.");
-            case 500:
-                throw new Exception("Erreur d'accès au serveur.");
-            default:
-                throw new Exception("Erreur inconnue, code erreur:" + codeStatus);
-        }
+            403 => new Exception("Erreur de pare feu."),
+            404 => new Exception("Erreur dans l'URL."),
+            500 => new Exception("Erreur d'accès au serveur."),
+            _ => new Exception("Erreur inconnue, code erreur:" + codeStatus),
+        };
     }
 }

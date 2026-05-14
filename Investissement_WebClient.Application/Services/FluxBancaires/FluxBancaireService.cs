@@ -25,7 +25,7 @@ public class FluxBancaireService : IFluxBancaireService
             Id = f.Id,
             Date = f.Date,
             Valeur = f.Valeur,
-            LibelleRecu = f.LibelleRecu,
+            Libelle = f.Libelle,
             IdCategorie = f.Categorie == null ? 0 : f.Categorie.Id
         }).ToListAsync();
     }
@@ -50,8 +50,8 @@ public class FluxBancaireService : IFluxBancaireService
         var rawData = await context.FluxBancaire
             .Where(f => f.IdCategorie != null)
             .Include(f => f.Categorie)
-            .Where(f => f.Categorie.MacroCategorie != null)
-            .GroupBy(t => new { t.Date.Year, t.Date.Month, t.Categorie.MacroCategorie })
+            .Where(f => f.Categorie!.MacroCategorie != null)
+            .GroupBy(t => new { t.Date.Year, t.Date.Month, t.Categorie!.MacroCategorie })
             .Select(d => new
             {
                 Categorie = d.Key.MacroCategorie,
@@ -63,7 +63,7 @@ public class FluxBancaireService : IFluxBancaireService
         var moisPossibles = rawData.GroupBy(f => f.Date).Select(r => r.Key).OrderBy(d => d.Date);
 
         return rawData
-            .GroupBy(r => r.Categorie)
+            .GroupBy(r => r.Categorie!)
             .Select(r => new BudgetsParCategorieVM
             {
                 Categorie = r.Key,
@@ -81,10 +81,7 @@ public class FluxBancaireService : IFluxBancaireService
         await using var context = await _dbFactory.CreateDbContextAsync();
 
         if (flux == null || flux.Count == 0)
-        {
-            Console.WriteLine("Aucun flux à récuperer pour la periode donnée.");
             return;
-        }
 
         var idsExistants = await context.FluxBancaire
             .Select(f => f.Id)
@@ -97,7 +94,7 @@ public class FluxBancaireService : IFluxBancaireService
                 Id = f.Id,
                 Date = f.Date,
                 Valeur = f.Valeur,
-                LibelleRecu = f.LibelleRecu
+                Libelle = f.Libelle ?? string.Empty
             });
 
         context.FluxBancaire.AddRange(nvFlux);
@@ -120,7 +117,7 @@ public class FluxBancaireService : IFluxBancaireService
         {
             if (fluxDic.TryGetValue(fluxVm.Id, out var _fluxEnregistre))
             {
-                _fluxEnregistre.LibelleRecu = fluxVm.LibelleRecu;
+                _fluxEnregistre.Libelle = fluxVm.Libelle;
                 _fluxEnregistre.IdCategorie = fluxVm.IdCategorie == 0 ? null : fluxVm.IdCategorie;
             }
         }

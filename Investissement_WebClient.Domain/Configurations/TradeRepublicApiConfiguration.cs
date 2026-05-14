@@ -2,9 +2,9 @@
 {
     public static class TradeRepublicApiConfiguration
     {
-        public static string BaseUri { get; set; }
+        public static string BaseUri { get; set; } = null!;
 
-        public static string Key {  get; set; }
-        public static string Value { get; set; }
+        public static string Key { get; set; } = null!;
+        public static string Value { get; set; } = null!;
     }
 }

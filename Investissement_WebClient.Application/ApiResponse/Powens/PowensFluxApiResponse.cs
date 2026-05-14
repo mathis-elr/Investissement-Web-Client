@@ -14,5 +14,5 @@ public class PowensFluxApiResponse
     public decimal Valeur { get; set; }
     
     [JsonPropertyName("wording")]
-    public string LibelleRecu { get; set; }
+    public string? Libelle { get; set; }
 }
