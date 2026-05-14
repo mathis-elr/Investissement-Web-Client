@@ -1,20 +1,28 @@
 using ApexCharts;
 using Blazored.Toast;
-using Investissement_WebClient.Application.Workers;
+using Investissement_WebClient.Application.Services.Actifs;
 using Investissement_WebClient.Application.Services.FluxBancaires;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.PowensApi;
 using Investissement_WebClient.Application.Services.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.ValeurPatrimoines;
 using Investissement_WebClient.Application.Services.YahooFinanceApi;
+using Investissement_WebClient.Application.Workers;
+using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Infrastructure;
 using Investissement_WebClient.Web.Components;
 using Investissement_WebClient.Web.Components.ViewsModels;
 using Microsoft.EntityFrameworkCore;
-using Investissement_WebClient.Domain.Configurations;
-using Investissement_WebClient.Application.Services.Actifs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "fr-FR" };
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
