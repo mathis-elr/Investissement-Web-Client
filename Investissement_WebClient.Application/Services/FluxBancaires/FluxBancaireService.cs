@@ -17,6 +17,13 @@ public class FluxBancaireService : IFluxBancaireService
         _dbFactory = dbFactory;
     }
 
+    public async Task<DateTime?> GetDateLimiteValiditeSyncBanque()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        var acces = await context.BanqueAcces.FirstOrDefaultAsync();
+        return acces?.DateExpiration;
+    }
+
     public async Task<List<FluxBancaireVM>> GetFluxBancaire()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();

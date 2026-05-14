@@ -59,7 +59,8 @@
     {
         await PVM.StartLoadData();
 
-        if (PVM.ValeurPatrimoineCourante == 0) TS.ShowWarning("ℹ️ Commencez à recupérer vos flux dans 'Investissement' pour pouvoir suivre l'évolution de vôtre patrimoine");
+        if (PVM.ValeurPatrimoineCourante == 0) 
+            TS.ShowWarning("ℹ️ Commencez à recupérer vos flux dans 'Investissement' pour pouvoir suivre l'évolution de vôtre patrimoine");
 
         if (PVM.HasError)
         {

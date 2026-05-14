@@ -15,6 +15,10 @@
             🔄 Synchroniser ma banque 🔄
         </button>
     }
+    else
+    {
+        <p class="fst-italic">Banque synchronisée jusqu'au @Model.DateExpirationSync!.Value.ToString("dd MMM")</p>
+    }
 </div>
 
 <div class="content">
@@ -36,9 +40,9 @@
                 icon = "⛔";
                 statut = "indisponible";
                 break;
-            case Statut.en_cours:
+            case Statut.a_completer:
                 icon = "🕒";
-                statut = "en cours";
+                statut = "à compléter";
                 break;
             case Statut.complete:
                 icon = "✅";

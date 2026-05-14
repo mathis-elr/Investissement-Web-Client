@@ -23,30 +23,13 @@
     [Parameter] public required BudgetViewModel Model { get; set; }
     private DateTime Date => Model.DateEditMensuel;
 
-    private async Task GetTransactions()
-    {
-        try
-        {
-            await Model.GetFluxMensuel(Date);
-        }
-        catch (Exception e)
-        {
-            TS.ShowError(e.Message);
-            return;
-        }
-
-        TS.ShowSuccess($"Données de {Model.DateActiveString} récupéré avec succès");
-    }
-
     private async Task UpdateFluxMensuel()
     {
-        try
+        await Model.UpdateFluxMensuel();
+
+        if (Model.HasErreur)
         {
-            await Model.UpdateFluxMensuel();
-        }
-        catch(Exception ex)
-        {
-            TS.ShowError(ex.Message);
+            TS.ShowError(Model.MessageErreur);
             return;
         }
 

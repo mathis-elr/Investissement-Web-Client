@@ -4,7 +4,7 @@
     {
         indisponible,
         complete,
-        en_cours,
+        a_completer,
         aucune_donnees
     }
 }

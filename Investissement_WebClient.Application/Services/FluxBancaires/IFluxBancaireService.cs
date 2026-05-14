@@ -7,6 +7,7 @@ namespace Investissement_WebClient.Application.Services.FluxBancaires;
 
 public interface IFluxBancaireService
 {
+    Task<DateTime?> GetDateLimiteValiditeSyncBanque();
 
     Task<List<FluxBancaireVM>> GetFluxBancaire();
 

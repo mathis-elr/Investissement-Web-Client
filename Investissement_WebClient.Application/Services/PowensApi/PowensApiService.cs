@@ -26,19 +26,10 @@ public class PowensApiService : IPowensApiService
         _fluxBancaireService = fluxBancaireService;
     }
 
-    public async Task<bool> ConnexionRequise()
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        var acces = await context.BanqueAcces.FirstOrDefaultAsync();
-        return acces == null || acces.DateExpiration < DateTime.Now;
-    }
-
     public async Task GetToken(string code)
     {
         if (string.IsNullOrEmpty(code)) throw new ArgumentNullException(nameof(code));
 
-
-        Console.WriteLine("Code : " + code);
 
         var accesDictionnary = new Dictionary<string, string>();
         accesDictionnary.Add("client_id", PowensApiConfiguration.ClientId);
@@ -102,7 +93,7 @@ public class PowensApiService : IPowensApiService
         var requete = $"users/me/accounts/{tokenAcces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
 
         var reponse = await RequeteGetAvecToken(tokenAcces.AccesToken, requete);
-        
+
         var reponseString = await reponse.Content.ReadAsStringAsync();
         var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
 
@@ -143,7 +134,6 @@ public class PowensApiService : IPowensApiService
 
         var codeStatus = (int)reponse.StatusCode;
         VerifierContenueReponse(reponse, codeStatus);
-
         return reponse;
     }
 
@@ -165,7 +155,7 @@ public class PowensApiService : IPowensApiService
 
     private void VerifierContenueReponse(HttpResponseMessage reponse, int codeStatus)
     {
-        if (reponse.Content?.Headers?.ContentType?.MediaType == "application/json")
+        if (reponse.Content.Headers.ContentType.MediaType == "application/json")
             return;
 
         throw codeStatus switch

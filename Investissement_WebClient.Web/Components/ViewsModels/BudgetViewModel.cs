@@ -16,21 +16,22 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
     public event Action OnChange = null!;
     private void NotifyStateChanged() => OnChange.Invoke();
 
-    public List<FluxBancaireVM> FluxCreditCoop { get; set; } = [];
+    public List<FluxBancaireVM> Flux { get; set; } = [];
 
     // RECAPITULATIF GLOBAL
     public IEnumerable<BudgetsParCategorieVM> BudgetLineCharts { get; set; } = [];
 
     // HISTORIQUE MENSUEL
-    public DateTime DateDebut { get; set; } = DateTime.Now.AddMonths(-3);
+    public DateTime DateDebut { get; set; } = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-2);
     public List<StatutParMoisDto> StatutsParMois { get; set; } = [];
     public StatutParMoisDto? StatutMoisActif { get; set; } = null;
     public DateTime? DateActive { get; set; } = null;
     public string? DateActiveString => DateActive?.ToString("MMMM yyyy");
 
     // ENREGISTREMENT MENSUEL
-    public bool ConnexionBanqueRequise { get; set; }
-    public DateTime DateEditMensuel { get; set; } = DateTime.Now;
+    public DateTime? DateExpirationSync { get; set; } = null;
+    public bool ConnexionBanqueRequise => !DateExpirationSync.HasValue;
+    public DateTime DateEditMensuel { get; set; } = DateTime.Today;
     public List<FluxBancaireVM> FluxMensuel { get; set; } = [];
     public List<FluxBancaireVM> CreditsFluxMensuel => FluxMensuel.Where(f => f.Valeur >= 0).ToList();
     public List<FluxBancaireVM> DebitsFluxMensuel => FluxMensuel.Where(f => f.Valeur < 0).ToList();
@@ -43,17 +44,26 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     public async Task StartLoadData()
     {
-        await LoadConnexionBanqueNecessaire();
-        await LoadFluxCreditCoop();
+        await LoadDateLimiteValiditeSyncBanque();
+        await LoadFlux();
         await LoadBudgetParCategorie();
 
-        DateDebut = FluxCreditCoop.Count != 0 ? FluxCreditCoop.Min(f => f.Date) : DateDebut;
+        DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
         DeterminerStatutMois();
     }
 
-    public async Task LoadConnexionBanqueNecessaire()
+    private async Task LoadDateLimiteValiditeSyncBanque()
     {
-        ConnexionBanqueRequise = await _powensApiService.ConnexionRequise();
+        DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque();
+    }
+
+    public async Task MajVue()
+    {
+        await LoadFlux();
+        await LoadFluxUnMois(StatutMoisActif!);
+        DeterminerStatutMois();
+
+        NotifyStateChanged();
     }
 
     public void SetRecapGlobalMode()
@@ -75,7 +85,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
             Categories = await _fluxBancaireService.GetCategorieFlux();
 
         DateEditMensuel = date;
-        FluxMensuel = FluxCreditCoop
+        FluxMensuel = Flux
             .Where(f => f.Date.Month == date.Month && f.Date.Year == date.Year)
             .OrderByDescending(f => f.Date)
             .ToList();
@@ -86,12 +96,12 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
         NotifyStateChanged();
     }
 
-    public async Task LoadFluxCreditCoop()
+    public async Task LoadFlux()
     {
-        FluxCreditCoop = await _fluxBancaireService.GetFluxBancaire();
+        Flux = await _fluxBancaireService.GetFluxBancaire();
     }
 
-    public async Task GetFluxMensuel(DateTime date)
+    public async Task GetFluxMensuel()
     {
         if (ConnexionBanqueRequise)
         {
@@ -100,9 +110,9 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
             return;
         }
 
-        var dateDebut = new DateTime(date.Year, date.Month, 1);
-        var dernierJourDuMois = DateTime.DaysInMonth(date.Year, date.Month);
-        var dateFin = new DateTime(date.Year, date.Month, dernierJourDuMois);
+        var dateDebut = new DateTime(DateActive!.Value.Year, DateActive.Value.Month, 1);
+        var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
+        var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
 
         await _powensApiService.GetFlux(dateDebut, dateFin);
 
@@ -124,7 +134,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     public void EditerMoisComplete()
     {
-        StatutMoisActif!.Statut = Statut.en_cours;
+        StatutMoisActif!.Statut = Statut.a_completer;
         NotifyStateChanged();
     }
 
@@ -135,7 +145,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     private async Task RefreshData()
     {
-        await LoadFluxCreditCoop();
+        await LoadFlux();
         await LoadFluxUnMois(StatutMoisActif!);
         CalculerStatsGraphique();
     }
@@ -163,7 +173,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
             var DateLocale = dateCourante;
             var unMois = new StatutParMoisDto { Date = DateLocale };
             bool estIndisponible = (DateLocale.Year == DateTime.Now.Year && DateLocale.Month == DateTime.Now.Month);
-            var fluxDuMois = FluxCreditCoop.Where(f => f.Date.Year == DateLocale.Year && f.Date.Month == DateLocale.Month).ToList();
+            var fluxDuMois = Flux.Where(f => f.Date.Year == DateLocale.Year && f.Date.Month == DateLocale.Month).ToList();
             var fluxExiste = fluxDuMois.Count != 0;
             var allCategoriesCompletes = fluxDuMois.All(f => f.IdCategorie != 0);
 
@@ -172,7 +182,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
             else if (fluxExiste && allCategoriesCompletes)
                 unMois.Statut = Statut.complete;
             else if (fluxExiste)
-                unMois.Statut = Statut.en_cours;
+                unMois.Statut = Statut.a_completer;
             else
                 unMois.Statut = Statut.aucune_donnees;
 

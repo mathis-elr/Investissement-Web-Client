@@ -13,25 +13,20 @@
 
 @code {
     [Parameter] public required BudgetViewModel Model { get; set; }
-    [Parameter] public DateTime Date { get; set; }
 
     private async Task GetTransactions()
     {
-        try
+        await Model.GetFluxMensuel();
+
+        if (Model.HasErreur)
         {
-            await Model.GetFluxMensuel(Date);
-        }
-        catch (Exception e)
-        {
-            TS.ShowError(e.Message);
+            TS.ShowError(Model.MessageErreur);
             Model.HasErreur = false;
             Model.MessageErreur = string.Empty;
             return;
         }
 
         TS.ShowSuccess($"Données de {Model.DateActiveString} récupéré avec succès");
-
-        await Model.LoadFluxCreditCoop();
-        await Model.LoadFluxUnMois(Model.StatutMoisActif!);
+        await Model.MajVue();
     }
 }
