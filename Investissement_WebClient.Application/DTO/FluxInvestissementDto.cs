@@ -2,7 +2,7 @@
 {
     public class FluxInvestissementDto
     {
-        public DateTimeOffset Date { get; set; }
+        public DateTime Date { get; set; }
 
         public string? Actif { get; set; }
         

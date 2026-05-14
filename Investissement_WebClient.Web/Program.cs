@@ -12,6 +12,7 @@ using Investissement_WebClient.Web.Components;
 using Investissement_WebClient.Web.Components.ViewsModels;
 using Microsoft.EntityFrameworkCore;
 using Investissement_WebClient.Domain.Configurations;
+using Investissement_WebClient.Application.Services.Actifs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,16 +24,26 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
 
-var section = builder.Configuration.GetSection("PowensApiAcces");
-PowensConfiguration.ClientId = section["client_id"];
-PowensConfiguration.ClientSecret = section["client_secret"];
-PowensConfiguration.BaseUrl = section["BaseUrl"];
-PowensConfiguration.RedirectUri = section["RedirectUri"];
-PowensConfiguration.ConnectUrl = section["ConnectUrl"];
+var sectionPowens = builder.Configuration.GetSection("PowensApi");
+PowensApiConfiguration.ClientId = sectionPowens["client_id"];
+PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"];
+PowensApiConfiguration.BaseUrl = sectionPowens["BaseUrl"];
+PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"];
+PowensApiConfiguration.ConnectUrl = sectionPowens["ConnectUrl"];
+
+var sectionTR = builder.Configuration.GetSection("TradeRepublicApi");
+TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"];
+TradeRepublicApiConfiguration.Key = sectionTR["key"];
+TradeRepublicApiConfiguration.Value = sectionTR["value"];
+
+var sectionYahoo = builder.Configuration.GetSection("YahooFinanceApi");
+YahooFinanceApiConfiguration.BaseUri = sectionTR["BaseUri"];
+
 
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
 builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
 builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
+builder.Services.AddScoped<IActifService, ActifService>();
 
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 builder.Services.AddScoped<ITradeRepublicApiService, TradeRepublicApiService>();

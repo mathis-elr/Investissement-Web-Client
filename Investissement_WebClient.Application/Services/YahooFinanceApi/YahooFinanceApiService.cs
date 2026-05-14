@@ -1,4 +1,5 @@
 ﻿using Investissement_WebClient.Application.ApiResponse.YahooFinance;
+using Investissement_WebClient.Domain.Configurations;
 using System.Net.Http.Json;
 using YahooFinanceApi;
 
@@ -59,7 +60,6 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
                 return manualTicker;
             }
 
-            // Sinon, on lance la recherche HttpClient vue précédemment...
             return await SearchTickerOnYahoo(isin);
         }
 
@@ -67,10 +67,9 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
         {
             using (HttpClient client = new HttpClient())
             {
-                // Yahoo bloque souvent les requêtes sans User-Agent
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 
-                string url = $"https://query2.finance.yahoo.com/v1/finance/search?q={isin}";
+                string url = YahooFinanceApiConfiguration.BaseUri + isin;
                 var response = await client.GetAsync(url);
         
                 if (response.IsSuccessStatusCode)

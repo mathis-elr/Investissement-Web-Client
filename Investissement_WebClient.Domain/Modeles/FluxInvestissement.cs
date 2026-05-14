@@ -1,24 +1,23 @@
+using Investissement_WebClient.Domain.Enums;
+
 namespace Investissement_WebClient.Domain.Modeles;
 
 public class FluxInvestissement
 {
     public string? Id { get; init; }
 
-    public DateTimeOffset? Date { get; init; }
+    public DateTime Date { get; init; }
 
-    public string? Type { get; init; }
+    public TypeFlux Type { get; init; }
 
-    public string? Actif {  get; set; }
+    public int ActifId { get; set; }
+    public Actif? Actif {  get; set; }
 
-    public string? ISIN { get; init; }
+    public decimal Prix { get; init; }
 
-    public string? Ticker { get; set; }
-
-    public decimal? Prix { get; init; }
-
-    public decimal? Quantite { get; init; }
+    public decimal Quantite { get; init; }
     
     public decimal? Frais { get; init; }
 
-    public decimal? Total { get; init; }
+    public decimal Total { get; init; }
 }

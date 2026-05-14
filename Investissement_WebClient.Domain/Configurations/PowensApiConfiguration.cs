@@ -1,6 +1,6 @@
 namespace Investissement_WebClient.Domain.Configurations;
 
-public static class PowensConfiguration
+public static class PowensApiConfiguration
 {
     public static string ClientId { get; set; }
     

@@ -41,8 +41,8 @@ public class PowensApiService : IPowensApiService
         Console.WriteLine("Code : " + code);
 
         var accesDictionnary = new Dictionary<string, string>();
-        accesDictionnary.Add("client_id", PowensConfiguration.ClientId);
-        accesDictionnary.Add("client_secret", PowensConfiguration.ClientSecret);
+        accesDictionnary.Add("client_id", PowensApiConfiguration.ClientId);
+        accesDictionnary.Add("client_secret", PowensApiConfiguration.ClientSecret);
         accesDictionnary.Add("code", code);
         using var bodyUrl = new FormUrlEncodedContent(accesDictionnary);
 

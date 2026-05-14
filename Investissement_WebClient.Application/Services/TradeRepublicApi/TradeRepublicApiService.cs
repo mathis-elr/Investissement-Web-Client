@@ -4,28 +4,30 @@ using System.Text.Json.Serialization;
 using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.YahooFinanceApi;
+using Investissement_WebClient.Domain.Configurations;
 
 namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 {
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
-        private readonly IFluxInvestissementService _investissementService;
-        
+        private readonly IFluxInvestissementService _fluxInvestissementService;
         private readonly IYahooFinanceApiService _yahooFinanceApiService;
 
-        private readonly string API_KEY_KEY =  "X-API-KEY";
 
-        private readonly string API_KEY_VALUE = "franchement...lesapi?cesttopissime";
+        private readonly string API_KEY_KEY =  TradeRepublicApiConfiguration.Key;
+
+        private readonly string API_KEY_VALUE = TradeRepublicApiConfiguration.Value;
 
         private readonly HttpClient Client = new HttpClient
         {
-            BaseAddress = new Uri("http://89.168.42.226:5000/"),
+            BaseAddress = new Uri(TradeRepublicApiConfiguration.BaseUri),
             Timeout = TimeSpan.FromSeconds(30) // Important car Selenium peut être lent
         };
 
-        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService, IYahooFinanceApiService yahooFinanceApiService)
+        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService,
+                                       IYahooFinanceApiService yahooFinanceApiService)
         {
-            _investissementService = fluxInvestissementService;
+            _fluxInvestissementService = fluxInvestissementService;
             _yahooFinanceApiService = yahooFinanceApiService;
 
             if (!Client.DefaultRequestHeaders.Contains(API_KEY_KEY))
@@ -121,19 +123,15 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     PropertyNameCaseInsensitive = true,
                     NumberHandling = JsonNumberHandling.AllowReadingFromString
                 };
-                var responseBody = await response.Content.ReadFromJsonAsync<TradeRepublicFluxApiResponse>(options);
 
-                if (responseBody == null)
-                {
-                    throw new Exception("L'API a renvoyé un corps vide.");
-                }
-
+                var responseBody = await response.Content.ReadFromJsonAsync<TradeRepublicFluxApiResponse>(options) ?? throw new Exception("L'API a renvoyé un corps vide.");
+                
                 foreach (var transaction in responseBody.Transactions)
                 {
                     transaction.Ticker = await _yahooFinanceApiService.GetTickerByIsinAsync(transaction.ISIN);
                 }
                 
-                await _investissementService.AddFluxInvestissementRange(responseBody.Transactions ?? new());
+                await _fluxInvestissementService.MapperTransactions(responseBody.Transactions ?? new());
 
                 return codeStatus;
             }

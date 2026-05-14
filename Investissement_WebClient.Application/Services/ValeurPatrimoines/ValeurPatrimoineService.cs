@@ -113,27 +113,6 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
         }).ToList();
     }
 
-    public async Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-
-        var data = await context.FluxInvestissement
-            .GroupBy(t => new { t.Actif, t.Ticker })
-            .Select(groupe => new
-            {
-                Actif = groupe.Key.Actif,
-                Ticker = groupe.Key.Ticker,
-                QuantiteTotale = groupe.Sum(t => t.Type == "Achat" ? t.Quantite : -t.Quantite)
-            })
-            .ToListAsync();
-
-        return data.Where(t => t.QuantiteTotale != 0).Select(t => new ValeurTotaleParActifVM
-        {
-            Actif = t.Actif,
-            Valeur = Math.Round((decimal)(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0)), 2)
-        }).ToList();
-    }
-
     public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
     {
         await using var context = await _dbFactory.CreateDbContextAsync();

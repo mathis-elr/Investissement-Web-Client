@@ -13,9 +13,6 @@ public interface IValeurPatrimoineService
 
     Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresPlusOuMoinsValues();
 
-    Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif);
-
-
     Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
 
     Task DeleteHistoriquePatrimoinePeriode(DateTime dateDepart);

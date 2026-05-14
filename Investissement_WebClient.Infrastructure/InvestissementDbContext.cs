@@ -10,6 +10,8 @@ public class InvestissementDbContext : DbContext
     {
     }
 
+    public DbSet<Actif> Actif { get; set; }
+
     public DbSet<FluxInvestissement> FluxInvestissement { get; set; }
 
     public DbSet<CategorieFlux> CategorieFlux { get; set; }
@@ -25,14 +27,17 @@ public class InvestissementDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Actif>(entity =>
+        {
+            entity.Property(e => e.ISIN)
+                .HasMaxLength(12)
+                .IsFixedLength();
+        });
+
         modelBuilder.Entity<FluxInvestissement>(entity =>
         {
             entity.Property(t => t.Id)
                 .ValueGeneratedNever();
-
-            entity.Property(e => e.ISIN)
-                .HasMaxLength(12)
-                .IsFixedLength();
 
             entity.Property(e => e.Quantite)
                 .HasPrecision(18, 6);
