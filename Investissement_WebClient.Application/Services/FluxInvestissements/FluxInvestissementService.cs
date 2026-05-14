@@ -104,10 +104,17 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             if (investissementParMois.Count == 0)
                 return 0;
 
-            // on retire le mois en cours
-            investissementParMois.RemoveAt(investissementParMois.Count - 1);
+            var donneesCompletes = investissementParMois
+                .Take(investissementParMois.Count - 1)
+                .Select(i => i.Investissement)
+                .ToList();
 
-            return Math.Round(investissementParMois.Average(i => i.Investissement), 0);
+            var sorted = donneesCompletes.OrderBy(v => v).ToList();
+            decimal mediane;
+            int mid = sorted.Count / 2;
+            mediane = sorted.Count % 2 != 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+
+            return Math.Round(mediane, 0);
         }
 
         public async Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif)
