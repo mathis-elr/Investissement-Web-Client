@@ -42,6 +42,15 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 }).ToListAsync();
         }
 
+        public async Task<string?> GetDernierFluxEnregistre()
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            var dernierFlux = await context.FluxInvestissement
+                .OrderByDescending(f => f.Date)
+                .FirstOrDefaultAsync();
+            return dernierFlux?.Id;
+        }
+
         public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
@@ -153,36 +162,37 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             var actifsLoacaux = await _actifService.GetAll();
-            var tickersExistants = actifsLoacaux.Select(a => a.Ticker);
 
             var transactionsValides = transactions
-        .       Where(t => t.Date.HasValue 
+        .       Where(t => t.Id != null
+                        && t.Date.HasValue 
                         && t.Prix.HasValue
                         && t.Quantite.HasValue
                         && t.Actif != null
-                        && t.Ticker != null
                         && t.ISIN != null);
 
             foreach (var transaction in transactionsValides)
             {
                 var nvFlux = new FluxInvestissement
                 {
+                    Id = transaction.Id,
                     Date = transaction.Date!.Value.DateTime,
-                    Type = transaction.Type == "Achat" ? TypeFlux.Achat : TypeFlux.Vente,
+                    Type = (TypeFlux)transaction.Type!,
                     Prix = transaction.Prix!.Value,
                     Quantite = transaction.Quantite!.Value,
                     Frais = transaction.Frais,
                     Total = transaction.Total ?? (transaction.Prix!.Value * transaction.Quantite!.Value)
                 };
 
-                var IdActif = actifsLoacaux.FirstOrDefault(a => a.Ticker == transaction.Ticker)?.Id;
+                var IdActif = actifsLoacaux.FirstOrDefault(a => a.ISIN == transaction.ISIN)?.Id;
                 if(IdActif == null)
                 {
+                    var ticker = await _yahooFinanceApiService.GetTickerByIsinAsync(transaction.ISIN!);
                     var nvActif = new Actif
                     {
-                        Libelle = transaction.Actif!,
+                        Libelle = _actifService.NettoyerLibelle(transaction.Actif!),
                         ISIN = transaction.ISIN!,
-                        Ticker = transaction.Ticker!
+                        Ticker = ticker!
                     };
                     nvFlux.ActifId = await _actifService.AddActif(nvActif);
                     actifsLoacaux.Add(nvActif);
@@ -193,24 +203,6 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 }
                 context.FluxInvestissement.Add(nvFlux);
             }
-            await context.SaveChangesAsync();
-        }
-
-        public async Task AddFluxInvestissementRange(IEnumerable<FluxInvestissement> flux)
-        {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            var idsExistants = await context.FluxInvestissement.Select(t => t.Id).ToListAsync();
-            var hashSetIds = new HashSet<string>(idsExistants!);
-
-            var nouveauxFlux = flux.Where(f => !hashSetIds.Contains(f.Id!)).ToList();
-
-            if (nouveauxFlux.Count != 0)
-            {
-                await context.FluxInvestissement.AddRangeAsync(nouveauxFlux);
-                await context.SaveChangesAsync();
-            }
-
             await context.SaveChangesAsync();
         }
 

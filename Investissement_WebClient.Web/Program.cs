@@ -33,19 +33,24 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 
 
 var sectionPowens = builder.Configuration.GetSection("PowensApi");
-PowensApiConfiguration.ClientId = sectionPowens["client_id"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientId' est absente."); ;
-PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientSecret' est absente."); ;
-PowensApiConfiguration.BaseUrl = sectionPowens["BaseUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:BaseUrl' est absente."); ;
-PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"] ?? throw new InvalidOperationException("La config 'PowensApi:RedirectUri' est absente."); ;
-PowensApiConfiguration.ConnectUrl = sectionPowens["ConnectUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:ConnectUrl' est absente."); ;
+PowensApiConfiguration.ClientId = sectionPowens["client_id"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientId' est absente.");
+PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientSecret' est absente.");
+PowensApiConfiguration.BaseUrl = sectionPowens["BaseUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:BaseUrl' est absente.");
+PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"] ?? throw new InvalidOperationException("La config 'PowensApi:RedirectUri' est absente.");
+PowensApiConfiguration.ConnectUrl = sectionPowens["ConnectUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:ConnectUrl' est absente.");
 
 var sectionTR = builder.Configuration.GetSection("TradeRepublicApi");
-TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:BaseUri' est absente."); ;
-TradeRepublicApiConfiguration.Key = sectionTR["key"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Key' est absente."); ;
-TradeRepublicApiConfiguration.Value = sectionTR["value"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Value' est absente."); ;
+TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:BaseUri' est absente.");
+TradeRepublicApiConfiguration.CleeApiKey = sectionTR["CleeApiKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Key' est absente.");
+TradeRepublicApiConfiguration.CleeApiValue = sectionTR["CleeApiValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Value' est absente.");
+TradeRepublicApiConfiguration.NumTelKey = sectionTR["NumTelKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:NumTelKey' est absente.");
+TradeRepublicApiConfiguration.NumTelValue = sectionTR["NumTelValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:NumTelValue' est absente.");
+TradeRepublicApiConfiguration.PinKey = sectionTR["PinKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:PinKey' est absente.");
+TradeRepublicApiConfiguration.PinValue = sectionTR["PinValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:PinValue' est absente.");
+TradeRepublicApiConfiguration.DernierIdEnregistreKey = sectionTR["DernierIdEnregistreKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:DernierIdEnregistreKey' est absente.");
 
 var sectionYahoo = builder.Configuration.GetSection("YahooFinanceApi");
-YahooFinanceApiConfiguration.BaseUri = sectionYahoo["BaseUri"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:BaseUri' est absente."); ;
+YahooFinanceApiConfiguration.BaseUri = sectionYahoo["BaseUri"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:BaseUri' est absente.");
 
 
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();

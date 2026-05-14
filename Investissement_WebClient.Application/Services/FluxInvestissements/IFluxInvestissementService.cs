@@ -2,13 +2,14 @@
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services.FluxInvestissements
 {
     public interface IFluxInvestissementService
     {
         Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement();
+
+        Task<string?> GetDernierFluxEnregistre();
 
         Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel);
 
@@ -25,7 +26,5 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
         Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif);
 
         Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions);
-
-        Task AddFluxInvestissementRange(IEnumerable<FluxInvestissement> flux);
     }
 }

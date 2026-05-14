@@ -6,7 +6,7 @@
 
         public DateTimeOffset? Date { get; init; }
 
-        public string? Type { get; init; }
+        public int? Type { get; init; }
 
         public string? Actif { get; set; }
 

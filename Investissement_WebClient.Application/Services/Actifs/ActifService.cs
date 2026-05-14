@@ -8,6 +8,8 @@ namespace Investissement_WebClient.Application.Services.Actifs
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
 
+        private readonly List<string> _motsInutiles = ["EUR", "(ACC)", "PEA", "SWAP", "(DIST)","ESG"];
+
         public ActifService(IDbContextFactory<InvestissementDbContext> dbContext)
         {
             _dbFactory = dbContext;
@@ -24,6 +26,19 @@ namespace Investissement_WebClient.Application.Services.Actifs
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.Actif.Select(d => d.Ticker).ToListAsync();
+        }
+
+        public string NettoyerLibelle(string libelle)
+        {
+            if (string.IsNullOrWhiteSpace(libelle))
+                return string.Empty;
+
+            var motsNettoyes = libelle.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(mot => !_motsInutiles.Contains(mot, StringComparer.OrdinalIgnoreCase));
+
+            string resultat = string.Join(" ", motsNettoyes);
+
+            return resultat.Trim();
         }
 
         public async Task<int> AddActif(Actif actif)

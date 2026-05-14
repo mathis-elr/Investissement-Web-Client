@@ -36,6 +36,7 @@
     opacity: 0.8;
     overflow: hidden;
     position: relative;
+    transition: all 0.3s ease-in-out;
 }
 
 .btn-rond {

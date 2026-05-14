@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.YahooFinanceApi;
 using Investissement_WebClient.Domain.Configurations;
 
 namespace Investissement_WebClient.Application.Services.TradeRepublicApi
@@ -11,12 +10,18 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
         private readonly IFluxInvestissementService _fluxInvestissementService;
-        private readonly IYahooFinanceApiService _yahooFinanceApiService;
 
 
-        private readonly string API_KEY_KEY =  TradeRepublicApiConfiguration.Key;
+        private readonly string _cleeApiKey =  TradeRepublicApiConfiguration.CleeApiKey;
+        private readonly string _cleeApiValue = TradeRepublicApiConfiguration.CleeApiValue;
 
-        private readonly string API_KEY_VALUE = TradeRepublicApiConfiguration.Value;
+        private readonly string _numTelKey = TradeRepublicApiConfiguration.NumTelKey;
+        private readonly string _numTelValue = TradeRepublicApiConfiguration.NumTelValue;
+
+        private readonly string _pinKey = TradeRepublicApiConfiguration.PinKey;
+        private readonly string _pinValue = TradeRepublicApiConfiguration.PinValue;
+
+        private readonly string _dernierIdEnregistreKey = TradeRepublicApiConfiguration.DernierIdEnregistreKey;
 
         private readonly HttpClient Client = new HttpClient
         {
@@ -24,15 +29,13 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             Timeout = TimeSpan.FromSeconds(30) // Important car Selenium peut être lent
         };
 
-        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService,
-                                       IYahooFinanceApiService yahooFinanceApiService)
+        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService)
         {
             _fluxInvestissementService = fluxInvestissementService;
-            _yahooFinanceApiService = yahooFinanceApiService;
 
-            if (!Client.DefaultRequestHeaders.Contains(API_KEY_KEY))
+            if (!Client.DefaultRequestHeaders.Contains(_cleeApiKey))
             {
-                Client.DefaultRequestHeaders.Add(API_KEY_KEY, API_KEY_VALUE);
+                Client.DefaultRequestHeaders.Add(_cleeApiKey, _cleeApiValue);
             }
         }
 
@@ -40,7 +43,12 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
         {
             try
             {
-                var response = await Client.PostAsync("auth/request-sms", null);
+                var request = new HttpRequestMessage(HttpMethod.Post, "auth/request-sms");
+
+                request.Headers.Add(_numTelKey, _numTelValue);
+                request.Headers.Add(_pinKey, _pinValue);
+
+                var response = await Client.SendAsync(request);
 
                 int codeStatus = (int)response.StatusCode;
 
@@ -114,7 +122,13 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
         {
             try
             {
-                var response = await Client.GetAsync("datas");
+                var dernierIdEnregistreValue = await _fluxInvestissementService.GetDernierFluxEnregistre();
+                var request = new HttpRequestMessage(HttpMethod.Get, "datas");
+
+                if (!string.IsNullOrEmpty(dernierIdEnregistreValue))
+                    request.Headers.Add(_dernierIdEnregistreKey, dernierIdEnregistreValue);
+
+                var response = await Client.SendAsync(request);
 
                 int codeStatus = (int)response.StatusCode;
 
@@ -124,12 +138,10 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     NumberHandling = JsonNumberHandling.AllowReadingFromString
                 };
 
+                var strcontent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(strcontent);
+
                 var responseBody = await response.Content.ReadFromJsonAsync<TradeRepublicFluxApiResponse>(options) ?? throw new Exception("L'API a renvoyé un corps vide.");
-                
-                foreach (var transaction in responseBody.Transactions)
-                {
-                    transaction.Ticker = await _yahooFinanceApiService.GetTickerByIsinAsync(transaction.ISIN!);
-                }
                 
                 await _fluxInvestissementService.MapperTransactions(responseBody.Transactions);
 

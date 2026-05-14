@@ -73,7 +73,7 @@
             return;
         }
 
-        TS.ShowSuccess(Model.Message);
+        TS.ShowSuccess(Model.ErrorMessage);
     }
 
 
@@ -88,21 +88,7 @@
             Model.FinDeDemande();
             return;
         }
-
-        TS.ShowSuccess(Model.Message);
-    }
-
-    private async Task ChargerTransactions()
-    {
-        await Model.ChargerTransactions();
-
-        if (Model.HasError)
-        {
-            TS.ShowError(Model.ErrorMessage);
-            Model.ReinitiliserGestionErreur();
-            return;
-        }
-
+   
         TS.ShowSuccess("Les transactions on été chargées correctement.");
     }
 }

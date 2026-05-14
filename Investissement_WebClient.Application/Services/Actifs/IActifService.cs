@@ -8,6 +8,8 @@ namespace Investissement_WebClient.Application.Services.Actifs
 
         Task<IEnumerable<string>> GetTickers();
 
+        string NettoyerLibelle(string libelle);
+
         Task<int> AddActif(Actif actif);
     }
 }
