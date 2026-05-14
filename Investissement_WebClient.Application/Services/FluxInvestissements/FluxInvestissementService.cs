@@ -53,6 +53,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
         public async Task<Dictionary<string,decimal>> GetPrixParActif()
         {
             var tickers = await _actifService.GetTickers();
+            if (!tickers.Any()) return [];
             return await _yahooFinanceApiService.GetPrixActuelAsync(tickers);
         }
 

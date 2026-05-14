@@ -43,6 +43,8 @@ public class InvestissementDbContext : DbContext
                 .HasPrecision(18, 6);
             entity.Property(e => e.Prix)
                 .HasPrecision(18, 4);
+            entity.Property(e => e.Frais)
+                .HasPrecision(18, 2);
             entity.Property(e => e.Total)
                 .HasPrecision(18, 2);
         });
@@ -54,8 +56,10 @@ public class InvestissementDbContext : DbContext
             entity.Property(h => h.Date)
                 .IsRequired();
             entity.Property(h => h.InvestissementTotal)
+                .HasPrecision(18, 2)
                 .IsRequired();
             entity.Property(h => h.Valeur)
+                .HasPrecision(18, 2)
                 .IsRequired();
         });
 
@@ -66,6 +70,7 @@ public class InvestissementDbContext : DbContext
             entity.Property(h => h.Date)
                 .IsRequired();
             entity.Property(h => h.Valeur)
+                .HasPrecision(18, 2)
                 .IsRequired();
             entity.HasOne(h => h.Categorie)
                 .WithMany()

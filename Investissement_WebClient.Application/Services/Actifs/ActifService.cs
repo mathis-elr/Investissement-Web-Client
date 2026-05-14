@@ -23,7 +23,7 @@ namespace Investissement_WebClient.Application.Services.Actifs
         public async Task<IEnumerable<string>> GetTickers()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return context.Actif.Select(d => d.Ticker);
+            return await context.Actif.Select(d => d.Ticker).ToListAsync();
         }
 
         public async Task<int> AddActif(Actif actif)
