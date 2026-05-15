@@ -15,6 +15,13 @@ public class PowensApiService : IPowensApiService
     private readonly IFluxBancaireService _fluxBancaireService;
     private readonly HttpClient _httpClient;
 
+    private readonly string _clientId = PowensApiConfiguration.ClientId;
+    private readonly string _clientSecret = PowensApiConfiguration.ClientSecret;
+
+    private readonly string _baseUri = PowensApiConfiguration.BaseUri;
+    private readonly string _tokenEndPoint = PowensApiConfiguration.TokenEndPoint;
+    private readonly string _accountsEndPoint = PowensApiConfiguration.AccountsEndPoint;
+
     public PowensApiService(IDbContextFactory<InvestissementDbContext> dbFactory, 
                             IFluxBancaireService fluxBancaireService,
                             HttpClient httpClient)
@@ -22,7 +29,7 @@ public class PowensApiService : IPowensApiService
         _dbFactory = dbFactory;
         _fluxBancaireService = fluxBancaireService;
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(PowensApiConfiguration.BaseUrl);
+        _httpClient.BaseAddress = new Uri(_baseUri);
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
@@ -32,12 +39,12 @@ public class PowensApiService : IPowensApiService
 
 
         var accesDictionnary = new Dictionary<string, string>();
-        accesDictionnary.Add("client_id", PowensApiConfiguration.ClientId);
-        accesDictionnary.Add("client_secret", PowensApiConfiguration.ClientSecret);
+        accesDictionnary.Add("client_id", _clientId);
+        accesDictionnary.Add("client_secret", _clientSecret);
         accesDictionnary.Add("code", code);
         using var bodyUrl = new FormUrlEncodedContent(accesDictionnary);
 
-        var reponse = await _httpClient.PostAsync("auth/token/access", bodyUrl);
+        var reponse = await _httpClient.PostAsync(_tokenEndPoint, bodyUrl);
         var codeStatus = (int)reponse.StatusCode;
 
         VerifierContenueReponse(reponse, codeStatus);
@@ -90,7 +97,7 @@ public class PowensApiService : IPowensApiService
         var tokenAcces = await GetToken() ?? throw new Exception("Aucune instance du token est enregistré");
         var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
         var dateFinString = dateFin.ToString("yyyy-MM-dd");
-        var requete = $"users/me/accounts/{tokenAcces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
+        var requete = $"{_accountsEndPoint}/{tokenAcces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
 
         var reponse = await RequeteGetAvecToken(tokenAcces.AccesToken, requete);
 
@@ -139,7 +146,7 @@ public class PowensApiService : IPowensApiService
 
     private async Task<int> GetIdCompteCourant(string token)
     {
-        var reponse = await RequeteGetAvecToken(token, "users/me/accounts");
+        var reponse = await RequeteGetAvecToken(token, _accountsEndPoint);
         var reponseString = await reponse.Content.ReadAsStringAsync();
         var comptes = JsonSerializer.Deserialize<PowensComptesApiResponse>(reponseString);
 

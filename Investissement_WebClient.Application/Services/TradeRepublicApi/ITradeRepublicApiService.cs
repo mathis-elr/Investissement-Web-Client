@@ -2,10 +2,10 @@
 {
     public interface ITradeRepublicApiService
     {
-        Task<(string message, int codeHTTP)> GetSms();
+        Task<string> GetSms();
 
-        Task<(string message, int codeHTTP)> ConfirmSms(string codeSms);
+        Task<string> ConfirmSms(string codeSms);
 
-        Task<int> ChargerTransactions();
+        Task<bool> ChargerTransactions();
     }
 }

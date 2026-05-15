@@ -6,15 +6,19 @@ public static class PowensApiConfiguration
 
     public static string ClientSecret { get; set; } = null!;
 
-    public static string BaseUrl { get; set; } = null!;
+    public static string BaseUri { get; set; } = null!;
+
+    public static string ConnectEndPoint { get; set; } = null!;
+
+    public static string TokenEndPoint { get; set; } = null!;
+
+    public static string AccountsEndPoint { get; set; } = null!;
 
     public static string RedirectUri { get; set; } = null!;
 
-    public static string ConnectUrl { get; set; } = null!;
-
     public static string GetConnexionUrl()
     {
-        var fullConnectUrl = new Uri(new Uri(BaseUrl), ConnectUrl).ToString();
+        var fullConnectUrl = new Uri(new Uri(BaseUri), ConnectEndPoint).ToString();
 
         var encodedRedirect = Uri.EscapeDataString(RedirectUri);
 

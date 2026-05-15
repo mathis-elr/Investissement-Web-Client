@@ -1,5 +1,4 @@
 ﻿@using Investissement_WebClient.Web.Components.ViewsModels
-@using System.Globalization
 
 @page "/"
 @inject NavigationManager Nav
@@ -49,7 +48,9 @@
         else
         {
             await IVM.LoadData();
-            if (!IVM.FluxInvestissement.Any()) TS.ShowWarning("ℹ️ Cliquez sur 'Récuperer mes transactions' pour commencer à suivre vos investissements.");
+
+            if (!IVM.FluxInvestissement.Any()) 
+                TS.ShowWarning("ℹ️ Cliquez sur 'Récuperer mes transactions' pour commencer à suivre vos investissements.");
         }
     }
 
@@ -79,10 +80,10 @@
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+
                 await IVM.LoadDataPrixParActif();
                 StateHasChanged();
-
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
         catch (OperationCanceledException) { Console.WriteLine("Arret du chargement investissement"); }

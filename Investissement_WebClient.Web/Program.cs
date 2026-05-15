@@ -35,12 +35,17 @@ builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
 var sectionPowens = builder.Configuration.GetSection("PowensApi");
 PowensApiConfiguration.ClientId = sectionPowens["client_id"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientId' est absente.");
 PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientSecret' est absente.");
-PowensApiConfiguration.BaseUrl = sectionPowens["BaseUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:BaseUrl' est absente.");
+PowensApiConfiguration.BaseUri = sectionPowens["BaseUri"] ?? throw new InvalidOperationException("La config 'PowensApi:BaseUri' est absente.");
+PowensApiConfiguration.ConnectEndPoint = sectionPowens["ConnectEndPoint"] ?? throw new InvalidOperationException("La config 'PowensApi:ConnectEndPoint' est absente.");
+PowensApiConfiguration.TokenEndPoint = sectionPowens["TokenEndPoint"] ?? throw new InvalidOperationException("La config 'PowensApi:TokenEndPoint' est absente.");
+PowensApiConfiguration.AccountsEndPoint = sectionPowens["AccountsEndPoint"] ?? throw new InvalidOperationException("La config 'PowensApi:AccountsEndPoint' est absente.");
 PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"] ?? throw new InvalidOperationException("La config 'PowensApi:RedirectUri' est absente.");
-PowensApiConfiguration.ConnectUrl = sectionPowens["ConnectUrl"] ?? throw new InvalidOperationException("La config 'PowensApi:ConnectUrl' est absente.");
 
 var sectionTR = builder.Configuration.GetSection("TradeRepublicApi");
 TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:BaseUri' est absente.");
+TradeRepublicApiConfiguration.RequestSmsEndPoint = sectionTR["RequestSmsEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:RequestSmsEndPoint' est absente.");
+TradeRepublicApiConfiguration.ConfirmSmsEndPoint = sectionTR["ConfirmSmsEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:ConfirmSmsEndPoint' est absente.");
+TradeRepublicApiConfiguration.DatasEndPoint = sectionTR["DatasEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:DatasEndPoint' est absente.");
 TradeRepublicApiConfiguration.CleeApiKey = sectionTR["CleeApiKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Key' est absente.");
 TradeRepublicApiConfiguration.CleeApiValue = sectionTR["CleeApiValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Value' est absente.");
 TradeRepublicApiConfiguration.NumTelKey = sectionTR["NumTelKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:NumTelKey' est absente.");
@@ -51,6 +56,8 @@ TradeRepublicApiConfiguration.DernierIdEnregistreKey = sectionTR["DernierIdEnreg
 
 var sectionYahoo = builder.Configuration.GetSection("YahooFinanceApi");
 YahooFinanceApiConfiguration.BaseUri = sectionYahoo["BaseUri"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:BaseUri' est absente.");
+YahooFinanceApiConfiguration.SearchEndPoint = sectionYahoo["SearchEndPoint"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:SearchEndPoint' est absente.");
+
 
 
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();

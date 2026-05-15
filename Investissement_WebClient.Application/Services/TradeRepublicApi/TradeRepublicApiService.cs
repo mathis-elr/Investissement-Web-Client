@@ -23,6 +23,10 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 
         private readonly string _dernierIdEnregistreKey = TradeRepublicApiConfiguration.DernierIdEnregistreKey;
 
+        private readonly string _requestSmsEndPoint = TradeRepublicApiConfiguration.RequestSmsEndPoint;
+        private readonly string _confirmSmsEndPoint = TradeRepublicApiConfiguration.ConfirmSmsEndPoint;
+        private readonly string _datasEndPoint = TradeRepublicApiConfiguration.DatasEndPoint;
+
         public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService, HttpClient httpClient)
         {
             _fluxInvestissementService = fluxInvestissementService;
@@ -36,11 +40,11 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        public async Task<(string message, int codeHTTP)> GetSms()
+        public async Task<string> GetSms()
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, "auth/request-sms");
+                var request = new HttpRequestMessage(HttpMethod.Post, _requestSmsEndPoint);
 
                 request.Headers.Add(_numTelKey, _numTelValue);
                 request.Headers.Add(_pinKey, _pinValue);
@@ -66,7 +70,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     message += Coutdouwn != null ? $"{Coutdouwn}s restantes." : string.Empty;
                 }
 
-                return (message, codeStatus);
+                return message;
             }
             catch (HttpRequestException)
             {
@@ -79,7 +83,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        public async Task<(string message, int codeHTTP)> ConfirmSms(string codeSms)
+        public async Task<string> ConfirmSms(string codeSms)
         {
             try
             {
@@ -87,7 +91,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     throw new Exception("Format du code invalide, 4 chiffres requis");
 
                 var body = new { code = codeSms };
-                var response = await _httpClient.PostAsJsonAsync("auth/confirm-sms", body);
+                var response = await _httpClient.PostAsJsonAsync(_confirmSmsEndPoint, body);
 
                 int codeStatus = (int)response.StatusCode;
 
@@ -102,7 +106,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     message = messageJson.GetString() ?? string.Empty;
                 }
 
-                return (message, codeStatus);
+                return message;
             }
             catch (HttpRequestException)
             {
@@ -115,12 +119,12 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        public async Task<int> ChargerTransactions()
+        public async Task<bool> ChargerTransactions()
         {
             try
             {
                 var dernierIdEnregistreValue = await _fluxInvestissementService.GetDernierFluxEnregistre();
-                var request = new HttpRequestMessage(HttpMethod.Get, "datas");
+                var request = new HttpRequestMessage(HttpMethod.Get, _datasEndPoint);
 
                 if (!string.IsNullOrEmpty(dernierIdEnregistreValue))
                     request.Headers.Add(_dernierIdEnregistreKey, dernierIdEnregistreValue);
@@ -135,14 +139,14 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     NumberHandling = JsonNumberHandling.AllowReadingFromString
                 };
 
-                var strcontent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(strcontent);
-
                 var responseBody = await response.Content.ReadFromJsonAsync<TradeRepublicFluxApiResponse>(options) ?? throw new Exception("L'API a renvoyé un corps vide.");
                 
-                await _fluxInvestissementService.MapperTransactions(responseBody.Transactions);
-
-                return codeStatus;
+                if(responseBody.Transactions.Count > 0)
+                {
+                    await _fluxInvestissementService.MapperTransactions(responseBody.Transactions);
+                    return true;
+                }
+                return false;
             }
             catch (HttpRequestException)
             {

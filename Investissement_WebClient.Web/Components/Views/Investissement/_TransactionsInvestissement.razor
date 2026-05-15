@@ -83,16 +83,20 @@
 
     private async Task VerifierCodeSms()
     {
-        await Model.VerfierCodeSms();
-
-        if (Model.HasError)
+        switch (await Model.VerfierCodeSms())
         {
-            TS.ShowError(Model.ErrorMessage);
-            Model.ReinitiliserGestionErreur();
-            Model.FinDeDemande();
-            return;
+            case null:
+                TS.ShowError(Model.ErrorMessage);
+                Model.ReinitiliserGestionErreur();
+                Model.FinDeDemande();
+                break;
+            case false:
+                TS.ShowWarning("Toutes les transactions ont déjà été récupérées.");
+                break;
+            default:
+                TS.ShowSuccess("Les transactions on été récupérées avec succès !");
+                break;
+
         }
-   
-        TS.ShowSuccess("Les transactions on été chargées correctement.");
     }
 }

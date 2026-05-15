@@ -7,6 +7,8 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
 {
     public class YahooFinanceApiService : IYahooFinanceApiService
     {
+        private readonly string _baseUri = YahooFinanceApiConfiguration.BaseUri;
+
         private readonly Dictionary<string, string> tickersFixes = new()
         {
             { "FR0013416716", "GLDA.DE" },
@@ -14,7 +16,7 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
             { "XF000ETH0019", "ETH-EUR" }, 
             { "XF000SOL0012", "SOL-EUR" }, 
         };
-        
+
         public async Task<Dictionary<string, decimal>> GetPrixActuelAsync(IEnumerable<string> symboles)
         {
             var dictionnairePrix = new Dictionary<string, decimal>();
@@ -68,7 +70,7 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
             {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 
-                string url = YahooFinanceApiConfiguration.BaseUri + isin;
+                string url = _baseUri + isin;
                 var response = await client.GetAsync(url);
         
                 if (response.IsSuccessStatusCode)

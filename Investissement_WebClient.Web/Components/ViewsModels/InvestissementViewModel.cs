@@ -87,9 +87,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                (string messageRecu, int CodeHtpp) = await _transactionService.GetSms();
-                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? Etat.SmsRequis : Etat.Erreur;
+                var messageRecu = await _transactionService.GetSms();
                 Message = messageRecu;
+                Etat = Etat.SmsRequis;
 
                 NotifyStateChanged();
             }
@@ -107,67 +107,65 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
-        public async Task VerfierCodeSms()
+        public async Task<bool?> VerfierCodeSms()
         {
-            Etat = Etat.EnCours;
             Message = "Vérification de la conformité du code ...";
 
             if (int.TryParse(CodeSms, out int codeSmsString) && CodeSms.Length!=4)
             {
-                Etat = Etat.SmsRequis;
                 ErrorMessage = "Le code doit être composé de 4 chiffres.";
                 HasError = true;
-                return;
+                return false;
             }
 
             try
             {
-                (string messageRecu, int CodeHtpp) = await _transactionService.ConfirmSms(CodeSms);
-                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? Etat.Succes : Etat.Erreur;
+                var messageRecu = await _transactionService.ConfirmSms(CodeSms);
                 Message = messageRecu;
 
-                await ChargerTransactions();
+                return await ChargerTransactions();
             }
             catch (HttpRequestException ex)
             {
                 ErrorMessage = ex.Message;
                 HasError = true;
-                return;
+                return null;
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
                 HasError = true;
-                return;
+                return null;
             }
         }
 
-        public async Task ChargerTransactions()
+        public async Task<bool?> ChargerTransactions()
         {
-            Etat = Etat.EnCours;
             Message = "Récupération des transactions, cette opération peut être plus ou moins longue ...";
 
             NotifyStateChanged();
 
             try
             {
-                int CodeHtpp = await _transactionService.ChargerTransactions();
-                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? Etat.Succes : Etat.Erreur;
-
-                await LoadData();
+                if (await _transactionService.ChargerTransactions())
+                {
+                    await LoadData();
+                    return true;
+                }
                 FinDeDemande();
+                return false;
             }
             catch (HttpRequestException ex)
             {
                 ErrorMessage = ex.Message;
                 HasError = true;
-                return;
+                return null;
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
                 HasError = true;
-                return;
+                return null;
             }
         }
 

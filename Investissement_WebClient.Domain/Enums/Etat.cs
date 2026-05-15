@@ -4,8 +4,5 @@
     {
         Neutre,
         SmsRequis,
-        EnCours,
-        Succes,
-        Erreur
     }
 }
