@@ -3,6 +3,7 @@ using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.PowensApi;
 using Investissement_WebClient.Application.Services.TradeRepublicApi;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
@@ -20,7 +21,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // TRANSACTIONS
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
         public string Message { get; set; } = "Aucune demande de récupération de transactions en cours ...";
-        public string Etat { get; set; } = "neutre";
+        public Etat Etat { get; set; } = Etat.Neutre;
         public string CodeSms { get; set; } = string.Empty;
         public bool DemandeEnCours { get; set; } = false;
 
@@ -87,7 +88,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             try
             {
                 (string messageRecu, int CodeHtpp) = await _transactionService.GetSms();
-                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? "sms-requis" : "error";
+                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? Etat.SmsRequis : Etat.Erreur;
                 Message = messageRecu;
 
                 NotifyStateChanged();
@@ -108,12 +109,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task VerfierCodeSms()
         {
-            Etat = "verification";
+            Etat = Etat.EnCours;
             Message = "Vérification de la conformité du code ...";
 
             if (int.TryParse(CodeSms, out int codeSmsString) && CodeSms.Length!=4)
             {
-                Etat = "sms-requis";
+                Etat = Etat.SmsRequis;
                 ErrorMessage = "Le code doit être composé de 4 chiffres.";
                 HasError = true;
                 return;
@@ -122,11 +123,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             try
             {
                 (string messageRecu, int CodeHtpp) = await _transactionService.ConfirmSms(CodeSms);
-                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? "succes" : "error";
+                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? Etat.Succes : Etat.Erreur;
                 Message = messageRecu;
 
                 await ChargerTransactions();
-                NotifyStateChanged();
             }
             catch (HttpRequestException ex)
             {
@@ -144,13 +144,15 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task ChargerTransactions()
         {
-            Etat = "recherche";
-            Message = "Récupération des transactions, cette opération peut durer quelque minutes ...";
+            Etat = Etat.EnCours;
+            Message = "Récupération des transactions, cette opération peut être plus ou moins longue ...";
+
+            NotifyStateChanged();
 
             try
             {
                 int CodeHtpp = await _transactionService.ChargerTransactions();
-                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? "succes" : "error";
+                Etat = CodeHtpp < 299 && CodeHtpp >= 200 ? Etat.Succes : Etat.Erreur;
 
                 await LoadData();
                 FinDeDemande();
@@ -176,7 +178,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         }
         public void FinDeDemande()
         {
-            Etat = "neutre";
+            Etat = Etat.Neutre;
             Message = "Aucune demande de récupération de transactions en cours ...";
             DemandeEnCours = false;
 

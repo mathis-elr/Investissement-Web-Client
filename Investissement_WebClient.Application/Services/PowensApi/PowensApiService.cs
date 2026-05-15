@@ -13,17 +13,17 @@ public class PowensApiService : IPowensApiService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
     private readonly IFluxBancaireService _fluxBancaireService;
+    private readonly HttpClient _httpClient;
 
-    private readonly HttpClient Client = new HttpClient
-    {
-        BaseAddress = new Uri(PowensApiConfiguration.BaseUrl),
-        Timeout = TimeSpan.FromSeconds(10)
-    };
-
-    public PowensApiService(IDbContextFactory<InvestissementDbContext> dbFactory, IFluxBancaireService fluxBancaireService)
+    public PowensApiService(IDbContextFactory<InvestissementDbContext> dbFactory, 
+                            IFluxBancaireService fluxBancaireService,
+                            HttpClient httpClient)
     {
         _dbFactory = dbFactory;
         _fluxBancaireService = fluxBancaireService;
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri(PowensApiConfiguration.BaseUrl);
+        _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
     public async Task GetToken(string code)
@@ -37,7 +37,7 @@ public class PowensApiService : IPowensApiService
         accesDictionnary.Add("code", code);
         using var bodyUrl = new FormUrlEncodedContent(accesDictionnary);
 
-        var reponse = await Client.PostAsync("auth/token/access", bodyUrl);
+        var reponse = await _httpClient.PostAsync("auth/token/access", bodyUrl);
         var codeStatus = (int)reponse.StatusCode;
 
         VerifierContenueReponse(reponse, codeStatus);
@@ -127,10 +127,10 @@ public class PowensApiService : IPowensApiService
 
     private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)
     {
-        Client.DefaultRequestHeaders.Authorization =
+        _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token);
 
-        var reponse = await Client.GetAsync(requete);
+        var reponse = await _httpClient.GetAsync(requete);
 
         var codeStatus = (int)reponse.StatusCode;
         VerifierContenueReponse(reponse, codeStatus);

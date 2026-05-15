@@ -1,4 +1,4 @@
-using ApexCharts;
+    using ApexCharts;
 using Blazored.Toast;
 using Investissement_WebClient.Application.Services.Actifs;
 using Investissement_WebClient.Application.Services.FluxBancaires;
@@ -61,6 +61,10 @@ builder.Services.AddScoped<IActifService, ActifService>();
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 builder.Services.AddScoped<ITradeRepublicApiService, TradeRepublicApiService>();
 builder.Services.AddScoped<IPowensApiService, PowensApiService>();
+
+builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
+builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService>();
+builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 
 builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();

@@ -10,7 +10,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
         private readonly IFluxInvestissementService _fluxInvestissementService;
-
+        private readonly HttpClient _httpClient;
 
         private readonly string _cleeApiKey =  TradeRepublicApiConfiguration.CleeApiKey;
         private readonly string _cleeApiValue = TradeRepublicApiConfiguration.CleeApiValue;
@@ -23,19 +23,16 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 
         private readonly string _dernierIdEnregistreKey = TradeRepublicApiConfiguration.DernierIdEnregistreKey;
 
-        private readonly HttpClient Client = new HttpClient
-        {
-            BaseAddress = new Uri(TradeRepublicApiConfiguration.BaseUri),
-            Timeout = TimeSpan.FromSeconds(30) // Important car Selenium peut être lent
-        };
-
-        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService)
+        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService, HttpClient httpClient)
         {
             _fluxInvestissementService = fluxInvestissementService;
+            _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(TradeRepublicApiConfiguration.BaseUri);
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
 
-            if (!Client.DefaultRequestHeaders.Contains(_cleeApiKey))
+            if (!_httpClient.DefaultRequestHeaders.Contains(_cleeApiKey))
             {
-                Client.DefaultRequestHeaders.Add(_cleeApiKey, _cleeApiValue);
+                _httpClient.DefaultRequestHeaders.Add(_cleeApiKey, _cleeApiValue);
             }
         }
 
@@ -48,7 +45,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                 request.Headers.Add(_numTelKey, _numTelValue);
                 request.Headers.Add(_pinKey, _pinValue);
 
-                var response = await Client.SendAsync(request);
+                var response = await _httpClient.SendAsync(request);
 
                 int codeStatus = (int)response.StatusCode;
 
@@ -90,7 +87,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     throw new Exception("Format du code invalide, 4 chiffres requis");
 
                 var body = new { code = codeSms };
-                var response = await Client.PostAsJsonAsync("auth/confirm-sms", body);
+                var response = await _httpClient.PostAsJsonAsync("auth/confirm-sms", body);
 
                 int codeStatus = (int)response.StatusCode;
 
@@ -128,7 +125,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                 if (!string.IsNullOrEmpty(dernierIdEnregistreValue))
                     request.Headers.Add(_dernierIdEnregistreKey, dernierIdEnregistreValue);
 
-                var response = await Client.SendAsync(request);
+                var response = await _httpClient.SendAsync(request);
 
                 int codeStatus = (int)response.StatusCode;
 

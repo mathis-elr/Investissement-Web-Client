@@ -1,4 +1,5 @@
-﻿@using Investissement_WebClient.Web.Components.ViewsModels
+﻿@using Investissement_WebClient.Domain.Enums
+@using Investissement_WebClient.Web.Components.ViewsModels
 
 @inject IToastService TS
 
@@ -9,7 +10,7 @@
 
 <div class="transactions-infos">
     <div class="form-grid">
-        @if (Model.Etat == "sms-requis")
+        @if (Model.Etat == Etat.SmsRequis)
         {
             <label>Code sms</label>
             <div class="info">
@@ -17,7 +18,7 @@
             </div>
             <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">Vérifier</button>
         }
-        else if (Model.Etat == "neutre" || Model.Etat == "recherche")
+        else
         {
             <span class="message">@Model.Message</span>
         }
@@ -61,7 +62,10 @@
     private async Task RecupererTransactions()
     {
         if (Model.DemandeEnCours)
-            TS.ShowError("Veuillez patientez une demande est déjà en cours");
+        {
+            TS.ShowError("Veuillez patienter, une demande est déjà en cours");
+            return;
+        }
 
         await Model.DemandeCodeSms();
 
@@ -73,7 +77,7 @@
             return;
         }
 
-        TS.ShowSuccess(Model.ErrorMessage);
+        TS.ShowSuccess(Model.Message);
     }
 
 

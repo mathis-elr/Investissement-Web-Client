@@ -17,7 +17,7 @@
     background-color: green;
 }
 
-.btn-get-transactions:disabled {
+button:disabled {
     background-color: #999;
     color: #585d60;
     cursor: not-allowed;
