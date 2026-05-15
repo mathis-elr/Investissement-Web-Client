@@ -1,11 +1,17 @@
 ﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class ProfilViewModel(IFluxInvestissementService fluxInvestissementService)
+    public class ProfilViewModel(AuthenticationStateProvider authenticationStateProvider, IFluxInvestissementService fluxInvestissementService)
     {
+        private readonly AuthenticationStateProvider _authStateProvider = authenticationStateProvider;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
+
+        // USER CONNECTE
+        public int? IdUser { get; set; }
+        public string? PrenomUser { get; set; }
         
         // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }
@@ -20,6 +26,13 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
+            var authState = await _authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            var idString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(idString, out int id)) this.IdUser = id;
+            PrenomUser = user.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+
             await LoadInvestissementMoyenMensuel();
             await CalculerEvolutionDuPatrimoine();
         }

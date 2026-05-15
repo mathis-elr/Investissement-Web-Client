@@ -1,6 +1,8 @@
 ﻿@using Investissement_WebClient.Web.Components.ViewsModels
+@using Microsoft.AspNetCore.Authorization
 
 @page "/"
+@attribute [Authorize]
 @inject NavigationManager Nav
 @inject InvestissementViewModel IVM
 @implements IDisposable

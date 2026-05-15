@@ -23,7 +23,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                await _authentificationService.Inscription(InformationsInscription);
+                InformationsInscription.Id = await _authentificationService.Inscription(InformationsInscription);
             }
             catch (Exception ex)
             {

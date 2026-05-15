@@ -1,11 +1,12 @@
 ﻿using Investissement_WebClient.Application.ViewsModels;
+using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services.Authentification
 {
     public interface IAuthentificationService
     {
-        Task Inscription(InscriptionVM infosInscription);
+        Task<int> Inscription(InscriptionVM infosInscription);
 
-        Task Connexion(ConnexionVM infosConnexion);
+        Task<Utilisateur> Connexion(ConnexionVM infosConnexion);
     }
 }

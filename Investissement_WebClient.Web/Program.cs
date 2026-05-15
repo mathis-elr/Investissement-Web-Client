@@ -14,6 +14,9 @@ using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Infrastructure;
 using Investissement_WebClient.Web.Components;
 using Investissement_WebClient.Web.Components.ViewsModels;
+using Investissement_WebClient.Web.GestionSession;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -87,6 +90,17 @@ builder.Services.AddScoped<ProfilViewModel>();
 builder.Services.AddScoped<ConnexionViewModel>();
 
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
+
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/connexion";
+    });
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<ProtectedLocalStorage>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddApexCharts();
 builder.Services.AddBlazoredToast();

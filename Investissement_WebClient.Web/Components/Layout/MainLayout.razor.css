@@ -28,7 +28,7 @@ nav {
         opacity: 1;
     }
 
-::deep .page {
+::deep .link {
     font-family: 'Consolas', monospace;
     font-size: 26px;
     border: none;

@@ -15,7 +15,7 @@ namespace Investissement_WebClient.Application.Services.Authentification
             _dbFactory = dbFactory;
         }
 
-        public async Task Inscription(InscriptionVM infosInscription)
+        public async Task<int> Inscription(InscriptionVM infosInscription)
         {
             using var dbContext = await _dbFactory.CreateDbContextAsync();
             if(await dbContext.Utilisateur.FirstOrDefaultAsync(u => u.Email == infosInscription.Email) != null)
@@ -31,9 +31,11 @@ namespace Investissement_WebClient.Application.Services.Authentification
 
             dbContext.Utilisateur.Add(newUser);
             await dbContext.SaveChangesAsync();
+
+            return newUser.Id;
         }
 
-        public async Task Connexion(ConnexionVM infosConnexion)
+        public async Task<Utilisateur> Connexion(ConnexionVM infosConnexion)
         {
             using var dbContext = await _dbFactory.CreateDbContextAsync();
             var user = await dbContext.Utilisateur.FirstOrDefaultAsync(u => u.Email == infosConnexion.Email);
@@ -41,7 +43,7 @@ namespace Investissement_WebClient.Application.Services.Authentification
                 throw new Exception("Adresse e-mail incorrect.");
             else if(!VerifyPassword(infosConnexion.Mdp, user.MdpHash))
                 throw new Exception("Mot de passe incorrect.");
-
+            return user;
         }
 
         private string HashPassword(string password)

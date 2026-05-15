@@ -4,6 +4,8 @@ namespace Investissement_WebClient.Application.ViewsModels
 {
     public class InscriptionVM
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Le prénom est obligatoire.")]
         public string Prenom { get; set; } = string.Empty;
 

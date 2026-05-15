@@ -1,8 +1,19 @@
-﻿@namespace Investissement_WebClient.Web.Components
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@namespace Investissement_WebClient.Web.Components
 
-<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof( Investissement_WebClient.Web.Components.Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
+@inject NavigationManager Nav
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof( Investissement_WebClient.Web.Components.Layout.MainLayout)">
+                <NotAuthorized>
+                    @{
+                        Nav.NavigateTo("/connexion");
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+    </Router>
+</CascadingAuthenticationState>

@@ -1,11 +1,14 @@
-﻿@using Investissement_WebClient.Web.Components.ViewsModels
-@using Investissement_WebClient.Web.Components.Layout
+﻿@using Investissement_WebClient.Web.Components.Layout
+@using Investissement_WebClient.Web.Components.ViewsModels
+@using Investissement_WebClient.Web.GestionSession
+@using Microsoft.AspNetCore.Components.Authorization
 
 @page "/connexion"
 @layout AuthLayout
 @inject ConnexionViewModel CVM
 @inject NavigationManager Nav
 @inject IToastService TS
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Connexion</PageTitle>
 
@@ -43,6 +46,9 @@
             CVM.MessageErreur = string.Empty;
             return;
         }
+
+        var customAuthStateProvider = (CustomAuthStateProvider)AuthStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(CVM.SessionUtilisateur);
 
         Nav.NavigateTo("/profil");
     }

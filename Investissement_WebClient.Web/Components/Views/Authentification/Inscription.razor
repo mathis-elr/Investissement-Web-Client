@@ -1,11 +1,14 @@
-﻿@using Investissement_WebClient.Web.Components.ViewsModels
-@using Investissement_WebClient.Web.Components.Layout
+﻿@using Investissement_WebClient.Web.Components.Layout
+@using Investissement_WebClient.Web.Components.ViewsModels
+@using Investissement_WebClient.Web.GestionSession
+@using Microsoft.AspNetCore.Components.Authorization
 
 @page "/inscription"
 @layout AuthLayout
 @inject InscriptionViewModel IVM 
 @inject NavigationManager Nav
 @inject IToastService TS
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Nouvel utilisateur</PageTitle>
 
@@ -51,6 +54,18 @@
             IVM.MessageErreur = string.Empty;
             return;
         }
+
+        // on connecte l'utilisateur
+        var nouvelUser = IVM.InformationsInscription;
+        var session = new SessionUtilisateur
+        {
+            Id = nouvelUser.Id,
+            Email = nouvelUser.Email,
+            Prenom = nouvelUser.Prenom
+        };
+
+        var customAuthStateProvider = (CustomAuthStateProvider)AuthStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(session);
 
         Nav.NavigateTo("/profil?creation=succes");
     }

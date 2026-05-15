@@ -1,7 +1,9 @@
 ﻿@using Investissement_WebClient.Web.Components.ViewsModels
+@using Microsoft.AspNetCore.Authorization
 
 @page "/profil"
-@inject ProfilViewModel IVM
+@attribute [Authorize]
+@inject ProfilViewModel PVM
 @inject IJSRuntime JS
 @inject IToastService TS
 
@@ -17,30 +19,34 @@
             <div class="form-grid">
                 <label>Investissement mensuel</label>
                 <div class="info">
-                    <input @bind="IVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    <input @bind="PVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                 </div>
                 <label>€</label>
 
                 <label>Evolution Annuelle</label>
                 <div class="info">
-                    <input @bind="IVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    <input @bind="PVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                 </div>
                 <label>%</label>
 
                 <label>Nombre d'années</label>
                 <div class="info">
-                    <input @bind="IVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    <input @bind="PVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                 </div>
                 <label>ans</label>
             </div>
         </div>
 
         <div class="perspectives-graphique">
-            <_GraphiquePerspectivePatrimoine PerspectivesValeurPatrimoineParAn="@IVM.PerspectivesValeurPatrimoineParAn" />
+            <_GraphiquePerspectivePatrimoine PerspectivesValeurPatrimoineParAn="@PVM.PerspectivesValeurPatrimoineParAn" />
         </div>
     </div>
 
-    <div class="bloc2"></div>
+    <div class="bloc2">
+        <div class="header">
+            <label>Bonjour @PVM.PrenomUser</label>
+        </div>
+    </div>
     <div class="bloc3"></div>
     <div class="bloc4"></div>
 </div>
@@ -53,18 +59,18 @@
         if (CreationStatus == "succes")
             TS.ShowSuccess("Votre compte a été créé avec succès !");
 
-        await IVM.LoadData();
+        await PVM.LoadData();
     }
 
     private async Task CalculerEvolutionDuPatrimoine()
     {
-        await IVM.CalculerEvolutionDuPatrimoine();
+        await PVM.CalculerEvolutionDuPatrimoine();
 
-        if (IVM.HasError)
+        if (PVM.HasError)
         {
-            TS.ShowError(IVM.ErrorMessage);
-            IVM.HasError = false;
-            IVM.ErrorMessage = string.Empty;
+            TS.ShowError(PVM.ErrorMessage);
+            PVM.HasError = false;
+            PVM.ErrorMessage = string.Empty;
         }
     }
 }

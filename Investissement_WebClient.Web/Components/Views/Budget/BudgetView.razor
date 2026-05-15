@@ -1,7 +1,9 @@
 @using Investissement_WebClient.Domain.Enums
 @using Investissement_WebClient.Web.Components.ViewsModels
+@using Microsoft.AspNetCore.Authorization
 
 @page "/budget"
+@attribute [Authorize]
 @inject BudgetViewModel BVM
 @inject IToastService TS
 @implements IDisposable
