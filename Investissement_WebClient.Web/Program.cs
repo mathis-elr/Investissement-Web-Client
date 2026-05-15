@@ -91,16 +91,26 @@ builder.Services.AddScoped<ConnexionViewModel>();
 
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies", options =>
+
+builder.Services.AddAuthentication("Manual")
+    .AddCookie("Manual", options =>
     {
-        options.LoginPath = "/connexion";
+        // C'EST CETTE LIGNE QUI TUE TA REDIRECTION /Account/Login
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = 401; // On renvoie juste un code, pas de redirection
+            return Task.CompletedTask;
+        };
     });
 
 builder.Services.AddAuthorizationCore();
+
+// 2. On garde ton Provider et ton LocalStorage
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<SessionService>();
+
 
 builder.Services.AddApexCharts();
 builder.Services.AddBlazoredToast();
@@ -124,7 +134,8 @@ app.UseAntiforgery();
 app.UseRequestLocalization();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AllowAnonymous();
 
 // requette vide pour cron job
 app.MapGet("/api/update-data", async (BudgetViewModel bvm) =>

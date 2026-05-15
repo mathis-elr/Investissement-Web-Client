@@ -1,17 +1,18 @@
 ﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
-using Microsoft.AspNetCore.Components.Authorization;
+using Investissement_WebClient.Web.GestionSession;
+
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class ProfilViewModel(AuthenticationStateProvider authenticationStateProvider, IFluxInvestissementService fluxInvestissementService)
+    public class ProfilViewModel(SessionService sessionService, IFluxInvestissementService fluxInvestissementService)
     {
-        private readonly AuthenticationStateProvider _authStateProvider = authenticationStateProvider;
+        private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
 
         // USER CONNECTE
-        public int? IdUser { get; set; }
-        public string? PrenomUser { get; set; }
+        public int IdUser { get; set; }
+        public string PrenomUser { get; set; } = string.Empty;
         
         // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }
@@ -26,12 +27,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
+            await _sessionService.Initialiser();
 
-            var idString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (int.TryParse(idString, out int id)) this.IdUser = id;
-            PrenomUser = user.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+            IdUser = _sessionService.Id;
+            PrenomUser = _sessionService.Prenom;
 
             await LoadInvestissementMoyenMensuel();
             await CalculerEvolutionDuPatrimoine();
@@ -89,7 +88,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadInvestissementMoyenMensuel()
         {
-            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel();
+            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel(IdUser);
             if (InvestissementMoyenMensuel == 0) InvestissementMoyenMensuel = 100;
         }
     }

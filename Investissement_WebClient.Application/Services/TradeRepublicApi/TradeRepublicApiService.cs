@@ -119,11 +119,11 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        public async Task<bool> ChargerTransactions()
+        public async Task<bool> ChargerTransactions(int userId)
         {
             try
             {
-                var dernierIdEnregistreValue = await _fluxInvestissementService.GetDernierFluxEnregistre();
+                var dernierIdEnregistreValue = await _fluxInvestissementService.GetDernierFluxEnregistre(userId);
                 var request = new HttpRequestMessage(HttpMethod.Get, _datasEndPoint);
 
                 if (!string.IsNullOrEmpty(dernierIdEnregistreValue))
@@ -143,7 +143,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                 
                 if(responseBody.Transactions.Count > 0)
                 {
-                    await _fluxInvestissementService.MapperTransactions(responseBody.Transactions);
+                    await _fluxInvestissementService.MapperTransactions(responseBody.Transactions, userId);
                     return true;
                 }
                 return false;

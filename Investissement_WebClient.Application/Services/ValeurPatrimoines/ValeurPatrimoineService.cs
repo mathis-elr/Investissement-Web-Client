@@ -15,7 +15,7 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
         _dbFactory = dbContext;
     }
 
-    public async Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal)
+    public async Task SaveValeurPatrimoine(decimal valeurPatrimoine, decimal valeurInvestissementTotal, int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -23,20 +23,22 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
         {
             Date = DateTime.Now,
             Valeur = valeurPatrimoine,
-            InvestissementTotal = valeurInvestissementTotal
+            InvestissementTotal = valeurInvestissementTotal,
+            UtilisateurId = userId
         };
 
         context.ValeurPatrimoine.Add(newValeurPatrimoine);
         await context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<VariationDto>> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal)
+    public async Task<IEnumerable<VariationDto>> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal, int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
         var unAnsAvantAjd = DateTime.Now.AddYears(-1);
         
         var historiqueAnnee = await context.ValeurPatrimoine
+            .Where(h => h.UtilisateurId == userId)
             .Where(h => h.Date >= unAnsAvantAjd)
             .OrderByDescending(h => h.Date)
             .ToListAsync();
@@ -50,10 +52,11 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
         };
     }
 
-    public async Task<DateTime?> GetDateDernierEnregistrement()
+    public async Task<DateTime?> GetDateDernierEnregistrement(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         return await context.ValeurPatrimoine
+                               .Where(h => h.UtilisateurId == userId)
                                .OrderByDescending(h => h.Date)
                                .Select(f  => f.Date)
                                .FirstOrDefaultAsync();
@@ -74,11 +77,12 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
         return variation;
     }
 
-    public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresPlusOuMoinsValues()
+    public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresPlusOuMoinsValues(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
         
         var donneesGroupes = await context.ValeurPatrimoine
+            .Where(h => h.UtilisateurId == userId)
             .GroupBy(hp => hp.Date.Date)
             .Select(d => new
             {
@@ -113,21 +117,24 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
         }).ToList();
     }
 
-    public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal()
+    public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
-        var data = await context.ValeurPatrimoine.GroupBy(hp => hp.Date.Date).Select(hp => new
-        {
-            Date = hp.Key,
-            MaxValeur = hp.Max(t => t.Valeur),
-            MinValeur = hp.Min(t => t.Valeur),
-            DonnesParJour = hp.OrderBy(hp => hp.Date).Select(t => new
+        var data = await context.ValeurPatrimoine
+            .Where(h => h.UtilisateurId == userId)
+            .GroupBy(hp => hp.Date.Date)
+            .Select(hp => new
             {
-                t.Valeur,
-                t.InvestissementTotal
-            }),
-            InvestissementTotal = hp.Max(testc => testc.InvestissementTotal)
+                Date = hp.Key,
+                MaxValeur = hp.Max(t => t.Valeur),
+                MinValeur = hp.Min(t => t.Valeur),
+                DonnesParJour = hp.OrderBy(hp => hp.Date).Select(t => new
+                {
+                    t.Valeur,
+                    t.InvestissementTotal
+                }),
+                InvestissementTotal = hp.Max(testc => testc.InvestissementTotal)
         }).OrderBy(hp => hp.Date)
           .ToListAsync();
 
@@ -140,16 +147,5 @@ public class ValeurPatrimoineService : IValeurPatrimoineService
             Haut = t.MaxValeur,
             InvestissementTotal = t.InvestissementTotal,
         }).ToList();
-    }
-
-
-    public async Task DeleteHistoriquePatrimoinePeriode(DateTime dateDepart)
-    {
-        await using var context = await _dbFactory.CreateDbContextAsync();
-        
-        var enregistrementsASupprimer = context.ValeurPatrimoine.Where(hp => hp.Date >= dateDepart && hp.Date <= DateTime.Now).ToList();
-        
-        context.ValeurPatrimoine.RemoveRange(enregistrementsASupprimer);
-        await context.SaveChangesAsync();
     }
 }

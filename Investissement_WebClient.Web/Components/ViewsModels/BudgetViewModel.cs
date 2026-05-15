@@ -4,13 +4,21 @@ using Investissement_WebClient.Application.Services.PowensApi;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels;
 
-public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensApiService powensApiService)
+public class BudgetViewModel(SessionService sessionService, 
+                             IFluxBancaireService fluxBancaireService,
+                             IPowensApiService powensApiService)
 {
+    private readonly SessionService _sessionService = sessionService;
     private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
     private readonly IPowensApiService _powensApiService = powensApiService;
+
+    // USER CONNECTE
+    public int IdUser { get; set; }
+    public string PrenomUser { get; set; } = string.Empty;
 
     //MAJ VUE
     public event Action OnChange = null!;
@@ -44,7 +52,13 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     public async Task StartLoadData()
     {
+        await _sessionService.Initialiser();
+
+        IdUser = _sessionService.Id;
+        PrenomUser = _sessionService.Prenom;
+
         await LoadDateLimiteValiditeSyncBanque();
+
         await LoadFlux();
         await LoadBudgetParCategorie();
 
@@ -54,7 +68,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     private async Task LoadDateLimiteValiditeSyncBanque()
     {
-        DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque();
+        DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
     }
 
     public async Task MajVue()
@@ -98,7 +112,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     public async Task LoadFlux()
     {
-        Flux = await _fluxBancaireService.GetFluxBancaire();
+        Flux = await _fluxBancaireService.GetFluxBancaire(IdUser);
     }
 
     public async Task GetFluxMensuel()
@@ -114,7 +128,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
         var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
         var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
 
-        await _powensApiService.GetFlux(dateDebut, dateFin);
+        await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
 
         await RefreshData();
         NotifyStateChanged();
@@ -125,7 +139,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
         if (FluxMensuel == null)
             throw new Exception("Aucune données mensuel");
 
-        await _fluxBancaireService.UpdateFluxCreditCoopMensuel(FluxMensuel);
+        await _fluxBancaireService.UpdateFluxMensuel(FluxMensuel, IdUser);
 
         await RefreshData();
         DeterminerStatutMois();
@@ -140,7 +154,7 @@ public class BudgetViewModel(IFluxBancaireService fluxBancaireService, IPowensAp
 
     private async Task LoadBudgetParCategorie()
     {
-        BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois();
+        BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(IdUser);
     }
 
     private async Task RefreshData()

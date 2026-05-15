@@ -33,7 +33,7 @@ public class PowensApiService : IPowensApiService
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
-    public async Task GetToken(string code)
+    public async Task GetToken(string code, int userId)
     {
         if (string.IsNullOrEmpty(code)) throw new ArgumentNullException(nameof(code));
 
@@ -60,7 +60,7 @@ public class PowensApiService : IPowensApiService
                 {
                     var token = accessToken.GetString() ?? string.Empty;
                     var idCompteCourant = await GetIdCompteCourant(token);
-                    await SaveToken(token, idCompteCourant);
+                    await SaveToken(token, idCompteCourant, userId);
                 }
                 else
                 {
@@ -92,9 +92,9 @@ public class PowensApiService : IPowensApiService
         }
     }
 
-    public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
+    public async Task GetFlux(DateTime dateDebut, DateTime dateFin, int userId)
     {
-        var tokenAcces = await GetToken() ?? throw new Exception("Aucune instance du token est enregistré");
+        var tokenAcces = await GetToken(userId) ?? throw new Exception("Aucune instance du token est enregistré");
         var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
         var dateFinString = dateFin.ToString("yyyy-MM-dd");
         var requete = $"{_accountsEndPoint}/{tokenAcces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
@@ -104,32 +104,43 @@ public class PowensApiService : IPowensApiService
         var reponseString = await reponse.Content.ReadAsStringAsync();
         var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
 
-        await _fluxBancaireService.AddFluxBancaire(transactions?.Transactions);
+        await _fluxBancaireService.AddFluxBancaire(transactions?.Transactions, userId);
     }
 
-    private async Task SaveToken(string token, int idCompteCourant)
+    private async Task SaveToken(string token, int idCompteCourant, int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
-        var anciens = await context.BanqueAcces.ToListAsync();
-        context.BanqueAcces.RemoveRange(anciens);
+        var acces = await context.BanqueAcces
+            .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
 
-        var newAcces = new BanqueAcces
+        if (acces != null)
         {
-            AccesToken = token,
-            IdCompteCourant = idCompteCourant,
-            DateCreation = DateTime.Now,
-            DateExpiration = DateTime.Now.AddDays(90)
-        };
+            acces.AccesToken = token;
+            acces.IdCompteCourant = idCompteCourant;
+            acces.DateCreation = DateTime.Now;
+            acces.DateExpiration = DateTime.Now.AddDays(90);
+        }
+        else
+        {
+            var newAcces = new BanqueAcces
+            {
+                AccesToken = token,
+                IdCompteCourant = idCompteCourant,
+                DateCreation = DateTime.Now,
+                DateExpiration = DateTime.Now.AddDays(90),
+                UtilisateurId = userId
+            };
+            await context.BanqueAcces.AddAsync(newAcces);
+        }
 
-        await context.BanqueAcces.AddAsync(newAcces);
         await context.SaveChangesAsync();
     }
 
-    private async Task<BanqueAcces?> GetToken()
+    private async Task<BanqueAcces?> GetToken(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
-        return context.BanqueAcces.FirstOrDefault();
+        return await context.BanqueAcces.FirstOrDefaultAsync(b => b.UtilisateurId == userId);
     }
 
     private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)

@@ -6,6 +6,6 @@
 
         Task<string> ConfirmSms(string codeSms);
 
-        Task<bool> ChargerTransactions();
+        Task<bool> ChargerTransactions(int userId);
     }
 }

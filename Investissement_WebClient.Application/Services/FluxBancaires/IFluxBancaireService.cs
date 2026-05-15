@@ -7,16 +7,16 @@ namespace Investissement_WebClient.Application.Services.FluxBancaires;
 
 public interface IFluxBancaireService
 {
-    Task<DateTime?> GetDateLimiteValiditeSyncBanque();
+    Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId);
 
-    Task<List<FluxBancaireVM>> GetFluxBancaire();
+    Task<List<FluxBancaireVM>> GetFluxBancaire(int userId);
 
     Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux();
 
-    Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois();
+    Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId);
 
-    Task AddFluxBancaire(List<PowensFluxApiResponse>? flux);
+    Task AddFluxBancaire(List<PowensFluxApiResponse>? flux, int userId);
 
-    Task UpdateFluxCreditCoopMensuel(List<FluxBancaireVM> fluxMensuelVM);
+    Task UpdateFluxMensuel(List<FluxBancaireVM> fluxMensuelVM, int userId);
 
 }

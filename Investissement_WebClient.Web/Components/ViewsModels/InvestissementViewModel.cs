@@ -4,17 +4,26 @@ using Investissement_WebClient.Application.Services.PowensApi;
 using Investissement_WebClient.Application.Services.TradeRepublicApi;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class InvestissementViewModel(IFluxInvestissementService fluxInvestissementService,
+    public class InvestissementViewModel(SessionService sessionService,
+                                         IFluxInvestissementService fluxInvestissementService,
                                          ITradeRepublicApiService transactionService,
                                          IPowensApiService powensDataService)
     {
+        private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
         private readonly ITradeRepublicApiService _transactionService = transactionService;
         private readonly IPowensApiService _powensDataService = powensDataService;
 
+
+        // USER CONNECTE
+        public int IdUser { get; set; }
+        public string PrenomUser { get; set; } = string.Empty;
+
+        // MAJ VUE
         public event Action OnChange = null!;
         public void NotifyStateChanged() => OnChange.Invoke();
 
@@ -39,9 +48,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task FinaliserConnexionBanque(string codeRetour)
         {
+            await InitialiserSession();
+
             try
             {
-                await _powensDataService.GetToken(codeRetour);
+                await _powensDataService.GetToken(codeRetour, IdUser);
             }
             catch (Exception ex)
             {
@@ -50,28 +61,30 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
-        public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
-        {
-            InfoInvestParActif = await _fluxInvestissementService.CalculerInfosInvestParActif(prixParActif);
-        }
-
-        private async Task<Dictionary<string, decimal>> LoadPrixParActif()
-        {
-            return await _fluxInvestissementService.GetPrixParActif();
-        }
-
         public async Task LoadData()
         {
+            await InitialiserSession();
+
             await LoadFluxInvestissement();
             if (!FluxInvestissement.Any())
                 return;
-            
+
             await LoadInvestissementMoyenMensuel();
 
             var prixParActif = await LoadPrixParActif();
             await LoadInvestissementTotal(prixParActif);
             await LoadInvestissementsParMois();
             await LoadInfosInvestParActif(prixParActif);
+        }
+
+        public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
+        {
+            InfoInvestParActif = await _fluxInvestissementService.CalculerInfosInvestParActif(prixParActif, IdUser);
+        }
+
+        private async Task<Dictionary<string, decimal>> LoadPrixParActif()
+        {
+            return await _fluxInvestissementService.GetPrixParActif();
         }
 
         public async Task LoadDataPrixParActif()
@@ -147,7 +160,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                if (await _transactionService.ChargerTransactions())
+                if (await _transactionService.ChargerTransactions(IdUser))
                 {
                     await LoadData();
                     return true;
@@ -180,27 +193,35 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             Message = "Aucune demande de récupération de transactions en cours ...";
             DemandeEnCours = false;
 
-            NotifyStateChanged();
+            NotifyStateChanged();   
+        }
+
+        private async Task InitialiserSession()
+        {
+            await _sessionService.Initialiser();
+
+            IdUser = _sessionService.Id;
+            PrenomUser = _sessionService.Prenom;
         }
 
         private async Task LoadFluxInvestissement()
         {
-            FluxInvestissement = await _fluxInvestissementService.GetFluxInvestissement();
+            FluxInvestissement = await _fluxInvestissementService.GetFluxInvestissement(IdUser);
         }
 
         private async Task LoadInvestissementMoyenMensuel()
         {
-            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel();
+            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel(IdUser);
         }
 
         private async Task LoadInvestissementTotal(Dictionary<string, decimal> prixParActif)
         {
-            InvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal();
+            InvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal(IdUser);
         }
 
         private async Task LoadInvestissementsParMois()
         {
-            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(InvestissementMoyenMensuel);
+            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(InvestissementMoyenMensuel, IdUser);
         }
     }
 }

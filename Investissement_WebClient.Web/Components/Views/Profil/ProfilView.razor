@@ -1,11 +1,15 @@
 ﻿@using Investissement_WebClient.Web.Components.ViewsModels
+@using Investissement_WebClient.Web.GestionSession
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 
 @page "/profil"
 @attribute [Authorize]
 @inject ProfilViewModel PVM
 @inject IJSRuntime JS
 @inject IToastService TS
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Profil</PageTitle>
 
@@ -44,7 +48,8 @@
 
     <div class="bloc2">
         <div class="header">
-            <label>Bonjour @PVM.PrenomUser</label>
+            <label>@(PVM.PrenomUser != string.Empty ? "Bonjour " + PVM.PrenomUser : "")</label>
+            <button class="btn-calcul" @onclick="Deconnexion">Déconnexion</button>
         </div>
     </div>
     <div class="bloc3"></div>
@@ -58,8 +63,15 @@
     {
         if (CreationStatus == "succes")
             TS.ShowSuccess("Votre compte a été créé avec succès !");
+    }
 
-        await PVM.LoadData();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await PVM.LoadData();
+            StateHasChanged();
+        }
     }
 
     private async Task CalculerEvolutionDuPatrimoine()
@@ -72,5 +84,13 @@
             PVM.HasError = false;
             PVM.ErrorMessage = string.Empty;
         }
+    }
+
+    public async Task Deconnexion()
+    {
+        var customAuthStateProvider = (CustomAuthStateProvider)AuthStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+
+        Nav.NavigateTo("connexion");
     }
 }

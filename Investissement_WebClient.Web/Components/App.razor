@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="app.css" asp-append-version="true"/>
     <link rel="stylesheet" href="Investissement_WebClient.Web.styles.css"/>
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 </head>
 
 <body>
-    <Routes @rendermode="InteractiveServer" />
+    <Routes @rendermode="new InteractiveServerRenderMode(prerender: false)" />
     
     <script type="module" src="_content/Blazor-ApexCharts/js/blazor-apexcharts.js"></script>
 

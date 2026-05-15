@@ -1,6 +1,6 @@
 ﻿namespace Investissement_WebClient.Web.GestionSession
 {
-    public class SessionUtilisateur
+    public class SessionUtilisateur()
     {
         public int Id { get; set; }
 

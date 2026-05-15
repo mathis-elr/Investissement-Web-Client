@@ -26,12 +26,13 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             _actifService = actifService;
         }
 
-        public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement()
+        public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             return await context.FluxInvestissement
                 .Include(f => f.Actif)
+                .Where(f => f.UtilisateurId == userId)
                 .Select(t => new FluxInvestissementDto
                 {
                     Date = t.Date,
@@ -42,19 +43,20 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 }).ToListAsync();
         }
 
-        public async Task<string?> GetDernierFluxEnregistre()
+        public async Task<string?> GetDernierFluxEnregistre(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var dernierFlux = await context.FluxInvestissement
+                .Where(f => f.UtilisateurId == userId)
                 .OrderByDescending(f => f.Date)
                 .FirstOrDefaultAsync();
             return dernierFlux?.Id;
         }
 
-        public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel)
+        public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            var investissementParMois =  await CalculerInvestissementParMois();
+            var investissementParMois =  await CalculerInvestissementParMois(userId);
             investissementParMois.ForEach(i => i.InvestissementMoyen = Math.Round(investissementMoyenMensuel,2));
             return investissementParMois;
         }
@@ -66,12 +68,13 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             return await _yahooFinanceApiService.GetPrixActuelAsync(tickers);
         }
 
-        public async Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif)
+        public async Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             var data = await context.FluxInvestissement
                 .Include(f => f.Actif)
+                .Where(f => f.UtilisateurId == userId)
                 .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
                 .Select(groupe => new
                 {
@@ -88,28 +91,29 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             }).ToList();
         }
 
-        public async Task<decimal> CalculerValeurCourante(Dictionary<string, decimal> prixParActif)
+        public async Task<decimal> CalculerValeurCourante(Dictionary<string, decimal> prixParActif, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var transactions = await GetFluxInvestissement();
+            var transactions = await GetFluxInvestissement(userId);
 
             return transactions.Sum(a => a.Quantite * prixParActif[a.Ticker!]);
         }
 
-        public async Task<decimal> CalculerValeurInvestissementTotal()
+        public async Task<decimal> CalculerValeurInvestissementTotal(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             return await context.FluxInvestissement
+                .Where(f => f.UtilisateurId == userId)
                 .SumAsync(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total);
         }
         
-        public async Task<decimal> CalculerInvestissementMoyenMensuel()
+        public async Task<decimal> CalculerInvestissementMoyenMensuel(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var investissementParMois = await CalculerInvestissementParMois();
+            var investissementParMois = await CalculerInvestissementParMois(userId);
 
             if (investissementParMois.Count == 0)
                 return 0;
@@ -127,10 +131,11 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             return Math.Round(mediane, 0);
         }
 
-        public async Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif)
+        public async Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var rawData = await context.FluxInvestissement
+                .Where(f => f.UtilisateurId == userId)
                 .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
                 .Select(g => new
                 {
@@ -157,7 +162,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             }).ToList();
         }
 
-        public async Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions)
+        public async Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -181,7 +186,8 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                     Prix = transaction.Prix!.Value,
                     Quantite = transaction.Quantite!.Value,
                     Frais = transaction.Frais,
-                    Total = transaction.Total ?? (transaction.Prix!.Value * transaction.Quantite!.Value)
+                    Total = transaction.Total ?? (transaction.Prix!.Value * transaction.Quantite!.Value),
+                    UtilisateurId = userId
                 };
 
                 var IdActif = actifsLoacaux.FirstOrDefault(a => a.ISIN == transaction.ISIN)?.Id;
@@ -206,11 +212,12 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             await context.SaveChangesAsync();
         }
 
-        private async Task<List<InvestissementParMoisVM>> CalculerInvestissementParMois()
+        private async Task<List<InvestissementParMoisVM>> CalculerInvestissementParMois(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             var rawData = await context.FluxInvestissement
+                .Where(f => f.UtilisateurId == userId)
                 .GroupBy(t => new { t.Date.Year, t.Date.Month })
                 .Select(d => new
                 {

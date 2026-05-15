@@ -1,5 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using Investissement_WebClient.Web.GestionSession
+
+@inherits LayoutComponentBase
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject SessionService Session
 
 <BlazoredToasts Position="ToastPosition.TopRight"
                 Timeout="10"

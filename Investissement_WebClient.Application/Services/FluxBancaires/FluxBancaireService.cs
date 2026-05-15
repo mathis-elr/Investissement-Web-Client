@@ -17,19 +17,23 @@ public class FluxBancaireService : IFluxBancaireService
         _dbFactory = dbFactory;
     }
 
-    public async Task<DateTime?> GetDateLimiteValiditeSyncBanque()
+    public async Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
-        var acces = await context.BanqueAcces.FirstOrDefaultAsync();
+        var acces = await context.BanqueAcces
+            .Where(b => b.UtilisateurId == userId)
+            .FirstOrDefaultAsync();
         return acces?.DateExpiration;
     }
 
-    public async Task<List<FluxBancaireVM>> GetFluxBancaire()
+    public async Task<List<FluxBancaireVM>> GetFluxBancaire(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
-        return await context.FluxBancaire.Select(f => new FluxBancaireVM
-        {
-            Id = f.Id,
+        return await context.FluxBancaire
+            .Where(f => f.UtilisateurId == userId)
+            .Select(f => new FluxBancaireVM
+            {
+                Id = f.Id,
             Date = f.Date,
             Valeur = f.Valeur,
             Libelle = f.Libelle,
@@ -50,11 +54,12 @@ public class FluxBancaireService : IFluxBancaireService
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois()
+    public async Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
         var rawData = await context.FluxBancaire
+            .Where(f => f.UtilisateurId == userId)
             .Where(f => f.IdCategorie != null)
             .Include(f => f.Categorie)
             .Where(f => f.Categorie!.MacroCategorie != null)
@@ -83,7 +88,7 @@ public class FluxBancaireService : IFluxBancaireService
             .ToList();
     }
 
-    public async Task AddFluxBancaire(List<PowensFluxApiResponse>? flux)
+    public async Task AddFluxBancaire(List<PowensFluxApiResponse>? flux, int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -91,6 +96,7 @@ public class FluxBancaireService : IFluxBancaireService
             return;
 
         var idsExistants = await context.FluxBancaire
+            .Where(f => f.UtilisateurId == userId)
             .Select(f => f.Id)
             .ToListAsync();
 
@@ -101,14 +107,15 @@ public class FluxBancaireService : IFluxBancaireService
                 Id = f.Id,
                 Date = f.Date,
                 Valeur = f.Valeur,
-                Libelle = f.Libelle ?? string.Empty
+                Libelle = f.Libelle ?? string.Empty,
+                UtilisateurId = userId
             });
 
         context.FluxBancaire.AddRange(nvFlux);
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateFluxCreditCoopMensuel(List<ViewsModels.FluxBancaireVM> fluxMensuelVM)
+    public async Task UpdateFluxMensuel(List<FluxBancaireVM> fluxMensuelVM, int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -116,6 +123,7 @@ public class FluxBancaireService : IFluxBancaireService
 
         var fluxMensuelEnregistree = await context.FluxBancaire
             .Where(f => idVM.Contains(f.Id))
+            .Where(f => f.UtilisateurId == userId)
             .ToListAsync();
 
         var fluxDic = fluxMensuelEnregistree.ToDictionary(e => e.Id);

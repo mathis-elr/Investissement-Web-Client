@@ -9,4 +9,7 @@ public class ValeurPatrimoine
     public decimal InvestissementTotal { get; set; }
     
     public decimal Valeur { get; set; }
+
+    public int UtilisateurId { get; set; }
+    public Utilisateur Utilisateur { get; set; } = null!;
 }

@@ -2,15 +2,24 @@
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.ValeurPatrimoines;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
+using Investissement_WebClient.Web.GestionSession;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class PatrimoineViewModel(IValeurPatrimoineService valeurPatrimoineService, IFluxInvestissementService fluxInvestissementService)
+    public class PatrimoineViewModel(SessionService sessionService,
+                                     IValeurPatrimoineService valeurPatrimoineService, 
+                                     IFluxInvestissementService fluxInvestissementService)
     {
+        private readonly SessionService _sessionService = sessionService;
         private readonly IValeurPatrimoineService _valeurPatrimoineService = valeurPatrimoineService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
-        
+
+
+        // USER CONNECTE
+        public int IdUser { get; set; }
+        public string PrenomUser { get; set; } = string.Empty;
+
         // DATAS INFOS PATRIMOINE
         public decimal ValeurPatrimoineCourante { get; set; }
         private decimal ValeurInvestissementTotal { get; set; }
@@ -28,6 +37,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
+            await _sessionService.Initialiser();
+
+            IdUser = _sessionService.Id;
+            PrenomUser = _sessionService.Prenom;
+
             var prixParActif = await _fluxInvestissementService.GetPrixParActif();
 
             await LoadValeurPatrimoineCourante(prixParActif);
@@ -63,7 +77,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         {
             try
             {
-                ValeurPatrimoineCourante = await _fluxInvestissementService.CalculerValeurCourante(prixParActif);
+                ValeurPatrimoineCourante = await _fluxInvestissementService.CalculerValeurCourante(prixParActif, IdUser);
             }
             catch (Exception ex)
             {
@@ -74,28 +88,28 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadValeurInvestissementTotale()
         {
-            ValeurInvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal();
+            ValeurInvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal(IdUser);
         }
 
         private async Task LoadVariationsPrix()
         {
-            if (ValeurPatrimoineCourante == 0) return;
-            Variations = await _valeurPatrimoineService.GetVariations(ValeurPatrimoineCourante, ValeurInvestissementTotal);
+            if (ValeurPatrimoineCourante == 0) return;  
+            Variations = await _valeurPatrimoineService.GetVariations(ValeurPatrimoineCourante, ValeurInvestissementTotal, IdUser);
         }
 
         private async Task LoadBougiesJournalieresPlusOuMoinsValues()
         {
-            BougiesJournalieresPlusOuMoinsValues = await _valeurPatrimoineService.GetBougiesJournalieresPlusOuMoinsValues();
+            BougiesJournalieresPlusOuMoinsValues = await _valeurPatrimoineService.GetBougiesJournalieresPlusOuMoinsValues(IdUser);
         }
 
         private async Task LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()
         {
-            BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _valeurPatrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal();
+            BougiesJournalieresValeurPatrimoineSurInvestissementTotal = await _valeurPatrimoineService.GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal(IdUser);
         }
 
         private async Task LoadProportionParActif(Dictionary<string, decimal> prixParActif)
         {
-            ValeurParActifInvestit = await _fluxInvestissementService.GetValeurParActifInvestit(prixParActif);
+            ValeurParActifInvestit = await _fluxInvestissementService.GetValeurParActifInvestit(prixParActif, IdUser);
         }
     }
 }
