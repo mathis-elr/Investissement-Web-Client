@@ -3,26 +3,47 @@
 
 @page "/connexion"
 @layout AuthLayout
-@* @inject ConnexionViewModel CVM *@
+@inject ConnexionViewModel CVM
 @inject NavigationManager Nav
+@inject IToastService TS
 
 <PageTitle>Connexion</PageTitle>
 
 <div class="login-register">
-    <div class="form">
-        <div class="header">
-            <label>Connexion</label>
+    <div class="header">
+        <label>Connexion</label>
+    </div>
+
+    <EditForm Model="@CVM.InformationsConnexion" OnValidSubmit="TentativeConnexion">
+        <DataAnnotationsValidator />
+
+        <div>
+            <InputText @bind-Value="CVM.InformationsConnexion.Email" placeholder="Email" />
+            <ValidationMessage class="erreur" For="@(() => CVM.InformationsConnexion.Email)" />
+        </div>
+        <div>
+            <InputText @bind-Value="CVM.InformationsConnexion.Mdp" type="password" placeholder="Mot de passe" />
+            <ValidationMessage class="erreur" For="@(() => CVM.InformationsConnexion.Mdp)" />
         </div>
 
-        <div class="content">
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Mot de passe" />
-            <button class="btn-submit">Se connecter</button>
-            <p>Vous n'avez pas encore de compte ? <a href="/inscription">Enregistrez-vous</a></p>
-        </div>
-    </div>
+        <button class="btn-submit">Se connecter</button>
+        <p>Vous n'avez pas encore de compte ? <a href="/inscription">Enregistrez-vous</a></p>
+    </EditForm>
 </div>
 
 @code {
+    public async Task TentativeConnexion()
+    {
+        await CVM.TentativeConnexion();
 
+        if (CVM.HasErreur)
+        {
+            TS.ShowError(CVM.MessageErreur);
+            CVM.HasErreur = false;
+            CVM.MessageErreur = string.Empty;
+            return;
+        }
+
+        Nav.NavigateTo("/profil");
+    }
 }

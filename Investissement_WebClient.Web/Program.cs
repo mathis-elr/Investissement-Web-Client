@@ -1,6 +1,7 @@
     using ApexCharts;
 using Blazored.Toast;
 using Investissement_WebClient.Application.Services.Actifs;
+using Investissement_WebClient.Application.Services.Authentification;
 using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Services.FluxBancaires;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
@@ -63,6 +64,7 @@ YahooFinanceApiConfiguration.SearchEndPoint = sectionYahoo["SearchEndPoint"] ?? 
 
 
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
+builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
 builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
 builder.Services.AddScoped<IActifService, ActifService>();

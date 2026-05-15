@@ -3,28 +3,55 @@
 
 @page "/inscription"
 @layout AuthLayout
-@* @inject InscriptionViewModel IVM  *@
+@inject InscriptionViewModel IVM 
 @inject NavigationManager Nav
+@inject IToastService TS
 
 <PageTitle>Nouvel utilisateur</PageTitle>
 
 <div class="login-register">
-    <div class="form">
-        <div class="header">
-            <label>Inscription</label>
+    <div class="header">
+        <label>Inscription</label>
+    </div>
+
+    <EditForm Model="@IVM.InformationsInscription" OnValidSubmit="TentativeInscription">
+        <DataAnnotationsValidator />
+
+        <div>
+            <InputText @bind-Value="IVM.InformationsInscription.Prenom" placeholder="Prénom" />
+            <ValidationMessage class="erreur" For="@(() => IVM.InformationsInscription.Prenom)" />
+        </div>
+        <div>
+            <InputText @bind-Value="IVM.InformationsInscription.Email" placeholder="Email" />
+            <ValidationMessage class="erreur" For="@(() => IVM.InformationsInscription.Email)" />
+        </div>
+        <div>
+            <InputText @bind-Value="IVM.InformationsInscription.Mdp" type="password" placeholder="Mot de passe" />
+            <ValidationMessage class="erreur" For="@(() => IVM.InformationsInscription.Mdp)" />
+        </div>
+        <div>
+            <InputText @bind-Value="IVM.InformationsInscription.ConfirmationMdp" type="password" placeholder="Confirmation mot de passe" />
+            <ValidationMessage class="erreur" For="@(() => IVM.InformationsInscription.ConfirmationMdp)" />
         </div>
 
-        <div class="content">
-            <input type="text" placeholder="Nom d'utilisateur"  />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Mot de passe" />
-            <input type="password" placeholder="Confirmer le mot de passe" />
-            <button class="btn-submit">S'inscrire</button>
-            <p>Vous avez déjà un compte ? <a href="/connexion">Connectez-vous</a></p>   
-        </div>
-    </div>
+        <button class="btn-submit">S'inscrire</button>
+        <p>Vous avez déjà un compte ? <a href="/connexion">Connectez-vous</a></p>
+    </EditForm>
 </div>
 
 @code {
+    public async Task TentativeInscription()
+    {
+        await IVM.TentativeInscription();
 
+        if (IVM.HasErreur)
+        {
+            TS.ShowError(IVM.MessageErreur);
+            IVM.HasErreur = false;
+            IVM.MessageErreur = string.Empty;
+            return;
+        }
+
+        Nav.NavigateTo("/profil?creation=succes");
+    }
 }

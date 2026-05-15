@@ -46,8 +46,13 @@
 </div>
 
 @code {
+    [Parameter][SupplyParameterFromQuery(Name = "creation")] public string? CreationStatus { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        if (CreationStatus == "succes")
+            TS.ShowSuccess("Votre compte a été créé avec succès !");
+
         await IVM.LoadData();
     }
 
