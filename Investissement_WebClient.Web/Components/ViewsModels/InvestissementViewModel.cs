@@ -100,7 +100,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                var messageRecu = await _transactionService.GetSms();
+                var messageRecu = await _transactionService.GetSms(IdUser);
                 Message = messageRecu;
                 Etat = Etat.SmsRequis;
 
@@ -165,7 +165,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                     await LoadData();
                     return true;
                 }
-                FinDeDemande();
                 return false;
             }
             catch (HttpRequestException ex)

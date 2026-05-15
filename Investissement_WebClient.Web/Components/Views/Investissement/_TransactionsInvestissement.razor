@@ -5,7 +5,16 @@
 
 <div class="header">
     <label>Transactions</label>
-    <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">Récuperer mes transactions</button>
+    <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">
+        @if (Model.DemandeEnCours)
+        {
+            <img src="chargement.png" alt="..." />
+        }
+        else
+        {
+            <div>Récuperer mes transactions</div>
+        }
+    </button>
 </div>
 
 <div class="transactions-infos">
@@ -98,5 +107,7 @@
                 break;
 
         }
+
+        Model.FinDeDemande();
     }
 }

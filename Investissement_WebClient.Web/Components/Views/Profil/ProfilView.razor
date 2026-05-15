@@ -46,18 +46,46 @@
         </div>
     </div>
 
-    <div class="bloc2">
+    <div class="info-compte">
         <div class="header">
             <label>@(PVM.PrenomUser != string.Empty ? "Bonjour " + PVM.PrenomUser : "")</label>
             <button class="btn-calcul" @onclick="Deconnexion">Déconnexion</button>
         </div>
     </div>
-    <div class="bloc3"></div>
-    <div class="bloc4"></div>
+    <div class="connect-tr">
+        <div class="header">
+            <label>Connexion Trade Republic</label>
+        </div>
+
+        <EditForm Model="@PVM.TradeRepublicAcces" OnValidSubmit="TentativeEnregistrement">
+            <DataAnnotationsValidator />
+
+            <div>
+                <InputText @bind-Value="PVM.TradeRepublicAcces.NumTel" placeholder="Numéro de téléphone" />
+                <ValidationMessage class="erreur" For="@(() => PVM.TradeRepublicAcces.NumTel)" />
+            </div>
+            <div>
+                <InputText @bind-Value="PVM.TradeRepublicAcces.Pin" type="password" placeholder="Pin (4 chiffres)" />
+                <ValidationMessage class="erreur" For="@(() => PVM.TradeRepublicAcces.Pin)" />
+            </div>
+
+            <button class="btn-submit" disabled="@IsLoading">
+                @if (IsLoading)
+                {
+                    <img src="chargement.png" alt="..." />
+                }
+                else
+                {
+                    <span>Enregistrer</span>
+                }
+            </button>
+        </EditForm>
+    </div>
 </div>
 
 @code {
     [Parameter][SupplyParameterFromQuery(Name = "creation")] public string? CreationStatus { get; set; }
+    public bool IsLoading { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,5 +120,24 @@
         await customAuthStateProvider.UpdateAuthenticationState(null);
 
         Nav.NavigateTo("connexion");
+    }
+
+    public async Task TentativeEnregistrement()
+    {
+        IsLoading = true;
+
+        await PVM.SaveAccesTR();
+
+        if (PVM.HasError)
+        {
+            TS.ShowError(PVM.ErrorMessage);
+            PVM.HasError = false;
+            PVM.ErrorMessage = string.Empty;
+            IsLoading = false;
+            return;
+        }
+
+        IsLoading = false;
+        TS.ShowSuccess("Accès Trade Republic enregistré avec succès !");
     }
 }

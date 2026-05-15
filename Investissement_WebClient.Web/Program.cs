@@ -55,9 +55,7 @@ TradeRepublicApiConfiguration.DatasEndPoint = sectionTR["DatasEndPoint"] ?? thro
 TradeRepublicApiConfiguration.CleeApiKey = sectionTR["CleeApiKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Key' est absente.");
 TradeRepublicApiConfiguration.CleeApiValue = sectionTR["CleeApiValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Value' est absente.");
 TradeRepublicApiConfiguration.NumTelKey = sectionTR["NumTelKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:NumTelKey' est absente.");
-TradeRepublicApiConfiguration.NumTelValue = sectionTR["NumTelValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:NumTelValue' est absente.");
 TradeRepublicApiConfiguration.PinKey = sectionTR["PinKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:PinKey' est absente.");
-TradeRepublicApiConfiguration.PinValue = sectionTR["PinValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:PinValue' est absente.");
 TradeRepublicApiConfiguration.DernierIdEnregistreKey = sectionTR["DernierIdEnregistreKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:DernierIdEnregistreKey' est absente.");
 
 var sectionYahoo = builder.Configuration.GetSection("YahooFinanceApi");

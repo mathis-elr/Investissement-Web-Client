@@ -60,7 +60,7 @@ public class PowensApiService : IPowensApiService
                 {
                     var token = accessToken.GetString() ?? string.Empty;
                     var idCompteCourant = await GetIdCompteCourant(token);
-                    await SaveToken(token, idCompteCourant, userId);
+                    await SaveAcces(token, idCompteCourant, userId);
                 }
                 else
                 {
@@ -107,7 +107,7 @@ public class PowensApiService : IPowensApiService
         await _fluxBancaireService.AddFluxBancaire(transactions?.Transactions, userId);
     }
 
-    private async Task SaveToken(string token, int idCompteCourant, int userId)
+    private async Task SaveAcces(string token, int idCompteCourant, int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
 

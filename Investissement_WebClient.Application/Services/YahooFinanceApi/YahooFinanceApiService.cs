@@ -8,6 +8,7 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
     public class YahooFinanceApiService : IYahooFinanceApiService
     {
         private readonly string _baseUri = YahooFinanceApiConfiguration.BaseUri;
+        private readonly string _searchEndPoint = YahooFinanceApiConfiguration.SearchEndPoint;
 
         private readonly Dictionary<string, string> tickersFixes = new()
         {
@@ -70,7 +71,7 @@ namespace Investissement_WebClient.Application.Services.YahooFinanceApi
             {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 
-                string url = _baseUri + isin;
+                string url = _baseUri + _searchEndPoint + isin;
                 var response = await client.GetAsync(url);
         
                 if (response.IsSuccessStatusCode)

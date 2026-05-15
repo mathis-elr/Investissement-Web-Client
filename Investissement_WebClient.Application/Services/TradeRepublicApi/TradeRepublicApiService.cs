@@ -1,25 +1,32 @@
-﻿using System.Net.Http.Json;
+﻿using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
+using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.Services.Encrypt;
+using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.ViewsModels;
+using Investissement_WebClient.Domain.Configurations;
+using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
-using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Domain.Configurations;
 
 namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 {
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
+        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
         private readonly IFluxInvestissementService _fluxInvestissementService;
+        private readonly IEncryptService _encryptService;
         private readonly HttpClient _httpClient;
+
+        private readonly string _masterKey = TradeRepublicApiConfiguration.MasterKey;
 
         private readonly string _cleeApiKey =  TradeRepublicApiConfiguration.CleeApiKey;
         private readonly string _cleeApiValue = TradeRepublicApiConfiguration.CleeApiValue;
 
         private readonly string _numTelKey = TradeRepublicApiConfiguration.NumTelKey;
-        private readonly string _numTelValue = TradeRepublicApiConfiguration.NumTelValue;
-
         private readonly string _pinKey = TradeRepublicApiConfiguration.PinKey;
-        private readonly string _pinValue = TradeRepublicApiConfiguration.PinValue;
 
         private readonly string _dernierIdEnregistreKey = TradeRepublicApiConfiguration.DernierIdEnregistreKey;
 
@@ -27,9 +34,11 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
         private readonly string _confirmSmsEndPoint = TradeRepublicApiConfiguration.ConfirmSmsEndPoint;
         private readonly string _datasEndPoint = TradeRepublicApiConfiguration.DatasEndPoint;
 
-        public TradeRepublicApiService(IFluxInvestissementService fluxInvestissementService, HttpClient httpClient)
+        public TradeRepublicApiService(IDbContextFactory<InvestissementDbContext> dbFactory, IFluxInvestissementService fluxInvestissementService, IEncryptService encryptService, HttpClient httpClient)
         {
+            _dbFactory = dbFactory;
             _fluxInvestissementService = fluxInvestissementService;
+            _encryptService = encryptService;
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(TradeRepublicApiConfiguration.BaseUri);
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
@@ -40,14 +49,15 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        public async Task<string> GetSms()
+        public async Task<string> GetSms(int userId)
         {
             try
             {
+                var accesTR = await GetTradeRepublicAcces(userId);
                 var request = new HttpRequestMessage(HttpMethod.Post, _requestSmsEndPoint);
 
-                request.Headers.Add(_numTelKey, _numTelValue);
-                request.Headers.Add(_pinKey, _pinValue);
+                request.Headers.Add(_numTelKey, accesTR.NumTel);
+                request.Headers.Add(_pinKey, accesTR.Pin);
 
                 var response = await _httpClient.SendAsync(request);
 
@@ -157,6 +167,48 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                 Console.WriteLine("Erreur innatendu lors de la recuperation des transactions" + ex.Message);
                 throw new Exception($"Erreur inattendue lors de la récupération des transactions");
             }
+        }
+
+        private async Task<TradeRepublicAccesDto> GetTradeRepublicAcces(int userId)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+
+            var acces = await context.TradeRepublicAcces
+                .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
+
+            var accesDto = acces != null ? new TradeRepublicAccesDto
+            {
+                NumTel = acces.NumTel,
+                Pin = _encryptService.Decrypt(acces.PinCrypte.ToString(), _masterKey)
+            } : throw new InvalidOperationException("Accès TradeRepublic non trouvé");
+
+            return accesDto;
+        }
+
+        public async Task SaveAcces(TradeRepublicAccesVM accesDto, int userId)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+
+            var acces = await context.TradeRepublicAcces
+                .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
+
+            if (acces != null)
+            {
+                acces.NumTel = accesDto.NumTel;
+                acces.PinCrypte = _encryptService.Encrypt(accesDto.Pin, _masterKey);
+            }
+            else
+            {
+                var newAcces = new TradeRepublicAcces
+                {
+                    NumTel = accesDto.NumTel,
+                    PinCrypte = _encryptService.Encrypt(accesDto.Pin, _masterKey),
+                    UtilisateurId = userId
+                };
+                await context.TradeRepublicAcces.AddAsync(newAcces);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

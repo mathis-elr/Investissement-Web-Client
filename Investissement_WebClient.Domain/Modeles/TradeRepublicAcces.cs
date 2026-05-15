@@ -6,7 +6,7 @@
 
         public required string NumTel { get; set; }
 
-        public required int PinCrypte { get; set; }
+        public required string PinCrypte { get; set; }
 
         public int UtilisateurId { get; set; }
         public Utilisateur Utilisateur { get; set; } = null!;

@@ -17,14 +17,6 @@
     background-color: green;
 }
 
-button:disabled {
-    background-color: #999;
-    color: #585d60;
-    cursor: not-allowed;
-    opacity: 0.5;
-    pointer-events: none; /*desactive les effets de survol*/
-}
-
 .btn-verifier:hover {
     background-color: darkgreen;
     transform: scale(0.95);

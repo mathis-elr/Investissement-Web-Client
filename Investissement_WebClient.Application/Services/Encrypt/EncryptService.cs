@@ -5,7 +5,7 @@ namespace Investissement_WebClient.Application.Services.Encrypt
 {
     public class EncryptService : IEncryptService
     {
-        public static string Encrypt(string plainText, string masterKey)
+        public string Encrypt(string plainText, string masterKey)
         {
             using Aes aes = Aes.Create();
             // On transforme la clé master en 32 bytes
@@ -24,7 +24,7 @@ namespace Investissement_WebClient.Application.Services.Encrypt
             return Convert.ToBase64String(result);
         }
 
-        public static string Decrypt(string cipherText, string masterKey)
+        public string Decrypt(string cipherText, string masterKey)
         {
             byte[] fullCipher = Convert.FromBase64String(cipherText);
 

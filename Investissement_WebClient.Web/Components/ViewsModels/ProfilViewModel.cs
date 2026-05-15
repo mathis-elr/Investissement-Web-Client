@@ -1,14 +1,19 @@
 ﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.Services.TradeRepublicApi;
+using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
 using Investissement_WebClient.Web.GestionSession;
 
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class ProfilViewModel(SessionService sessionService, IFluxInvestissementService fluxInvestissementService)
+    public class ProfilViewModel(SessionService sessionService, 
+                                 IFluxInvestissementService fluxInvestissementService, 
+                                 ITradeRepublicApiService tradeRepublicApiService)
     {
         private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
+        private readonly ITradeRepublicApiService _tradeRepublicApiService = tradeRepublicApiService;
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -19,6 +24,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public decimal EvolutionAnnuellePourcentage { get; set; } = 8;
         public int PerspectiveNbAnnees { get; set; } = 15;
         public List<ValeurParAnLineChartVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+
+        // CONNECTION TR
+        public TradeRepublicAccesVM TradeRepublicAcces { get; set; } = new TradeRepublicAccesVM();
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
@@ -83,6 +91,19 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 PerspectivesValeurPatrimoineParAn.Add(valeurParAn);
                 annee++;
                 investissementCourant += InvestissementMoyenMensuel * 12;
+            }
+        }
+
+        public async Task SaveAccesTR()
+        {
+            try
+            {
+                await _tradeRepublicApiService.SaveAcces(TradeRepublicAcces, IdUser);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = ex.Message;
             }
         }
 

@@ -37,14 +37,27 @@
             <ValidationMessage class="erreur" For="@(() => IVM.InformationsInscription.ConfirmationMdp)" />
         </div>
 
-        <button class="btn-submit">S'inscrire</button>
+        <button class="btn-submit" disabled="@IsLoading">
+            @if (IsLoading)
+            {
+                <img src="chargement.png" alt="..." />
+            }
+            else
+            {
+                <span>S'inscrire</span>
+            }
+        </button>
         <p>Vous avez déjà un compte ? <a href="/connexion">Connectez-vous</a></p>
     </EditForm>
 </div>
 
 @code {
+    public bool IsLoading { get; set; } = false;
+
     public async Task TentativeInscription()
     {
+        IsLoading = true;
+
         await IVM.TentativeInscription();
 
         if (IVM.HasErreur)
