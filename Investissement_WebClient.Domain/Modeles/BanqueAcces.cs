@@ -11,4 +11,7 @@ public class BanqueAcces
     public DateTime DateCreation { get; set; }
     
     public DateTime DateExpiration {  get; set; }
+
+    public int UtilisateurId { get; set; }
+    public Utilisateur Utilisateur { get; set; } = null!;
 }

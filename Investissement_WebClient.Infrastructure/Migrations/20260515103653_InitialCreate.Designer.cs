@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    [Migration("20260514140637_MajNomPropriete")]
-    partial class MajNomPropriete
+    [Migration("20260515103653_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,7 +73,12 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Property<int>("IdCompteCourant")
                         .HasColumnType("int");
 
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UtilisateurId");
 
                     b.ToTable("BanqueAcces");
                 });
@@ -112,62 +117,69 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 4,
-                            MicroCategorie = "Livret A"
-                        },
-                        new
-                        {
-                            Id = 5,
+                            Id = 3,
                             MacroCategorie = "Vie quotidienne",
                             MicroCategorie = "Achat de nécéssité"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 4,
                             MacroCategorie = "Vie quotidienne",
                             MicroCategorie = "Sport"
                         },
                         new
                         {
-                            Id = 7,
-                            MacroCategorie = "Revenus",
-                            MicroCategorie = "Salaire"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            MacroCategorie = "Revenus",
-                            MicroCategorie = "Aide"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            MacroCategorie = "Autre",
-                            MicroCategorie = "Autre"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            MacroCategorie = "Patrimoine",
-                            MicroCategorie = "Investissement TR"
-                        },
-                        new
-                        {
-                            Id = 11,
+                            Id = 5,
                             MacroCategorie = "Vie quotidienne",
                             MicroCategorie = "Abonnement fixe"
                         },
                         new
                         {
-                            Id = 12,
+                            Id = 6,
                             MacroCategorie = "Vie quotidienne",
                             MicroCategorie = "Logement"
                         },
                         new
                         {
-                            Id = 13,
+                            Id = 7,
+                            MacroCategorie = "Vie quotidienne",
+                            MicroCategorie = "Santé"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            MacroCategorie = "Revenus",
+                            MicroCategorie = "Salaire"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            MacroCategorie = "Revenus",
+                            MicroCategorie = "Aide"
+                        },
+                        new
+                        {
+                            Id = 10,
                             MacroCategorie = "Revenus",
                             MicroCategorie = "Cadeau reçu"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            MacroCategorie = "Patrimoine",
+                            MicroCategorie = "Investissement TR"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            MacroCategorie = "Patrimoine",
+                            MicroCategorie = "Investissement AV"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            MacroCategorie = "Patrimoine",
+                            MicroCategorie = "Epargne"
                         },
                         new
                         {
@@ -178,38 +190,31 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         new
                         {
                             Id = 15,
-                            MacroCategorie = "Patrimoine",
-                            MicroCategorie = "Investissement AV"
-                        },
-                        new
-                        {
-                            Id = 16,
                             MacroCategorie = "Loisirs/Plaisirs",
                             MicroCategorie = "Vacances"
                         },
                         new
                         {
-                            Id = 17,
-                            MacroCategorie = "Vie quotidienne",
-                            MicroCategorie = "Santé"
-                        },
-                        new
-                        {
-                            Id = 18,
+                            Id = 16,
                             MacroCategorie = "Loisirs/Plaisirs",
                             MicroCategorie = "Abonnement plaisir"
                         },
                         new
                         {
-                            Id = 19,
-                            MacroCategorie = "Patrimoine",
-                            MicroCategorie = "Epargne"
+                            Id = 17,
+                            MacroCategorie = "Loisirs/Plaisirs",
+                            MicroCategorie = "Achat cadeau"
                         },
                         new
                         {
-                            Id = 20,
-                            MacroCategorie = "Loisirs/Plaisirs",
-                            MicroCategorie = "Achat cadeau"
+                            Id = 18,
+                            MacroCategorie = "Autre",
+                            MicroCategorie = "Autre"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            MicroCategorie = "Livret A"
                         });
                 });
 
@@ -228,12 +233,18 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Valeur")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdCategorie");
+
+                    b.HasIndex("UtilisateurId");
 
                     b.ToTable("FluxBancaire");
                 });
@@ -250,6 +261,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("Frais")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Prix")
@@ -267,11 +279,72 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActifId");
 
+                    b.HasIndex("UtilisateurId");
+
                     b.ToTable("FluxInvestissement");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.TradeRepublicAcces", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NumTel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PinCrypte")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UtilisateurId");
+
+                    b.ToTable("TradeRepublicAcces");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Utilisateur", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreationCompte")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("MdpHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Utilisateur");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.ValeurPatrimoine", b =>
@@ -286,14 +359,27 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("InvestissementTotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Valeur")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ValeurPatrimoine");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.BanqueAcces", b =>
+                {
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxBancaire", b =>
@@ -303,7 +389,15 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasForeignKey("IdCategorie")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Categorie");
+
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxInvestissement", b =>
@@ -314,7 +408,26 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Actif");
+
+                    b.Navigation("Utilisateur");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.TradeRepublicAcces", b =>
+                {
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Utilisateur");
                 });
 #pragma warning restore 612, 618
         }

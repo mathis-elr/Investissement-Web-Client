@@ -5,28 +5,30 @@
                 Timeout="10"
                 IconType="IconType.FontAwesome"/>
 
-<nav>
-    <NavLink class="nav-link" href="/budget">
-        <div class="page">Budget</div>
-    </NavLink>
+<div class="main-layout">
+    <nav>
+        <NavLink class="nav-link" href="/budget">
+            <div class="page">Budget</div>
+        </NavLink>
 
-    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-        <div class="page">Investissement</div>
-    </NavLink>
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <div class="page">Investissement</div>
+        </NavLink>
     
-    <NavLink class="nav-link" href="/patrimoine">
-        <div class="page">Patrimoine</div>
-    </NavLink>
+        <NavLink class="nav-link" href="/patrimoine">
+            <div class="page">Patrimoine</div>
+        </NavLink>
 
-    <NavLink class="nav-link" href="/profil">
-        <div class="page">Profil</div>
-    </NavLink>
-</nav>
+        <NavLink class="nav-link" href="/profil">
+            <div class="page">Profil</div>
+        </NavLink>
+    </nav>
 
-@Body
+    @Body
 
-<footer>
-    <div class="footer-content">
-        <label>© Investissement 2025 - @(DateTime.Today.Year) </label>
-    </div>
-</footer>
+    <footer>
+        <div class="footer-content">
+            <label>© Investissement 2025 - @(DateTime.Today.Year) </label>
+        </div>
+    </footer>
+</div>

@@ -11,5 +11,8 @@ public class FluxBancaire
     public required string Libelle { get; set; }
 
     public int? IdCategorie { get; set; }
-    public CategorieFlux? Categorie { get; set; }
+    public CategorieFlux Categorie { get; set; } = null!;
+
+    public int UtilisateurId { get; set; }
+    public Utilisateur Utilisateur { get; set; } = null!;
 }

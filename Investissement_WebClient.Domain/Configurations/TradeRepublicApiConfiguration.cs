@@ -2,6 +2,8 @@
 {
     public static class TradeRepublicApiConfiguration
     {
+        public static string MasterKey { get; set; } = null!;
+
         public static string BaseUri { get; set; } = null!;
         public static string RequestSmsEndPoint { get; set; } = null!;
         public static string ConfirmSmsEndPoint { get; set; } = null!;

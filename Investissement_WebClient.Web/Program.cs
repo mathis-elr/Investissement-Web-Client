@@ -1,6 +1,7 @@
     using ApexCharts;
 using Blazored.Toast;
 using Investissement_WebClient.Application.Services.Actifs;
+using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Services.FluxBancaires;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.PowensApi;
@@ -42,6 +43,7 @@ PowensApiConfiguration.AccountsEndPoint = sectionPowens["AccountsEndPoint"] ?? t
 PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"] ?? throw new InvalidOperationException("La config 'PowensApi:RedirectUri' est absente.");
 
 var sectionTR = builder.Configuration.GetSection("TradeRepublicApi");
+TradeRepublicApiConfiguration.MasterKey = sectionTR["MasterKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:MasterKey' est absente.");
 TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:BaseUri' est absente.");
 TradeRepublicApiConfiguration.RequestSmsEndPoint = sectionTR["RequestSmsEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:RequestSmsEndPoint' est absente.");
 TradeRepublicApiConfiguration.ConfirmSmsEndPoint = sectionTR["ConfirmSmsEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:ConfirmSmsEndPoint' est absente.");
@@ -69,14 +71,18 @@ builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 builder.Services.AddScoped<ITradeRepublicApiService, TradeRepublicApiService>();
 builder.Services.AddScoped<IPowensApiService, PowensApiService>();
 
-builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService>();
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
+builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
+
+builder.Services.AddScoped<IEncryptService, EncryptService>();
 
 builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
+builder.Services.AddScoped<InscriptionViewModel>();
 builder.Services.AddScoped<BudgetViewModel>();
 builder.Services.AddScoped<ProfilViewModel>();
+builder.Services.AddScoped<ConnexionViewModel>();
 
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 

@@ -101,19 +101,6 @@
     font-weight: 500;
 }
 
-select, input {
-    width: 100%;
-    transition: 0.4s ease-in-out;
-}
-
-.perspectives-infos input:hover,
-.perspectives-infos select:hover,
-.perspectives-infos input:focus,
-.perspectives-infos select:focus {
-    outline: none !important;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
-}
-
 
 .bloc2 {
     grid-column: 3/5;

@@ -10,22 +10,28 @@ public class InvestissementDbContext : DbContext
     {
     }
 
-    public DbSet<Actif> Actif { get; set; }
+    public DbSet<Utilisateur> Utilisateur { get; set; }
 
+    public DbSet<TradeRepublicAcces> TradeRepublicAcces { get; set; }
+
+    public DbSet<BanqueAcces> BanqueAcces { get; set; }
+
+    public DbSet<Actif> Actif { get; set; }
     public DbSet<FluxInvestissement> FluxInvestissement { get; set; }
 
     public DbSet<CategorieFlux> CategorieFlux { get; set; }
-
     public DbSet<FluxBancaire> FluxBancaire { get; set; }
 
     public DbSet<ValeurPatrimoine> ValeurPatrimoine { get; set; }
-
-    public DbSet<BanqueAcces> BanqueAcces { get; set; }
     
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Utilisateur>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
 
         modelBuilder.Entity<Actif>(entity =>
         {
@@ -93,62 +99,69 @@ public class InvestissementDbContext : DbContext
             },
             new CategorieFlux
             {
-                Id = 4,
-                MicroCategorie = "Livret A"
-            },
-            new CategorieFlux
-            {
-                Id = 5,
+                Id = 3,
                 MacroCategorie = "Vie quotidienne",
                 MicroCategorie = "Achat de nécéssité"
             },
             new CategorieFlux
             {
-                Id = 6,
+                Id = 4,
                 MacroCategorie = "Vie quotidienne",
                 MicroCategorie = "Sport"
             },
             new CategorieFlux
             {
-                Id = 7,
-                MacroCategorie = "Revenus",
-                MicroCategorie = "Salaire"
-            },
-            new CategorieFlux
-            {
-                Id = 8,
-                MacroCategorie = "Revenus",
-                MicroCategorie = "Aide"
-            },
-            new CategorieFlux
-            {
-                Id = 9,
-                MacroCategorie = "Autre",
-                MicroCategorie = "Autre"
-            },
-            new CategorieFlux
-            {
-                Id = 10,
-                MacroCategorie = "Patrimoine",
-                MicroCategorie = "Investissement TR"
-            },
-            new CategorieFlux
-            {
-                Id = 11,
+                Id = 5,
                 MacroCategorie = "Vie quotidienne",
                 MicroCategorie = "Abonnement fixe"
             },
             new CategorieFlux
             {
-                Id = 12,
+                Id = 6,
                 MacroCategorie = "Vie quotidienne",
                 MicroCategorie = "Logement"
             },
             new CategorieFlux
             {
-                Id = 13,
+                Id = 7,
+                MacroCategorie = "Vie quotidienne",
+                MicroCategorie = "Santé"
+            },
+            new CategorieFlux
+            {
+                Id = 8,
+                MacroCategorie = "Revenus",
+                MicroCategorie = "Salaire"
+            },
+            new CategorieFlux
+            {
+                Id = 9,
+                MacroCategorie = "Revenus",
+                MicroCategorie = "Aide"
+            },
+            new CategorieFlux
+            {
+                Id = 10,
                 MacroCategorie = "Revenus",
                 MicroCategorie = "Cadeau reçu"
+            },
+            new CategorieFlux
+            {
+                Id = 11,
+                MacroCategorie = "Patrimoine",
+                MicroCategorie = "Investissement TR"
+            },
+            new CategorieFlux
+            {
+                Id = 12,
+                MacroCategorie = "Patrimoine",
+                MicroCategorie = "Investissement AV"
+            },
+            new CategorieFlux
+            {
+                Id = 13,
+                MacroCategorie = "Patrimoine",
+                MicroCategorie = "Epargne"
             },
             new CategorieFlux
             {
@@ -159,38 +172,33 @@ public class InvestissementDbContext : DbContext
             new CategorieFlux
             {
                 Id = 15,
-                MacroCategorie = "Patrimoine",
-                MicroCategorie = "Investissement AV"
+                MacroCategorie = "Loisirs/Plaisirs",
+                MicroCategorie = "Vacances"
             },
+
             new CategorieFlux
             {
                 Id = 16,
                 MacroCategorie = "Loisirs/Plaisirs",
-                MicroCategorie = "Vacances"
+                MicroCategorie = "Abonnement plaisir"
             },
+
             new CategorieFlux
             {
                 Id = 17,
-                MacroCategorie = "Vie quotidienne",
-                MicroCategorie = "Santé"
+                MacroCategorie = "Loisirs/Plaisirs",
+                MicroCategorie = "Achat cadeau"
             },
             new CategorieFlux
             {
                 Id = 18,
-                MacroCategorie = "Loisirs/Plaisirs",
-                MicroCategorie = "Abonnement plaisir"
+                MacroCategorie = "Autre",
+                MicroCategorie = "Autre"
             },
             new CategorieFlux
             {
                 Id = 19,
-                MacroCategorie = "Patrimoine",
-                MicroCategorie = "Epargne"
-            },
-            new CategorieFlux
-            {
-                Id = 20,
-                MacroCategorie = "Loisirs/Plaisirs",
-                MicroCategorie = "Achat cadeau"
+                MicroCategorie = "Livret A"
             }
         );
     }

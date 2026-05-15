@@ -1,0 +1,30 @@
+﻿@using Investissement_WebClient.Web.Components.ViewsModels
+@using Investissement_WebClient.Web.Components.Layout
+
+@page "/inscription"
+@layout AuthLayout
+@* @inject InscriptionViewModel IVM  *@
+@inject NavigationManager Nav
+
+<PageTitle>Nouvel utilisateur</PageTitle>
+
+<div class="login-register">
+    <div class="form">
+        <div class="header">
+            <label>Inscription</label>
+        </div>
+
+        <div class="content">
+            <input type="text" placeholder="Nom d'utilisateur"  />
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Mot de passe" />
+            <input type="password" placeholder="Confirmer le mot de passe" />
+            <button class="btn-submit">S'inscrire</button>
+            <p>Vous avez déjà un compte ? <a href="/connexion">Connectez-vous</a></p>   
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

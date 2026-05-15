@@ -11,7 +11,7 @@ public class FluxInvestissement
     public TypeFlux Type { get; init; }
 
     public int ActifId { get; set; }
-    public Actif? Actif {  get; set; }
+    public Actif Actif {  get; set; } = null!;
 
     public decimal Prix { get; init; }
 
@@ -20,4 +20,7 @@ public class FluxInvestissement
     public decimal? Frais { get; init; }
 
     public decimal Total { get; init; }
+
+    public int UtilisateurId { get; set; }
+    public Utilisateur Utilisateur { get; set; } = null!;
 }
