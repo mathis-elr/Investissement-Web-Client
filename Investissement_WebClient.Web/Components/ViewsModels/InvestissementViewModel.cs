@@ -197,10 +197,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task InitialiserSession()
         {
-            await _sessionService.Initialiser();
-
             IdUser = _sessionService.Id;
-            PrenomUser = _sessionService.Prenom;
         }
 
         private async Task LoadFluxInvestissement()

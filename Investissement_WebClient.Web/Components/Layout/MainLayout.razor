@@ -31,7 +31,21 @@
 
     <footer>
         <div class="footer-content">
-            <label>© Investissement 2025 - @(DateTime.Today.Year) </label>
+            <label>Investissement @PrenomUser @(AnneeCreation == AnneeCourante ? AnneeCreation : AnneeCreation + "-" + AnneeCourante)</label>
         </div>
     </footer>
 </div>
+
+
+@code{
+    private string PrenomUser { get; set; } = string.Empty;
+    private string AnneeCreation { get; set; } = string.Empty;
+    private string AnneeCourante { get; set; } = DateTime.Now.Year.ToString();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Session.Initialiser();
+        PrenomUser = Session.Prenom;
+        AnneeCreation = Session.AnneeCreation;
+    }
+}

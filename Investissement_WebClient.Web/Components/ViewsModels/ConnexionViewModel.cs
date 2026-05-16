@@ -22,6 +22,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 SessionUtilisateur.Id = user.Id;
                 SessionUtilisateur.Email = user.Email;
                 SessionUtilisateur.Prenom = user.Prenom;
+                SessionUtilisateur.DateCreationCompte = user.DateCreationCompte;
             }
             catch (Exception ex)
             {

@@ -54,7 +54,8 @@ public class CustomAuthStateProvider(ProtectedLocalStorage localStorage) : Authe
         {
             new Claim(ClaimTypes.NameIdentifier, session.Id.ToString()),
             new Claim(ClaimTypes.Email, session.Email),
-            new Claim(ClaimTypes.Name, session.Prenom)
+            new Claim(ClaimTypes.Name, session.Prenom),
+            new Claim(ClaimTypes.DateOfBirth, session.DateCreationCompte.Year.ToString())
         }, "CustomAuth"));
     }
 }

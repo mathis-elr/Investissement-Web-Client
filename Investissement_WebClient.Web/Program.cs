@@ -135,11 +135,4 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AllowAnonymous();
 
-// requette vide pour cron job
-app.MapGet("/api/update-data", async (BudgetViewModel bvm) =>
-{
-    await bvm.StartLoadData();
-    return Results.Empty; 
-});
-
 app.Run();

@@ -37,10 +37,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
-            await _sessionService.Initialiser();
-
             IdUser = _sessionService.Id;
-            PrenomUser = _sessionService.Prenom;
 
             var prixParActif = await _fluxInvestissementService.GetPrixParActif();
 

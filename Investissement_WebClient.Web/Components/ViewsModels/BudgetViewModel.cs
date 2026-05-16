@@ -52,10 +52,7 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task StartLoadData()
     {
-        await _sessionService.Initialiser();
-
         IdUser = _sessionService.Id;
-        PrenomUser = _sessionService.Prenom;
 
         await LoadDateLimiteValiditeSyncBanque();
 
