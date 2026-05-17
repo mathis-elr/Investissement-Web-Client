@@ -21,6 +21,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public string PrenomUser { get; set; } = string.Empty;
 
         // DATAS INFOS PATRIMOINE
+        public bool RecuparationEnCours { get; set; } = false;
         public decimal ValeurPatrimoineCourante { get; set; }
         private decimal ValeurInvestissementTotal { get; set; }
         public IEnumerable<VariationDto> Variations { get; set; } = [];
@@ -37,6 +38,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
+            RecuparationEnCours = true;
+
+            await _sessionService.Initialiser();
             IdUser = _sessionService.Id;
 
             var prixParActif = await _fluxInvestissementService.GetPrixParActif();
@@ -53,6 +57,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 await LoadBougiesJournalieresPlusOuMoinsValues();
                 await LoadProportionParActif(prixParActif);
             }
+
+            RecuparationEnCours = false;
         }
 
         public string DeterminerClasse(decimal variationPrix)

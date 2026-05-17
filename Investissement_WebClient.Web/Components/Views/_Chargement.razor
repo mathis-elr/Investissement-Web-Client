@@ -1,0 +1,26 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg"
+     style="display: inline-block; vertical-align: middle; width: @(LargeurBouton)px; height: auto;"
+     viewBox="0 0 100 100"
+     preserveAspectRatio="xMidYMid">
+
+    <circle cx="25" cy="50" r="@Taille" fill="@Couleur">
+        <animate attributeName="r" values="@Taille;@(Taille * 2);@Taille" dur="1.2s" repeatCount="indefinite" begin="0s" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1" keyTimes="0;0.5;1"></animate>
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" begin="0s" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1" keyTimes="0;0.5;1"></animate>
+    </circle>
+
+    <circle cx="50" cy="50" r="@Taille" fill="@Couleur">
+        <animate attributeName="r" values="@Taille;@(Taille * 2);@Taille" dur="1.2s" repeatCount="indefinite" begin="0.2s" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1" keyTimes="0;0.5;1"></animate>
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" begin="0.2s" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1" keyTimes="0;0.5;1"></animate>
+    </circle>
+
+    <circle cx="75" cy="50" r="@Taille" fill="@Couleur">
+        <animate attributeName="r" values="@Taille;@(Taille * 2);@Taille" dur="1.2s" repeatCount="indefinite" begin="0.4s" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1" keyTimes="0;0.5;1"></animate>
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" begin="0.4s" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1" keyTimes="0;0.5;1"></animate>
+    </circle>
+</svg>
+
+@code {
+    [Parameter] public string Couleur { get; set; } = "black";
+    [Parameter] public int Taille { get; set; } = 6; 
+    [Parameter] public int LargeurBouton { get; set; } = 30; // Gère la largeur réelle du SVG en pixels
+}

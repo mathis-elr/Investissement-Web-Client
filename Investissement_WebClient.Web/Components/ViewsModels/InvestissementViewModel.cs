@@ -33,8 +33,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public Etat Etat { get; set; } = Etat.Neutre;
         public string CodeSms { get; set; } = string.Empty;
         public bool DemandeEnCours { get; set; } = false;
+        public bool VerificationEnCours { get; set; } = false;
 
         // INVESTISSEMENT MOYEN
+        public bool ChargementEncours { get; set; } = false;
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
@@ -63,18 +65,23 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
+            ChargementEncours = true;
+
             await InitialiserSession();
 
             await LoadFluxInvestissement();
-            if (!FluxInvestissement.Any())
-                return;
 
-            await LoadInvestissementMoyenMensuel();
+            if (FluxInvestissement.Any())
+            {
+                await LoadInvestissementMoyenMensuel();
 
-            var prixParActif = await LoadPrixParActif();
-            await LoadInvestissementTotal(prixParActif);
-            await LoadInvestissementsParMois();
-            await LoadInfosInvestParActif(prixParActif);
+                var prixParActif = await LoadPrixParActif();
+                await LoadInvestissementTotal(prixParActif);
+                await LoadInvestissementsParMois();
+                await LoadInfosInvestParActif(prixParActif);
+            }
+
+            ChargementEncours = false;
         }
 
         public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
@@ -122,6 +129,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task<bool?> VerfierCodeSms()
         {
+            VerificationEnCours = true;
             Message = "Vérification de la conformité du code ...";
 
             if (int.TryParse(CodeSms, out int codeSmsString) && CodeSms.Length!=4)
@@ -155,7 +163,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public async Task<bool?> ChargerTransactions()
         {
             Message = "Récupération des transactions, cette opération peut être plus ou moins longue ...";
-
             NotifyStateChanged();
 
             try
@@ -191,12 +198,14 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             Etat = Etat.Neutre;
             Message = "Aucune demande de récupération de transactions en cours ...";
             DemandeEnCours = false;
+            VerificationEnCours = false;
 
             NotifyStateChanged();   
         }
 
         private async Task InitialiserSession()
         {
+            await _sessionService.Initialiser();
             IdUser = _sessionService.Id;
         }
 

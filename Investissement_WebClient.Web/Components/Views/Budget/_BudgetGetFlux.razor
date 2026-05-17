@@ -4,7 +4,16 @@
 
 <div class="header">
     <label>Flux @Model.DateActiveString</label>
-    <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">Récupérer les transactions de @Model.DateActiveString</button>
+    <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">
+        @if (Model.ActionEnCours)
+        {
+            <_Chargement />
+        }
+        else
+        {
+            <div>Récupérer les transactions de @Model.DateActiveString</div>
+        }
+    </button>
 </div>
 
 <div class="content">
@@ -23,6 +32,7 @@
             TS.ShowError(Model.MessageErreur);
             Model.HasErreur = false;
             Model.MessageErreur = string.Empty;
+            Model.ActionEnCours = false;
             return;
         }
 

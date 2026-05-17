@@ -26,7 +26,15 @@
 
         <div class="rail @(graphiques[index])">
 
-            @if (PVM.ValeurPatrimoineCourante == 0)
+            @if (PVM.RecuparationEnCours)
+            {
+                <div class="page">
+                    <div class="recherche-donnee">            
+                        <_ChargementGraphique />
+                    </div>
+                </div>
+            }
+            else if (PVM.ValeurPatrimoineCourante == 0)
             {
                 <div class="page">
                     <div class="recherche-donnee">

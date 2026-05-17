@@ -8,7 +8,7 @@
     <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">
         @if (Model.DemandeEnCours)
         {
-            <img src="chargement.png" alt="..." />
+            <_Chargement />
         }
         else
         {
@@ -25,7 +25,16 @@
             <div class="info">
                 <input type="text" inputmode="numeric" maxlength="4" @bind="Model.CodeSms" placeholder="ex : 1234" />
             </div>
-            <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">Vérifier</button>
+            <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">
+                @if (Model.VerificationEnCours)
+                {
+                    <_Chargement />
+                }
+                else
+                {
+                    <div>Vérifier</div>
+                }
+            </button>
         }
         else
         {
@@ -35,7 +44,13 @@
 </div>
 
 <div class="content">
-    @if (Model.FluxInvestissement.Any())
+    @if (Model.ChargementEncours)
+    {
+        <div class="center">
+            <p><_Chargement Couleur="goldenrod" LargeurBouton="50"/></p>
+        </div>
+    }
+    else if (Model.FluxInvestissement.Any())
     {
         @foreach (var transactionsParDate in Model.FluxInvestissement.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key)!)
         {

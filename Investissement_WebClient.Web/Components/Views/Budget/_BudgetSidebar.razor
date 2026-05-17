@@ -15,7 +15,7 @@
             🔄 Synchroniser ma banque 🔄
         </button>
     }
-    else
+    else if (Model.DateExpirationSync.HasValue)
     {
         <p class="fst-italic">Banque synchronisée jusqu'au @Model.DateExpirationSync!.Value.ToString("dd MMM")</p>
     }

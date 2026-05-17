@@ -35,6 +35,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
+            await _sessionService.Initialiser();
             IdUser = _sessionService.Id;
             PrenomUser = _sessionService.Prenom;
 

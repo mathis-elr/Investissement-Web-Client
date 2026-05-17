@@ -21,17 +21,25 @@
     </div>
 
     <div class="evolution-actifs">
-        <div class="@(IVM.InfoInvestParActif.Any() ? "mes-actifs" : "")">
-            @if (IVM.InfoInvestParActif.Any())
-            {
+        @if (IVM.ChargementEncours)
+        {
+            <div class="center">
+                <_Chargement Couleur="goldenrod" LargeurBouton="50" />
+            </div>
+        }
+        else if (IVM.InfoInvestParActif.Any())
+        {
+            <div class="mes-actifs">
                 <_EvolutionActifs InfoInvestParActif="@IVM.InfoInvestParActif" />
                 <_EvolutionActifs InfoInvestParActif="@IVM.InfoInvestParActif" />
-            }
-            else
-            {
+            </div>
+        }
+        else
+        {
+            <div class="center">
                 <p>Ici vous pourrez voir l'évolution de tous les actifs dans lesquels vous investissez...</p>
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>
 

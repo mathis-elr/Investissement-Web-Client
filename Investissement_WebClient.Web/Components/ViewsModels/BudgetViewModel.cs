@@ -22,7 +22,7 @@ public class BudgetViewModel(SessionService sessionService,
 
     //MAJ VUE
     public event Action OnChange = null!;
-    private void NotifyStateChanged() => OnChange.Invoke();
+    private void NotifyStateChanged() => OnChange?.Invoke();
 
     public List<FluxBancaireVM> Flux { get; set; } = [];
 
@@ -38,13 +38,14 @@ public class BudgetViewModel(SessionService sessionService,
 
     // ENREGISTREMENT MENSUEL
     public DateTime? DateExpirationSync { get; set; } = null;
-    public bool ConnexionBanqueRequise => !DateExpirationSync.HasValue;
+    public bool ConnexionBanqueRequise { get; set; } = false;
     public DateTime DateEditMensuel { get; set; } = DateTime.Today;
     public List<FluxBancaireVM> FluxMensuel { get; set; } = [];
     public List<FluxBancaireVM> CreditsFluxMensuel => FluxMensuel.Where(f => f.Valeur >= 0).ToList();
     public List<FluxBancaireVM> DebitsFluxMensuel => FluxMensuel.Where(f => f.Valeur < 0).ToList();
     public IEnumerable<CategorieFluxDto> Categories { get; set; } = [];
     public List<ValeurParCategorieBarChartVM> StatsGraphique { get; set; } = [];
+    public bool ActionEnCours { get; set; } = false;
 
     // GESTION D'ERREUR
     public string MessageErreur { get; set; } = string.Empty;
@@ -52,6 +53,8 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task StartLoadData()
     {
+        ActionEnCours = true;
+        await _sessionService.Initialiser();
         IdUser = _sessionService.Id;
 
         await LoadDateLimiteValiditeSyncBanque();
@@ -61,11 +64,8 @@ public class BudgetViewModel(SessionService sessionService,
 
         DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
         DeterminerStatutMois();
-    }
 
-    private async Task LoadDateLimiteValiditeSyncBanque()
-    {
-        DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
+        ActionEnCours = false;
     }
 
     public async Task MajVue()
@@ -73,12 +73,14 @@ public class BudgetViewModel(SessionService sessionService,
         await LoadFlux();
         await LoadFluxUnMois(StatutMoisActif!);
         DeterminerStatutMois();
+        ActionEnCours = false;
 
         NotifyStateChanged();
     }
 
     public void SetRecapGlobalMode()
     {
+        FluxMensuel = [];
         DateActive = null;
         StatutMoisActif = null;
 
@@ -92,7 +94,7 @@ public class BudgetViewModel(SessionService sessionService,
 
         DateActive = date;
 
-        if(!Categories.Any())
+        if (!Categories.Any())
             Categories = await _fluxBancaireService.GetCategorieFlux();
 
         DateEditMensuel = date;
@@ -114,6 +116,8 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task GetFluxMensuel()
     {
+        ActionEnCours = true;
+
         if (ConnexionBanqueRequise)
         {
             HasErreur = true;
@@ -133,6 +137,8 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task UpdateFluxMensuel()
     {
+        ActionEnCours = true;
+
         if (FluxMensuel == null)
             throw new Exception("Aucune données mensuel");
 
@@ -140,7 +146,17 @@ public class BudgetViewModel(SessionService sessionService,
 
         await RefreshData();
         DeterminerStatutMois();
+
+        ActionEnCours = false;
+
         NotifyStateChanged();
+    }
+
+    private async Task LoadDateLimiteValiditeSyncBanque()
+    {
+        DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
+        ConnexionBanqueRequise = !DateExpirationSync.HasValue;
+        Console.WriteLine(ConnexionBanqueRequise);
     }
 
     public void EditerMoisComplete()
