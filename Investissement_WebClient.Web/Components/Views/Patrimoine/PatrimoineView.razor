@@ -20,8 +20,8 @@
 
         @if(PVM.ValeurPatrimoineCourante != 0)
         {
-            <div class="btn-rond precedent" @onclick="GraphiquePrecedent">ᐸ</div>
-            <div class="btn-rond suivant" @onclick="GraphiqueSuivant">ᐳ</div>
+            <div class="btn-rond precedent" @onclick="GraphiquePrecedent"><img src="precedent.png"></div>
+            <div class="btn-rond suivant" @onclick="GraphiqueSuivant"><img src="suivant.png"></div>
         }
 
         <div class="rail @(graphiques[index])">
