@@ -24,7 +24,7 @@
     <div class="investissement-content">
         <ApexChart TItem="InvestissementParMoisVM"
                     XAxisType="XAxisType.Datetime"
-                    Options="ProfilChartsOptions.OptionsInvestissementParMois">
+                    Options="ProfilChartsOptions.OptionsInvestissementParMois">        
 
             <ApexPointSeries TItem="InvestissementParMoisVM"
                                 Items="Model.InvestissementsParMois"
@@ -32,15 +32,16 @@
                                 Name="Investissement"
                                 YValue="@(e => e.Investissement)"
                                 XValue="@(e => e.Date)"
-                                Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })" ShowDataLabels />
+                                Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })" 
+                                ShowDataLabels />
 
             <ApexPointSeries TItem="InvestissementParMoisVM"
-                                Items="Model.InvestissementsParMois"
-                                SeriesType="SeriesType.Line"
-                                Name="Investissement moyen"
-                                YValue="@(e => e.InvestissementMoyen)"
-                                XValue="@(e => e.Date)"
-                                Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="grey" })" />
+                             Items="Model.InvestissementsParMois"
+                             SeriesType="SeriesType.Line"
+                             Name="Investissement moyen"
+                             YValue="@(e => e.InvestissementMoyen)"
+                             XValue="@(e => e.Date)"
+                             Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="grey" })"/>
         </ApexChart>
     </div>
 }

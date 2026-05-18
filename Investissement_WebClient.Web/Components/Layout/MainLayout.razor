@@ -5,25 +5,25 @@
 @inject SessionService Session
 
 <BlazoredToasts Position="ToastPosition.TopRight"
-                Timeout="10"
+                Timeout="7"
                 IconType="IconType.FontAwesome"/>
 
 <div class="main-layout">
     <nav>
-        <NavLink class="nav-link" href="/budget">
-            <div class="link">Budget</div>
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <div class="link">Profil</div>
         </NavLink>
 
-        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-            <div class="link">Investissement</div>
-        </NavLink>
-    
         <NavLink class="nav-link" href="/patrimoine">
             <div class="link">Patrimoine</div>
         </NavLink>
 
-        <NavLink class="nav-link" href="/profil">
-            <div class="link">Profil</div>
+        <NavLink class="nav-link" href="/investissement">
+            <div class="link">Investissement</div>
+        </NavLink>
+
+        <NavLink class="nav-link" href="/budget">
+            <div class="link">Budget</div>
         </NavLink>
     </nav>
 

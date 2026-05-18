@@ -2,30 +2,37 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;
+    border-radius: 15px;
+    background-color: #1e1e1e;
+    padding: 5px;
+    width: fit-content;
+    margin: 0 auto;
     gap: 15px;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
+
+    nav:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
 
 ::deep .nav-link {
     text-decoration: none;
-    transition: ease-in-out 0.1s;
-    border-radius: 20px;
-    color: white;
+    border-radius: 13px;
+    color: #808080;
     font-weight: bold;
-    opacity: 0.6;
+    padding: .4rem 1rem;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
-
-    ::deep .nav-link:hover {
-        color: white;
-        opacity: 1;
+    ::deep .nav-link:hover:not(.active) {
+        color: #b3b3b3;
+        background-color: rgba(255, 255, 255, 0.03);
     }
 
     ::deep .nav-link.active {
-        background-color: rgb(49, 45, 45);
+        background-color: #242424;
         color: goldenrod;
-        font-weight: bold;
-        opacity: 1;
+        transform: scale(1.01); 
     }
 
 ::deep .link {

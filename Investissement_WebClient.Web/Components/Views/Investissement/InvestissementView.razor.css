@@ -70,7 +70,7 @@
 .mes-actifs{
     display:flex;
     gap: 15px;
-    animation: defilement linear 30s infinite;
+    animation: defilement linear 40s infinite;
 }
     .mes-actifs:hover {
         animation-play-state: paused;
@@ -93,8 +93,4 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-::deep span {
-    color: goldenrod;
 }
