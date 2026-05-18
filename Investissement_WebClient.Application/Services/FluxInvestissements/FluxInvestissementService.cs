@@ -53,11 +53,10 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             return dernierFlux?.Id;
         }
 
-        public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel, int userId)
+        public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var investissementParMois =  await CalculerInvestissementParMois(userId);
-            investissementParMois.ForEach(i => i.InvestissementMoyen = Math.Round(investissementMoyenMensuel,2));
             return investissementParMois;
         }
 
@@ -109,7 +108,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 .SumAsync(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total);
         }
         
-        public async Task<decimal> CalculerInvestissementMoyenMensuel(int userId)
+        public async Task<decimal> CalculerInvestissementMedianMensuel(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 

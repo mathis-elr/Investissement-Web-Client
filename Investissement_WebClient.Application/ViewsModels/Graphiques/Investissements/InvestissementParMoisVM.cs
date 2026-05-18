@@ -5,7 +5,5 @@
         public DateTime Date { get; set; }
 
         public decimal Investissement { get; set; }
-
-        public decimal InvestissementMoyen {  get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         Task<string?> GetDernierFluxEnregistre(int userId);
 
-        Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(decimal investissementMoyenMensuel, int userId);
+        Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(int userId);
 
         Task<Dictionary<string, decimal>> GetPrixParActif();
 
@@ -21,7 +21,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
     
         Task<decimal> CalculerValeurInvestissementTotal(int userId);
 
-        Task<decimal> CalculerInvestissementMoyenMensuel(int userId);
+        Task<decimal> CalculerInvestissementMedianMensuel(int userId);
 
         Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId);
 

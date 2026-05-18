@@ -37,7 +37,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         // INVESTISSEMENT MOYEN
         public bool ChargementEncours { get; set; } = false;
-        public decimal InvestissementMoyenMensuel { get; set; }
+        public decimal InvestissementMedianMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
 
@@ -73,7 +73,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             if (FluxInvestissement.Any())
             {
-                await LoadInvestissementMoyenMensuel();
+                await LoadInvestissementMedianMensuel();
 
                 var prixParActif = await LoadPrixParActif();
                 await LoadInvestissementTotal(prixParActif);
@@ -214,9 +214,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             FluxInvestissement = await _fluxInvestissementService.GetFluxInvestissement(IdUser);
         }
 
-        private async Task LoadInvestissementMoyenMensuel()
+        private async Task LoadInvestissementMedianMensuel()
         {
-            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel(IdUser);
+            InvestissementMedianMensuel = await _fluxInvestissementService.CalculerInvestissementMedianMensuel(IdUser);
         }
 
         private async Task LoadInvestissementTotal(Dictionary<string, decimal> prixParActif)
@@ -226,7 +226,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadInvestissementsParMois()
         {
-            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(InvestissementMoyenMensuel, IdUser);
+            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(IdUser);
         }
     }
 }

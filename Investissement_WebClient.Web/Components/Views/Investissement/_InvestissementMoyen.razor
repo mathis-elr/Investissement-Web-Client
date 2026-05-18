@@ -6,9 +6,9 @@
     <label>Investissements</label>
     <div class="investissement-infos">
         <div class="form-grid">
-            <label>Moyen mensuel</label>
+            <label>Médian mensuel</label>
             <div class="info" style="text-align: end">
-                <span>@(Model.InvestissementMoyenMensuel == 0 ? "--,--" : Model.InvestissementMoyenMensuel.ToString("C"))</span>
+                <span>@(Model.InvestissementMedianMensuel == 0 ? "--,--" : Model.InvestissementMedianMensuel.ToString("C"))</span>
             </div>
 
             <label>Total</label>
@@ -24,7 +24,7 @@
     <div class="investissement-content">
         <ApexChart TItem="InvestissementParMoisVM"
                     XAxisType="XAxisType.Datetime"
-                    Options="ProfilChartsOptions.OptionsInvestissementParMois">        
+                    Options="_options">        
 
             <ApexPointSeries TItem="InvestissementParMoisVM"
                                 Items="Model.InvestissementsParMois"
@@ -32,16 +32,7 @@
                                 Name="Investissement"
                                 YValue="@(e => e.Investissement)"
                                 XValue="@(e => e.Date)"
-                                Stroke="@(new SeriesStroke{ Width=3, Color="goldenrod" })" 
                                 ShowDataLabels />
-
-            <ApexPointSeries TItem="InvestissementParMoisVM"
-                             Items="Model.InvestissementsParMois"
-                             SeriesType="SeriesType.Line"
-                             Name="Investissement moyen"
-                             YValue="@(e => e.InvestissementMoyen)"
-                             XValue="@(e => e.Date)"
-                             Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="grey" })"/>
         </ApexChart>
     </div>
 }
@@ -56,4 +47,35 @@ else
 
 @code {
     [Parameter] public required InvestissementViewModel Model { get; set; }
+
+    private ApexChartOptions<InvestissementParMoisVM> _options = null!;
+
+    protected override void OnParametersSet()
+    {
+        _options = ProfilChartsOptions.OptionsInvestissementParMois;
+
+        _options.Annotations = new Annotations
+        {
+            Yaxis = new List<AnnotationsYAxis>
+            {
+                new AnnotationsYAxis
+                {
+                    Y = Model.InvestissementMedianMensuel,
+                    BorderColor = "grey",
+                    StrokeDashArray = 4,
+                    BorderWidth = 2,
+                    Label = new Label
+                    {
+                        Text = $"Médian : {Model.InvestissementMedianMensuel.ToString("C")}",
+                        Position = LabelPosition.Right,
+                        Style = new Style
+                        {
+                            Background = "#1e1e1e",
+                            Padding = new Padding { Left = 5, Right = 5, Top = 3, Bottom = 3 }
+                        }
+                    }
+                }
+            }
+        };
+    }
 }

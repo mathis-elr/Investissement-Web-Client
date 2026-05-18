@@ -108,7 +108,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadInvestissementMoyenMensuel()
         {
-            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMoyenMensuel(IdUser);
+            InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMedianMensuel(IdUser);
             if (InvestissementMoyenMensuel == 0) InvestissementMoyenMensuel = 100;
         }
     }

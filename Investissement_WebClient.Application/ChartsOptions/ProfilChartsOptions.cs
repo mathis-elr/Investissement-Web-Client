@@ -37,11 +37,13 @@ namespace Investissement_WebClient.Application.ChartsOptions
 
         public static ApexChartOptions<InvestissementParMoisVM> OptionsInvestissementParMois = new()
         {
+            Colors = new List<string> { "goldenrod" },
 
             Stroke = new Stroke
             {
                 Curve = Curve.Smooth,
-                Width = 3
+                Width = 3,
+                LineCap = LineCap.Round,
             },
 
             Chart = new Chart
@@ -62,6 +64,7 @@ namespace Investissement_WebClient.Application.ChartsOptions
             {
                 Theme = Mode.Dark,
             },
+
         };   
     }
 }
