@@ -108,10 +108,3 @@
     grid-row: 1;
 }
 
-.connect-tr {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    gap: 20px;
-    grid-column: 2;
-    grid-row: 2;
-}

@@ -2,6 +2,7 @@
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.PowensApi;
 using Investissement_WebClient.Application.Services.TradeRepublicApi;
+using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Web.GestionSession;
@@ -10,12 +11,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 {
     public class InvestissementViewModel(SessionService sessionService,
                                          IFluxInvestissementService fluxInvestissementService,
-                                         ITradeRepublicApiService transactionService,
+                                         ITradeRepublicApiService tradeRepublicApiService,
                                          IPowensApiService powensDataService)
     {
         private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
-        private readonly ITradeRepublicApiService _transactionService = transactionService;
+        private readonly ITradeRepublicApiService _tradeRepublicApiService = tradeRepublicApiService;
         private readonly IPowensApiService _powensDataService = powensDataService;
 
 
@@ -28,8 +29,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public void NotifyStateChanged() => OnChange.Invoke();
 
         // TRANSACTIONS
+        public TradeRepublicAccesVM? TradeRepublicAcces { get; set; } = new TradeRepublicAccesVM();
+        public bool IdentifiantsRequis => TradeRepublicAcces == null;
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
-        public string Message { get; set; } = "Aucune demande de récupération de transactions en cours ...";
+        public string Message { get; set; } = "Aucune demande en cours ...";
         public Etat Etat { get; set; } = Etat.Neutre;
         public string CodeSms { get; set; } = string.Empty;
         public bool DemandeEnCours { get; set; } = false;
@@ -69,6 +72,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             await InitialiserSession();
 
+            await LoadIdentifiantsRequis();
+            if (IdentifiantsRequis)
+                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
             await LoadFluxInvestissement();
 
             if (FluxInvestissement.Any())
@@ -82,6 +88,19 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
 
             ChargementEncours = false;
+        }
+
+        public async Task SaveAccesTR()
+        {
+            try
+            {
+                await _tradeRepublicApiService.SaveAcces(TradeRepublicAcces, IdUser);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = ex.Message;
+            }
         }
 
         public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
@@ -107,7 +126,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                var messageRecu = await _transactionService.GetSms(IdUser);
+                var messageRecu = await _tradeRepublicApiService.GetSms(IdUser);
                 Message = messageRecu;
                 Etat = Etat.SmsRequis;
 
@@ -141,7 +160,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                var messageRecu = await _transactionService.ConfirmSms(CodeSms);
+                var messageRecu = await _tradeRepublicApiService.ConfirmSms(CodeSms);
                 Message = messageRecu;
 
                 return await ChargerTransactions();
@@ -167,7 +186,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                if (await _transactionService.ChargerTransactions(IdUser))
+                if (await _tradeRepublicApiService.ChargerTransactions(IdUser))
                 {
                     await LoadData();
                     return true;
@@ -196,7 +215,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public void FinDeDemande()
         {
             Etat = Etat.Neutre;
-            Message = "Aucune demande de récupération de transactions en cours ...";
+            Message = "Aucune demande en cours ...";
             DemandeEnCours = false;
             VerificationEnCours = false;
 
@@ -227,6 +246,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         private async Task LoadInvestissementsParMois()
         {
             InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(IdUser);
+        }
+
+        private async Task LoadIdentifiantsRequis()
+        {
+            TradeRepublicAcces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser);
         }
     }
 }

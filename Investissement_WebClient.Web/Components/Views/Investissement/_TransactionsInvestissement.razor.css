@@ -42,14 +42,6 @@
         width: 100%
     }
 
-.form-grid .message {
-    display: flex;
-    justify-content: center;
-    font-size: 18px;
-    font-style: italic;
-    color: goldenrod;
-}
-
 .form-grid label {
     color: #999;
     font-size: 20px;
@@ -152,3 +144,34 @@ select, input {
         display: inline-block;
         color: goldenrod;
     }
+
+::deep form {
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto 1fr 1fr auto;
+    gap: 15px;
+}
+
+
+.infos {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 15px;
+    border-radius: 8px;
+}
+
+.btn-edit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+    .btn-edit:hover {
+        transform: rotate(45deg);
+    }
+
+

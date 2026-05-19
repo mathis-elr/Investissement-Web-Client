@@ -10,6 +10,8 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 
         Task<bool> ChargerTransactions(int userId);
 
+        Task<TradeRepublicAccesVM?> GetTradeRepublicAcces(int userId);
+
         Task SaveAcces(TradeRepublicAccesVM accesDto, int userId);
     }
 }

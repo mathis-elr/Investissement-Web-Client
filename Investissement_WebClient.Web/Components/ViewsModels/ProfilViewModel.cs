@@ -25,9 +25,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public int PerspectiveNbAnnees { get; set; } = 15;
         public List<ValeurParAnLineChartVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
 
-        // CONNECTION TR
-        public TradeRepublicAccesVM TradeRepublicAcces { get; set; } = new TradeRepublicAccesVM();
-
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
         public string ErrorMessage { get; set; } = string.Empty;
@@ -90,19 +87,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 PerspectivesValeurPatrimoineParAn.Add(valeurParAn);
                 annee++;
                 investissementCourant += InvestissementMoyenMensuel * 12;
-            }
-        }
-
-        public async Task SaveAccesTR()
-        {
-            try
-            {
-                await _tradeRepublicApiService.SaveAcces(TradeRepublicAcces, IdUser);
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                ErrorMessage = ex.Message;
             }
         }
 

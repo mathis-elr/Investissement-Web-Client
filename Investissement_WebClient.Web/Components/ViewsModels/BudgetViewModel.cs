@@ -156,7 +156,6 @@ public class BudgetViewModel(SessionService sessionService,
     {
         DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
         ConnexionBanqueRequise = !DateExpirationSync.HasValue;
-        Console.WriteLine(ConnexionBanqueRequise);
     }
 
     public void EditerMoisComplete()

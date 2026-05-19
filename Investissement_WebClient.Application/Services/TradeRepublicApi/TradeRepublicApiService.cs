@@ -34,7 +34,10 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
         private readonly string _confirmSmsEndPoint = TradeRepublicApiConfiguration.ConfirmSmsEndPoint;
         private readonly string _datasEndPoint = TradeRepublicApiConfiguration.DatasEndPoint;
 
-        public TradeRepublicApiService(IDbContextFactory<InvestissementDbContext> dbFactory, IFluxInvestissementService fluxInvestissementService, IEncryptService encryptService, HttpClient httpClient)
+        public TradeRepublicApiService(IDbContextFactory<InvestissementDbContext> dbFactory, 
+                                       IFluxInvestissementService fluxInvestissementService, 
+                                       IEncryptService encryptService, 
+                                       HttpClient httpClient)
         {
             _dbFactory = dbFactory;
             _fluxInvestissementService = fluxInvestissementService;
@@ -53,7 +56,8 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
         {
             try
             {
-                var accesTR = await GetTradeRepublicAcces(userId);
+                var accesTR = await GetTradeRepublicAcces(userId) ?? throw new Exception("Identifiants Trade Republic manquants");
+
                 var request = new HttpRequestMessage(HttpMethod.Post, _requestSmsEndPoint);
 
                 request.Headers.Add(_numTelKey, accesTR.NumTel);
@@ -169,18 +173,18 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        private async Task<TradeRepublicAccesDto> GetTradeRepublicAcces(int userId)
+        public async Task<TradeRepublicAccesVM?> GetTradeRepublicAcces(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             var acces = await context.TradeRepublicAcces
                 .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
 
-            var accesDto = acces != null ? new TradeRepublicAccesDto
+            var accesDto = acces != null ? new TradeRepublicAccesVM
             {
                 NumTel = acces.NumTel,
                 Pin = _encryptService.Decrypt(acces.PinCrypte.ToString(), _masterKey)
-            } : throw new InvalidOperationException("Accès TradeRepublic non trouvé");
+            } : null;
 
             return accesDto;
         }

@@ -1,0 +1,29 @@
+﻿.btn-annuler {
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    font-size: 28px;
+    color: red;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+    .btn-annuler:hover {
+        transform: rotateX(45deg);
+    }
+
+
+::deep input.invalid {
+    border-color: red;
+    background-color: rgba(255, 0, 0, 0.02);
+}
+
+    ::deep input.invalid:hover,
+    ::deep input.invalid:focus {
+        box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
+    }
+
+    .champ{
+        display:inline-flex;
+        align-items:center;
+        gap:3px;
+    }

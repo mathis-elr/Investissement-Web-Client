@@ -5,42 +5,49 @@
 
 <div class="header">
     <label>Transactions</label>
-    <button disabled="@(Model.DemandeEnCours)" type="button" class="btn-transactions" @onclick="RecupererTransactions">
-        @if (Model.DemandeEnCours)
-        {
-            <_Chargement />
-        }
-        else
-        {
-            <div>Récuperer mes transactions</div>
-        }
-    </button>
+    @if (!Model.IdentifiantsRequis && !_afficherFormulaire)
+    {
+        <div class="btn-edit" title="Editer mes identifiants" @onclick="() => _afficherFormulaire = true">
+            <img style="width:40%" src="parametres.png" />
+        </div>
+    }
 </div>
 
 <div class="transactions-infos">
-    <div class="form-grid">
-        @if (Model.Etat == Etat.SmsRequis)
+        @if (Model.IdentifiantsRequis || _afficherFormulaire)
         {
-            <label>Code sms</label>
-            <div class="info">
-                <input type="text" inputmode="numeric" maxlength="4" @bind="Model.CodeSms" placeholder="ex : 1234" />
+            <_FormIdTR Model="@Model" OnAnnuler="MasquerFormulaire"/>
+        }
+        else if (Model.Etat == Etat.SmsRequis)
+        {
+            <div class="form-grid">
+                <label>Code sms</label>
+                <div class="info">
+                    <input type="text" inputmode="numeric" maxlength="4" @bind="Model.CodeSms" placeholder="ex : 1234" />
+                </div>
+                <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">
+                    @if (Model.VerificationEnCours)
+                    {
+                        <_Chargement />
+                    }
+                    else
+                    {
+                        <div>Vérifier</div>
+                    }
+                </button>
             </div>
-            <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">
-                @if (Model.VerificationEnCours)
-                {
-                    <_Chargement />
-                }
-                else
-                {
-                    <div>Vérifier</div>
-                }
-            </button>
         }
         else
         {
-            <span class="message">@Model.Message</span>
+            <div class="infos">
+                <button class="btn-submit" @onclick="Model.DemandeCodeSms" disabled="@Model.DemandeEnCours">
+                    @if (Model.DemandeEnCours) { <_Chargement Couleur="black" /> }
+                    else { <span>Récuperer transactions</span> }
+                </button>
+    
+                <p>@Model.Message</p>
+            </div>
         }
-    </div>
 </div>
 
 <div class="content">
@@ -49,6 +56,10 @@
         <div class="center">
             <p><_Chargement Couleur="goldenrod" LargeurBouton="50"/></p>
         </div>
+    }
+    else if (Model.IdentifiantsRequis)
+    {
+        <p>Vous pourez consulter vos transactions ici dès que vous aurez enregistré vos identifiants Trade Republic et récuperer vos transactions.</p>
     }
     else if (Model.FluxInvestissement.Any())
     {
@@ -82,6 +93,8 @@
 
 @code {
     [Parameter] public required InvestissementViewModel Model { get; set; }
+
+    private bool _afficherFormulaire { get; set; } = false;
 
     private async Task RecupererTransactions()
     {
@@ -123,5 +136,10 @@
         }
 
         Model.FinDeDemande();
+    }
+
+    private void MasquerFormulaire()
+    {
+        _afficherFormulaire = false;
     }
 }

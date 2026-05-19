@@ -1,0 +1,75 @@
+﻿@using Investissement_WebClient.Web.Components.ViewsModels
+
+@inject IToastService TS
+
+<EditForm Model="@Model.TradeRepublicAcces" 
+          OnValidSubmit="TentativeEnregistrement"
+          OnInvalidSubmit="AfficherErreursToast">
+
+    <DataAnnotationsValidator />
+
+    <button class="btn-annuler" title="Annuler" @onclick="FermerEdition">
+        ✕
+    </button>
+    <div class="champ">
+        <p>+33</p>
+        <InputText @bind-Value="Model.TradeRepublicAcces.NumTel" placeholder="7 07 07 07 07" maxlength="9" />
+    </div>
+
+    <div class="champ">
+        <InputText @bind-Value="Model.TradeRepublicAcces.Pin" type="password" placeholder="Pin (4 chiffres)" />
+    </div>
+
+    <button class="btn-submit" disabled="@IsLoading">
+        @if (IsLoading)
+        {
+            <_Chargement Couleur="black" />
+        }
+        else
+        {
+            <span>Enregistrer</span>
+        }
+    </button>
+</EditForm>
+
+@code{
+    [Parameter] public InvestissementViewModel Model { get; set; } = null!;
+    [Parameter] public EventCallback OnAnnuler { get; set; }
+
+    public bool IsLoading { get; set; } = false;
+
+    public async Task TentativeEnregistrement()
+    {
+        IsLoading = true;
+
+        await Model.SaveAccesTR();
+
+        if (Model.HasError)
+        {
+            TS.ShowError(Model.ErrorMessage);
+            Model.HasError = false;
+            Model.ErrorMessage = string.Empty;
+            IsLoading = false;
+            return;
+        }
+
+        IsLoading = false;
+        FermerEdition();
+        TS.ShowSuccess("Accès Trade Republic enregistré avec succès !");
+    }
+
+    private void AfficherErreursToast(EditContext editContext)
+    {
+        var erreurs = editContext.GetValidationMessages();
+
+        foreach (var erreur in erreurs)
+        {
+            TS.ShowError(erreur);
+        }
+    }
+
+    public void FermerEdition()
+    {
+        OnAnnuler.InvokeAsync();
+    }
+}
