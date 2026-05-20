@@ -1,11 +1,11 @@
-﻿.investissement-infos {
+﻿.infos-invest {
     display: flex;
     background-color: #242424;
     padding: 5px;
     border-radius: 10px;
 }
 
-    .investissement-infos .form-grid {
+    .infos-invest .form-grid {
         display: grid;
         grid-template-columns: auto 1fr;
         gap: 5px 40px;
@@ -13,13 +13,19 @@
         width: 100%
     }
 
-        .investissement-infos .form-grid label {
+        .infos-invest .form-grid label {
             color: #999;
             font-size: 16px;
             font-weight: 500;
         }
 
 
-.investissement-infos span {
+.infos-invest span {
     color: goldenrod;
 }
+
+
+
+
+
+

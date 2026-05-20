@@ -4,14 +4,10 @@
 
 <div class="header">
     <label>Investissements</label>
-    <div class="investissement-infos">
-        <div class="form-grid">
-            <label>Médian mensuel</label>
-            <div class="info" style="text-align: end">
-                <span>@(Model.InvestissementMedianMensuel == 0 ? "--,--" : Model.InvestissementMedianMensuel.ToString("C"))</span>
-            </div>
 
-            <label>Total</label>
+    <div class="infos-invest">
+        <div class="form-grid">
+            <label>Investissement total</label>
             <div class="info">
                 <span>@(Model.InvestissementTotal == 0 ? "--,--" : Model.InvestissementTotal.ToString("C"))</span>
             </div>
@@ -19,34 +15,29 @@
     </div>
 </div>
 
-@if (Model.InvestissementsParMois.Any())
-{
-    <div class="investissement-content">
-        <ApexChart TItem="InvestissementParMoisVM"
-                    XAxisType="XAxisType.Datetime"
-                    Options="_options">        
+<div class="options-content" style="--active-index: @(_modePerformances ? 1 : 0)">
+    <button class="btn-nav @(_modePerformances ? "" : "active")" @onclick="() => _modePerformances = false">Investissement mensuel</button>
+    <button class="btn-nav @(_modePerformances ? "active" : "")" @onclick="() => _modePerformances = true">Performances</button>
+</div>
 
-            <ApexPointSeries TItem="InvestissementParMoisVM"
-                                Items="Model.InvestissementsParMois"
-                                SeriesType="SeriesType.Line"
-                                Name="Investissement"
-                                YValue="@(e => e.Investissement)"
-                                XValue="@(e => e.Date)"
-                                ShowDataLabels />
-        </ApexChart>
-    </div>
-}
-else if (Model.ChargementEncours)
-{
-    <_ChargementGraphique />
-}
-else
-{
-    <p>Aucun investissement effecuté.</p>
-}
+
+<div class="content @(_modePerformances ? "content-padding" : "")">
+    @if (_modePerformances)
+    {
+        <span>pas encore disponible ...</span>
+    }
+    else
+    {
+        <_InvestissementMensuel Model="Model" />
+    }
+</div>
+
+
 
 @code {
     [Parameter] public required InvestissementViewModel Model { get; set; }
+
+    private bool _modePerformances { get; set; } = false;
 
     private ApexChartOptions<InvestissementParMoisVM> _options = null!;
 
