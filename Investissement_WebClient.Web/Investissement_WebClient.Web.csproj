@@ -21,9 +21,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Investissement_WebClient.Application\Investissement_WebClient.Application.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\Views\Icons\" />
-  </ItemGroup>
   
 </Project>

@@ -1,0 +1,39 @@
+﻿@using System.Globalization
+@using Investissement_WebClient.Application.DTO
+
+<div class="un-actif">
+    <div class="header">
+        <label>@Actif.Actif</label>
+        <label>
+            @Actif.ValeurDetenue.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))
+        </label>
+    </div>
+    <div class="content">
+        <div class="item">
+            @{
+                (string couleurVarVal, string signeVarVal) = DeterminerSigne(Actif.VariationValeur);
+                (string couleurVarPour, string signeVarPour) = DeterminerSigne(Actif.VariationPourcentage);
+            }
+            <span class="@couleurVarVal">
+                @(signeVarVal + Actif.VariationValeur.ToString("C", CultureInfo.GetCultureInfo("fr-FR")))
+            </span>
+            <span class="@couleurVarPour">
+                @(signeVarVal + Actif.VariationPourcentage + "%")
+            </span>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter] public InfoValeurParActifDto Actif { get; set; } = null!;
+
+    (string, string) DeterminerSigne(decimal valeur)
+    {
+        return valeur switch
+        {
+            > 0 => ("vert", "+"),
+            < 0 => ("rouge", ""),
+            _ => ("gris", "")
+        };
+    }
+ }

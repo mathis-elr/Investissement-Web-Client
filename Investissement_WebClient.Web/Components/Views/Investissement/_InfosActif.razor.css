@@ -1,0 +1,48 @@
+﻿.un-actif {
+    display: grid;
+    gap: 2px;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: #242424;
+    width: 350px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.content {
+    display: grid;
+    gap: 3px;
+}
+
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+label {
+    color: white;
+    font-size: 18px;
+}
+
+span {
+    color: white;
+    font-size: 16px;
+}
+
+.gris {
+    color: grey;
+}
+
+.vert {
+    color: green;
+}
+
+.rouge {
+    color: red;
+}
