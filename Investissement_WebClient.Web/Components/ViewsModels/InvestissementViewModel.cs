@@ -38,14 +38,14 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public bool DemandeEnCours { get; set; } = false;
         public bool VerificationEnCours { get; set; } = false;
 
-        // INVESTISSEMENT MOYEN
+        // INVESTISSEMENT HISTORIQUE
         public bool ChargementEncours { get; set; } = false;
         public decimal InvestissementMedianMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
 
         // EVOLUTION ACTIFS
-        public IEnumerable<InfoValeurParActifDto> InfoInvestParActif { get; set; } = [];
+        public IEnumerable<InfoParActifDto> InfoInvestParActif { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;

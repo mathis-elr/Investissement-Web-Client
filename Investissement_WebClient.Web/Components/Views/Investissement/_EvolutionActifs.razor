@@ -2,9 +2,9 @@
 
 @foreach (var actif in InfoInvestParActif)
 {
-   <_InfosActif Actif="actif"/>
+   <_InfosActif Actif="actif" />
 }
 
 @code {
-    [Parameter] public IEnumerable<InfoValeurParActifDto> InfoInvestParActif { get; set; } = [];
+    [Parameter] public IEnumerable<InfoParActifDto> InfoInvestParActif { get; set; } = [];
 }

@@ -130,7 +130,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             return Math.Round(mediane, 0);
         }
 
-        public async Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string,decimal> prixParActif, int userId)
+        public async Task<IEnumerable<InfoParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             var rawData = await context.FluxInvestissement
@@ -150,7 +150,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 var prixActuel = prixParActif[t.Ticker];
                 var valeurDetenue = t.TotalQuantite * prixActuel;
 
-                return new InfoValeurParActifDto
+                return new InfoParActifDto
                 {
                     Actif = t.Libelle,
                     ValeurDetenue = Math.Round(valeurDetenue, 2),
@@ -222,7 +222,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 {
                     Annee = d.Key.Year,
                     Mois = d.Key.Month,
-                    TotalInvesti = Math.Round(d.Sum(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total), 2)
+                    TotalInvestit = Math.Round(d.Sum(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total), 2)
                 })
                 .ToListAsync();
 
@@ -230,7 +230,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 .Select(d => new InvestissementParMoisVM
                 {
                     Date = new DateTime(d.Annee, d.Mois, 1),
-                    Investissement = d.TotalInvesti
+                    Investissement = d.TotalInvestit
                 })
                 .OrderByDescending(d => d.Date)
                 .ToList();

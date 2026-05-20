@@ -23,7 +23,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         Task<decimal> CalculerInvestissementMedianMensuel(int userId);
 
-        Task<IEnumerable<InfoValeurParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId);
+        Task<IEnumerable<InfoParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId);
 
         Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions, int userId);
     }

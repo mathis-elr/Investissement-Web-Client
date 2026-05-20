@@ -1,6 +1,7 @@
 ﻿namespace Investissement_WebClient.Application.DTO
 {
-    public class InfoValeurParActifDto
+
+    public class InfoParActifDto
     {
         public required string Actif { get; set; }
 
