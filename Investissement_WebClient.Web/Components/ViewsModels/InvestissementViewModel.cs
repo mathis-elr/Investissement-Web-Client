@@ -79,6 +79,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
+            var stopwatch = Stopwatch.StartNew();
+
             ChargementEncours = true;
 
             try

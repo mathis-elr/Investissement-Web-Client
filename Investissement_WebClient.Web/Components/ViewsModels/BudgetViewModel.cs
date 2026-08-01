@@ -54,6 +54,8 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task StartLoadData()
     {
+        var stopwatch = Stopwatch.StartNew();
+
         ActionEnCours = true;
 
         try

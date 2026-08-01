@@ -39,6 +39,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
+            var stopwatch = Stopwatch.StartNew();
+
             RecuparationEnCours = true;
 
             try
