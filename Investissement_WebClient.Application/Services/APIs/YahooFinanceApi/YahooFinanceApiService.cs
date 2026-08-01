@@ -128,12 +128,6 @@ namespace Investissement_WebClient.Application.Services.API.YahooFinanceApi
                 foreach (LapsTemps p in Enum.GetValues(typeof(LapsTemps))) dictionnairePrix[p] = 0;
             }
 
-
-            foreach (var a in dictionnairePrix)
-            {
-                Console.WriteLine(ticker + " => " + a.Key + " : " + a.Value);
-            }
-
             return dictionnairePrix;
         }
 

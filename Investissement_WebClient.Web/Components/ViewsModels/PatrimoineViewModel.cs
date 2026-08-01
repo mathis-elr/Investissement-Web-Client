@@ -1,8 +1,9 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
+﻿using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.ValeurPatrimoines;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
 using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -38,27 +39,38 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
+            var stopwatch = Stopwatch.StartNew();
+
             RecuparationEnCours = true;
 
-            await _sessionService.Initialiser();
-            IdUser = _sessionService.Id;
-
-            var prixParActif = await _fluxInvestissementService.GetPrixParActif();
-
-            await LoadValeurPatrimoineCourante(prixParActif);
-
-            if(ValeurPatrimoineCourante != 0)
+            try
             {
-                await LoadValeurInvestissementTotale();
-                await LoadVariationsPrix();
+                await _sessionService.Initialiser();
+                IdUser = _sessionService.Id;
 
-                // GRAPHIQUES
-                await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
-                await LoadBougiesJournalieresPlusOuMoinsValues();
-                await LoadProportionParActif(prixParActif);
+                var prixParActif = await _fluxInvestissementService.GetPrixParActif();
+
+                await LoadValeurPatrimoineCourante(prixParActif);
+
+                if (ValeurPatrimoineCourante != 0)
+                {
+                    await LoadValeurInvestissementTotale();
+
+                    await Task.WhenAll(
+                        LoadVariationsPrix(),
+                        LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal(),
+                        LoadBougiesJournalieresPlusOuMoinsValues(),
+                        LoadProportionParActif(prixParActif)
+                    );
+                }
             }
+            finally
+            {
+                RecuparationEnCours = false;
 
-            RecuparationEnCours = false;
+                stopwatch.Stop();
+                Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
+            }
         }
 
         public string DeterminerClasse(decimal variationPrix)

@@ -20,7 +20,11 @@
             </ApexChart>
         </div>
     }
-               
+    else
+    {
+        <span>Aucune donnée disponible</span>
+    }
+
 
 @code {
     [Parameter] public IEnumerable<ValeurTotaleParActifVM> ValeurParActifInvestit { get; set; } = [];

@@ -1,11 +1,12 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+﻿using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
+using System.Diagnostics;
 
 
 
@@ -78,6 +79,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
+            var stopwatch = Stopwatch.StartNew();
+
             ChargementEncours = true;
 
             await InitialiserSession();
@@ -92,12 +95,21 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 await LoadInvestissementMedianMensuel();
 
                 var prixParActif = await LoadPrixParActif();
-                await LoadInvestissementTotal(prixParActif);
-                await LoadInvestissementsParMois();
-                await LoadValeurInfoParActif(prixParActif);
+                await Task.WhenAll(
+                    LoadInvestissementTotal(prixParActif),
+                    LoadInvestissementsParMois(),
+                    LoadValeurInfoParActif(prixParActif)
+                );
+
+                //await LoadInvestissementTotal(prixParActif);
+                //await LoadInvestissementsParMois();
+                //await LoadValeurInfoParActif(prixParActif);
             }
 
             ChargementEncours = false;
+
+            stopwatch.Stop();
+            Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
         }
 
         public async Task SaveAccesTR()

@@ -136,49 +136,45 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                 {
                     g.Key.Libelle,
                     g.Key.Ticker,
-                    Transactions = g.ToList(),
                     TotalQuantite = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)t.Quantite : (decimal)-t.Quantite),
                     TotalValeurInvest = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)(t.Quantite * t.Prix) : (decimal)(-t.Quantite * t.Prix))
                 })
                 .ToListAsync();
 
+            var actifsValides = infosParActif.Where(t => t.TotalQuantite > 0).ToList();
 
-            var tasks = infosParActif
-                .Where(t => t.TotalQuantite > 0)
-                .Select(async t =>
+            var tasks = actifsValides.Select(async t =>
+            {
+                var prixActuel = prixParActif[t.Ticker];
+                var valeurActuelle = t.TotalQuantite * prixActuel;
+
+                var variationsParLapsTemps = new Dictionary<LapsTemps, VariationDataDto>();
+                var prixParActifHistorique = await _yahooFinanceApiService.GetPrixHistorique(t.Ticker);
+
+                foreach (LapsTemps periode in Enum.GetValues(typeof(LapsTemps)))
                 {
-                    var prixActuel = prixParActif[t.Ticker];
-                    var valeurActuelle = t.TotalQuantite * prixActuel;
-
-                    var variationsParLapsTemps = new Dictionary<LapsTemps, VariationDataDto>();
-                    var prixParActifHistorique = await _yahooFinanceApiService.GetPrixHistorique(t.Ticker);
-
-                    foreach (LapsTemps periode in Enum.GetValues(typeof(LapsTemps)))
+                    if (periode == LapsTemps.All)
                     {
-                        if (periode == LapsTemps.All)
+                        variationsParLapsTemps[LapsTemps.All] = new VariationDataDto
                         {
-                            variationsParLapsTemps[LapsTemps.All] = new VariationDataDto
-                            {
-                                VariationValeur = valeurActuelle - t.TotalValeurInvest,
-                                VariationPourcentage = Math.Round(((valeurActuelle - t.TotalValeurInvest) / t.TotalValeurInvest) * 100, 2)
-                            };
-
-                            continue;
-                        }
-
-                        variationsParLapsTemps[periode] = CalculVariationPrix(prixParActifHistorique[periode], prixParActif[t.Ticker]);
+                            VariationValeur = valeurActuelle - t.TotalValeurInvest,
+                            VariationPourcentage = Math.Round(((valeurActuelle - t.TotalValeurInvest) / t.TotalValeurInvest) * 100, 2)
+                        };
+                        continue;
                     }
 
-                    return new ValeurActifInfosDto
-                    {
-                        Actif = t.Libelle,
-                        ValeurInvestit = Math.Round(valeurActuelle, 2),
-                        VariationsParLapsTemps = variationsParLapsTemps
-                    };
-                });
+                    variationsParLapsTemps[periode] = CalculVariationPrix(prixParActifHistorique[periode], prixActuel);
+                }
 
-            var res = await Task.WhenAll(tasks);
-            return res;   
+                return new ValeurActifInfosDto
+                {
+                    Actif = t.Libelle,
+                    ValeurInvestit = Math.Round(valeurActuelle, 2),
+                    VariationsParLapsTemps = variationsParLapsTemps
+                };
+            }).ToList(); 
+
+            return await Task.WhenAll(tasks);
         }
 
         private VariationDataDto CalculVariationPrix(decimal prixHistorique, decimal prixCourant)

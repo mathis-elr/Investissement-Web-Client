@@ -1,10 +1,11 @@
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.Services.FluxBancaires;
 using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
+using System.Diagnostics;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels;
 
@@ -53,29 +54,42 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task StartLoadData()
     {
+        var stopwatch = Stopwatch.StartNew();
+
         ActionEnCours = true;
         await _sessionService.Initialiser();
         IdUser = _sessionService.Id;
 
         await LoadDateLimiteValiditeSyncBanque();
 
-        await LoadFlux();
-        await LoadBudgetParCategorie();
+        await Task.WhenAll(
+            LoadFlux(),
+            LoadBudgetParCategorie()
+            ,LoadCategories()
+        );
 
         DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
         DeterminerStatutMois();
 
         ActionEnCours = false;
+
+        stopwatch.Stop();
+        Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
     }
 
     public async Task MajVue()
     {
+        var stopwatch = Stopwatch.StartNew();
+
         await LoadFlux();
         await LoadFluxUnMois(StatutMoisActif!);
         DeterminerStatutMois();
         ActionEnCours = false;
 
         NotifyStateChanged();
+
+        stopwatch.Stop();
+        Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
     }
 
     public void SetRecapGlobalMode()
@@ -94,8 +108,10 @@ public class BudgetViewModel(SessionService sessionService,
 
         DateActive = date;
 
-        if (!Categories.Any())
-            Categories = await _fluxBancaireService.GetCategorieFlux();
+        //if (!Categories.Any())
+        //{
+        //    await LoadCategories();
+        //}
 
         DateEditMensuel = date;
         FluxMensuel = Flux
@@ -150,6 +166,11 @@ public class BudgetViewModel(SessionService sessionService,
         ActionEnCours = false;
 
         NotifyStateChanged();
+    }
+
+    private async Task LoadCategories()
+    {
+        Categories = await _fluxBancaireService.GetCategorieFlux();
     }
 
     private async Task LoadDateLimiteValiditeSyncBanque()

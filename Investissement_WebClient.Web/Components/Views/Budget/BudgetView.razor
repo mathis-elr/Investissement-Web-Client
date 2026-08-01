@@ -45,7 +45,10 @@
         BVM.OnChange += StateHasChanged;
         if(SyncStatus == "ok") TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
 
-        await BVM.StartLoadData();
+        for(int i = 0; i < 10; i++)
+        {
+            await BVM.StartLoadData();
+        }
 
         if (BVM.ConnexionBanqueRequise) TS.ShowWarning("ℹ️ Synchronisation avec vôtre banque requise pour récuperer les flux mensuel.");
     }
