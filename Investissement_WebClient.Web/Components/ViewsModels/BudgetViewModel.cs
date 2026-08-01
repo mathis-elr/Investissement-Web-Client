@@ -65,8 +65,8 @@ public class BudgetViewModel(SessionService sessionService,
 
             await Task.WhenAll(
                 LoadFlux(),
-                LoadBudgetParCategorie()
-                , LoadCategories()
+                LoadBudgetParCategorie(),
+                LoadCategories()
             );
 
             DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
