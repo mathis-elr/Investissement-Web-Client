@@ -1,4 +1,4 @@
-namespace Investissement_WebClient.Application.Services.PowensApi;
+namespace Investissement_WebClient.Application.Services.API.PowensApi;
 
 public interface IPowensApiService
 {

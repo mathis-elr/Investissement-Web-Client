@@ -1,20 +1,15 @@
-using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
+using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Application.Services.ValeurPatrimoines;
 
-public class ValeurPatrimoineService : IValeurPatrimoineService
+public class ValeurPatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext) : IValeurPatrimoineService
 {
-    private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-
-    public ValeurPatrimoineService(IDbContextFactory<InvestissementDbContext> dbContext)
-    {
-        _dbFactory = dbContext;
-    }
+    private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
     public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresPlusOuMoinsValues(int userId)
     {

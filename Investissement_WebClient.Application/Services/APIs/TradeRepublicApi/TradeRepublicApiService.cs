@@ -1,28 +1,27 @@
-﻿using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
-using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
 using Investissement_WebClient.Application.Services.Encrypt;
-using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace Investissement_WebClient.Application.Services.TradeRepublicApi
+namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
 {
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
         private readonly IFluxInvestissementService _fluxInvestissementService;
-        private readonly IEncryptService _encryptService;
+        private readonly ICryptService _encryptService;
         private readonly HttpClient _httpClient;
 
         private readonly string _masterKey = TradeRepublicApiConfiguration.MasterKey;
 
-        private readonly string _cleeApiKey =  TradeRepublicApiConfiguration.CleeApiKey;
+        private readonly string _cleeApiKey = TradeRepublicApiConfiguration.CleeApiKey;
         private readonly string _cleeApiValue = TradeRepublicApiConfiguration.CleeApiValue;
 
         private readonly string _numTelKey = TradeRepublicApiConfiguration.NumTelKey;
@@ -36,7 +35,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 
         public TradeRepublicApiService(IDbContextFactory<InvestissementDbContext> dbFactory, 
                                        IFluxInvestissementService fluxInvestissementService, 
-                                       IEncryptService encryptService, 
+                                       ICryptService encryptService, 
                                        HttpClient httpClient)
         {
             _dbFactory = dbFactory;
@@ -44,7 +43,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             _encryptService = encryptService;
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(TradeRepublicApiConfiguration.BaseUri);
-            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            _httpClient.Timeout = TimeSpan.FromSeconds(120);
 
             if (!_httpClient.DefaultRequestHeaders.Contains(_cleeApiKey))
             {
@@ -52,7 +51,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
             }
         }
 
-        public async Task<string> GetSms(int userId)
+        public async Task<(int, string)> GetSms(int userId)
         {
             try
             {
@@ -60,8 +59,8 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 
                 var request = new HttpRequestMessage(HttpMethod.Post, _requestSmsEndPoint);
 
-                request.Headers.Add(_numTelKey, accesTR.NumTel);
-                request.Headers.Add(_pinKey, accesTR.Pin);
+                var jsonPayload = "{\"num-tel\":\"+33" + accesTR.NumTel + "\", \"pin\":\"" + accesTR.Pin + "\"}";
+                request.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.SendAsync(request);
 
@@ -78,13 +77,7 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
                     message = messageJson.GetString() ?? string.Empty;
                 }
 
-                if (retour.TryGetProperty("coutdouwn", out var coutdouwnJson))
-                {
-                    string? Coutdouwn = coutdouwnJson.GetString();
-                    message += Coutdouwn != null ? $"{Coutdouwn}s restantes." : string.Empty;
-                }
-
-                return message;
+                return (codeStatus, message);
             }
             catch (HttpRequestException)
             {
@@ -195,10 +188,12 @@ namespace Investissement_WebClient.Application.Services.TradeRepublicApi
 
             var acces = await context.TradeRepublicAcces
                 .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
-
+           
             if (acces != null)
             {
-                acces.NumTel = accesDto.NumTel;
+                var numTelEtier = accesDto.NumTel.Replace(" ", "");
+
+                acces.NumTel = numTelEtier;
                 acces.PinCrypte = _encryptService.Encrypt(accesDto.Pin, _masterKey);
             }
             else

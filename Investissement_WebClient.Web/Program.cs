@@ -1,14 +1,14 @@
-    using ApexCharts;
+using ApexCharts;
 using Blazored.Toast;
 using Investissement_WebClient.Application.Services.Actifs;
+using Investissement_WebClient.Application.Services.API.PowensApi;
+using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
+using Investissement_WebClient.Application.Services.API.YahooFinanceApi;
 using Investissement_WebClient.Application.Services.Authentification;
 using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Services.FluxBancaires;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.PowensApi;
-using Investissement_WebClient.Application.Services.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.ValeurPatrimoines;
-using Investissement_WebClient.Application.Services.YahooFinanceApi;
 using Investissement_WebClient.Application.Workers;
 using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Infrastructure;
@@ -78,7 +78,7 @@ builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 
-builder.Services.AddScoped<IEncryptService, EncryptService>();
+builder.Services.AddScoped<ICryptService, CryptService>();
 
 builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
@@ -93,10 +93,9 @@ builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 builder.Services.AddAuthentication("Manual")
     .AddCookie("Manual", options =>
     {
-        // C'EST CETTE LIGNE QUI TUE TA REDIRECTION /Account/Login
         options.Events.OnRedirectToLogin = context =>
         {
-            context.Response.StatusCode = 401; // On renvoie juste un code, pas de redirection
+            context.Response.StatusCode = 401;
             return Task.CompletedTask;
         };
     });

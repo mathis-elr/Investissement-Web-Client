@@ -5,15 +5,10 @@ using Microsoft.Extensions.Hosting;
 
 namespace Investissement_WebClient.Application.Workers;
 
-public class EnregistrementValeurPatrimoineWorker : BackgroundService
+public class EnregistrementValeurPatrimoineWorker(IServiceProvider serviceProvider) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    public EnregistrementValeurPatrimoineWorker(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)

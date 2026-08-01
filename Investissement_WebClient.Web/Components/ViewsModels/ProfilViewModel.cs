@@ -1,7 +1,6 @@
-﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.TradeRepublicApi;
-using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
+using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
+using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Web.GestionSession;
 
 
@@ -13,7 +12,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
     {
         private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
-        private readonly ITradeRepublicApiService _tradeRepublicApiService = tradeRepublicApiService;
 
         // USER CONNECTE
         public int IdUser { get; set; }

@@ -1,9 +1,7 @@
-﻿@inherits LayoutComponentBase
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+﻿@using Investissement_WebClient.Web.Components.Views.Shared
+@inherits LayoutComponentBase
 
-<BlazoredToasts Position="ToastPosition.TopRight"
-                Timeout="10"
-                IconType="IconType.FontAwesome" />
+<_Notification/>
 
 <div class="auth-layout">
     @Body

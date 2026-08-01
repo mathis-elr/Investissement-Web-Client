@@ -1,11 +1,13 @@
-﻿using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.PowensApi;
-using Investissement_WebClient.Application.Services.TradeRepublicApi;
+using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Domain.Enums;
+
+
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
@@ -43,9 +45,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public decimal InvestissementMedianMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
+        public IEnumerable<ValeurActifInfosDto> ValeurActifInfos { get; set; } = [];
 
         // EVOLUTION ACTIFS
-        public IEnumerable<InfoParActifDto> InfoInvestParActif { get; set; } = [];
+        public IEnumerable<InfoParActifDto> InfoParActifPeriodeAll => ValeurActifInfos
+            .Select(v => new InfoParActifDto 
+            { 
+                Actif = v.Actif,
+                ValeurDetenue = v.ValeurInvestit,
+                VariationValeur = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationValeur).FirstOrDefault(),
+                VariationPourcentage = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationPourcentage).FirstOrDefault(),
+            });
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
@@ -84,7 +94,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 var prixParActif = await LoadPrixParActif();
                 await LoadInvestissementTotal(prixParActif);
                 await LoadInvestissementsParMois();
-                await LoadInfosInvestParActif(prixParActif);
+                await LoadValeurInfoParActif(prixParActif);
             }
 
             ChargementEncours = false;
@@ -103,9 +113,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
-        public async Task LoadInfosInvestParActif(Dictionary<string, decimal> prixParActif)
+        public async Task LoadValeurInfoParActif(Dictionary<string, decimal> prixParActif)
         {
-            InfoInvestParActif = await _fluxInvestissementService.CalculerInfosInvestParActif(prixParActif, IdUser);
+            ValeurActifInfos = await _fluxInvestissementService.CalculerInfosInvestParActif(prixParActif, IdUser);
         }
 
         private async Task<Dictionary<string, decimal>> LoadPrixParActif()
@@ -116,7 +126,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public async Task LoadDataPrixParActif()
         {
             var prixParActif = await LoadPrixParActif();
-            await LoadInfosInvestParActif(prixParActif);
+            await LoadValeurInfoParActif(prixParActif);
         }
 
         public async Task DemandeCodeSms()
@@ -126,17 +136,19 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                var messageRecu = await _tradeRepublicApiService.GetSms(IdUser);
+                (var codeStatut, var messageRecu) = await _tradeRepublicApiService.GetSms(IdUser);
+
+                if(codeStatut != 200)
+                {
+                    ErrorMessage = messageRecu;
+                    HasError = true;
+                    return; 
+                }
+
                 Message = messageRecu;
                 Etat = Etat.SmsRequis;
 
                 NotifyStateChanged();
-            }
-            catch (HttpRequestException ex)
-            {
-                ErrorMessage = ex.Message;
-                HasError = true;
-                return;
             }
             catch (Exception ex)
             {

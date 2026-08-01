@@ -1,10 +1,10 @@
-using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.Services.FluxBancaires;
-using Investissement_WebClient.Application.Services.PowensApi;
-using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
-using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Application.Services.API.PowensApi;
+using Investissement_WebClient.Application.Services.FluxBancaires;
+using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels;
 

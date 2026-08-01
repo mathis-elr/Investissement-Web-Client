@@ -1,6 +1,6 @@
 ﻿namespace Investissement_WebClient.Application.Services.Encrypt
 {
-    public interface IEncryptService
+    public interface ICryptService
     {
         string Encrypt(string plainText, string masterKey);
 

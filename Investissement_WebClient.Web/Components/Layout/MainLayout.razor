@@ -1,15 +1,13 @@
-﻿@using Investissement_WebClient.Web.GestionSession
+﻿@using Investissement_WebClient.Web.Components.Views.Shared
+@using Investissement_WebClient.Web.GestionSession
 
 @inherits LayoutComponentBase
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject SessionService Session
 
-<BlazoredToasts Position="ToastPosition.TopRight"
-                Timeout="7"
-                IconType="IconType.FontAwesome"/>
+<_Notification />
 
 <div class="main-layout">
-    <nav>
+    <nav class="glass-card">
         <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
             <div class="link">Profil</div>
         </NavLink>

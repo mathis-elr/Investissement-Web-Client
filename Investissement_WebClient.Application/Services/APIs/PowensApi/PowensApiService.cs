@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
-namespace Investissement_WebClient.Application.Services.PowensApi;
+namespace Investissement_WebClient.Application.Services.API.PowensApi;
 
 public class PowensApiService : IPowensApiService
 {

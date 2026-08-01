@@ -1,10 +1,10 @@
 ﻿using Investissement_WebClient.Application.ViewsModels;
 
-namespace Investissement_WebClient.Application.Services.TradeRepublicApi
+namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
 {
     public interface ITradeRepublicApiService
     {
-        Task<string> GetSms(int userId);
+        Task<(int, string)> GetSms(int userId);
 
         Task<string> ConfirmSms(string codeSms);
 

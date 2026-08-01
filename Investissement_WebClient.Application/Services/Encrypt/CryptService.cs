@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Investissement_WebClient.Application.Services.Encrypt
 {
-    public class EncryptService : IEncryptService
+    public class CryptService : ICryptService
     {
         public string Encrypt(string plainText, string masterKey)
         {

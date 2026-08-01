@@ -6,14 +6,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Investissement_WebClient.Application.Services.Authentification
 {
-    public class AuthentificationService : IAuthentificationService
+    public class AuthentificationService(IDbContextFactory<InvestissementDbContext> dbFactory) : IAuthentificationService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-
-        public AuthentificationService(IDbContextFactory<InvestissementDbContext> dbFactory)
-        {
-            _dbFactory = dbFactory;
-        }
+        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbFactory;
 
         public async Task<int> Inscription(InscriptionVM infosInscription)
         {

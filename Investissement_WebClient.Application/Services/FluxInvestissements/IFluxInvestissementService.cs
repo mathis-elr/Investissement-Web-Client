@@ -1,7 +1,6 @@
 ﻿using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
 
 namespace Investissement_WebClient.Application.Services.FluxInvestissements
 {
@@ -15,15 +14,13 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         Task<Dictionary<string, decimal>> GetPrixParActif();
 
-        Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif, int userId);
+        Task<IEnumerable<ValeurActifInfosDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId);
 
         Task<decimal> CalculerValeurCourante(Dictionary<string, decimal> prixParActif, int userId);
     
         Task<decimal> CalculerValeurInvestissementTotal(int userId);
 
         Task<decimal> CalculerInvestissementMedianMensuel(int userId);
-
-        Task<IEnumerable<InfoParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId);
 
         Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions, int userId);
     }

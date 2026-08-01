@@ -1,21 +1,16 @@
-using Investissement_WebClient.Application.ApiResponse.Powens;
-using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
+using Investissement_WebClient.Application.ApiResponse.Powens;
+using Investissement_WebClient.Application.ViewsModels;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Application.Services.FluxBancaires;
 
-public class FluxBancaireService : IFluxBancaireService
+public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFactory) : IFluxBancaireService
 {
-    private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-
-    public FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFactory)
-    {
-        _dbFactory = dbFactory;
-    }
+    private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbFactory;
 
     public async Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId)
     {

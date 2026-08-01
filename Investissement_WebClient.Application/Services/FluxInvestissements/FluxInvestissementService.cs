@@ -1,30 +1,24 @@
-﻿using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
-using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.Services.Actifs;
-using Investissement_WebClient.Application.Services.YahooFinanceApi;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Application.Services.API.YahooFinanceApi;
+using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
+using Investissement_WebClient.Application.Services.Actifs;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
+using Investissement_WebClient.Domain.Enums;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Application.Services.FluxInvestissements
 {
-    public class FluxInvestissementService : IFluxInvestissementService
+    public class FluxInvestissementService(IDbContextFactory<InvestissementDbContext> dbContext,
+                                           IYahooFinanceApiService yahooFinanceApiService,
+                                           IActifService actifService) : IFluxInvestissementService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-        private readonly IYahooFinanceApiService _yahooFinanceApiService;
-        private readonly IActifService _actifService;
-
-        public FluxInvestissementService(IDbContextFactory<InvestissementDbContext> dbContext,  
-                                         IYahooFinanceApiService yahooFinanceApiService,
-                                         IActifService actifService)
-        {
-            _dbFactory = dbContext;
-            _yahooFinanceApiService = yahooFinanceApiService;
-            _actifService = actifService;
-        }
+        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
+        private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
+        private readonly IActifService _actifService = actifService;
 
         public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId)
         {
@@ -86,7 +80,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             return data.Where(t => t.QuantiteTotale != 0).Select(t => new ValeurTotaleParActifVM
             {
                 Actif = t.Libelle,
-                Valeur = Math.Round((decimal)(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0)), 2)
+                Valeur = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0), 2)
             }).ToList();
         }
 
@@ -130,36 +124,102 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
             return Math.Round(mediane, 0);
         }
 
-        public async Task<IEnumerable<InfoParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId)
+        public async Task<IEnumerable<ValeurActifInfosDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            var rawData = await context.FluxInvestissement
+
+            var infosParActif = await context.FluxInvestissement
+                .Include(f => f.Actif)
                 .Where(f => f.UtilisateurId == userId)
                 .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
                 .Select(g => new
                 {
                     g.Key.Libelle,
                     g.Key.Ticker,
+                    Transactions = g.ToList(),
                     TotalQuantite = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)t.Quantite : (decimal)-t.Quantite),
-                    TotalInvesti = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)(t.Quantite * t.Prix) : (decimal)(-t.Quantite * t.Prix))
+                    TotalValeurInvest = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)(t.Quantite * t.Prix) : (decimal)(-t.Quantite * t.Prix))
                 })
                 .ToListAsync();
 
-            return rawData.Where(t => t.TotalQuantite > 0).Select(t =>
-            {
-                var prixActuel = prixParActif[t.Ticker];
-                var valeurDetenue = t.TotalQuantite * prixActuel;
 
-                return new InfoParActifDto
+            var tasks = infosParActif
+                .Where(t => t.TotalQuantite > 0)
+                .Select(async t =>
                 {
-                    Actif = t.Libelle,
-                    ValeurDetenue = Math.Round(valeurDetenue, 2),
-                    VariationValeur = Math.Round(valeurDetenue - t.TotalInvesti, 2),
-                    VariationPourcentage = Math.Round((valeurDetenue - t.TotalInvesti) / t.TotalInvesti * 100, 2)
+                    var prixActuel = prixParActif[t.Ticker];
+                    var valeurActuelle = t.TotalQuantite * prixActuel;
 
-                };
-            }).ToList();
+                    var variationsParLapsTemps = new Dictionary<LapsTemps, VariationDataDto>();
+                    var prixParActifHistorique = await _yahooFinanceApiService.GetPrixHistorique(t.Ticker);
+
+                    foreach (LapsTemps periode in Enum.GetValues(typeof(LapsTemps)))
+                    {
+                        if (periode == LapsTemps.All)
+                        {
+                            variationsParLapsTemps[LapsTemps.All] = new VariationDataDto
+                            {
+                                VariationValeur = valeurActuelle - t.TotalValeurInvest,
+                                VariationPourcentage = Math.Round(((valeurActuelle - t.TotalValeurInvest) / t.TotalValeurInvest) * 100, 2)
+                            };
+
+                            continue;
+                        }
+
+                        variationsParLapsTemps[periode] = CalculVariationPrix(prixParActifHistorique[periode], prixParActif[t.Ticker]);
+                    }
+
+                    return new ValeurActifInfosDto
+                    {
+                        Actif = t.Libelle,
+                        ValeurInvestit = Math.Round(valeurActuelle, 2),
+                        VariationsParLapsTemps = variationsParLapsTemps
+                    };
+                });
+
+            var res = await Task.WhenAll(tasks);
+            return res;   
         }
+
+        private VariationDataDto CalculVariationPrix(decimal prixHistorique, decimal prixCourant)
+        {
+            return new VariationDataDto
+            {
+                VariationValeur = prixCourant - prixHistorique,
+                VariationPourcentage = Math.Round(((prixCourant - prixHistorique) / prixHistorique) * 100, 2)
+            };
+        }
+
+        //public async Task<IEnumerable<InfoParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId)
+        //{
+        //    await using var context = await _dbFactory.CreateDbContextAsync();
+        //    var rawData = await context.FluxInvestissement
+        //        .Where(f => f.UtilisateurId == userId)
+        //        .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
+        //        .Select(g => new
+        //        {
+        //            g.Key.Libelle,
+        //            g.Key.Ticker,
+        //            TotalQuantite = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)t.Quantite : (decimal)-t.Quantite),
+        //            TotalInvesti = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)(t.Quantite * t.Prix) : (decimal)(-t.Quantite * t.Prix))
+        //        })
+        //        .ToListAsync();
+
+        //    return rawData.Where(t => t.TotalQuantite > 0).Select(t =>
+        //    {
+        //        var prixActuel = prixParActif[t.Ticker];
+        //        var valeurDetenue = t.TotalQuantite * prixActuel;
+
+        //        return new InfoParActifDto
+        //        {
+        //            Actif = t.Libelle,
+        //            ValeurDetenue = Math.Round(valeurDetenue, 2),
+        //            VariationValeur = Math.Round(valeurDetenue - t.TotalInvesti, 2),
+        //            VariationPourcentage = Math.Round((valeurDetenue - t.TotalInvesti) / t.TotalInvesti * 100, 2)
+
+        //        };
+        //    }).ToList();
+        //}
 
         public async Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions, int userId)
         {

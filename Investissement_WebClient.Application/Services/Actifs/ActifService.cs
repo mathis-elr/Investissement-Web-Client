@@ -4,16 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Application.Services.Actifs
 {
-    public class ActifService : IActifService
+    public class ActifService(IDbContextFactory<InvestissementDbContext> dbContext) : IActifService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
+        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
         private readonly List<string> _motsInutiles = ["EUR", "(ACC)", "PEA", "SWAP", "(DIST)","ESG"];
-
-        public ActifService(IDbContextFactory<InvestissementDbContext> dbContext)
-        {
-            _dbFactory = dbContext;
-        }
 
         public async Task<List<Actif>> GetAll()
         {
