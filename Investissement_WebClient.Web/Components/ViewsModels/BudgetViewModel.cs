@@ -177,7 +177,7 @@ public class BudgetViewModel(SessionService sessionService,
 
     public void EditerMoisComplete()
     {
-        StatutMoisActif!.Statut = Statut.a_completer;
+        StatutMoisActif!.Statut = Statut.edition;
         NotifyStateChanged();
     }
 

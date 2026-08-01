@@ -5,6 +5,7 @@
         indisponible,
         complete,
         a_completer,
-        aucune_donnees
+        aucune_donnees,
+        edition
     }
 }

@@ -52,6 +52,10 @@
                 icon = "🔍";
                 statut = "aucune données";
                 break;
+            case Statut.edition:
+                icon = "✏️";
+                statut = "édition";
+                break;
         }
 
         var estActif = Model.DateActive.HasValue
