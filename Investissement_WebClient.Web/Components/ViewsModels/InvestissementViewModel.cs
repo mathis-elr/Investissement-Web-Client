@@ -1,11 +1,12 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+﻿using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
+using System.Diagnostics;
 
 
 
@@ -80,24 +81,30 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         {
             ChargementEncours = true;
 
-            await InitialiserSession();
-
-            await LoadIdentifiantsRequis();
-            if (IdentifiantsRequis)
-                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
-            await LoadFluxInvestissement();
-
-            if (FluxInvestissement.Any())
+            try
             {
-                await LoadInvestissementMedianMensuel();
+                await InitialiserSession();
 
-                var prixParActif = await LoadPrixParActif();
-                await LoadInvestissementTotal(prixParActif);
-                await LoadInvestissementsParMois();
-                await LoadValeurInfoParActif(prixParActif);
+                await LoadIdentifiantsRequis();
+                if (IdentifiantsRequis)
+                    Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
+                await LoadFluxInvestissement();
+
+                if (FluxInvestissement.Any())
+                {
+                    await LoadInvestissementMedianMensuel();
+
+                    var prixParActif = await LoadPrixParActif();
+                    await Task.WhenAll(
+                        LoadInvestissementTotal(prixParActif),
+                        LoadInvestissementsParMois(),
+                        LoadValeurInfoParActif(prixParActif)
+                    );
+                }
             }
-
-            ChargementEncours = false;
+            finally { 
+                ChargementEncours = false; 
+            }
         }
 
         public async Task SaveAccesTR()

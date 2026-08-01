@@ -109,7 +109,6 @@
 
         if (Model.HasError)
         {
-            Console.WriteLine("has erreur yes");
             Model.FinDeDemande();
             await Task.Yield();
             TS.ShowError(Model.ErrorMessage);

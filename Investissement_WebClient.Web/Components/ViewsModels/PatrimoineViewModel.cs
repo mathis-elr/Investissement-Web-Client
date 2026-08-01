@@ -1,8 +1,9 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
+﻿using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.ValeurPatrimoines;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
 using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -40,25 +41,31 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         {
             RecuparationEnCours = true;
 
-            await _sessionService.Initialiser();
-            IdUser = _sessionService.Id;
-
-            var prixParActif = await _fluxInvestissementService.GetPrixParActif();
-
-            await LoadValeurPatrimoineCourante(prixParActif);
-
-            if(ValeurPatrimoineCourante != 0)
+            try
             {
-                await LoadValeurInvestissementTotale();
-                await LoadVariationsPrix();
+                await _sessionService.Initialiser();
+                IdUser = _sessionService.Id;
 
-                // GRAPHIQUES
-                await LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal();
-                await LoadBougiesJournalieresPlusOuMoinsValues();
-                await LoadProportionParActif(prixParActif);
+                var prixParActif = await _fluxInvestissementService.GetPrixParActif();
+
+                await LoadValeurPatrimoineCourante(prixParActif);
+
+                if (ValeurPatrimoineCourante != 0)
+                {
+                    await LoadValeurInvestissementTotale();
+
+                    await Task.WhenAll(
+                        LoadVariationsPrix(),
+                        LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal(),
+                        LoadBougiesJournalieresPlusOuMoinsValues(),
+                        LoadProportionParActif(prixParActif)
+                    );
+                }
             }
-
-            RecuparationEnCours = false;
+            finally
+            {
+                RecuparationEnCours = false;
+            }
         }
 
         public string DeterminerClasse(decimal variationPrix)
