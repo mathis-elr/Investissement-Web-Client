@@ -71,8 +71,6 @@ builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
 builder.Services.AddScoped<IActifService, ActifService>();
 
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
-builder.Services.AddScoped<ITradeRepublicApiService, TradeRepublicApiService>();
-builder.Services.AddScoped<IPowensApiService, PowensApiService>();
 
 builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService>();
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
@@ -88,7 +86,7 @@ builder.Services.AddScoped<ProfilViewModel>();
 builder.Services.AddScoped<ConnexionViewModel>();
 
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
-
+builder.Services.AddHostedService<RecuperationFluxBancairesWorker>();
 
 builder.Services.AddAuthentication("Manual")
     .AddCookie("Manual", options =>

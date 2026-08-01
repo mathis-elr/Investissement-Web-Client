@@ -39,8 +39,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task StartLoadData()
         {
-            var stopwatch = Stopwatch.StartNew();
-
             RecuparationEnCours = true;
 
             try
@@ -67,9 +65,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             finally
             {
                 RecuparationEnCours = false;
-
-                stopwatch.Stop();
-                Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
             }
         }
 

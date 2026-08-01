@@ -13,6 +13,8 @@ public interface IFluxBancaireService
 
     Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux();
 
+    Task VerifierEtSynchroniserFluxBancairesAsync();
+
     Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId);
 
     Task AddFluxBancaire(List<PowensFluxApiResponse>? flux, int userId);

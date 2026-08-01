@@ -79,37 +79,33 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
-            var stopwatch = Stopwatch.StartNew();
-
             ChargementEncours = true;
 
-            await InitialiserSession();
-
-            await LoadIdentifiantsRequis();
-            if (IdentifiantsRequis)
-                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
-            await LoadFluxInvestissement();
-
-            if (FluxInvestissement.Any())
+            try
             {
-                await LoadInvestissementMedianMensuel();
+                await InitialiserSession();
 
-                var prixParActif = await LoadPrixParActif();
-                await Task.WhenAll(
-                    LoadInvestissementTotal(prixParActif),
-                    LoadInvestissementsParMois(),
-                    LoadValeurInfoParActif(prixParActif)
-                );
+                await LoadIdentifiantsRequis();
+                if (IdentifiantsRequis)
+                    Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
+                await LoadFluxInvestissement();
 
-                //await LoadInvestissementTotal(prixParActif);
-                //await LoadInvestissementsParMois();
-                //await LoadValeurInfoParActif(prixParActif);
+                if (FluxInvestissement.Any())
+                {
+                    await LoadInvestissementMedianMensuel();
+
+                    var prixParActif = await LoadPrixParActif();
+                    await Task.WhenAll(
+                        LoadInvestissementTotal(prixParActif),
+                        LoadInvestissementsParMois(),
+                        LoadValeurInfoParActif(prixParActif)
+                    );
+                }
             }
-
-            ChargementEncours = false;
-
-            stopwatch.Stop();
-            Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
+            finally
+            {
+                ChargementEncours = false;
+            }
         }
 
         public async Task SaveAccesTR()

@@ -4,6 +4,7 @@ using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -12,7 +13,7 @@ namespace Investissement_WebClient.Application.Services.API.PowensApi;
 public class PowensApiService : IPowensApiService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
-    private readonly IFluxBancaireService _fluxBancaireService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly HttpClient _httpClient;
 
     private readonly string _clientId = PowensApiConfiguration.ClientId;
@@ -22,12 +23,12 @@ public class PowensApiService : IPowensApiService
     private readonly string _tokenEndPoint = PowensApiConfiguration.TokenEndPoint;
     private readonly string _accountsEndPoint = PowensApiConfiguration.AccountsEndPoint;
 
-    public PowensApiService(IDbContextFactory<InvestissementDbContext> dbFactory, 
-                            IFluxBancaireService fluxBancaireService,
+    public PowensApiService(IDbContextFactory<InvestissementDbContext> dbFactory,
+                            IServiceScopeFactory scopeFactory,
                             HttpClient httpClient)
     {
         _dbFactory = dbFactory;
-        _fluxBancaireService = fluxBancaireService;
+        _scopeFactory = scopeFactory;
         _httpClient = httpClient;
         _httpClient.BaseAddress = new Uri(_baseUri);
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
@@ -104,7 +105,9 @@ public class PowensApiService : IPowensApiService
         var reponseString = await reponse.Content.ReadAsStringAsync();
         var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
 
-        await _fluxBancaireService.AddFluxBancaire(transactions?.Transactions, userId);
+        using var scope = _scopeFactory.CreateScope();
+        var fluxBancaireService = scope.ServiceProvider.GetRequiredService<IFluxBancaireService>();
+        await fluxBancaireService.AddFluxBancaire(transactions?.Transactions, userId);
     }
 
     private async Task SaveAcces(string token, int idCompteCourant, int userId)

@@ -5,12 +5,14 @@ using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Investissement_WebClient.Application.Services.API.PowensApi;
 
 namespace Investissement_WebClient.Application.Services.FluxBancaires;
 
-public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFactory) : IFluxBancaireService
+public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFactory, IPowensApiService powensApiService) : IFluxBancaireService
 {
     private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbFactory;
+    private readonly IPowensApiService _powensApiService = powensApiService;
 
     public async Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId)
     {
@@ -19,6 +21,16 @@ public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFa
             .Where(b => b.UtilisateurId == userId)
             .FirstOrDefaultAsync();
         return acces?.DateExpiration;
+    }
+
+    public async Task<DateTime?> GetDateDernierFlux(int userId)
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+        return await context.FluxBancaire
+            .Where(f => f.UtilisateurId == userId)
+            .OrderByDescending(f => f.Date)
+            .Select(f => (DateTime?)f.Date)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<List<FluxBancaireVM>> GetFluxBancaire(int userId)
@@ -47,6 +59,32 @@ public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFa
             })
             .OrderBy(f => f.Libelle)
             .ToListAsync();
+    }
+
+    public async Task VerifierEtSynchroniserFluxBancairesAsync()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var currentDate = DateTime.Now;
+
+        var finMoisPrecedent = new DateTime(currentDate.Year, currentDate.Month, 1).AddDays(-1);
+
+        var idsUsers = await context.BanqueAcces
+            .Where(b => b.DateExpiration > DateTime.Now)
+            .Select(b => b.UtilisateurId)
+            .ToListAsync();
+
+        foreach (var idUser in idsUsers)
+        {
+            var derniereDate = await GetDateDernierFlux(idUser);
+
+            if (derniereDate.HasValue && derniereDate.Value >= finMoisPrecedent)
+                continue;
+
+            var dateDebut = derniereDate ?? new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(-2);
+
+            await _powensApiService.GetFlux(dateDebut, finMoisPrecedent, idUser);
+        }
     }
 
     public async Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId)

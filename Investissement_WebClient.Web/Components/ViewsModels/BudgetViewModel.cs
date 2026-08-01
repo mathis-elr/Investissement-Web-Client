@@ -54,27 +54,28 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task StartLoadData()
     {
-        var stopwatch = Stopwatch.StartNew();
-
         ActionEnCours = true;
-        await _sessionService.Initialiser();
-        IdUser = _sessionService.Id;
 
-        await LoadDateLimiteValiditeSyncBanque();
+        try
+        {
+            await _sessionService.Initialiser();
+            IdUser = _sessionService.Id;
 
-        await Task.WhenAll(
-            LoadFlux(),
-            LoadBudgetParCategorie()
-            ,LoadCategories()
-        );
+            await LoadDateLimiteValiditeSyncBanque();
 
-        DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
-        DeterminerStatutMois();
+            await Task.WhenAll(
+                LoadFlux(),
+                LoadBudgetParCategorie()
+                , LoadCategories()
+            );
 
-        ActionEnCours = false;
-
-        stopwatch.Stop();
-        Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
+            DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
+            DeterminerStatutMois();
+        }
+        finally
+        {
+            ActionEnCours = false;
+        }
     }
 
     public async Task MajVue()
@@ -107,11 +108,6 @@ public class BudgetViewModel(SessionService sessionService,
         var date = statutMoisDto.Date;   
 
         DateActive = date;
-
-        //if (!Categories.Any())
-        //{
-        //    await LoadCategories();
-        //}
 
         DateEditMensuel = date;
         FluxMensuel = Flux
@@ -219,7 +215,7 @@ public class BudgetViewModel(SessionService sessionService,
         {
             var DateLocale = dateCourante;
             var unMois = new StatutParMoisDto { Date = DateLocale };
-            bool estIndisponible = (DateLocale.Year == DateTime.Now.Year && DateLocale.Month == DateTime.Now.Month);
+            bool estIndisponible = (DateLocale.Year == DateTime.Now.Year && DateLocale.Month == DateTime.Now.Month) || (DateTime.Now.Day < 5 && DateLocale.Year == DateTime.Now.AddMonths(-1).Year && DateLocale.Month == DateTime.Now.AddMonths(-1).Month);
             var fluxDuMois = Flux.Where(f => f.Date.Year == DateLocale.Year && f.Date.Month == DateLocale.Month).ToList();
             var fluxExiste = fluxDuMois.Count != 0;
             var allCategoriesCompletes = fluxDuMois.All(f => f.IdCategorie != 0);
