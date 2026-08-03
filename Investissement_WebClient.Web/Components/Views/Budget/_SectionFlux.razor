@@ -13,9 +13,15 @@
                 <option value="0"></option>
                 @foreach (var categorie in Categories)
                 {
-                    <option value="@categorie.Id">@categorie.Libelle</option>
+                    <option value="@categorie.Id">
+                        @categorie.Libelle 
+                    </option>
                 }
             </select>
+            @if (flux.Suggestion)
+            {
+                <div class="badge bg-info-subtle text-info border border-info px-1 py-0">(Suggestion automatique 🪄)</div>
+            }
         </div>
     }
 </div>

@@ -41,11 +41,12 @@ public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFa
             .Select(f => new FluxBancaireVM
             {
                 Id = f.Id,
-            Date = f.Date,
-            Valeur = f.Valeur,
-            Libelle = f.Libelle,
-            IdCategorie = f.Categorie == null ? 0 : f.Categorie.Id
-        }).ToListAsync();
+                Date = f.Date,
+                Valeur = f.Valeur,
+                Libelle = f.Libelle,
+                IdCategorie = f.Categorie == null ? 0 : f.Categorie.Id,
+                Suggestion = f.Suggestion
+            }).ToListAsync();
     }
 
     public async Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux()

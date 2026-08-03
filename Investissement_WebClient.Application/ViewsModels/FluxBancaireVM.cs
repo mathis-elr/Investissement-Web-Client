@@ -12,4 +12,6 @@ public class FluxBancaireVM
     public required string Libelle { get; set; }
     
     public int IdCategorie { get; set; }
+
+    public bool Suggestion { get; set; }
 }
