@@ -1,55 +1,28 @@
-<h1> Application web de suivi d'investissement </h1>
+<h1> Application web de gestion de son portefeuille </h1>
 
-<h3>Ce qui est possible de faire : </h3>
-<ul>
-  <h4>💰 <I>Page Investissement</I> 💰</h4>
-  <li>
-    Ajouter des investissements (1 ou plusieurs transactions) effectués en ajout le prix d'achat et la quantité des actifs investits avec la possibilité d'inclure un modele pré enregistré.
-  </li>
-  <li>
-    Visualiser ces investissements classés par date décroissante, avec le montant total investit par jour mais également la listes de transactions, leur prix d'achat et la quantité investit.
-  </li>
-  <li>
-    Annuler une transaction qui a eu lieu il y a moins de 3h.
-  </li>
+L'application propose deux fonctionalitées principales :
+<br>
+- Suivi des investissement (uniquement Trade Republique pour le moment) : 
+Ajouter vos identifiants Trade Républic, l'application ira chercher vos transactions. Vous pourrez ensuite visualiser plusieurs indicateurs :
+- le premier est le plus simple vous pouvez visualiser facilement les investissement classés par date décroissante et groupé par date d'investissement et le montant investit. Pour toute les transactions vous pourrez visualiser, l'actif, la quantité investi et le montant total en €.
+- Un graphique vous offre une courbe d'investissement effectué par mois avec un indicateur de médiane
+- Vous trouverez également un indicateur détaillé pour chacun de vos actif détenus : quantité détenue, valeur actuelle en €, taux de baisse ou de hausse en %
 
-  <h4>💼 <I>Page Actif</I> 💼</h4>
-  <li>
-    Enregistrer et modifier facilement un actif pré enregistré parmis une liste d'ETF, ETC, Actions et Crytos disponible
-  </li>
-  <li>
-    Supression de un ou plusieurs actif(s) en simultané par selection
-  </li>
+<br>
+<br>
 
-  <h4>📋 <I>Page Modele</I> 📋</h4>
-  <li>
-    Ajouter un modele = panier d'actifs utilise pour l'investissement en DCA, permet la reutilisation des même actifs si on fait souvent les mêmes investissements
-  </li>
-  <li>
-    Modifier un modele et plus precisement les actifs le composant, et la quantité associé
-  </li>
-  <li>
-    Supression de un ou plusieurs modele(s) en simultané par selection
-  </li>
+- Suivi de son budget :
+<br>
+Vous pouvez connecter votre banque via ***Powens*** qui est une plateforme intermédiaire permettant de récupérer les données de son compte en banque en toute sécurité, cette pratique est possible depuis 2018 grâce à la loi sur l'Open Banking qui oblige les banques à permettre l'accès aux données des utilisateurs sans passer par la banque elle même. Cette loi est tout de même très encadré, n'importe qui ne peut pas se connecter à la banque c'est pour cela que l'application passe par ***Powens*** qui permet de faire le lien entre les banques et les applications en toute sécurité.
+>⚠️ A noter que la connexion est effective durant 3 mois, une fois ce délais passer vous devrez vous reconnecter (C'est une étape simple et rapide ≃2mn).
+Une fois la connexion effectué, tout les 5 du mois, vos flux bancaire du mois précédent seront récupérés automatiquement. L'appplication intègre une catégorisation par transaction, maheureusement, ***Powens*** les banques ne communiquent pas les categories c'est pour cela que ce travail devra être fait par vous. Cela dit l'application intègre une semi automatisation en fonction des transactions déjà renseigné, par exemple si il détecte une Libelle Leclerc auquel vous avez associé la catégorie Alimentation, vous n'aurez plus besoin de le re renseigner, cependant il sera toujours modifiable si cela ne vous convient pas.
 
-  <h4>🙍‍♂️ <I>Page profil</I> 🙍‍♂️</h4>
-  <li>Rien pour le moment voir futurs ajouts</li>
-</ul>
+<br>
+<br>
 
-<h3>Futures ajouts : </h3>
-<ul>
-  <h4> Page Profil </h4>
-  <li>
-    Infos sur l'investissement moyen, le salaire
-  </li>
-  <li>
-    Perspectives d'evolution positives de la valeur du patrimoine à long terme (5/10/20/40 ans via graphique)
-  </li>
-  <li>
-    Courbe ou plus/moins values ou variations des actifs investits entre le premier investissement et ajd, pour visualiser ce qui marche et ce qui marche moins bien 
-  </li>
-  <li>
-    Autres infos à determiner grace aux données collectées
-  </li>
-</ul>
+Deux autres fonctionnalités secondaires s'offre à vous : 
+
+- Plusieurs indicateurs s'offre à vous pour suivre l'evolution de votre patrimoine, valeur du patrimoine actuellement, évolution sur 1 jours, 7 jours, 1 mois et 1 an, mais égalements des graphiques : évolution journalière en %, part de possesion, évolution du patrimoine
+- Un graphique modulable s'offre à vous afin de mesurer vos perspective d'évolution de patrimoine, renseigner votre investissement mensuel, votre objectif d'évolution annuelle en % et le nombre d'années en perspective et obtenez un graphique sur mesure comprenant votre investissement brut et l'évolution possible année par année.
+⚠️ Ce graphique est bien évidement à titre indicatif et vous permet de visualiser les effets des intérêts composés et de vous projeter sur la valeur de votre patrimoine durant votre vie.
 
