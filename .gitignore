@@ -40,13 +40,6 @@ packages/
 
 ## Blazor/ASP.NET Core Specific Files ##
 
-# Blazor WebAssembly AOT output
-wwwroot/
-wwwroot/index.html
-wwwroot/_framework/
-wwwroot/service-worker-assets.js
-wwwroot/service-worker.published.js
-
 # Blazor Server/WebAssembly Output (If published)
 /publish/
 /bundle/
