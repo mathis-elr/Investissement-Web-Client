@@ -135,6 +135,8 @@ public class PowensApiService : IPowensApiService
                 UtilisateurId = userId
             };
             await context.BanqueAcces.AddAsync(newAcces);
+
+            await GetFlux(DateTime.Now.AddMonths(-2), DateTime.Now, userId);
         }
 
         await context.SaveChangesAsync();
