@@ -1,12 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Investissement_WebClient.Domain.Modeles;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Investissement_WebClient.Infrastructure.Configurations
 {
-    internal class FluxBancaireConfiguration
+    internal class FluxBancaireConfiguration : IEntityTypeConfiguration<FluxBancaire>
     {
+        public void Configure(EntityTypeBuilder<FluxBancaire> builder)
+        {
+            builder.Property(h => h.Id)
+                .ValueGeneratedNever();
+
+            builder.Property(h => h.Date)
+                .IsRequired();
+            builder.Property(h => h.Valeur)
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            builder.HasOne(h => h.Categorie)
+                .WithMany()
+                .HasForeignKey(h => h.IdCategorie)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

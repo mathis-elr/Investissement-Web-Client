@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Investissement_WebClient.Domain.Modeles;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Investissement_WebClient.Infrastructure.Configurations
 {
-    internal class UtilisateurConfiguration
+    internal class UtilisateurConfiguration : IEntityTypeConfiguration<Utilisateur>
     {
+        public void Configure(EntityTypeBuilder<Utilisateur> builder)
+        {
+            builder.HasIndex(u => u.Email)
+                .IsUnique();
+        }
     }
 }

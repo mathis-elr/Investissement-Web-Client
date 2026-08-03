@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Investissement_WebClient.Domain.Modeles;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Investissement_WebClient.Infrastructure.Configurations
 {
-    internal class ValeurPatrimoineConfiguration
+    internal class ValeurPatrimoineConfiguration : IEntityTypeConfiguration<ValeurPatrimoine>
     {
+        public void Configure(EntityTypeBuilder<ValeurPatrimoine> builder)
+        {
+            builder.Property(h => h.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Property(h => h.Date)
+                .IsRequired();
+            builder.Property(h => h.InvestissementTotal)
+                .HasPrecision(18, 2)
+                .IsRequired();
+            builder.Property(h => h.Valeur)
+                .HasPrecision(18, 2)
+                .IsRequired();
+        }
     }
 }
