@@ -13,6 +13,8 @@ public class FluxBancaire
     public int? IdCategorie { get; set; }
     public CategorieFlux Categorie { get; set; } = null!;
 
+    public bool Suggestion { get; set; } = false;
+
     public int UtilisateurId { get; set; }
     public Utilisateur Utilisateur { get; set; } = null!;
 }

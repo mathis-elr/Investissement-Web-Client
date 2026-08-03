@@ -87,6 +87,31 @@ public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFa
         }
     }
 
+    public async Task DeterminerCategorieFlux()
+    {
+        await using var context = await _dbFactory.CreateDbContextAsync();
+
+        var fluxSansCategorie = await context.FluxBancaire
+            .Where(f => f.IdCategorie == null)
+            .ToListAsync();
+
+        var dicCorrespondanceFluxBancaire = await context.FluxBancaire
+            .Where(f => f.IdCategorie != null)
+            .GroupBy(f => f.Libelle.Trim().ToLower())
+            .ToDictionaryAsync(g => g.Key, f => f.First().IdCategorie);
+
+        foreach (var flux in fluxSansCategorie)
+        {
+            if (dicCorrespondanceFluxBancaire.TryGetValue(flux.Libelle, out int? idCategorie))
+            {
+                flux.IdCategorie = idCategorie;
+                flux.Suggestion = true;
+            }
+        }
+
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId)
     {
         await using var context = await _dbFactory.CreateDbContextAsync();
@@ -146,6 +171,8 @@ public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFa
 
         context.FluxBancaire.AddRange(nvFlux);
         await context.SaveChangesAsync();
+
+        await DeterminerCategorieFlux();
     }
 
     public async Task UpdateFluxMensuel(List<FluxBancaireVM> fluxMensuelVM, int userId)
@@ -167,6 +194,7 @@ public class FluxBancaireService(IDbContextFactory<InvestissementDbContext> dbFa
             {
                 _fluxEnregistre.Libelle = fluxVm.Libelle;
                 _fluxEnregistre.IdCategorie = fluxVm.IdCategorie == 0 ? null : fluxVm.IdCategorie;
+                _fluxEnregistre.Suggestion = false;
             }
         }
 
