@@ -1,5 +1,4 @@
 ﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
-using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Web.GestionSession;
 
@@ -7,8 +6,7 @@ using Investissement_WebClient.Web.GestionSession;
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
     public class ProfilViewModel(SessionService sessionService, 
-                                 IFluxInvestissementService fluxInvestissementService, 
-                                 ITradeRepublicApiService tradeRepublicApiService)
+                                 IFluxInvestissementService fluxInvestissementService)
     {
         private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
@@ -35,10 +33,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             PrenomUser = _sessionService.Prenom;
 
             await LoadInvestissementMoyenMensuel();
-            await CalculerEvolutionDuPatrimoine();
+            CalculerEvolutionDuPatrimoine();
         }
 
-        public async Task CalculerEvolutionDuPatrimoine()
+        public void CalculerEvolutionDuPatrimoine()
         {
 
             if (InvestissementMoyenMensuel < 1)

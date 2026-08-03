@@ -63,7 +63,7 @@
                     && Model.DateActive.Value.Month == unMois.Date.Month;
 
         <div class="un-mois @(estIndisponible || Model.ConnexionBanqueRequise ? "disabled" : estActif ? "active" : "")"
-             @onclick="async () => { if (!estIndisponible && !Model.ConnexionBanqueRequise) { await Model.LoadFluxUnMois(unMois); } }"
+             @onclick="() => { if (!estIndisponible && !Model.ConnexionBanqueRequise) { Model.LoadFluxUnMois(unMois); } }"
              title="@(estIndisponible ? $"Vous pourrez voir vox flux à partir du 5 {unMois.Date.AddMonths(1).ToString("MMMM yyyy")}" : "Cliquer pour consulter les flux du mois")">
             <span>@(icon + " " + unMois.Date.ToString("MMMM yyyy") + " - " + statut)</span>
         </div>

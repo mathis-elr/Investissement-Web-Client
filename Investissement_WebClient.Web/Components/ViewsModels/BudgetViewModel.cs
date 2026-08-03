@@ -83,7 +83,7 @@ public class BudgetViewModel(SessionService sessionService,
         var stopwatch = Stopwatch.StartNew();
 
         await LoadFlux();
-        await LoadFluxUnMois(StatutMoisActif!);
+        LoadFluxUnMois(StatutMoisActif!);
         DeterminerStatutMois();
         ActionEnCours = false;
 
@@ -102,7 +102,7 @@ public class BudgetViewModel(SessionService sessionService,
         NotifyStateChanged();
     }
 
-    public async Task LoadFluxUnMois(StatutParMoisDto statutMoisDto)
+    public void LoadFluxUnMois(StatutParMoisDto statutMoisDto)
     {
         StatutMoisActif = statutMoisDto;
         var date = statutMoisDto.Date;   
@@ -189,7 +189,7 @@ public class BudgetViewModel(SessionService sessionService,
     private async Task RefreshData()
     {
         await LoadFlux();
-        await LoadFluxUnMois(StatutMoisActif!);
+        LoadFluxUnMois(StatutMoisActif!);
         CalculerStatsGraphique();
     }
 

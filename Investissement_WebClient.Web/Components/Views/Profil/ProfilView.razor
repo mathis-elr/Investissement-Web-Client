@@ -76,9 +76,9 @@
         }
     }
 
-    private async Task CalculerEvolutionDuPatrimoine()
+    private void CalculerEvolutionDuPatrimoine()
     {
-        await PVM.CalculerEvolutionDuPatrimoine();
+        PVM.CalculerEvolutionDuPatrimoine();
 
         if (PVM.HasError)
         {
