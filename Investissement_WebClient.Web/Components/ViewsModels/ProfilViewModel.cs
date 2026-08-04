@@ -2,7 +2,6 @@
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Web.GestionSession;
 
-
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
     public class ProfilViewModel(SessionService sessionService, 

@@ -1,6 +1,6 @@
-﻿using ApexCharts;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
+using ApexCharts;
 
 namespace Investissement_WebClient.Application.ChartsOptions
 {

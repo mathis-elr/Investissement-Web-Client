@@ -1,6 +1,6 @@
-﻿using Investissement_WebClient.Domain.Modeles;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Investissement_WebClient.Domain.Modeles;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Investissement_WebClient.Infrastructure.Configurations
 {

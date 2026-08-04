@@ -1,6 +1,6 @@
-using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.InterfacesRepositories;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
+using Investissement_WebClient.Application.InterfacesRepositories;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services.ValeurPatrimoines

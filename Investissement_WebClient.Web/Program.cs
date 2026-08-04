@@ -1,26 +1,27 @@
-using ApexCharts;
-using Blazored.Toast;
-using Investissement_WebClient.Application.InterfacesRepositories;
-using Investissement_WebClient.Application.Services.Actifs;
-using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.API.YahooFinanceApi;
-using Investissement_WebClient.Application.Services.APIs.PowensApi;
-using Investissement_WebClient.Application.Services.Authentification;
-using Investissement_WebClient.Application.Services.Encrypt;
-using Investissement_WebClient.Application.Services.FluxBancaires;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.Services.ValeurPatrimoines;
-using Investissement_WebClient.Application.Workers;
-using Investissement_WebClient.Domain.Configurations;
-using Investissement_WebClient.Infrastructure;
-using Investissement_WebClient.Infrastructure.Repositories;
-using Investissement_WebClient.Web.Components;
-using Investissement_WebClient.Web.Components.ViewsModels;
-using Investissement_WebClient.Web.GestionSession;
-using Microsoft.AspNetCore.Components.Authorization;
+using Investissement_WebClient.Application.Services.Authentification;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Investissement_WebClient.Application.Services.APIs.PowensApi;
+using Investissement_WebClient.Application.Services.FluxBancaires;
+using Investissement_WebClient.Application.InterfacesRepositories;
+using Investissement_WebClient.Application.Services.API.PowensApi;
+using Investissement_WebClient.Application.Services.Encrypt;
+using Investissement_WebClient.Infrastructure.Repositories;
+using Investissement_WebClient.Application.Services.Actifs;
+using Investissement_WebClient.Web.Components.ViewsModels;
+using Investissement_WebClient.Domain.Configurations;
+using Microsoft.AspNetCore.Components.Authorization;
+using Investissement_WebClient.Application.Workers;
+using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Infrastructure;
+using Investissement_WebClient.Web.Components;
 using Microsoft.EntityFrameworkCore;
+using Blazored.Toast;
+using ApexCharts;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,34 +1,36 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Investissement_WebClient.Web.GestionSession;
-public class SessionService(AuthenticationStateProvider authStateProvider)
+namespace Investissement_WebClient.Web.GestionSession
 {
-    public int Id { get; private set; }
-    public string Prenom { get; private set; } = string.Empty;
-    public string AnneeCreation { get; private set; } = string.Empty;
-    public bool IsConnected { get; private set; }
-
-    public async Task Initialiser()
+    public class SessionService(AuthenticationStateProvider authStateProvider)
     {
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        public int Id { get; private set; }
+        public string Prenom { get; private set; } = string.Empty;
+        public string AnneeCreation { get; private set; } = string.Empty;
+        public bool IsConnected { get; private set; }
 
-        if (user.Identity is { IsAuthenticated: true })
+        public async Task Initialiser()
         {
-            var idClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (int.TryParse(idClaim, out int id)) Id = id;
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
 
-            Prenom = user.Identity.Name ?? "";
-            AnneeCreation = user.FindFirst(ClaimTypes.DateOfBirth)?.Value ?? "";
-            IsConnected = true;
-        }
-        else
-        {
-            Id = 0;
-            Prenom = "";
-            AnneeCreation = "";
-            IsConnected = false;
+            if (user.Identity is { IsAuthenticated: true })
+            {
+                var idClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(idClaim, out int id)) Id = id;
+
+                Prenom = user.Identity.Name ?? "";
+                AnneeCreation = user.FindFirst(ClaimTypes.DateOfBirth)?.Value ?? "";
+                IsConnected = true;
+            }
+            else
+            {
+                Id = 0;
+                Prenom = "";
+                AnneeCreation = "";
+                IsConnected = false;
+            }
         }
     }
 }

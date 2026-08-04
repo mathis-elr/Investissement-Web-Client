@@ -1,5 +1,5 @@
-using ApexCharts;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
+using ApexCharts;
 
 namespace Investissement_WebClient.Application.ChartsOptions;
 

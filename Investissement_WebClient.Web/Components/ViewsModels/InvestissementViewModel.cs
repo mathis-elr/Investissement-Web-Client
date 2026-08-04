@@ -1,14 +1,11 @@
-﻿using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.Services.API.PowensApi;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
 using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.FluxInvestissements;
+using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Web.GestionSession;
-using System.Diagnostics;
-
-
+using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
