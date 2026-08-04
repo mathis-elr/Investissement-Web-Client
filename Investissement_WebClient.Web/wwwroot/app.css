@@ -74,12 +74,6 @@ input{
     transition: 0.4s ease-in-out;
 }
 
-
-select, input {
-    width: 100%;
-    transition: 0.4s ease-in-out;
-}
-
     input:hover,
     select:hover,
     input:focus,

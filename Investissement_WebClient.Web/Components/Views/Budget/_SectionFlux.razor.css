@@ -13,3 +13,13 @@
     justify-content: center;
     gap: 5px;
 }
+
+.select-suggestion {
+    border: solid 1px #0dcaf0;
+}
+
+    .select-suggestion:hover,
+    .select-suggestion:focus {
+        outline: none !important;
+        box-shadow: 0 4px 12px rgba(13, 202, 240, 0.4) !important;
+    }

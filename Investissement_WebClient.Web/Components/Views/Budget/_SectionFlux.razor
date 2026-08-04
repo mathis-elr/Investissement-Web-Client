@@ -9,7 +9,7 @@
             <span>@flux.Date.ToString("dd MMM")</span>
             <span class="@(IsCredit ? "credit" : "debit")">@flux.Valeur €</span>
             <input type="text" @bind="@flux.Libelle" />
-            <select type="text" @bind="@flux.IdCategorie">
+            <select class="@(flux.Suggestion ? "select-suggestion" : "")" type="text" @bind="@flux.IdCategorie">
                 <option value="0"></option>
                 @foreach (var categorie in Categories)
                 {
@@ -20,7 +20,7 @@
             </select>
             @if (flux.Suggestion)
             {
-                <div class="badge bg-info-subtle text-info border border-info px-1 py-0">(Suggestion automatique 🪄)</div>
+                <div title="Suggestion automatique">🪄</div>
             }
         </div>
     }
