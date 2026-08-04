@@ -202,6 +202,7 @@ public class BudgetViewModel(SessionService sessionService,
                 Categorie = Categories.FirstOrDefault(c => c.Id == g.Key)?.Libelle ?? "Inconnu",
                 Valeur = g.Sum(f => f.Valeur),
             })
+            .Where(g => g.Valeur != 0)
             .OrderByDescending(x => x.Valeur)
             .ToList();
     }
@@ -209,20 +210,40 @@ public class BudgetViewModel(SessionService sessionService,
     private void DeterminerStatutMois()
     {
         StatutsParMois.Clear();
-        var dateCourante =  DateTime.Now;
 
-        while (dateCourante.Year >= DateDebut.Year && dateCourante.Month >= DateDebut.Month)
+        var aujourdHui = DateTime.Now;
+        var moisCourant = new DateTime(aujourdHui.Year, aujourdHui.Month, 1);
+        var moisPrecedent = moisCourant.AddMonths(-1);
+
+        var dateCourante = moisCourant;
+
+        while (dateCourante >= new DateTime(DateDebut.Year, DateDebut.Month, 1))
         {
-            var DateLocale = dateCourante;
-            var unMois = new StatutParMoisDto { Date = DateLocale };
-            bool estIndisponible = (DateLocale.Year == DateTime.Now.Year && DateLocale.Month == DateTime.Now.Month) || (DateTime.Now.Day < 5 && DateLocale.Year == DateTime.Now.AddMonths(-1).Year && DateLocale.Month == DateTime.Now.AddMonths(-1).Month);
-            var fluxDuMois = Flux.Where(f => f.Date.Year == DateLocale.Year && f.Date.Month == DateLocale.Month).ToList();
-            var fluxExiste = fluxDuMois.Count != 0;
-            var allCategoriesCompletes = fluxDuMois.All(f => f.IdCategorie != 0);
+            var unMois = new StatutParMoisDto { Date = dateCourante };
+
+            bool estMoisCourant =
+                dateCourante.Year == moisCourant.Year &&
+                dateCourante.Month == moisCourant.Month;
+
+            bool estMoisPrecedent =
+                dateCourante.Year == moisPrecedent.Year &&
+                dateCourante.Month == moisPrecedent.Month;
+
+            bool estIndisponible =
+                estMoisCourant ||
+                (aujourdHui.Day < 5 && estMoisPrecedent);
+
+            var fluxDuMois = Flux
+                .Where(f => f.Date.Year == dateCourante.Year &&
+                            f.Date.Month == dateCourante.Month)
+                .ToList();
+
+            bool fluxExiste = fluxDuMois.Count != 0;
+            bool toutesCategoriesCompletes = fluxDuMois.All(f => f.IdCategorie != 0);
 
             if (estIndisponible)
                 unMois.Statut = Statut.indisponible;
-            else if (fluxExiste && allCategoriesCompletes)
+            else if (fluxExiste && toutesCategoriesCompletes)
                 unMois.Statut = Statut.complete;
             else if (fluxExiste)
                 unMois.Statut = Statut.a_completer;
