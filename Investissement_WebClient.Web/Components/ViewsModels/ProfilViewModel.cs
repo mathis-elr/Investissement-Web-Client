@@ -57,10 +57,22 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 ErrorMessage = "Impossible de calculer l'evolution de moins d'une année";
                 return;
             }
-            if (PerspectiveNbAnnees > 100)
+            if (PerspectiveNbAnnees > 80)
             {
                 HasError = true;
-                ErrorMessage = "Impossible de calculer l'evolution pour plus de 100 ans";
+                ErrorMessage = "Impossible de calculer l'evolution pour plus de 80 ans";
+                return;
+            }
+            if (EvolutionAnnuellePourcentage > 50)
+            {
+                HasError = true;
+                ErrorMessage = "Impossible de calculer l'evolution pour plus de 50% d'évolution par an";
+                return;
+            }
+            if (InvestissementMoyenMensuel > 100_000)
+            {
+                HasError = true;
+                ErrorMessage = "Impossible de calculer l'evolution pour plus de 100k d'investissement mensuel";
                 return;
             }
 
@@ -73,10 +85,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             while (annee <= PerspectiveNbAnnees)
             {
+                var valeurDouble = pointFixe * (Math.Pow(pourcentageMensuel, annee * 12) - 1);
+
+                if (double.IsInfinity(valeurDouble) || valeurDouble > (double)decimal.MaxValue)
+                {
+                    valeurDouble = (double)decimal.MaxValue;
+                }
+
                 var valeurParAn = new ValeurParAnLineChartVM
                 {
                     Annee = annee,
-                    Valeur = (decimal)Math.Round(pointFixe * (Math.Pow(pourcentageMensuel, annee * 12) - 1), 0),
+                    Valeur = (decimal)Math.Round(valeurDouble, 0),
                     Investissement = investissementCourant
                 };
 
