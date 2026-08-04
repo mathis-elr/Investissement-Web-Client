@@ -1,16 +1,17 @@
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
-using Investissement_WebClient.Application.Services.API.PowensApi;
-using Investissement_WebClient.Application.InterfacesRepositories;
 using Investissement_WebClient.Application.ApiResponse.Powens;
-using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.InterfacesRepositories;
+using Investissement_WebClient.Application.Services.API.PowensApi;
+using Investissement_WebClient.Application.ViewsModels;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
+using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services.FluxBancaires
 {
     public class FluxBancaireService(ICategorieFluxRepository categorieFluxRepository,
-                                 IFluxBancaireRepository fluxBancaireRepository,
-                                 IBanqueAccesRepository banqueAccesRepository,
-                                 IPowensApiService powensApiService) : IFluxBancaireService
+                                     IFluxBancaireRepository fluxBancaireRepository,
+                                     IBanqueAccesRepository banqueAccesRepository,
+                                     IPowensApiService powensApiService) : IFluxBancaireService
     {
         private readonly ICategorieFluxRepository _categorieFluxRepository = categorieFluxRepository;
         private readonly IBanqueAccesRepository _banqueAccesRepository = banqueAccesRepository;
@@ -82,14 +83,20 @@ namespace Investissement_WebClient.Application.Services.FluxBancaires
             var fluxSansCategorie = await _fluxBancaireRepository.GetAllSansCategorie();
             var dicCorrespondanceFluxBancaire = await _fluxBancaireRepository.GetCorrespondancesCategories();
 
+            var fluxModifies = new List<FluxBancaire>();
+
             foreach (var flux in fluxSansCategorie)
             {
-                if (dicCorrespondanceFluxBancaire.TryGetValue(flux.Libelle, out int? idCategorie))
+                if (dicCorrespondanceFluxBancaire.TryGetValue(flux.Libelle.ToLower(), out int? idCategorie))
                 {
                     flux.IdCategorie = idCategorie;
                     flux.Suggestion = true;
+                    fluxModifies.Add(flux);
                 }
             }
+
+            if (fluxModifies.Count != 0)
+                await _fluxBancaireRepository.UpdateRangeSuggestions(fluxModifies);
         }
 
         public async Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId)

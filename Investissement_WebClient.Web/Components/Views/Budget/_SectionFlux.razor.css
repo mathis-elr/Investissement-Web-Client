@@ -15,7 +15,7 @@
 }
 
 .select-suggestion {
-    border: solid 1px #0dcaf0;
+    border: dashed 1px #0dcaf0 !important;
 }
 
     .select-suggestion:hover,

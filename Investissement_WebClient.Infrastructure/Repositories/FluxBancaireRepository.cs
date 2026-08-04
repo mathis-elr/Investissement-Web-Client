@@ -26,6 +26,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.FluxBancaire
                 .Where(f => f.UtilisateurId == userId)
+                .Include(f => f.Categorie)
                 .ToListAsync();
         }
 
@@ -120,6 +121,14 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 }
             }
 
+            await context.SaveChangesAsync();
+        }
+
+        public async Task UpdateRangeSuggestions(IEnumerable<FluxBancaire> fluxList)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+
+            context.FluxBancaire.UpdateRange(fluxList);
             await context.SaveChangesAsync();
         }
     }

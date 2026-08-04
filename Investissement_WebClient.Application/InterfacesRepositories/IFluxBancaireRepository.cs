@@ -20,5 +20,7 @@ namespace Investissement_WebClient.Application.InterfacesRepositories
         Task AddRangeForUserId(List<PowensFluxApiResponse> flux, int userId);
 
         Task UpdateRangeForUserId(List<FluxBancaireVM> fluxMensuelVM, int userId);
+
+        Task UpdateRangeSuggestions(IEnumerable<FluxBancaire> fluxList);
     }
 }
