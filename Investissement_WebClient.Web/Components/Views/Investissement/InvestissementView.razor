@@ -60,7 +60,9 @@
         {
             await IVM.LoadData();
 
-            if (!IVM.FluxInvestissement.Any()) 
+            if(IVM.IdentifiantsRequis)
+                TS.ShowWarning("ℹ️ Renseignez vos identifiants Trade Republic pour commencer à récuperer vos transactions.");
+            else if (!IVM.FluxInvestissement.Any()) 
                 TS.ShowWarning("ℹ️ Cliquez sur 'Récuperer mes transactions' pour commencer à suivre vos investissements.");
         }
     }

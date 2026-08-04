@@ -54,6 +54,8 @@
             return;
         }
 
+        await Model.LoadIdentifiantsRequis();
+
         IsLoading = false;
         FermerEdition();
         TS.ShowSuccess("Accès Trade Republic enregistré avec succès !");

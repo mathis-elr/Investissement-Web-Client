@@ -32,8 +32,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public void NotifyStateChanged() => OnChange.Invoke();
 
         // TRANSACTIONS
-        public TradeRepublicAccesVM? TradeRepublicAcces { get; set; } = new TradeRepublicAccesVM();
-        public bool IdentifiantsRequis => TradeRepublicAcces == null;
+        public TradeRepublicAccesVM TradeRepublicAcces { get; set; } = new TradeRepublicAccesVM();
+        public bool IdentifiantsRequis => string.IsNullOrEmpty(TradeRepublicAcces.NumTel) || string.IsNullOrEmpty(TradeRepublicAcces.Pin);
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
         public string Message { get; set; } = "Aucune demande en cours ...";
         public Etat Etat { get; set; } = Etat.Neutre;
@@ -86,10 +86,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 await InitialiserSession();
 
                 await LoadIdentifiantsRequis();
-                if (IdentifiantsRequis)
-                    Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
-                await LoadFluxInvestissement();
 
+                await LoadFluxInvestissement();
+               
                 if (FluxInvestissement.Any())
                 {
                     await LoadInvestissementMedianMensuel();
@@ -105,6 +104,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             finally
             {
                 ChargementEncours = false;
+                NotifyStateChanged();
             }
         }
 
@@ -241,6 +241,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             NotifyStateChanged();   
         }
+        public async Task LoadIdentifiantsRequis()
+        {
+            TradeRepublicAcces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser) ?? new TradeRepublicAccesVM();
+
+            if (IdentifiantsRequis)
+                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
+            else
+            {
+                Message = "Aucune demande en cours ...";
+            }
+        }
 
         private async Task InitialiserSession()
         {
@@ -266,11 +277,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         private async Task LoadInvestissementsParMois()
         {
             InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(IdUser);
-        }
-
-        private async Task LoadIdentifiantsRequis()
-        {
-            TradeRepublicAcces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser);
         }
     }
 }

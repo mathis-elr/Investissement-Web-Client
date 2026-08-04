@@ -41,7 +41,7 @@
         else
         {
             <div class="infos">
-                <button class="btn-submit" @onclick="RecupererTransactions" disabled="@Model.DemandeEnCours">
+                <button class="btn-submit" @onclick="RecupererTransactions" disabled="@(Model.DemandeEnCours || Model.IdentifiantsRequis)">
                     @if (Model.DemandeEnCours) { <_Chargement Couleur="black" /> }
                     else { <span>Récuperer transactions</span> }
                 </button>
