@@ -1,9 +1,11 @@
 using ApexCharts;
 using Blazored.Toast;
+using Investissement_WebClient.Application.InterfacesRepositories;
 using Investissement_WebClient.Application.Services.Actifs;
 using Investissement_WebClient.Application.Services.API.PowensApi;
 using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
 using Investissement_WebClient.Application.Services.API.YahooFinanceApi;
+using Investissement_WebClient.Application.Services.APIs.PowensApi;
 using Investissement_WebClient.Application.Services.Authentification;
 using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Services.FluxBancaires;
@@ -12,6 +14,7 @@ using Investissement_WebClient.Application.Services.ValeurPatrimoines;
 using Investissement_WebClient.Application.Workers;
 using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Infrastructure;
+using Investissement_WebClient.Infrastructure.Repositories;
 using Investissement_WebClient.Web.Components;
 using Investissement_WebClient.Web.Components.ViewsModels;
 using Investissement_WebClient.Web.GestionSession;
@@ -63,7 +66,7 @@ YahooFinanceApiConfiguration.BaseUri = sectionYahoo["BaseUri"] ?? throw new Inva
 YahooFinanceApiConfiguration.SearchEndPoint = sectionYahoo["SearchEndPoint"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:SearchEndPoint' est absente.");
 
 
-
+// services
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
@@ -78,15 +81,31 @@ builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 
 builder.Services.AddScoped<ICryptService, CryptService>();
 
+
+// views models
 builder.Services.AddScoped<InvestissementViewModel>();
-builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<InscriptionViewModel>();
+builder.Services.AddScoped<PatrimoineViewModel>();
+builder.Services.AddScoped<ConnexionViewModel>();
 builder.Services.AddScoped<BudgetViewModel>();
 builder.Services.AddScoped<ProfilViewModel>();
-builder.Services.AddScoped<ConnexionViewModel>();
 
+
+// repositories
+builder.Services.AddScoped<IFluxInvestissementRepository, FluxInvestissementRepository>();
+builder.Services.AddScoped<ITradeRepublicAccesRepository, TradeRepublicAccesRepository>();
+builder.Services.AddScoped<IValeurPatrimoineRepository, ValeurPatrimoineRepository>();
+builder.Services.AddScoped<ICategorieFluxRepository, CategorieFluxRepository>();
+builder.Services.AddScoped<IFluxBancaireRepository, FluxBancaireRepository>();
+builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
+builder.Services.AddScoped<IBanqueAccesRepository, BanqueAccesRepository>();
+builder.Services.AddScoped<IActifRepository, ActifRepository>();
+
+
+// workers
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 builder.Services.AddHostedService<RecuperationFluxBancairesWorker>();
+
 
 builder.Services.AddAuthentication("Manual")
     .AddCookie("Manual", options =>

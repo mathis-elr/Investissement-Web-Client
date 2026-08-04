@@ -1,19 +1,18 @@
-﻿using Investissement_WebClient.Application.ViewsModels;
+﻿using Investissement_WebClient.Application.InterfacesRepositories;
+using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Domain.Modeles;
-using Investissement_WebClient.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 namespace Investissement_WebClient.Application.Services.Authentification
 {
-    public class AuthentificationService(IDbContextFactory<InvestissementDbContext> dbFactory) : IAuthentificationService
+    public class AuthentificationService(IUtilisateurRepository utilisateurRepository) : IAuthentificationService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbFactory;
+        private readonly IUtilisateurRepository _utilisateurRepository = utilisateurRepository; 
 
         public async Task<int> Inscription(InscriptionVM infosInscription)
         {
-            using var dbContext = await _dbFactory.CreateDbContextAsync();
-            if(await dbContext.Utilisateur.FirstOrDefaultAsync(u => u.Email == infosInscription.Email) != null)
+            var utilisateur = await _utilisateurRepository.GetByEmail(infosInscription.Email);
+            if (utilisateur != null)
                 throw new Exception("Un compte avec cette adresse e-mail existe déjà.");
 
             var newUser = new Utilisateur
@@ -24,21 +23,21 @@ namespace Investissement_WebClient.Application.Services.Authentification
                 DateCreationCompte = DateTime.Now
             };
 
-            dbContext.Utilisateur.Add(newUser);
-            await dbContext.SaveChangesAsync();
+            await _utilisateurRepository.Add(newUser);
 
             return newUser.Id;
         }
 
         public async Task<Utilisateur> Connexion(ConnexionVM infosConnexion)
         {
-            using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var user = await dbContext.Utilisateur.FirstOrDefaultAsync(u => u.Email == infosConnexion.Email);
-            if (user == null)
+            var utilisateur = await _utilisateurRepository.GetByEmail(infosConnexion.Email);
+
+            if (utilisateur == null)
                 throw new Exception("Adresse e-mail incorrect.");
-            else if(!VerifyPassword(infosConnexion.Mdp, user.MdpHash))
+            else if(!VerifyPassword(infosConnexion.Mdp, utilisateur.MdpHash))
                 throw new Exception("Mot de passe incorrect.");
-            return user;
+
+            return utilisateur;
         }
 
         private string HashPassword(string password)

@@ -1,26 +1,22 @@
-﻿using Investissement_WebClient.Domain.Modeles;
-using Investissement_WebClient.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Investissement_WebClient.Application.InterfacesRepositories;
+using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services.Actifs
 {
-    public class ActifService(IDbContextFactory<InvestissementDbContext> dbContext) : IActifService
+    public class ActifService(IActifRepository actifRepository) : IActifService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
+        private readonly IActifRepository _actifRepository = actifRepository;
 
         private readonly List<string> _motsInutiles = ["EUR", "(ACC)", "PEA", "SWAP", "(DIST)","ESG"];
 
         public async Task<List<Actif>> GetAll()
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            return await context.Actif.ToListAsync();
+            return await _actifRepository.GetAll();
         }
 
         public async Task<IEnumerable<string>> GetTickers()
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.Actif.Select(d => d.Ticker).ToListAsync();
+            return await _actifRepository.GetAllTickers();
         }
 
         public string NettoyerLibelle(string libelle)
@@ -38,10 +34,7 @@ namespace Investissement_WebClient.Application.Services.Actifs
 
         public async Task<int> AddActif(Actif actif)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-            await context.AddAsync(actif);
-            await context.SaveChangesAsync();
-            return actif.Id;
+            return await _actifRepository.Add(actif);
         }
     }
 }

@@ -1,20 +1,21 @@
 ﻿using Investissement_WebClient.Application.Services.FluxInvestissements;
 using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
+using Investissement_WebClient.Application.InterfacesRepositories;
 using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Domain.Configurations;
 using Investissement_WebClient.Domain.Modeles;
-using Investissement_WebClient.Infrastructure;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Json;
 using System.Text.Json;
 
+
 namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
 {
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory;
+        private readonly ITradeRepublicAccesRepository _tradeRepublicAccesRepository;
         private readonly IFluxInvestissementService _fluxInvestissementService;
         private readonly ICryptService _encryptService;
         private readonly HttpClient _httpClient;
@@ -33,12 +34,12 @@ namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
         private readonly string _confirmSmsEndPoint = TradeRepublicApiConfiguration.ConfirmSmsEndPoint;
         private readonly string _datasEndPoint = TradeRepublicApiConfiguration.DatasEndPoint;
 
-        public TradeRepublicApiService(IDbContextFactory<InvestissementDbContext> dbFactory, 
+        public TradeRepublicApiService(ITradeRepublicAccesRepository tradeRepublicAccesRepository,
                                        IFluxInvestissementService fluxInvestissementService, 
                                        ICryptService encryptService, 
                                        HttpClient httpClient)
         {
-            _dbFactory = dbFactory;
+            _tradeRepublicAccesRepository = tradeRepublicAccesRepository;   
             _fluxInvestissementService = fluxInvestissementService;
             _encryptService = encryptService;
             _httpClient = httpClient;
@@ -168,10 +169,7 @@ namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
 
         public async Task<TradeRepublicAccesVM?> GetTradeRepublicAcces(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            var acces = await context.TradeRepublicAcces
-                .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
+            var acces = await _tradeRepublicAccesRepository.GetByUserId(userId);
 
             var accesDto = acces != null ? new TradeRepublicAccesVM
             {
@@ -184,11 +182,8 @@ namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
 
         public async Task SaveAcces(TradeRepublicAccesVM accesDto, int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
+            var acces = await _tradeRepublicAccesRepository.GetByUserId(userId);
 
-            var acces = await context.TradeRepublicAcces
-                .FirstOrDefaultAsync(b => b.UtilisateurId == userId);
-           
             if (acces != null)
             {
                 var numTelEtier = accesDto.NumTel.Replace(" ", "");
@@ -204,10 +199,9 @@ namespace Investissement_WebClient.Application.Services.API.TradeRepublicApi
                     PinCrypte = _encryptService.Encrypt(accesDto.Pin, _masterKey),
                     UtilisateurId = userId
                 };
-                await context.TradeRepublicAcces.AddAsync(newAcces);
-            }
 
-            await context.SaveChangesAsync();
+                await _tradeRepublicAccesRepository.Add(newAcces);
+            }
         }
     }
 }

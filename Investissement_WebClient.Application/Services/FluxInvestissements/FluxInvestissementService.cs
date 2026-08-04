@@ -2,56 +2,36 @@
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
 using Investissement_WebClient.Application.Services.API.YahooFinanceApi;
 using Investissement_WebClient.Application.ApiResponse.TradeRepublic;
+using Investissement_WebClient.Application.InterfacesRepositories;
 using Investissement_WebClient.Application.Services.Actifs;
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
-using Investissement_WebClient.Infrastructure;
 using Investissement_WebClient.Domain.Enums;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Application.Services.FluxInvestissements
 {
-    public class FluxInvestissementService(IDbContextFactory<InvestissementDbContext> dbContext,
+    public class FluxInvestissementService(IFluxInvestissementRepository fluxInvestissementRepository,
                                            IYahooFinanceApiService yahooFinanceApiService,
                                            IActifService actifService) : IFluxInvestissementService
     {
-        private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
+        private readonly IFluxInvestissementRepository _fluxInvestissementRepository = fluxInvestissementRepository;
         private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
         private readonly IActifService _actifService = actifService;
 
         public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            return await context.FluxInvestissement
-                .Include(f => f.Actif)
-                .Where(f => f.UtilisateurId == userId)
-                .Select(t => new FluxInvestissementDto
-                {
-                    Date = t.Date,
-                    Actif = t.Actif!.Libelle,
-                    Ticker = t.Actif.Ticker,
-                    Prix = t.Prix,
-                    Quantite = t.Type == TypeFlux.Achat ? t.Quantite : -t.Quantite,
-                }).ToListAsync();
+            return await _fluxInvestissementRepository.GetAllByUserId(userId);
         }
 
         public async Task<string?> GetDernierFluxEnregistre(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-            var dernierFlux = await context.FluxInvestissement
-                .Where(f => f.UtilisateurId == userId)
-                .OrderByDescending(f => f.Date)
-                .FirstOrDefaultAsync();
+            var dernierFlux = await _fluxInvestissementRepository.GetLastByUserId(userId);
             return dernierFlux?.Id;
         }
 
         public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-            var investissementParMois =  await CalculerInvestissementParMois(userId);
-            return investissementParMois;
+            return await CalculerInvestissementParMois(userId);
         }
 
         public async Task<Dictionary<string,decimal>> GetPrixParActif()
@@ -63,31 +43,20 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         public async Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif, int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
+            var positions = await _fluxInvestissementRepository.GetPositionsParActifByUserId(userId);
 
-            var data = await context.FluxInvestissement
-                .Include(f => f.Actif)
-                .Where(f => f.UtilisateurId == userId)
-                .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
-                .Select(groupe => new
+            return positions
+                .Where(t => t.QuantiteTotale != 0)
+                .Select(t => new ValeurTotaleParActifVM
                 {
-                    groupe.Key.Libelle,
-                    groupe.Key.Ticker,
-                    QuantiteTotale = groupe.Sum(t => t.Type == TypeFlux.Achat ? t.Quantite : -t.Quantite)
+                    Actif = t.Actif,
+                    Valeur = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0), 2)
                 })
-                .ToListAsync();
-
-            return data.Where(t => t.QuantiteTotale != 0).Select(t => new ValeurTotaleParActifVM
-            {
-                Actif = t.Libelle,
-                Valeur = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0), 2)
-            }).ToList();
+                .ToList();
         }
 
         public async Task<decimal> CalculerValeurCourante(Dictionary<string, decimal> prixParActif, int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
             var transactions = await GetFluxInvestissement(userId);
 
             return transactions.Sum(a => a.Quantite * prixParActif[a.Ticker!]);
@@ -95,26 +64,20 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         public async Task<decimal> CalculerValeurInvestissementTotal(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            return await context.FluxInvestissement
-                .Where(f => f.UtilisateurId == userId)
-                .SumAsync(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total);
+            return await _fluxInvestissementRepository.GetValeurInvestissementTotalByUserId(userId);
         }
         
         public async Task<decimal> CalculerInvestissementMedianMensuel(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
             var investissementParMois = await CalculerInvestissementParMois(userId);
 
-            if (investissementParMois.Count == 0)
-                return 0;
+            if (investissementParMois.Count <= 1)
+                return investissementParMois.FirstOrDefault()?.Investissement ?? 0;
 
             var donneesCompletes = investissementParMois
-                .Take(investissementParMois.Count - 1)
-                .Select(i => i.Investissement)
-                .ToList();
+                    .Take(investissementParMois.Count - 1)
+                    .Select(i => i.Investissement)
+                    .ToList();
 
             var sorted = donneesCompletes.OrderBy(v => v).ToList();
             decimal mediane;
@@ -126,20 +89,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         public async Task<IEnumerable<ValeurActifInfosDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            var infosParActif = await context.FluxInvestissement
-                .Include(f => f.Actif)
-                .Where(f => f.UtilisateurId == userId)
-                .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
-                .Select(g => new
-                {
-                    g.Key.Libelle,
-                    g.Key.Ticker,
-                    TotalQuantite = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)t.Quantite : (decimal)-t.Quantite),
-                    TotalValeurInvest = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)(t.Quantite * t.Prix) : (decimal)(-t.Quantite * t.Prix))
-                })
-                .ToListAsync();
+            var infosParActif = await _fluxInvestissementRepository.GetPositionsInvestiesParActifByUserId(userId);
 
             var actifsValides = infosParActif.Where(t => t.TotalQuantite > 0).ToList();
 
@@ -157,8 +107,8 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                     {
                         variationsParLapsTemps[LapsTemps.All] = new VariationDataDto
                         {
-                            VariationValeur = valeurActuelle - t.TotalValeurInvest,
-                            VariationPourcentage = Math.Round(((valeurActuelle - t.TotalValeurInvest) / t.TotalValeurInvest) * 100, 2)
+                            VariationValeur = valeurActuelle - t.TotalValeurInvestie,
+                            VariationPourcentage = Math.Round(((valeurActuelle - t.TotalValeurInvestie) / t.TotalValeurInvestie) * 100, 2)
                         };
                         continue;
                     }
@@ -168,7 +118,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
                 return new ValeurActifInfosDto
                 {
-                    Actif = t.Libelle,
+                    Actif = t.Actif,
                     ValeurInvestit = Math.Round(valeurActuelle, 2),
                     VariationsParLapsTemps = variationsParLapsTemps
                 };
@@ -219,17 +169,18 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
 
         public async Task MapperTransactions(List<TradeRepublicUnFluxApiResponse> transactions, int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            var actifsLoacaux = await _actifService.GetAll();
+            var actifsLocaux = await _actifService.GetAll();
+            var actifsParIsin = actifsLocaux.ToDictionary(a => a.ISIN);
 
             var transactionsValides = transactions
-        .       Where(t => t.Id != null
+               .Where(t => t.Id != null
                         && t.Date.HasValue 
                         && t.Prix.HasValue
                         && t.Quantite.HasValue
                         && t.Actif != null
                         && t.ISIN != null);
+
+            var fluxAInserer = new List<FluxInvestissement>();
 
             foreach (var transaction in transactionsValides)
             {
@@ -245,8 +196,7 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                     UtilisateurId = userId
                 };
 
-                var IdActif = actifsLoacaux.FirstOrDefault(a => a.ISIN == transaction.ISIN)?.Id;
-                if(IdActif == null)
+                if (!actifsParIsin.TryGetValue(transaction.ISIN!, out var actif))
                 {
                     var ticker = await _yahooFinanceApiService.GetTickerByIsinAsync(transaction.ISIN!);
                     var nvActif = new Actif
@@ -256,40 +206,23 @@ namespace Investissement_WebClient.Application.Services.FluxInvestissements
                         Ticker = ticker!
                     };
                     nvFlux.ActifId = await _actifService.AddActif(nvActif);
-                    actifsLoacaux.Add(nvActif);
+                    actifsLocaux.Add(nvActif);
+                    actifsParIsin[transaction.ISIN] = nvActif;
                 }
                 else
                 {
-                    nvFlux.ActifId = IdActif.Value;
+                    nvFlux.ActifId = actif.Id;
                 }
-                context.FluxInvestissement.Add(nvFlux);
+
+                fluxAInserer.Add(nvFlux);
             }
-            await context.SaveChangesAsync();
+
+            await _fluxInvestissementRepository.AddRange(fluxAInserer);
         }
 
         private async Task<List<InvestissementParMoisVM>> CalculerInvestissementParMois(int userId)
         {
-            await using var context = await _dbFactory.CreateDbContextAsync();
-
-            var rawData = await context.FluxInvestissement
-                .Where(f => f.UtilisateurId == userId)
-                .GroupBy(t => new { t.Date.Year, t.Date.Month })
-                .Select(d => new
-                {
-                    Annee = d.Key.Year,
-                    Mois = d.Key.Month,
-                    TotalInvestit = Math.Round(d.Sum(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total), 2)
-                })
-                .ToListAsync();
-
-            return rawData
-                .Select(d => new InvestissementParMoisVM
-                {
-                    Date = new DateTime(d.Annee, d.Mois, 1),
-                    Investissement = d.TotalInvestit
-                })
-                .OrderByDescending(d => d.Date)
-                .ToList();
+            return await _fluxInvestissementRepository.GetInvestissementParMoisByUserId(userId);
         }
     }
 }

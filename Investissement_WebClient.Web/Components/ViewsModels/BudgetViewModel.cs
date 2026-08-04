@@ -5,7 +5,6 @@ using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
 using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Web.GestionSession;
-using System.Diagnostics;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels;
 
@@ -80,17 +79,12 @@ public class BudgetViewModel(SessionService sessionService,
 
     public async Task MajVue()
     {
-        var stopwatch = Stopwatch.StartNew();
-
         await LoadFlux();
         LoadFluxUnMois(StatutMoisActif!);
         DeterminerStatutMois();
         ActionEnCours = false;
 
         NotifyStateChanged();
-
-        stopwatch.Stop();
-        Console.WriteLine($"Temps de chargement total : {stopwatch.ElapsedMilliseconds} ms");
     }
 
     public void SetRecapGlobalMode()

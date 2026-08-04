@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Investissement_WebClient.Application\Investissement_WebClient.Application.csproj" />
     <ProjectReference Include="..\Investissement_WebClient.Domain\Investissement_WebClient.Domain.csproj" />
   </ItemGroup>
 
