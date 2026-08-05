@@ -22,6 +22,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public bool RecuparationEnCours { get; set; } = false;
         public decimal ValeurPatrimoineCourante { get; set; }
         private decimal ValeurInvestissementTotal { get; set; }
+        public decimal GainTotal => ValeurPatrimoineCourante - ValeurInvestissementTotal;
         public IEnumerable<VariationDto> Variations { get; set; } = [];
 
         // DATAS GRAPHIQUES

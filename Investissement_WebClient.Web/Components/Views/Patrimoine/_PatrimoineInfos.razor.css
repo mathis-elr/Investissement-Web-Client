@@ -1,13 +1,73 @@
-﻿.valeur-totale-courante label {
+﻿.resume-patrimoine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.valeur-totale-courante {
     line-height: 1;
-    font-size: 30px;
+    font-size: 32px;
     font-weight: bold;
 }
 
+    .valeur-totale-courante label {
+        line-height: 1;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+.gain-total {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+    .gain-total span {
+        line-height: 1;
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+
+    .gain-total label {
+        font-size: 14px;
+        font-weight: normal;
+        color: grey;
+    }
+
+.separateur-card {
+    width: 100%;
+    height: 1px;
+    margin: 4px 0 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+}
+
+
 .variations-prix {
     display: flex;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
 }
+
+.variation-prix {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.variation-prix:not(:last-child)::after {
+    content: "";
+    width: 1px;
+    height: 16px;
+
+    background: rgba(255,255,255,.12);
+
+    margin-left: 18px;
+    margin-right: 18px;
+}
+
 
 .variation-prix label {
     font-size: 14px;
@@ -15,14 +75,34 @@
     color: grey;
 }
 
-.variation-prix.gris {
+.gris {
     color: grey;
 }
 
-.variation-prix.vert {
+.vert {
     color: green;
 }
 
-.variation-prix.rouge {
+.rouge {
     color: red;
+}
+
+@media (max-width: 1400px) {
+
+    .valeur-totale-courante label {
+        font-size: 24px;
+    }
+
+    .gain-total span {
+        font-size: 14px;
+    }
+
+    .gain-total label {
+        font-size: 12px;
+    }
+
+    .variation-prix:not(:last-child)::after {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }

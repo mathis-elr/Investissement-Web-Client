@@ -78,11 +78,17 @@ namespace Investissement_WebClient.Application.Services
             {
                 DateTime dateDebutPeriode = DateTime.Now.AddDays(-periode);
 
-                ancienProfit = historique
+                var historiquePeriode = historique
                     .Where(h => h.Date >= dateDebutPeriode)
                     .OrderBy(h => h.Date)
+                    .ToList();
+
+                if (historiquePeriode.Count == 0)
+                    return 0;
+
+                ancienProfit = historiquePeriode
                     .Select(h => h.Valeur - h.InvestissementTotal)
-                    .FirstOrDefault();
+                    .First();
             }
 
             decimal nouveauProfit = valeurActuelle - valeurInvestissementTotal;
