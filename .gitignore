@@ -52,8 +52,8 @@ web.config
 
 # Tooling and secrets
 appsettings.Development.json
+appsettings.Production.json
 appsettings.json
-appsettings.*.json
 
 # Visual Studio Code specific files
 .vscode/
