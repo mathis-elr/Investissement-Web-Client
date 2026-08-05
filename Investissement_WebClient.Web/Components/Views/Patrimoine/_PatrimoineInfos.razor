@@ -1,6 +1,4 @@
-﻿@using Investissement_WebClient.Web.Components.ViewsModels
-
-<span class="valeur-totale-courante">
+﻿<span class="valeur-totale-courante">
     <label>
         @(Model.ValeurPatrimoineCourante == 0 ? "--,--" : Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2"))
     </label>

@@ -1,6 +1,5 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.ValeurPatrimoines;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoine;
+using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Application.DTO;
 using System.Globalization;

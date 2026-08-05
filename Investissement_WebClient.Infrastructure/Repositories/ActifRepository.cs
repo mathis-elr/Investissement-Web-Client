@@ -1,4 +1,4 @@
-﻿using Investissement_WebClient.Application.InterfacesRepositories;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.EntityFrameworkCore;
 

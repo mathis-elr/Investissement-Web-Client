@@ -1,20 +1,27 @@
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
-using Investissement_WebClient.Application.Services.API.PowensApi;
-using Investissement_WebClient.Application.Services.FluxBancaires;
+using Investissement_WebClient.Application.ViewsModels.Graphiques.Budget;
+using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.Interfaces.APIs;
+using Investissement_WebClient.Infrastructure.APIs.Powens;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Enums;
+using Microsoft.Extensions.Options;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class BudgetViewModel(SessionService sessionService,
-                             IFluxBancaireService fluxBancaireService,
-                             IPowensApiService powensApiService)
+    public class BudgetViewModel(IFluxBancaireService fluxBancaireService,
+                                 IOptions<PowensApiOptions> options,
+                                 IPowensApiService powensApiService,
+                                 SessionService sessionService)
     {
-        private readonly SessionService _sessionService = sessionService;
         private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
+        private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly IPowensApiService _powensApiService = powensApiService;
+        private readonly SessionService _sessionService = sessionService;
+
+        // CONNEXION BANQUE
+        public string UrlConnexionPowens { get; set; } = string.Empty;
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -57,6 +64,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
+                GetUrlConnexionPowens();
+
                 await _sessionService.Initialiser();
                 IdUser = _sessionService.Id;
 
@@ -255,6 +264,18 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                     m.Date.Month == DateActive.Value.Month &&
                     m.Date.Year == DateActive.Value.Year);
             }
+        }
+
+        private string GetUrlConnexionPowens()
+        {
+            var fullConnectUrl =
+                new Uri(new Uri(_powensApiOptions.BaseUri),
+                        _powensApiOptions.ConnectEndPoint);
+
+            var encodedRedirect =
+                Uri.EscapeDataString(_powensApiOptions.RedirectUri);
+
+            return $"{fullConnectUrl}?client_id={_powensApiOptions.ClientId}&redirect_uri={encodedRedirect}";
         }
     }
 }

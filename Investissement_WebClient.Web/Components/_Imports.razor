@@ -1,14 +1,28 @@
-﻿@namespace Investissement_WebClient.Web.Components
-
+﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissement
+@using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoine
+@using Investissement_WebClient.Application.ViewsModels.Graphiques.Profil
+@using Investissement_WebClient.Application.ViewsModels.Graphiques.Budget
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Investissement_WebClient.Web.Components.Views.Shared
+@using Investissement_WebClient.Web.Components.ViewsModels
+@using Investissement_WebClient.Infrastructure.APIs.Powens
 @using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Investissement_WebClient.Application.ViewsModels
+@using Investissement_WebClient.Web.Components.Layout
+@using Microsoft.AspNetCore.Components.Authorization
+@using Investissement_WebClient.Web.GestionSession
+@using Investissement_WebClient.Web.ChartOptions
+@using Investissement_WebClient.Application.DTO
 @using Investissement_WebClient.Web.Components
 @using Microsoft.AspNetCore.Components.Routing
+@using Investissement_WebClient.Domain.Enums
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Authorization
 @using Blazored.Toast.Configuration
 @using Investissement_WebClient.Web
 @using Blazored.Toast.Services
+@using System.Globalization
 @using System.Net.Http.Json
 @using Microsoft.JSInterop
 @using System.Net.Http

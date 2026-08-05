@@ -1,8 +1,4 @@
-﻿@using Investissement_WebClient.Web.Components.ViewsModels
-@using Investissement_WebClient.Domain.Configurations
-@using Investissement_WebClient.Domain.Enums
-
-@inject NavigationManager Nav
+﻿@inject NavigationManager Nav
 
 <div class="header">
     <label>Historique</label>
@@ -76,6 +72,6 @@
 
     public void RedirigerVersPowens()
     {
-        Nav.NavigateTo(PowensApiConfiguration.GetConnexionUrl(), forceLoad: true);
+        Nav.NavigateTo(Model.UrlConnexionPowens, forceLoad: true);
     }
 }

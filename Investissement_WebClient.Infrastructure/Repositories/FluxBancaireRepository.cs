@@ -1,5 +1,4 @@
-﻿using Investissement_WebClient.Application.InterfacesRepositories;
-using Investissement_WebClient.Application.ApiResponse.Powens;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
@@ -72,7 +71,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddRangeForUserId(List<PowensFluxApiResponse> flux, int userId)
+        public async Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 

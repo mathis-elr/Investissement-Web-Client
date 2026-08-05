@@ -1,10 +1,11 @@
-namespace Investissement_WebClient.Domain.Modeles;
-
-public class CategorieFlux
+namespace Investissement_WebClient.Domain.Modeles
 {
-    public int Id { get; set; }
+    public class CategorieFlux
+    {
+        public int Id { get; set; }
 
-    public string? MacroCategorie { get; set; }
+        public string? MacroCategorie { get; set; }
 
-    public required string MicroCategorie { get; set; }
+        public required string MicroCategorie { get; set; }
+    }
 }

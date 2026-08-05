@@ -1,9 +1,4 @@
-﻿@using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements
-@using Investissement_WebClient.Web.Components.Views.Shared
-@using Investissement_WebClient.Web.Components.ViewsModels
-@using Investissement_WebClient.Application.ChartsOptions
-
-@if (Model.InvestissementsParMois.Any())
+﻿@if (Model.InvestissementsParMois.Any())
 {
     <ApexChart TItem="InvestissementParMoisVM"
                XAxisType="XAxisType.Datetime"

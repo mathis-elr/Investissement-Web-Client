@@ -1,8 +1,8 @@
-﻿using Investissement_WebClient.Application.DTO;
-using Investissement_WebClient.Application.InterfacesRepositories;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Domain.Enums;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
+using Investissement_WebClient.Application.Interfaces.Repositories;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Infrastructure.Repositories

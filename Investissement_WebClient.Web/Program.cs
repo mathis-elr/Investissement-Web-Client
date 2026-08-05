@@ -1,27 +1,21 @@
-using Investissement_WebClient.Application.Services.API.TradeRepublicApi;
-using Investissement_WebClient.Application.Services.API.YahooFinanceApi;
-using Investissement_WebClient.Application.Services.FluxInvestissements;
-using Investissement_WebClient.Application.Services.ValeurPatrimoines;
-using Investissement_WebClient.Application.Services.Authentification;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Investissement_WebClient.Application.Services.APIs.PowensApi;
-using Investissement_WebClient.Application.Services.FluxBancaires;
-using Investissement_WebClient.Application.InterfacesRepositories;
-using Investissement_WebClient.Application.Services.API.PowensApi;
-using Investissement_WebClient.Application.Services.Encrypt;
+using Investissement_WebClient.Application.Interfaces.Repositories;
+using Investissement_WebClient.Infrastructure.APIs.TradeRepublic;
+using Investissement_WebClient.Infrastructure.APIs.YahooFinance;
+using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Infrastructure.Repositories;
-using Investissement_WebClient.Application.Services.Actifs;
+using Investissement_WebClient.Application.Interfaces.APIs;
+using Investissement_WebClient.Infrastructure.APIs.Powens;
 using Investissement_WebClient.Web.Components.ViewsModels;
-using Investissement_WebClient.Domain.Configurations;
+using Investissement_WebClient.Infrastructure.Workers;
 using Microsoft.AspNetCore.Components.Authorization;
-using Investissement_WebClient.Application.Workers;
+using Investissement_WebClient.Application.Services;
 using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Infrastructure;
 using Investissement_WebClient.Web.Components;
 using Microsoft.EntityFrameworkCore;
 using Blazored.Toast;
 using ApexCharts;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,31 +34,14 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
+builder.Services.Configure<PowensApiOptions>(
+    builder.Configuration.GetSection("PowensApi"));
 
-var sectionPowens = builder.Configuration.GetSection("PowensApi");
-PowensApiConfiguration.ClientId = sectionPowens["client_id"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientId' est absente.");
-PowensApiConfiguration.ClientSecret = sectionPowens["client_secret"] ?? throw new InvalidOperationException("La config 'PowensApi:ClientSecret' est absente.");
-PowensApiConfiguration.BaseUri = sectionPowens["BaseUri"] ?? throw new InvalidOperationException("La config 'PowensApi:BaseUri' est absente.");
-PowensApiConfiguration.ConnectEndPoint = sectionPowens["ConnectEndPoint"] ?? throw new InvalidOperationException("La config 'PowensApi:ConnectEndPoint' est absente.");
-PowensApiConfiguration.TokenEndPoint = sectionPowens["TokenEndPoint"] ?? throw new InvalidOperationException("La config 'PowensApi:TokenEndPoint' est absente.");
-PowensApiConfiguration.AccountsEndPoint = sectionPowens["AccountsEndPoint"] ?? throw new InvalidOperationException("La config 'PowensApi:AccountsEndPoint' est absente.");
-PowensApiConfiguration.RedirectUri = sectionPowens["RedirectUri"] ?? throw new InvalidOperationException("La config 'PowensApi:RedirectUri' est absente.");
+builder.Services.Configure<TradeRepublicApiOptions>(
+    builder.Configuration.GetSection("TradeRepublicApi"));
 
-var sectionTR = builder.Configuration.GetSection("TradeRepublicApi");
-TradeRepublicApiConfiguration.MasterKey = sectionTR["MasterKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:MasterKey' est absente.");
-TradeRepublicApiConfiguration.BaseUri = sectionTR["BaseUri"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:BaseUri' est absente.");
-TradeRepublicApiConfiguration.RequestSmsEndPoint = sectionTR["RequestSmsEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:RequestSmsEndPoint' est absente.");
-TradeRepublicApiConfiguration.ConfirmSmsEndPoint = sectionTR["ConfirmSmsEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:ConfirmSmsEndPoint' est absente.");
-TradeRepublicApiConfiguration.DatasEndPoint = sectionTR["DatasEndPoint"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:DatasEndPoint' est absente.");
-TradeRepublicApiConfiguration.CleeApiKey = sectionTR["CleeApiKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Key' est absente.");
-TradeRepublicApiConfiguration.CleeApiValue = sectionTR["CleeApiValue"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:Value' est absente.");
-TradeRepublicApiConfiguration.NumTelKey = sectionTR["NumTelKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:NumTelKey' est absente.");
-TradeRepublicApiConfiguration.PinKey = sectionTR["PinKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:PinKey' est absente.");
-TradeRepublicApiConfiguration.DernierIdEnregistreKey = sectionTR["DernierIdEnregistreKey"] ?? throw new InvalidOperationException("La config 'TradeRepublicApi:DernierIdEnregistreKey' est absente.");
-
-var sectionYahoo = builder.Configuration.GetSection("YahooFinanceApi");
-YahooFinanceApiConfiguration.BaseUri = sectionYahoo["BaseUri"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:BaseUri' est absente.");
-YahooFinanceApiConfiguration.SearchEndPoint = sectionYahoo["SearchEndPoint"] ?? throw new InvalidOperationException("La config 'YahooFinanceApi:SearchEndPoint' est absente.");
+builder.Services.Configure<YahooFinanceApiOptions>(
+    builder.Configuration.GetSection("YahooFinanceApi"));
 
 
 // services

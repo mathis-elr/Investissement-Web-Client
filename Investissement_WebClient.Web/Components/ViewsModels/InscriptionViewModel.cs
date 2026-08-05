@@ -1,4 +1,4 @@
-﻿using Investissement_WebClient.Application.Services.Authentification;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.ViewsModels;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels

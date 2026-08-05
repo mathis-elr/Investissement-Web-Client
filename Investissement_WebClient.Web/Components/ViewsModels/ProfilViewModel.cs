@@ -1,5 +1,5 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Profils;
-using Investissement_WebClient.Application.Services.FluxInvestissements;
+﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Profil;
+using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Web.GestionSession;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels

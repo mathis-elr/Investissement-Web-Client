@@ -1,5 +1,5 @@
 ﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Application.InterfacesRepositories;
+using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
