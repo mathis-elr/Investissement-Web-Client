@@ -32,5 +32,12 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await context.BanqueAcces.AddAsync(acces);
             await context.SaveChangesAsync();
         }
+
+        public async Task Update(BanqueAcces acces)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            context.BanqueAcces.Update(acces);
+            await context.SaveChangesAsync();
+        }
     }
 }

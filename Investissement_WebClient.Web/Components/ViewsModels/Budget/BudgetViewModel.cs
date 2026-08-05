@@ -175,6 +175,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         {
             DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
             ConnexionBanqueRequise = !DateExpirationSync.HasValue;
+
+            if(ConnexionBanqueRequise)
+                UrlConnexionPowens = GetUrlConnexionPowens();
         }
 
         public void EditerMoisComplete()

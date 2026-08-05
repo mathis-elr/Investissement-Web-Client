@@ -92,6 +92,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         public async Task GetFlux(DateTime dateDebut, DateTime dateFin, int userId)
         {
+            Console.WriteLine("DEBUG_SYNC: 3. Appel de GetFlux en cours...");
+
             var acces = await _banqueAccesRepository.GetByUserId(userId) ?? throw new Exception("Aucune instance du token est enregistré");
             var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
             var dateFinString = dateFin.ToString("yyyy-MM-dd");
@@ -101,6 +103,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
+
+            Console.WriteLine($"DEBUG_SYNC: 4. Données reçues de Powens, nombre de flux trouvés : {transactions?.Transactions?.Count ?? 0}");
 
             using var scope = _scopeFactory.CreateScope();
             var fluxBancaireService = scope.ServiceProvider.GetRequiredService<IFluxBancaireService>();
@@ -128,6 +132,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                 acces.IdCompteCourant = idCompteCourant;
                 acces.DateCreation = DateTime.Now;
                 acces.DateExpiration = DateTime.Now.AddDays(90);
+                Console.WriteLine("maj d'un acces");
+                await _banqueAccesRepository.Update(acces);
             }
             else
             {
@@ -139,10 +145,13 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     DateExpiration = DateTime.Now.AddDays(90),
                     UtilisateurId = userId
                 };
+                Console.WriteLine("ajout d'un acces");
                 await _banqueAccesRepository.Add(newAcces);
-
-                await GetFlux(DateTime.Now.AddMonths(-2), DateTime.Now, userId);
             }
+
+            Console.WriteLine("acces save fin juste avant get flux");
+
+            await GetFlux(DateTime.Now.AddMonths(-2), DateTime.Now, userId);
         }
 
         private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)

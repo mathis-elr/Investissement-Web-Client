@@ -94,6 +94,8 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             context.FluxBancaire.AddRange(nvFlux);
 
             await context.SaveChangesAsync();
+
+            Console.WriteLine("DEBUG_SYNC: 6. Enregistrement des flux en base terminé avec succès.");
         }
 
         public async Task UpdateRangeForUserId(List<FluxBancaireDto> fluxMensuelVM, int userId)

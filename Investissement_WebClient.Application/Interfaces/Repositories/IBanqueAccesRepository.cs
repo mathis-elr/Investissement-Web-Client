@@ -9,5 +9,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
         Task<IEnumerable<int>> GetAll();
 
         Task Add(BanqueAcces acces);
+
+        Task Update(BanqueAcces acces);
     }
 }
