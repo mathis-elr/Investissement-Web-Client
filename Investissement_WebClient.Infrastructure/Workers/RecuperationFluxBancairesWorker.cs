@@ -12,7 +12,7 @@ namespace Investissement_WebClient.Infrastructure.Workers
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (DateTime.Now.Day > 5)
+                if (DateTime.Now.Day >= 5)
                 {
                     using var scope = _serviceProvider.CreateScope();
                     var fluxBancaireService = scope.ServiceProvider.GetRequiredService<IFluxBancaireService>();
