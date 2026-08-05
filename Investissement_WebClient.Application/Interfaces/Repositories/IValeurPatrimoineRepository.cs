@@ -1,14 +1,13 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
     public interface IValeurPatrimoineRepository
     {
-        Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresPlusOuMoinsValuesByUserId(int userId);
+        Task<IEnumerable<BougieJournaliereCandleChartDto>> GetBougiesJournalieresPlusOuMoinsValuesByUserId(int userId);
 
-        Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId);
+        Task<IEnumerable<BougieJournaliereCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId);
 
         Task<DateTime?> GetDateDernierEnregistrement();
 

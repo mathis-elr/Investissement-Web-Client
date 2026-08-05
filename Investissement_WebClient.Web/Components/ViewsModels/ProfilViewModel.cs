@@ -1,5 +1,5 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Profil;
-using Investissement_WebClient.Application.Interfaces.Services;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.Profil;
 using Investissement_WebClient.Web.GestionSession;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -18,7 +18,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal EvolutionAnnuellePourcentage { get; set; } = 8;
         public int PerspectiveNbAnnees { get; set; } = 15;
-        public List<ValeurParAnLineChartVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+        public List<ValeurParAnLineChartDto> PerspectivesValeurPatrimoineParAn { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
@@ -91,7 +91,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                     valeurDouble = (double)decimal.MaxValue;
                 }
 
-                var valeurParAn = new ValeurParAnLineChartVM
+                var valeurParAn = new ValeurParAnLineChartDto
                 {
                     Annee = annee,
                     Valeur = (decimal)Math.Round(valeurDouble, 0),

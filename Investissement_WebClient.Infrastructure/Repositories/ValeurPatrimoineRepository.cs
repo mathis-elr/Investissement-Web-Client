@@ -1,9 +1,9 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
-using Investissement_WebClient.Application.Interfaces.Repositories;
-using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Investissement_WebClient.Infrastructure.Repositories
 {
@@ -11,7 +11,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
-        public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresPlusOuMoinsValuesByUserId(int userId)
+        public async Task<IEnumerable<BougieJournaliereCandleChartDto>> GetBougiesJournalieresPlusOuMoinsValuesByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -46,7 +46,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 decimal investissementOuverture = premiereDonnee?.InvestissementTotal ?? 0;
                 decimal investissementFermeture = derniereDonnee?.InvestissementTotal ?? 0;
 
-                return new BougieJournaliereCandleChartVM
+                return new BougieJournaliereCandleChartDto
                 {
                     Date = dg.Date,
                     Ouverture = Math.Round(valeurOuverture - investissementOuverture, 2),
@@ -57,7 +57,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             }).ToList();
         }
 
-        public async Task<IEnumerable<BougieJournaliereCandleChartVM>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId)
+        public async Task<IEnumerable<BougieJournaliereCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -83,7 +83,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .OrderBy(hp => hp.Date)
                 .ToListAsync();
 
-            return data.Select(t => new BougieJournaliereCandleChartVM
+            return data.Select(t => new BougieJournaliereCandleChartDto
             {
                 Date = t.Date,
                 Ouverture = t.DonneesParJour.FirstOrDefault()?.Valeur ?? 0,

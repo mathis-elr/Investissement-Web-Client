@@ -1,5 +1,5 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Services;
-using Investissement_WebClient.Application.ViewsModels;
+using Investissement_WebClient.Application.DTO.Auth;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
@@ -7,7 +7,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
     {
         private readonly IAuthentificationService _authentificationService = authentificationService;
 
-        public InscriptionVM InformationsInscription { get; set; } = new InscriptionVM();
+        public InscriptionDto InformationsInscription { get; set; } = new InscriptionDto();
 
         public bool HasErreur { get; set; } = false;
         public string MessageErreur { get; set; } = string.Empty;

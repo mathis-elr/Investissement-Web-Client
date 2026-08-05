@@ -3,11 +3,11 @@
 @if (BougiesJournalieresPlusOuMoinsValues.Any())
 {
     <div style="flex:1">
-        <ApexChart TItem="BougieJournaliereCandleChartVM"
+        <ApexChart TItem="BougieJournaliereCandleChartDto"
                    XAxisType="XAxisType.Datetime"
                    Options="PatrimoineChartsOptions.OptionsBougieJournalierePlusOuMoinsValues">
 
-            <ApexCandleSeries TItem="BougieJournaliereCandleChartVM"
+            <ApexCandleSeries TItem="BougieJournaliereCandleChartDto"
                               Items="BougiesJournalieresPlusOuMoinsValues"
                               Name="Evolution des plus/moins values"
                               XValue="@(e => e.Date)"
@@ -25,5 +25,5 @@ else
 }
 
 @code {
-    [Parameter] public IEnumerable<BougieJournaliereCandleChartVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
+    [Parameter] public IEnumerable<BougieJournaliereCandleChartDto> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
 }

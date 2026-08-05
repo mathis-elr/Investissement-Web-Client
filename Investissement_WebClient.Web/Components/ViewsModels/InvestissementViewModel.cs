@@ -1,9 +1,8 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissement;
+﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.ViewsModels;
+using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -28,7 +27,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public void NotifyStateChanged() => OnChange.Invoke();
 
         // TRANSACTIONS
-        public TradeRepublicAccesVM TradeRepublicAcces { get; set; } = new TradeRepublicAccesVM();
+        public TradeRepublicAccesDto TradeRepublicAcces { get; set; } = new TradeRepublicAccesDto();
         public bool IdentifiantsRequis => string.IsNullOrEmpty(TradeRepublicAcces.NumTel) || string.IsNullOrEmpty(TradeRepublicAcces.Pin);
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
         public string Message { get; set; } = "Aucune demande en cours ...";
@@ -41,7 +40,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public bool ChargementEncours { get; set; } = false;
         public decimal InvestissementMedianMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
-        public IEnumerable<InvestissementParMoisVM> InvestissementsParMois { get; set; } = [];
+        public IEnumerable<InvestissementParMoisDto> InvestissementsParMois { get; set; } = [];
         public IEnumerable<ValeurActifInfosDto> ValeurActifInfos { get; set; } = [];
 
         // EVOLUTION ACTIFS
@@ -142,7 +141,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             {
                 (var codeStatut, var messageRecu) = await _tradeRepublicApiService.GetSms(IdUser);
 
-                if(codeStatut != 200)
+                if (codeStatut != 200)
                 {
                     ErrorMessage = messageRecu;
                     HasError = true;
@@ -239,7 +238,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         }
         public async Task LoadIdentifiantsRequis()
         {
-            TradeRepublicAcces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser) ?? new TradeRepublicAccesVM();
+            TradeRepublicAcces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser) ?? new TradeRepublicAccesDto();
 
             if (IdentifiantsRequis)
                 Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";

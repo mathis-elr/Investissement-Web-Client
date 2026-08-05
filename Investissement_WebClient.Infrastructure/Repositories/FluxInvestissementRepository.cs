@@ -1,6 +1,5 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Application.Interfaces.Repositories;
-using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
+using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -95,7 +94,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<InvestissementParMoisVM>> GetInvestissementParMoisByUserId(int userId)
+        public async Task<List<InvestissementParMoisDto>> GetInvestissementParMoisByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -114,7 +113,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
 
             return rawData
-                .Select(d => new InvestissementParMoisVM
+                .Select(d => new InvestissementParMoisDto
                 {
                     Date = new DateTime(d.Annee, d.Mois, 1),
                     Investissement = Math.Round(d.TotalInvestit, 2)

@@ -1,0 +1,18 @@
+namespace Investissement_WebClient.Application.DTO.Patrimoine
+{
+    public class BougieJournaliereCandleChartDto
+    {
+        public DateTime Date { get; set; }
+
+        public decimal Ouverture { get; set; }
+
+        public decimal Fermeture { get; set; }
+
+        public decimal Haut { get; set; }
+
+        public decimal Bas { get; set; }
+
+        public decimal InvestissementTotal { get; set; }
+    }
+}
+

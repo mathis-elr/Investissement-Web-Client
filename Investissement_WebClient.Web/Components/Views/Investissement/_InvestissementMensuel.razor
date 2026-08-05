@@ -1,10 +1,10 @@
 ﻿@if (Model.InvestissementsParMois.Any())
 {
-    <ApexChart TItem="InvestissementParMoisVM"
+    <ApexChart TItem="InvestissementParMoisDto"
                XAxisType="XAxisType.Datetime"
                Options="_options">
 
-        <ApexPointSeries TItem="InvestissementParMoisVM"
+        <ApexPointSeries TItem="InvestissementParMoisDto"
                          Items="Model.InvestissementsParMois"
                          SeriesType="SeriesType.Line"
                          Name="Investissement"
@@ -27,7 +27,7 @@ else
 @code {
     [Parameter] public required InvestissementViewModel Model { get; set; }
 
-    private ApexChartOptions<InvestissementParMoisVM> _options = null!;
+    private ApexChartOptions<InvestissementParMoisDto> _options = null!;
 
     protected override void OnParametersSet()
     {

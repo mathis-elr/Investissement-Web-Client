@@ -9,13 +9,13 @@
     else if (Model.BudgetLineCharts.Any())
     {
         <div class="investissement-content">
-            <ApexChart TItem="BudgetParMoisLineChartVM"
+            <ApexChart TItem="BudgetParMoisLineChartDto"
                        XAxisType="XAxisType.Datetime"
                        Options="BudgetChartsOptions.OptionBudgetLineChart">
 
                 @foreach (var categorie in Model.BudgetLineCharts)
                 {
-                    <ApexPointSeries TItem="BudgetParMoisLineChartVM"
+                    <ApexPointSeries TItem="BudgetParMoisLineChartDto"
                                      Items="categorie.BudgetCategorieParMois"
                                      Name="@categorie.Categorie"
                                      SeriesType="SeriesType.Line"

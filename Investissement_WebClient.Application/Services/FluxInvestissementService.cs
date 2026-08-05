@@ -1,9 +1,8 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoines;
+﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
 
@@ -28,7 +27,7 @@ namespace Investissement_WebClient.Application.Services
             return dernierFlux?.Id;
         }
 
-        public async Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(int userId)
+        public async Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(int userId)
         {
             return await CalculerInvestissementParMois(userId);
         }
@@ -40,13 +39,13 @@ namespace Investissement_WebClient.Application.Services
             return await _yahooFinanceApiService.GetPrixActuelAsync(tickers);
         }
 
-        public async Task<IEnumerable<ValeurTotaleParActifVM>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif, int userId)
+        public async Task<IEnumerable<ValeurTotaleParActifDto>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif, int userId)
         {
             var positions = await _fluxInvestissementRepository.GetPositionsParActifByUserId(userId);
 
             return positions
                 .Where(t => t.QuantiteTotale != 0)
-                .Select(t => new ValeurTotaleParActifVM
+                .Select(t => new ValeurTotaleParActifDto
                 {
                     Actif = t.Actif,
                     Valeur = Math.Round(t.QuantiteTotale * (prixParActif.TryGetValue(t.Ticker, out decimal value) ? value : 0), 2)
@@ -223,7 +222,7 @@ namespace Investissement_WebClient.Application.Services
             await _fluxInvestissementRepository.AddRange(fluxAInserer);
         }
 
-        private async Task<List<InvestissementParMoisVM>> CalculerInvestissementParMois(int userId)
+        private async Task<List<InvestissementParMoisDto>> CalculerInvestissementParMois(int userId)
         {
             return await _fluxInvestissementRepository.GetInvestissementParMoisByUserId(userId);
         }

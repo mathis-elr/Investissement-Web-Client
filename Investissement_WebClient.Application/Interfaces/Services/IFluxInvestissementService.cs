@@ -1,5 +1,5 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Investissements;
-using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 
 namespace Investissement_WebClient.Application.Interfaces.Services
 {
@@ -9,9 +9,11 @@ namespace Investissement_WebClient.Application.Interfaces.Services
 
         Task<string?> GetDernierFluxEnregistre(int userId);
 
-        Task<IEnumerable<InvestissementParMoisVM>> GetInvestissementParMois(int userId);
+        Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(int userId);
 
         Task<Dictionary<string, decimal>> GetPrixParActif();
+
+        Task<IEnumerable<ValeurTotaleParActifDto>> GetValeurParActifInvestit(Dictionary<string, decimal> prixParActif, int userId);
 
         Task<IEnumerable<ValeurActifInfosDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId);
 

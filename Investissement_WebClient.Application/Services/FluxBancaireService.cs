@@ -1,9 +1,7 @@
-using Investissement_WebClient.Application.ViewsModels.Graphiques.Budgets;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services
@@ -29,11 +27,11 @@ namespace Investissement_WebClient.Application.Services
             return await _fluxBancaireRepository.GetDateDernierFluxByUserId(userId);
         }
 
-        public async Task<List<FluxBancaireVM>> GetFluxBancaire(int userId)
+        public async Task<List<FluxBancaireDto>> GetFluxBancaire(int userId)
         {
             var flux = await _fluxBancaireRepository.GetByUserId(userId);
 
-            return flux.Select(f => new FluxBancaireVM
+            return flux.Select(f => new FluxBancaireDto
             {
                 Id = f.Id,
                 Date = f.Date,
@@ -99,7 +97,7 @@ namespace Investissement_WebClient.Application.Services
                 await _fluxBancaireRepository.UpdateRangeSuggestions(fluxModifies);
         }
 
-        public async Task<IEnumerable<BudgetsParCategorieVM>> CalculerBudgetCategorieParMois(int userId)
+        public async Task<IEnumerable<BudgetsParCategorieDto>> CalculerBudgetCategorieParMois(int userId)
         {
             var rawData = await _fluxBancaireRepository.GetBudgetParMacroCategorieParMois(userId);
 
@@ -116,11 +114,11 @@ namespace Investissement_WebClient.Application.Services
                         x => x.Date,
                         x => x.BudgetCategorie);
 
-                    return new BudgetsParCategorieVM
+                    return new BudgetsParCategorieDto
                     {
                         Categorie = g.Key,
                         BudgetCategorieParMois = moisPossibles
-                            .Select(m => new BudgetParMoisLineChartVM
+                            .Select(m => new BudgetParMoisLineChartDto
                             {
                                 Date = m,
                                 Budget = budgetsParDate.GetValueOrDefault(m, 0)
@@ -142,7 +140,7 @@ namespace Investissement_WebClient.Application.Services
             await DeterminerCategorieFlux();
         }
 
-        public async Task UpdateFluxMensuel(List<FluxBancaireVM> fluxMensuelVM, int userId)
+        public async Task UpdateFluxMensuel(List<FluxBancaireDto> fluxMensuelVM, int userId)
         {
             await _fluxBancaireRepository.UpdateRangeForUserId(fluxMensuelVM, userId);
         }

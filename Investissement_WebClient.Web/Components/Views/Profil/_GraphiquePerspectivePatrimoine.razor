@@ -1,8 +1,8 @@
 ﻿<ApexChart @ref="_chart"
-           TItem="ValeurParAnLineChartVM"
+           TItem="ValeurParAnLineChartDto"
            Options="ProfilChartsOptions.OptionsValeurParAn">
 
-    <ApexPointSeries TItem="ValeurParAnLineChartVM"
+    <ApexPointSeries TItem="ValeurParAnLineChartDto"
                      Items="PerspectivesValeurPatrimoineParAn"
                      SeriesType="SeriesType.Line"
                      Name="Valeur Patrimoine"
@@ -10,7 +10,7 @@
                      XValue="@(e => e.Annee)"
                      Stroke="@(new SeriesStroke{ Width=3, DashSpace=2, Color="goldenrod" })" />
 
-    <ApexPointSeries TItem="ValeurParAnLineChartVM"
+    <ApexPointSeries TItem="ValeurParAnLineChartDto"
                      Items="PerspectivesValeurPatrimoineParAn"
                      SeriesType="SeriesType.Line"
                      Name="Investissement"
@@ -20,8 +20,8 @@
 </ApexChart>
 
 @code {
-    [Parameter] public List<ValeurParAnLineChartVM> PerspectivesValeurPatrimoineParAn { get; set; } = [];
-    private ApexChart<ValeurParAnLineChartVM>? _chart { get; set; }
+    [Parameter] public List<ValeurParAnLineChartDto> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+    private ApexChart<ValeurParAnLineChartDto>? _chart { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {

@@ -1,9 +1,9 @@
 ﻿using Investissement_WebClient.Infrastructure.APIs.TradeRepublic.Responses;
+using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
 using System.Text.Json.Serialization;
@@ -180,11 +180,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
             }
         }
 
-        public async Task<TradeRepublicAccesVM?> GetTradeRepublicAcces(int userId)
+        public async Task<TradeRepublicAccesDto?> GetTradeRepublicAcces(int userId)
         {
             var acces = await _tradeRepublicAccesRepository.GetByUserId(userId);
 
-            var accesDto = acces != null ? new TradeRepublicAccesVM
+            var accesDto = acces != null ? new TradeRepublicAccesDto
             {
                 NumTel = acces.NumTel,
                 Pin = _encryptService.Decrypt(acces.PinCrypte.ToString(), _options.MasterKey)
@@ -193,7 +193,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
             return accesDto;
         }
 
-        public async Task SaveAcces(TradeRepublicAccesVM accesDto, int userId)
+        public async Task SaveAcces(TradeRepublicAccesDto accesDto, int userId)
         {
             var acces = await _tradeRepublicAccesRepository.GetByUserId(userId);
 

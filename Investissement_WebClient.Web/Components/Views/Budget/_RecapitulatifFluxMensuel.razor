@@ -5,10 +5,10 @@
 
 <div class="recapitulatif">
     <div class="content"> 
-        <ApexChart TItem="ValeurParCategorieBarChartVM"
+        <ApexChart TItem="ValeurParCategorieBarChartDto"
                    Options="BudgetChartsOptions.OptionsRecapitulatifBudgetMensuel">
 
-            <ApexPointSeries TItem="ValeurParCategorieBarChartVM"
+            <ApexPointSeries TItem="ValeurParCategorieBarChartDto"
                              Items="Model.StatsGraphique"
                              Name="Valeur"
                              XValue="@(e =>  e.Categorie)"
@@ -24,9 +24,9 @@
 @code{
     [Parameter] public required BudgetViewModel Model { get; set; }
 
-    private void PointMutator(IDataPoint<ValeurParCategorieBarChartVM> point)
+    private void PointMutator(IDataPoint<ValeurParCategorieBarChartDto> point)
     {
-        var dataPoint = (DataPoint<ValeurParCategorieBarChartVM>)point;
+        var dataPoint = (DataPoint<ValeurParCategorieBarChartDto>)point;
         if (dataPoint.Y > 0)
         {
             dataPoint.FillColor = "#00FF00";

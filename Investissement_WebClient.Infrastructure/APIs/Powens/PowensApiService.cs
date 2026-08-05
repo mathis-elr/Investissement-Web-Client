@@ -1,8 +1,8 @@
 using Investissement_WebClient.Infrastructure.APIs.Powens.Responses;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.DTO;
 using Microsoft.Extensions.DependencyInjection;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.Extensions.Options;

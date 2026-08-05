@@ -1,5 +1,4 @@
-﻿using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.DTO;
+﻿using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Interfaces.Repositories
@@ -18,7 +17,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId);
 
-        Task UpdateRangeForUserId(List<FluxBancaireVM> fluxMensuelVM, int userId);
+        Task UpdateRangeForUserId(List<FluxBancaireDto> fluxMensuelVM, int userId);
 
         Task UpdateRangeSuggestions(IEnumerable<FluxBancaire> fluxList);
     }

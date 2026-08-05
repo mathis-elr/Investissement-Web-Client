@@ -94,7 +94,7 @@
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
             } 
         }
-        catch(OperationCanceledException){ Console.WriteLine("Arret du chargement de la valeur du patrimoine"); }
+        catch(OperationCanceledException){ }
     }
 
     // déclenchement lors du déclenchement du catch de LoadData (quand on change de page) pour stopper la boucle

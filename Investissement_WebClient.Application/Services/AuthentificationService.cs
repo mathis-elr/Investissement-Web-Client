@@ -1,6 +1,6 @@
-﻿using Investissement_WebClient.Application.Interfaces.Repositories;
+﻿using Investissement_WebClient.Application.DTO.Auth;
+using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
-using Investissement_WebClient.Application.ViewsModels;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,7 +10,7 @@ namespace Investissement_WebClient.Application.Services
     {
         private readonly IUtilisateurRepository _utilisateurRepository = utilisateurRepository; 
 
-        public async Task<int> Inscription(InscriptionVM infosInscription)
+        public async Task<int> Inscription(InscriptionDto infosInscription)
         {
             var utilisateur = await _utilisateurRepository.GetByEmail(infosInscription.Email);
             if (utilisateur != null)
@@ -29,7 +29,7 @@ namespace Investissement_WebClient.Application.Services
             return newUser.Id;
         }
 
-        public async Task<Utilisateur> Connexion(ConnexionVM infosConnexion)
+        public async Task<Utilisateur> Connexion(ConnexionDto infosConnexion)
         {
             var utilisateur = await _utilisateurRepository.GetByEmail(infosConnexion.Email);
 

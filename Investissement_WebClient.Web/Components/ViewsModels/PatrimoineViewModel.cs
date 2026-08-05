@@ -1,7 +1,6 @@
-﻿using Investissement_WebClient.Application.ViewsModels.Graphiques.Patrimoine;
-using Investissement_WebClient.Application.Interfaces.Services;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Application.DTO;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -26,9 +25,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public IEnumerable<VariationDto> Variations { get; set; } = [];
 
         // DATAS GRAPHIQUES
-        public IEnumerable<BougieJournaliereCandleChartVM> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
-        public IEnumerable<BougieJournaliereCandleChartVM> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
-        public IEnumerable<ValeurTotaleParActifVM> ValeurParActifInvestit { get; set; } = [];
+        public IEnumerable<BougieJournaliereCandleChartDto> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
+        public IEnumerable<BougieJournaliereCandleChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+        public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError {get; set;} = false;
@@ -117,7 +116,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadProportionParActif(Dictionary<string, decimal> prixParActif)
         {
-            //ValeurParActifInvestit = await _fluxInvestissementService.GetValeurParActifInvestit(prixParActif, IdUser);
+            ValeurParActifInvestit = await _fluxInvestissementService.GetValeurParActifInvestit(prixParActif, IdUser);
         }
     }
 }

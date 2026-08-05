@@ -3,11 +3,11 @@
 @if (ValeurParActifInvestit.Any())
 {
     <div style="flex:1">
-        <ApexChart TItem="ValeurTotaleParActifVM"
+        <ApexChart TItem="ValeurTotaleParActifDto"
                    Title="Répartition investissement par actif"
                    Options="PatrimoineChartsOptions.OptionsPieActif">
 
-            <ApexPointSeries TItem="ValeurTotaleParActifVM"
+            <ApexPointSeries TItem="ValeurTotaleParActifDto"
                              Items="ValeurParActifInvestit"
                              SeriesType="SeriesType.Pie"
                              XValue="@(e => e.Actif)"
@@ -24,5 +24,5 @@ else
     
 
 @code {
-    [Parameter] public IEnumerable<ValeurTotaleParActifVM> ValeurParActifInvestit { get; set; } = [];
+    [Parameter] public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
 }

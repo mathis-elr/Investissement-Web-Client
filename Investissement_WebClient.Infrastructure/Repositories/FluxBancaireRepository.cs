@@ -1,6 +1,5 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Repositories;
-using Investissement_WebClient.Application.ViewsModels;
-using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.EntityFrameworkCore;
 
@@ -97,7 +96,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task UpdateRangeForUserId(List<FluxBancaireVM> fluxMensuelVM, int userId)
+        public async Task UpdateRangeForUserId(List<FluxBancaireDto> fluxMensuelVM, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 

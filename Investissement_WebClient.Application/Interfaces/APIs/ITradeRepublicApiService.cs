@@ -1,4 +1,4 @@
-﻿using Investissement_WebClient.Application.ViewsModels;
+﻿using Investissement_WebClient.Application.DTO.Auth;
 
 namespace Investissement_WebClient.Application.Interfaces.APIs
 {
@@ -10,8 +10,8 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
 
         Task<bool> ChargerTransactions(int userId);
 
-        Task<TradeRepublicAccesVM?> GetTradeRepublicAcces(int userId);
+        Task<TradeRepublicAccesDto?> GetTradeRepublicAcces(int userId);
 
-        Task SaveAcces(TradeRepublicAccesVM accesDto, int userId);
+        Task SaveAcces(TradeRepublicAccesDto accesDto, int userId);
     }
 }

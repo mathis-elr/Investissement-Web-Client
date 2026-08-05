@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Infrastructure.APIs.TradeRepublic;
+using Investissement_WebClient.Web.Components.ViewsModels.Budget;
 using Investissement_WebClient.Infrastructure.APIs.YahooFinance;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Infrastructure.Repositories;
@@ -16,6 +17,7 @@ using Investissement_WebClient.Web.Components;
 using Microsoft.EntityFrameworkCore;
 using Blazored.Toast;
 using ApexCharts;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
