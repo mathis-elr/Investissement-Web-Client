@@ -114,6 +114,18 @@ button:disabled {
     color: red;
 }
 
+.gris {
+    color: grey;
+}
+
+.vert {
+    color: green;
+}
+
+.rouge {
+    color: red;
+}
+
 p {
     color: grey;
     margin-bottom:0;

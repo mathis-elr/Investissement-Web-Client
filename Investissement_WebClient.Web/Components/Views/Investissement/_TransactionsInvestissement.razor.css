@@ -120,8 +120,7 @@ select, input {
         color: #999;
     }
 
-    .une-transaction .prix,
-    .une-transaction .quantite {
+    .une-transaction .prix {
         display: inline-block;
         color: goldenrod;
     }

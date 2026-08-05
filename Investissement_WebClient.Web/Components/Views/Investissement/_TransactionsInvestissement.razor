@@ -73,7 +73,7 @@
                     {
                         <div class="une-transaction">
                             <span></span>
-                            <span class="quantite">@transaction.Quantite&nbsp</span>
+                            <span class="quantite @(@transaction.Quantite > 0 ? "vert" : "rouge")">@transaction.Quantite&nbsp</span>
                             <span class="actif">@transaction.Actif à&nbsp</span>
                             <span class="prix">@transaction.Prix.ToString("C")</span>
                         </div>
