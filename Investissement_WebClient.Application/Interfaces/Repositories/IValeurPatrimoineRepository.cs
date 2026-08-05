@@ -11,7 +11,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<DateTime?> GetDateDernierEnregistrement();
 
-        Task<List<ValeurPatrimoine>> GetHistoriqueAnneeByUserId(int userId);
+        Task<List<ValeurPatrimoine>> GetAllHistoriqueByUserId(int userId);
 
         Task<List<PositionPatrimoineUtilisateurDto>> GetPositionsPatrimoineParUtilisateur();
 

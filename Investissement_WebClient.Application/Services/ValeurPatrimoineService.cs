@@ -26,14 +26,15 @@ namespace Investissement_WebClient.Application.Services
 
         public async Task<IEnumerable<VariationDto>> GetVariations(decimal valeurActuelle, decimal valeurInvestissementTotal, int userId)
         {
-            var historiqueAnnee = await _valeurPatrimoineRepository.GetHistoriqueAnneeByUserId(userId);
+            var historique = await _valeurPatrimoineRepository.GetAllHistoriqueByUserId(userId);
 
             return new List<VariationDto>
             {
-                new() { Label = "24H", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 1) },
-                new() { Label = "7J", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 7) },
-                new() { Label = "1M", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 30) },
-                new() { Label = "1A", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historiqueAnnee, 365) }
+                new() { Label = "24H", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 1) },
+                new() { Label = "7J", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 7) },
+                new() { Label = "1M", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 30) },
+                new() { Label = "1A", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 365) },
+                new() { Label = "All", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 0) },
             };
         }
 
@@ -62,16 +63,27 @@ namespace Investissement_WebClient.Application.Services
 
         private decimal CalculVariationPeriode(decimal valeurActuelle, decimal valeurInvestissementTotal, List<ValeurPatrimoine> historique, int periode)
         {
-            if (valeurInvestissementTotal == 0)
+            if (valeurInvestissementTotal == 0 || historique.Count == 0)
                 return 0;
 
-            DateTime dateDebutPeriode = DateTime.Now.AddDays(-periode);
+            decimal ancienProfit;
+            if (periode == 0)
+            {
+                ancienProfit = historique
+                    .OrderBy(h => h.Date)
+                    .Select(h => h.Valeur - h.InvestissementTotal)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                DateTime dateDebutPeriode = DateTime.Now.AddDays(-periode);
 
-            var ancienProfit = historique
-                .Where(h => h.Date >= dateDebutPeriode)
-                .OrderBy(h => h.Date)
-                .Select(h => h.Valeur - h.InvestissementTotal)
-                .FirstOrDefault();
+                ancienProfit = historique
+                    .Where(h => h.Date >= dateDebutPeriode)
+                    .OrderBy(h => h.Date)
+                    .Select(h => h.Valeur - h.InvestissementTotal)
+                    .FirstOrDefault();
+            }
 
             decimal nouveauProfit = valeurActuelle - valeurInvestissementTotal;
 

@@ -105,16 +105,13 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<ValeurPatrimoine>> GetHistoriqueAnneeByUserId(int userId)
+        public async Task<List<ValeurPatrimoine>> GetAllHistoriqueByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-
-            var unAnAvantAjd = DateTime.Now.AddYears(-1);
 
             return await context.ValeurPatrimoine
                 .AsNoTracking()
                 .Where(h => h.UtilisateurId == userId)
-                .Where(h => h.Date >= unAnAvantAjd)
                 .OrderByDescending(h => h.Date)
                 .ToListAsync();
         }
