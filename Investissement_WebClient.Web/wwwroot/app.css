@@ -297,14 +297,3 @@ html, body, main, div {
     scrollbar-color: #444 transparent;
     scrollbar-width: thin; 
 }
-
-
-.apexcharts-tooltip-series-group .apexcharts-tooltip-marker {
-    color: goldenrod !important;
-}
-
-.apexcharts-series-markers .apexcharts-marker {
-    fill: goldenrod;
-    stroke: black;
-    stroke-width: 5px;
-}

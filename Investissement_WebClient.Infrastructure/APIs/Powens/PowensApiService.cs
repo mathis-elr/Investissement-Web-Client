@@ -92,8 +92,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         public async Task GetFlux(DateTime dateDebut, DateTime dateFin, int userId)
         {
-            Console.WriteLine("DEBUG_SYNC: 3. Appel de GetFlux en cours...");
-
             var acces = await _banqueAccesRepository.GetByUserId(userId) ?? throw new Exception("Aucune instance du token est enregistré");
             var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
             var dateFinString = dateFin.ToString("yyyy-MM-dd");
@@ -132,7 +130,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                 acces.IdCompteCourant = idCompteCourant;
                 acces.DateCreation = DateTime.Now;
                 acces.DateExpiration = DateTime.Now.AddDays(90);
-                Console.WriteLine("maj d'un acces");
                 await _banqueAccesRepository.Update(acces);
             }
             else
@@ -145,11 +142,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     DateExpiration = DateTime.Now.AddDays(90),
                     UtilisateurId = userId
                 };
-                Console.WriteLine("ajout d'un acces");
                 await _banqueAccesRepository.Add(newAcces);
             }
-
-            Console.WriteLine("acces save fin juste avant get flux");
         }
 
         private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)

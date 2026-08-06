@@ -87,7 +87,6 @@ namespace Investissement_WebClient.Application.Services
             {
                 if (dicCorrespondanceFluxBancaire.TryGetValue(flux.Libelle.ToLower(), out int? idCategorie))
                 {
-                    Console.WriteLine($"DEBUG_SYNC: 7. Détermination de la catégorie pour le flux : {flux.Libelle}");
                     flux.IdCategorie = idCategorie;
                     flux.Suggestion = true;
                     fluxModifies.Add(flux);
@@ -133,11 +132,8 @@ namespace Investissement_WebClient.Application.Services
 
         public async Task AddFluxBancaire(List<FluxBancaireImportDto>? flux, int userId)
         {
-            Console.WriteLine("AddFluxBancaire");
             if (flux == null || flux.Count == 0)
                 return;
-
-            Console.WriteLine("DEBUG_SYNC: 5. Début de l'insertion des flux en base.");
 
             await _fluxBancaireRepository.AddRangeForUserId(flux, userId);
 

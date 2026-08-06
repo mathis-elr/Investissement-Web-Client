@@ -84,7 +84,8 @@ builder.Services.AddScoped<IActifRepository, ActifRepository>();
 
 // workers
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
-builder.Services.AddHostedService<RecuperationFluxBancairesWorker>();
+builder.Services.AddSingleton<RecuperationFluxBancairesWorker>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<RecuperationFluxBancairesWorker>());
 
 
 builder.Services.AddAuthentication("Manual")

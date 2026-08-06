@@ -1,9 +1,8 @@
 @page "/budget"
-@using Investissement_WebClient.Web.Components.ViewsModels.Budget
 @attribute [Authorize]
-@inject NavigationManager Nav
 @inject BudgetViewModel BVM
 @inject IToastService TS
+@inject RecuperationFluxBancairesWorker BankWorker
 @implements IDisposable
 
 <PageTitle>Budget</PageTitle>
@@ -34,8 +33,8 @@
 
 </div>
 
-
 @code {
+    private CancellationTokenSource _cts = new();
     [Parameter][SupplyParameterFromQuery(Name = "sync")] public string? SyncStatus { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -45,44 +44,62 @@
         await BVM.StartLoadData();
 
         if (SyncStatus == "ok")
-            await SynchronisationBanque();
+        {
+            TS.ShowSuccess("Banque synchronisée avec succès !");
+            TS.ShowInfo("Synchronisation des flux lancée en arrière-plan ...");
+            BankWorker.DeclencherSynchronisationImmediate(BVM.IdUser);
+        }
 
         if (BVM.ConnexionBanqueRequise)
             TS.ShowWarning("ℹ️ Synchronisation avec vôtre banque requise pour récuperer les flux mensuel.");
     }
 
-    public async Task SynchronisationBanque()
-    {
-        TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
-
-        await Task.Delay(2000);
-
-        TS.ShowInfo("récupération des transactions en cours ...");
-        var ajd = DateTime.Now;
-        var minDate = new DateTime(year: ajd.Year,
-                                   month: ajd.AddMonths(-2).Month,
-                                   day: 1); // le premier d'il y a deux mois
-        var maxDate = new DateTime(year: ajd.Year,
-                                   month: ajd.AddMonths(-1).Month,
-                                   day: DateTime.DaysInMonth(ajd.Year, ajd.AddMonths(-1).Month)); // le dernier jour du mois dernier
-
-        await BVM.GetFlux(minDate, maxDate);
-
-        if (BVM.HasErreur)
-            TS.ShowError("Erreur lors de la récupération des flux, veuillez réessayer plus tard.");
-        else
-        {
-            TS.ShowSuccess("Récupération des flux terminée.");
-            // BVM.NotifyStateChanged();
-        }
-            
-        await Task.Delay(3000);
-
-        Nav.NavigateTo(Nav.BaseUri, forceLoad: false);
-    }
-
     public void Dispose()
     {
         BVM.OnChange -= StateHasChanged;
+        _cts.Cancel();
+        _cts.Dispose();
     }
+
+    
+    // public async Task SynchronisationBanque()
+    // {
+    //     TS.ShowSuccess("Banque synchronisée avec succès !");
+
+    //     TS.ShowInfo("Récupération des transactions en cours, cette opération dure environ 15 secondes.");
+
+    //     await Task.Delay(15000);
+
+    //     var stopwatch = new System.Diagnostics.Stopwatch();
+    //     stopwatch.Start();
+
+    //     var ajd = DateTime.Now;
+    //     var minDate = new DateTime(year: ajd.Year,
+    //                                month: ajd.AddMonths(-2).Month,
+    //                                day: 1); le premier d'il y a deux mois
+    //     var maxDate = new DateTime(year: ajd.Year,
+    //                                month: ajd.AddMonths(-1).Month,
+    //                                day: DateTime.DaysInMonth(ajd.Year, ajd.AddMonths(-1).Month)); le dernier jour du mois dernier
+
+    //     Console.WriteLine("date min: " + minDate);
+    //     Console.WriteLine("date max: " + maxDate);
+
+    //     for (int i = 0; i < 30; i++)
+    //     {
+    //         await Task.Delay(1000);
+    //         await BVM.GetFlux(minDate, maxDate);
+    //         Console.WriteLine("Temps au chrono depuis le depart " + stopwatch.ElapsedMilliseconds + " ms, données récupérées ? " + BVM.Flux.Any());
+    //     }
+
+    //     stopwatch.Stop();
+
+    //     if (BVM.HasErreur)
+    //         TS.ShowError("Erreur lors de la récupération des flux, veuillez réessayer plus tard.");
+    //     else
+    //     {
+    //         TS.ShowSuccess("Récupération des flux terminée.");
+    //         BVM.NotifyStateChanged();
+    //     }
+    // }
 }
+

@@ -136,3 +136,13 @@ img {
     transform: translateX(-66.666%);
 }*/
 
+::deep .apexcharts-tooltip-series-group .apexcharts-tooltip-marker {
+    color: goldenrod !important;
+}
+
+::deep .apexcharts-series-markers .apexcharts-marker {
+    fill: goldenrod;
+    stroke: black;
+    stroke-width: 5px;
+}
+
