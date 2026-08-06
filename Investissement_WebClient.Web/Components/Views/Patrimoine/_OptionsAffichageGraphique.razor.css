@@ -1,0 +1,29 @@
+﻿.bloc-options{
+    display: flex;
+    align-items:center;
+    border: 1px solid grey;
+    border-radius: 30px;
+    padding: 5px 5px;
+    gap: 5px;
+}
+
+.option {
+    border-radius: 25px;
+    padding: 1px 10px;
+    cursor: pointer;
+}
+
+.active {
+    background-color: grey;
+}
+
+.separateur-card {
+    content: "";
+    width: 1px;
+    height: 14px;
+    background: rgba(255,255,255,.12);
+}
+
+span{
+    font-size: 15px;
+}

@@ -5,7 +5,7 @@ namespace Investissement_WebClient.Web.ChartsOptions
 {
     public static class PatrimoineChartsOptions
     {
-        public static ApexChartOptions<BougieJournaliereCandleChartDto> OptionsBougieJournalierePlusOuMoinsValues = new()
+        public static ApexChartOptions<BougieCandleChartDto> OptionsBougieJournalierePlusOuMoinsValues = new()
         {
 
             Stroke = new Stroke
@@ -34,7 +34,7 @@ namespace Investissement_WebClient.Web.ChartsOptions
             },
         };
 
-        public static ApexChartOptions<BougieJournaliereCandleChartDto> OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal = new()
+        public static ApexChartOptions<BougieCandleChartDto> OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal = new()
         {
 
             Stroke = new Stroke

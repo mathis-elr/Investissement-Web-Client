@@ -2,6 +2,7 @@ using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Application.Services
 {
@@ -9,12 +10,13 @@ namespace Investissement_WebClient.Application.Services
     {
         private readonly IValeurPatrimoineRepository _valeurPatrimoineRepository = valeurPatrimoineRepository;
 
-        public async Task<IEnumerable<BougieJournaliereCandleChartDto>> GetBougiesJournalieresPlusOuMoinsValues(int userId)
+        public async Task<IEnumerable<BougieCandleChartDto>> GetBougiesPlusValueByUserId(LapsTemps periode, Granulometrie granulometrie, int userId)
         {
-            return await _valeurPatrimoineRepository.GetBougiesJournalieresPlusOuMoinsValuesByUserId(userId);
+            return await _valeurPatrimoineRepository.GetBougiesPlusValueByUserId(periode, granulometrie, userId);
         }
 
-        public async Task<IEnumerable<BougieJournaliereCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal(int userId)
+
+        public async Task<IEnumerable<BougieCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal(int userId)
         {
             return await _valeurPatrimoineRepository.GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(userId);
         }

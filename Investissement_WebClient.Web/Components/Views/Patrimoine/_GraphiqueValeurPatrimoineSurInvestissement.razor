@@ -3,11 +3,11 @@
 @if (BougiesJournalieresValeurPatrimoineSurInvestissementTotal.Any())
 {
     <div style="flex:1">
-        <ApexChart TItem="BougieJournaliereCandleChartDto"
+        <ApexChart TItem="BougieCandleChartDto"
                    XAxisType="XAxisType.Datetime"
                    Options="PatrimoineChartsOptions.OptionsBougieJournaliereValeurPatrimoineSurInvestissementTotal">
 
-            <ApexCandleSeries TItem="BougieJournaliereCandleChartDto"
+            <ApexCandleSeries TItem="BougieCandleChartDto"
                               Items="BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
                               Name="Evolution de la valeur du patrimoine"
                               XValue="@(e => e.Date)"
@@ -17,7 +17,7 @@
                               Close="@(e => e.Fermeture)"
                               OrderByDescending="e => e.X" />
 
-            <ApexPointSeries TItem="BougieJournaliereCandleChartDto"
+            <ApexPointSeries TItem="BougieCandleChartDto"
                              Items="BougiesJournalieresValeurPatrimoineSurInvestissementTotal"
                              SeriesType="SeriesType.Line"
                              Name="Investissement total"
@@ -29,5 +29,5 @@
 }
 
 @code {
-    [Parameter] public IEnumerable<BougieJournaliereCandleChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+    [Parameter] public IEnumerable<BougieCandleChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
 }

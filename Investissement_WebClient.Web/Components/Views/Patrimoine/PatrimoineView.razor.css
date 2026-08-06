@@ -91,8 +91,9 @@
 
 .page {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 10px;
+    gap:0;
     overflow: hidden;
     flex-shrink: 0;
     width: 33.333%;
@@ -103,6 +104,13 @@
         justify-content: center;
         align-items: center;
     }
+
+.options {
+    display: flex;
+    justify-content: end;
+    gap: 25px;
+    padding: 0 30px;
+}
 
 .graph1 {
     transform: translateX(0%);

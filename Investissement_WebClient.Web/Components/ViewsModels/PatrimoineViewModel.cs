@@ -1,6 +1,7 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Domain.Enums;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -26,8 +27,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public IEnumerable<VariationDto> Variations { get; set; } = [];
 
         // DATAS GRAPHIQUES
-        public IEnumerable<BougieJournaliereCandleChartDto> BougiesJournalieresPlusOuMoinsValues { get; set; } = [];
-        public IEnumerable<BougieJournaliereCandleChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+        public IEnumerable<BougieCandleChartDto> BougiesPlusValue { get; set; } = [];
+        public LapsTemps Periode { get; set; } = LapsTemps.All;
+        public Granulometrie Granulometrie { get; set; } = Granulometrie.Mensuel;
+        public TypeGraphique TypeGraphique { get; set; } = TypeGraphique.Candle; 
+
+        public IEnumerable<BougieCandleChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
         public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
 
         // GESTION D'ERREUR
@@ -54,9 +59,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
                     await Task.WhenAll(
                         LoadVariationsPrix(),
-                        LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal(),
-                        LoadBougiesJournalieresPlusOuMoinsValues(),
-                        LoadProportionParActif(prixParActif)
+                        LoadBougiesPlusValue(),
+                        LoadProportionParActif(prixParActif),
+                        LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()
                     );
                 }
             }
@@ -105,9 +110,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             Variations = await _valeurPatrimoineService.GetVariations(ValeurPatrimoineCourante, ValeurInvestissementTotal, IdUser);
         }
 
-        private async Task LoadBougiesJournalieresPlusOuMoinsValues()
+        private async Task LoadBougiesPlusValue()
         {
-            BougiesJournalieresPlusOuMoinsValues = await _valeurPatrimoineService.GetBougiesJournalieresPlusOuMoinsValues(IdUser);
+            BougiesPlusValue = await _valeurPatrimoineService.GetBougiesPlusValueByUserId(Periode, Granulometrie, IdUser);
         }
 
         private async Task LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()

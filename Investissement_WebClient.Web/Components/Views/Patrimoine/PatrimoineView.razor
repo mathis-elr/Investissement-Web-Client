@@ -21,7 +21,7 @@
         }
 
         <div class="rail @(graphiques[index])">
-
+            
             @if (PVM.RecuparationEnCours)
             {
                 <div class="page">
@@ -41,7 +41,11 @@
             else
             {
                 <div class="page">
-                    <_GraphiqueEvolutionPlusValue BougiesJournalieresPlusOuMoinsValues="@PVM.BougiesJournalieresPlusOuMoinsValues" />
+                    <div class="options">
+                        <_OptionsAffichageGraphique />
+                    </div>
+
+                    <_GraphiqueEvolutionPlusValue BougiesJournalieresPlusOuMoinsValues="@PVM.BougiesPlusValue" />
                 </div>
 
                 <div class="page">
