@@ -150,8 +150,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             }
 
             Console.WriteLine("acces save fin juste avant get flux");
-
-            await GetFlux(DateTime.Now.AddMonths(-2), DateTime.Now, userId);
         }
 
         private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)

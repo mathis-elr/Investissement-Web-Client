@@ -1,6 +1,7 @@
 @page "/budget"
 @using Investissement_WebClient.Web.Components.ViewsModels.Budget
 @attribute [Authorize]
+@inject NavigationManager Nav
 @inject BudgetViewModel BVM
 @inject IToastService TS
 @implements IDisposable
@@ -40,14 +41,44 @@
     protected override async Task OnInitializedAsync()
     {
         BVM.OnChange += StateHasChanged;
-        if(SyncStatus == "ok") TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
 
-        for(int i = 0; i < 10; i++)
+        await BVM.StartLoadData();
+
+        if (SyncStatus == "ok")
+            await SynchronisationBanque();
+
+        if (BVM.ConnexionBanqueRequise)
+            TS.ShowWarning("ℹ️ Synchronisation avec vôtre banque requise pour récuperer les flux mensuel.");
+    }
+
+    public async Task SynchronisationBanque()
+    {
+        TS.ShowSuccess("Connexion à votre banque réussie, vous pouvez récuperer vos flux");
+
+        await Task.Delay(2000);
+
+        TS.ShowInfo("récupération des transactions en cours ...");
+        var ajd = DateTime.Now;
+        var minDate = new DateTime(year: ajd.Year,
+                                   month: ajd.AddMonths(-2).Month,
+                                   day: 1); // le premier d'il y a deux mois
+        var maxDate = new DateTime(year: ajd.Year,
+                                   month: ajd.AddMonths(-1).Month,
+                                   day: DateTime.DaysInMonth(ajd.Year, ajd.AddMonths(-1).Month)); // le dernier jour du mois dernier
+
+        await BVM.GetFlux(minDate, maxDate);
+
+        if (BVM.HasErreur)
+            TS.ShowError("Erreur lors de la récupération des flux, veuillez réessayer plus tard.");
+        else
         {
-            await BVM.StartLoadData();
+            TS.ShowSuccess("Récupération des flux terminée.");
+            // BVM.NotifyStateChanged();
         }
+            
+        await Task.Delay(3000);
 
-        if (BVM.ConnexionBanqueRequise) TS.ShowWarning("ℹ️ Synchronisation avec vôtre banque requise pour récuperer les flux mensuel.");
+        Nav.NavigateTo(Nav.BaseUri, forceLoad: false);
     }
 
     public void Dispose()

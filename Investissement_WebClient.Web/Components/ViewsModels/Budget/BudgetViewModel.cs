@@ -28,7 +28,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         //MAJ VUE
         public event Action OnChange = null!;
-        private void NotifyStateChanged() => OnChange?.Invoke();
+        public void NotifyStateChanged() => OnChange?.Invoke();
 
         public List<FluxBancaireDto> Flux { get; set; } = [];
 
@@ -143,7 +143,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
             var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
 
-            await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
+            await GetFlux(dateDebut, dateFin);
 
             await RefreshData();
             NotifyStateChanged();
@@ -164,6 +164,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             ActionEnCours = false;
 
             NotifyStateChanged();
+        }
+
+        public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
+        {
+            await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
         }
 
         private async Task LoadCategories()
