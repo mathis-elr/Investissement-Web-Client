@@ -2,20 +2,18 @@
 
 @if (PointsPlusValue.Any())
 {
-    <div style="flex:1">
-        <ApexChart TItem="PointChartDto"
-                   XAxisType="XAxisType.Datetime"
-                   Options="PatrimoineChartsOptions.OptionsPointsPlusValue">
+    <ApexChart TItem="PointChartDto"
+               XAxisType="XAxisType.Datetime"
+               Options="PatrimoineChartsOptions.OptionsPointsPlusValue">
 
-            <ApexPointSeries TItem="PointChartDto"
-                             Items="PointsPlusValue"
-                             Name="Valeur"
-                             SeriesType="SeriesType.Line"
-                             XValue="@(e => e.Date)"
-                             YValue="@(e => e.Valeur)"
-                             OrderByDescending="e => e.X" />
-        </ApexChart>
-    </div>
+        <ApexPointSeries TItem="PointChartDto"
+                         Items="PointsPlusValue"
+                         Name="Valeur"
+                         SeriesType="SeriesType.Line"
+                         XValue="@(e => e.Date)"
+                         YValue="@(e => e.Valeur)"
+                         OrderByDescending="e => e.X" />
+    </ApexChart>
 }
 else
 {

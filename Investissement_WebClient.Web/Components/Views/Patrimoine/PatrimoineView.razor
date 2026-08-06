@@ -12,15 +12,45 @@
         <_PatrimoineInfos Model="@PVM" />
     </div>
 
-    <div class="patrimoine-graphiques">
+    <div class="patrimoine-graphique">
 
-        @if(PVM.ValeurPatrimoineCourante != 0)
+        @* @if(PVM.ValeurPatrimoineCourante != 0)
         {
             <div class="btn-rond precedent" @onclick="GraphiquePrecedent"><img src="icons/precedent.png"></div>
             <div class="btn-rond suivant" @onclick="GraphiqueSuivant"><img src="icons/suivant.png"></div>
+        } *@
+
+        <div class="options">
+            <_OptionsAffichageGraphique Model="PVM" />
+        </div>
+
+        @if (PVM.RecuparationEnCours)
+        {
+            <div class="graphique graphique-centre">
+                <_ChargementGraphique />
+            </div>
+        }
+        else if (PVM.ValeurPatrimoineCourante == 0)
+        {
+            <div class="graphique graphique-centre">
+                <p>Récuperer vos flux pour commencer à visualiser l'évolution de vôtre patrimoine.</p>
+            </div>
+        }
+        else
+        {
+            <div class="graphique">
+                @if (PVM.TypeGraphiqueSelectionnee == TypeGraphique.Candle)
+                {
+                    <_GraphiqueEvolutionPlusValueCandle BougiesPlusValue="@PVM.BougiesPlusValue" />
+                }
+                else
+                {
+                    <_GraphiqueEvolutionPlusValueLine PointsPlusValue="@PVM.PointsPlusValue" />
+                }
+            </div>
         }
 
-        <div class="rail @(graphiques[index])">
+        @* <div class="rail @(graphiques[index])">
             
             @if (PVM.RecuparationEnCours)
             {
@@ -63,7 +93,7 @@
                     <_GraphiqueValeurPatrimoineSurInvestissement BougiesJournalieresValeurPatrimoineSurInvestissementTotal="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal" />
                 </div>
             }
-        </div>
+        </div> *@
     </div>
 </div>
 

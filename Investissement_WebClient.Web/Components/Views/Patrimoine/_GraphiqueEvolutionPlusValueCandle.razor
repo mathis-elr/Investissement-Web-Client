@@ -2,21 +2,19 @@
 
 @if (BougiesPlusValue.Any())
 {
-    <div style="flex:1">
-        <ApexChart TItem="BougieChartDto"
-                   XAxisType="XAxisType.Datetime"
-                   Options="PatrimoineChartsOptions.OptionsBougiesPlusValue">
+    <ApexChart TItem="BougieChartDto"
+               XAxisType="XAxisType.Datetime"
+               Options="PatrimoineChartsOptions.OptionsBougiesPlusValue">
 
-            <ApexCandleSeries TItem="BougieChartDto"
-                              Items="BougiesPlusValue"
-                              XValue="@(e => e.Date)"
-                              Open="@(e => e.Ouverture)"
-                              High="@(e => e.Haut)"
-                              Low="@(e => e.Bas)"
-                              Close="@(e => e.Fermeture)"
-                              OrderByDescending="e => e.X" />
-        </ApexChart>
-    </div>
+        <ApexCandleSeries TItem="BougieChartDto"
+                          Items="BougiesPlusValue"
+                          XValue="@(e => e.Date)"
+                          Open="@(e => e.Ouverture)"
+                          High="@(e => e.Haut)"
+                          Low="@(e => e.Bas)"
+                          Close="@(e => e.Fermeture)"
+                          OrderByDescending="e => e.X" />
+    </ApexChart>
 }
 else
 {
