@@ -16,8 +16,8 @@
 
         @if(PVM.ValeurPatrimoineCourante != 0)
         {
-            <div class="btn-rond precedent" @onclick="GraphiquePrecedent"><img src="precedent.png"></div>
-            <div class="btn-rond suivant" @onclick="GraphiqueSuivant"><img src="suivant.png"></div>
+            <div class="btn-rond precedent" @onclick="GraphiquePrecedent"><img src="icons/precedent.png"></div>
+            <div class="btn-rond suivant" @onclick="GraphiqueSuivant"><img src="icons/suivant.png"></div>
         }
 
         <div class="rail @(graphiques[index])">
@@ -42,10 +42,17 @@
             {
                 <div class="page">
                     <div class="options">
-                        <_OptionsAffichageGraphique />
+                        <_OptionsAffichageGraphique Model="PVM" />
                     </div>
 
-                    <_GraphiqueEvolutionPlusValue BougiesJournalieresPlusOuMoinsValues="@PVM.BougiesPlusValue" />
+                    @if(PVM.TypeGraphiqueSelectionnee == TypeGraphique.Candle)
+                    {
+                        <_GraphiqueEvolutionPlusValueCandle BougiesPlusValue="@PVM.BougiesPlusValue" />
+                    }
+                    else
+                    {
+                        <_GraphiqueEvolutionPlusValueLine PointsPlusValue="@PVM.PointsPlusValue" />
+                    }
                 </div>
 
                 <div class="page">
@@ -67,6 +74,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        PVM.OnChange += StateHasChanged;
+
         await PVM.StartLoadData();
 
         if (PVM.ValeurPatrimoineCourante == 0) 
@@ -104,6 +113,7 @@
     // déclenchement lors du déclenchement du catch de LoadData (quand on change de page) pour stopper la boucle
     public void Dispose()
     {
+        PVM.OnChange -= StateHasChanged;
         _cts.Cancel();
         _cts.Dispose(); 
     }

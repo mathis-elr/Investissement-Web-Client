@@ -1,29 +1,52 @@
-﻿.bloc-options{
+﻿.bloc-options {
     display: flex;
-    align-items:center;
-    border: 1px solid grey;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,.15);
+    background-color: #242424;
     border-radius: 30px;
-    padding: 5px 5px;
-    gap: 5px;
+    padding: 0 5px;
+    gap: 0;
 }
 
 .option {
-    border-radius: 25px;
-    padding: 1px 10px;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
     cursor: pointer;
 }
 
-.active {
-    background-color: grey;
-}
+    .option:not(:last-child)::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 14px;
+        background: rgba(255,255,255,.15);
+        margin-left: 5px;
+        margin-right: 5px;
+    }
 
-.separateur-card {
-    content: "";
-    width: 1px;
-    height: 14px;
-    background: rgba(255,255,255,.12);
-}
+    .option span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 35px;
+        height: 25px;
+        border-radius: 999px;
+        transition: all 0.2s ease;
+    }
 
-span{
-    font-size: 15px;
+        .option span:hover {
+            background-color: #000000;
+        }
+
+        .option span.active {
+            background-color: #000000;
+            color: goldenrod;
+            font-weight: bold;
+        }
+
+.icone-option {
+    width: 25px;
+    height: 25px;
+    display: block;
 }

@@ -6,9 +6,11 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
     public interface IValeurPatrimoineRepository
     {
-        Task<IEnumerable<BougieCandleChartDto>> GetBougiesPlusValueByUserId(LapsTemps periode, Granulometrie granulometrie, int userId);
+        Task<IEnumerable<BougieChartDto>> GetBougiesPlusValueByUserId(Periode periode, Granulometrie granulometrie, int userId);
 
-        Task<IEnumerable<BougieCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId);
+        Task<IEnumerable<PointChartDto>> GetPointsPlusValueByUserId(Periode periode, Granulometrie granulometrie, int userId);
+
+        Task<IEnumerable<BougieChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId);
 
         Task<DateTime?> GetDateDernierEnregistrement();
 

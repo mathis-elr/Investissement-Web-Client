@@ -10,13 +10,17 @@ namespace Investissement_WebClient.Application.Services
     {
         private readonly IValeurPatrimoineRepository _valeurPatrimoineRepository = valeurPatrimoineRepository;
 
-        public async Task<IEnumerable<BougieCandleChartDto>> GetBougiesPlusValueByUserId(LapsTemps periode, Granulometrie granulometrie, int userId)
+        public async Task<IEnumerable<BougieChartDto>> GetBougiesPlusValueByUserId(Periode periode, Granulometrie granulometrie, int userId)
         {
             return await _valeurPatrimoineRepository.GetBougiesPlusValueByUserId(periode, granulometrie, userId);
         }
 
+        public async Task<IEnumerable<PointChartDto>> GetPointsPlusValueByUserId(Periode periode, Granulometrie granulometrie, int userId)
+        {
+            return await _valeurPatrimoineRepository.GetPointsPlusValueByUserId(periode, granulometrie, userId);
+        }
 
-        public async Task<IEnumerable<BougieCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal(int userId)
+        public async Task<IEnumerable<BougieChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissmentTotal(int userId)
         {
             return await _valeurPatrimoineRepository.GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(userId);
         }

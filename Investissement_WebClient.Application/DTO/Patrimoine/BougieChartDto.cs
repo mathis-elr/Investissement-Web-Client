@@ -1,6 +1,6 @@
 namespace Investissement_WebClient.Application.DTO.Patrimoine
 {
-    public class BougieCandleChartDto
+    public class BougieChartDto
     {
         public DateTime Date { get; set; }
 

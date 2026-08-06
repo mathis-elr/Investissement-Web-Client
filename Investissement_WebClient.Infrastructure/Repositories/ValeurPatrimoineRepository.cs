@@ -11,7 +11,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
-        public async Task<IEnumerable<BougieCandleChartDto>> GetBougiesPlusValueByUserId(LapsTemps periode, Granulometrie granulometrie, int userId)
+        public async Task<IEnumerable<BougieChartDto>> GetBougiesPlusValueByUserId(Periode periode, Granulometrie granulometrie, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -19,7 +19,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .AsNoTracking()
                 .Where(h => h.UtilisateurId == userId);
 
-            if(periode != LapsTemps.All)
+            if(periode != Periode.Tout)
             {
                 var dateLimite = DateTime.UtcNow.AddDays(-((int)periode));
                 query = query.Where(h => h.Date >= dateLimite);
@@ -46,7 +46,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                     .OrderBy(d => d.Date)
                     .ToList();
 
-                    return new BougieCandleChartDto
+                    return new BougieChartDto
                     {
                         Date = dg.Key,
                         Ouverture = Math.Round(points.First().PlusValue, 2),
@@ -57,7 +57,51 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 }).ToList();
         }
 
-        public async Task<IEnumerable<BougieCandleChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId)
+
+        public async Task<IEnumerable<PointChartDto>> GetPointsPlusValueByUserId(Periode periode, Granulometrie granulometrie, int userId)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+
+            var query = context.ValeurPatrimoine
+                .AsNoTracking()
+                .Where(h => h.UtilisateurId == userId);
+
+            if (periode != Periode.Tout)
+            {
+                var dateLimite = DateTime.UtcNow.AddDays(-((int)periode));
+                query = query.Where(h => h.Date >= dateLimite);
+            }
+
+            var donnees = await query
+                .Select(d => new
+                {
+                    d.Date,
+                    PlusValue = d.Valeur - d.InvestissementTotal
+                })
+                .OrderBy(dg => dg.Date)
+                .ToListAsync();
+
+            var donneesGroupes = donnees
+                .GroupBy(d => GetDateGroupe(d.Date, granulometrie))
+                .OrderBy(dg => dg.Key)
+                .ToList();
+
+            return donneesGroupes
+                .Select(dg =>
+                {
+                    var points = dg
+                    .OrderBy(d => d.Date)
+                    .ToList();
+
+                    return new PointChartDto
+                    {
+                        Date = dg.Key,
+                        Valeur = Math.Round(points.Average(p => p.PlusValue), 2)
+                    };
+                }).ToList();
+        }
+
+        public async Task<IEnumerable<BougieChartDto>> GetBougiesJournalieresValeurPatrimoineSurInvestissementTotalByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -83,7 +127,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .OrderBy(hp => hp.Date)
                 .ToListAsync();
 
-            return data.Select(t => new BougieCandleChartDto
+            return data.Select(t => new BougieChartDto
             {
                 Date = t.Date,
                 Ouverture = t.DonneesParJour.FirstOrDefault()?.Valeur ?? 0,

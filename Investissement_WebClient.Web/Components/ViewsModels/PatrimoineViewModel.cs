@@ -1,7 +1,7 @@
-﻿using Investissement_WebClient.Application.Interfaces.Services;
-using Investissement_WebClient.Application.DTO.Patrimoine;
-using Investissement_WebClient.Web.GestionSession;
+﻿using Investissement_WebClient.Application.DTO.Patrimoine;
+using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
@@ -19,6 +19,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public int IdUser { get; set; }
         public string PrenomUser { get; set; } = string.Empty;
 
+        // MAJ VUE
+        public event Action OnChange = null!;
+        public void NotifyStateChanged() => OnChange.Invoke();
+
         // DATAS INFOS PATRIMOINE
         public bool RecuparationEnCours { get; set; } = false;
         public decimal ValeurPatrimoineCourante { get; set; }
@@ -27,12 +31,16 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public IEnumerable<VariationDto> Variations { get; set; } = [];
 
         // DATAS GRAPHIQUES
-        public IEnumerable<BougieCandleChartDto> BougiesPlusValue { get; set; } = [];
-        public LapsTemps Periode { get; set; } = LapsTemps.All;
-        public Granulometrie Granulometrie { get; set; } = Granulometrie.Mensuel;
-        public TypeGraphique TypeGraphique { get; set; } = TypeGraphique.Candle; 
+        public IEnumerable<BougieChartDto> BougiesPlusValue { get; set; } = [];
+        public IEnumerable<PointChartDto> PointsPlusValue { get; set; } = [];
+        public IEnumerable<Periode> PeriodesPossibles => Enum.GetValues<Periode>();
+        public IEnumerable<Granulometrie> GranulometriesPossibles => Enum.GetValues<Granulometrie>();
+        public IEnumerable<TypeGraphique> TypeGraphiquesPossibles => Enum.GetValues<TypeGraphique>();
+        public Periode PeriodeSelectionnee { get; set; } = Periode.Tout;
+        public Granulometrie GranulometrieSelectionnee { get; set; } = Granulometrie.Mensuel;
+        public TypeGraphique TypeGraphiqueSelectionnee { get; set; } = TypeGraphique.Line; 
 
-        public IEnumerable<BougieCandleChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
+        public IEnumerable<BougieChartDto> BougiesJournalieresValeurPatrimoineSurInvestissementTotal { get; set; } = [];
         public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
 
         // GESTION D'ERREUR
@@ -60,6 +68,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                     await Task.WhenAll(
                         LoadVariationsPrix(),
                         LoadBougiesPlusValue(),
+                        LoadPointsPlusValue(),
                         LoadProportionParActif(prixParActif),
                         LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()
                     );
@@ -84,6 +93,99 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public string ToStringPourcentage(decimal valeur, string devise)
         {
             return valeur.ToString(devise, CultureInfo.GetCultureInfo("fr-FR"));
+        }
+
+        public string GetLibelleGranulometrie(Granulometrie granulometrie)
+        {
+            return granulometrie switch
+            {
+                Granulometrie.Journalier => "J",
+                Granulometrie.Hebdomadaire => "H",
+                Granulometrie.Mensuel => "M",
+                _ => string.Empty
+            };
+        }
+
+        public string GetLibellePeriode(Periode periode)
+        {
+            return periode switch
+            {
+                Periode.Jour => "24H",
+                Periode.Semaine => "1S",
+                Periode.Mois => "1M",
+                Periode.SixMois => "6M",
+                Periode.Ans => "1A",
+                Periode.CinqAns => "5A",
+                Periode.Tout => "∞",
+                _ => string.Empty
+            };
+        }
+
+        public string GetIconeTypeGraphique(TypeGraphique typeGraphique, bool actif)
+        {
+            return typeGraphique switch
+            {
+                TypeGraphique.Candle =>
+                    actif
+                        ? "/icons/candle-orange.svg"
+                        : "/icons/candle-white.svg",
+
+                TypeGraphique.Line =>
+                    actif
+                        ? "/icons/line-orange.svg"
+                        : "/icons/line-white.svg",
+
+                _ => string.Empty
+            };
+        }
+
+        public async Task ChangerPeriodeSelectionnee(Periode periode)
+        {
+            if (PeriodeSelectionnee == periode || RecuparationEnCours)
+                return;
+
+            PeriodeSelectionnee = periode;
+
+            await RafraichirGraphique();
+        }
+
+        public async Task ChangerGranulometrieSelectionnee(Granulometrie granulometrie)
+        {
+            if (GranulometrieSelectionnee == granulometrie || RecuparationEnCours)
+                return;
+
+            GranulometrieSelectionnee = granulometrie;
+
+            await RafraichirGraphique();
+        }
+
+        public async Task ChangerTypeGraphiqueSelectionnee(TypeGraphique typeGraphique)
+        {
+            if (TypeGraphiqueSelectionnee == typeGraphique || RecuparationEnCours)
+                return;
+
+            TypeGraphiqueSelectionnee = typeGraphique;
+
+            await RafraichirGraphique();
+        }
+
+        private async Task RafraichirGraphique()
+        {
+            RecuparationEnCours = true;
+
+            try
+            {
+                await Task.WhenAll(
+                    LoadBougiesPlusValue(),
+                    LoadPointsPlusValue()
+                );
+
+                NotifyStateChanged();
+            }
+            finally
+            {
+                RecuparationEnCours = false;
+            }
         }
 
         private async Task LoadValeurPatrimoineCourante(Dictionary<string, decimal> prixParActif)
@@ -112,7 +214,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadBougiesPlusValue()
         {
-            BougiesPlusValue = await _valeurPatrimoineService.GetBougiesPlusValueByUserId(Periode, Granulometrie, IdUser);
+            BougiesPlusValue = await _valeurPatrimoineService.GetBougiesPlusValueByUserId(PeriodeSelectionnee, GranulometrieSelectionnee, IdUser);
+        }
+
+        private async Task LoadPointsPlusValue()
+        {
+            PointsPlusValue = await _valeurPatrimoineService.GetPointsPlusValueByUserId(PeriodeSelectionnee, GranulometrieSelectionnee, IdUser);
         }
 
         private async Task LoadBougiesJournalieresValeurPatrimoineSurInvestissementTotal()

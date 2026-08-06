@@ -1,60 +1,41 @@
 ﻿<div class="bloc-options">
-    <div class="option">
-        <span>24H</span>
-    </div>
-
-    <div class="separateur-card"></div>
-
-    <div class="option">
-        <span>7J</span>
-    </div>
-
-    <div class="separateur-card"></div>
-
-    <div class="option">
-        <span>1M</span>
-    </div>
-
-    <div class="separateur-card"></div>
-
-    <div class="option">
-        <span>1A</span>
-    </div>
-
-    <div class="separateur-card"></div>
-
-    <div class="option active">
-        <span>All</span>
-    </div>
+    @foreach (var periode in Model.PeriodesPossibles)
+    {
+        <div class="option">
+            <span @onclick="async () => { await Model.ChangerPeriodeSelectionnee(periode); }"
+                  class="@(Model.PeriodeSelectionnee == periode ? "active" : "")">
+                @Model.GetLibellePeriode(periode)
+            </span>
+        </div>
+    }
 </div>
 
 <div class="bloc-options">
-    <div class="option">
-        <span>J</span>
-    </div>
-
-    <div class="separateur-card"></div>
-
-    <div class="option">
-        <span>H</span>
-    </div>
-
-    <div class="separateur-card"></div>
-
-    <div class="option active">
-        <span>M</span>
-    </div>
+    @foreach (var granulometrie in Model.GranulometriesPossibles)
+    {
+        <div class="option">
+            <span @onclick="async () => { await Model.ChangerGranulometrieSelectionnee(granulometrie); }"
+                  class="@(Model.GranulometrieSelectionnee == granulometrie ? "active" : "")">
+                @Model.GetLibelleGranulometrie(granulometrie)
+            </span>
+        </div>
+    }
 </div>
 
 <div class="bloc-options">
-    <div class="option">
-        <span>📈</span>
-    </div>
+    @foreach (var typeGraphique in Model.TypeGraphiquesPossibles)
+    {
+        bool actif = Model.TypeGraphiqueSelectionnee == typeGraphique;
 
-    <div class="separateur-card"></div>
-
-    <div class="option active">
-        <span>📊</span>
-    </div>
+        <div class="option">
+            <span @onclick="async () => await Model.ChangerTypeGraphiqueSelectionnee(typeGraphique)"
+                  class="@(actif ? "active" : "")">
+                <img class="icone-option" src="@(Model.GetIconeTypeGraphique(typeGraphique, actif))" />
+            </span>
+        </div>
+    }
 </div>
 
+@code{
+        [Parameter] public required PatrimoineViewModel Model { get; set; }
+}

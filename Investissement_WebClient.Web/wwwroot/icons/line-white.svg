@@ -1,0 +1,13 @@
+﻿<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M5 16L9 12.5L12.3 14.2L18.5 7.5"
+          stroke="#DADADA"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          opacity="0.85"/>
+
+	<circle cx="5" cy="16" r="1.35" fill="#DADADA" opacity="0.85"/>
+	<circle cx="9" cy="12.5" r="1.35" fill="#DADADA" opacity="0.85"/>
+	<circle cx="12.3" cy="14.2" r="1.35" fill="#DADADA" opacity="0.85"/>
+	<circle cx="18.5" cy="7.5" r="1.35" fill="#DADADA" opacity="0.85"/>
+</svg>
