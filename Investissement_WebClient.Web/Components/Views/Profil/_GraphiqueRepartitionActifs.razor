@@ -1,18 +1,22 @@
 ﻿@* Pie : proportion investit par actif par rapport au total investit *@
 
-@if (ValeurParActifInvestit.Any())
+@if (Model.ValeurParActifInvestit.Any())
 {
     <ApexChart TItem="ValeurTotaleParActifDto"
                Options="ProfilChartsOptions.OptionsPieActif">
 
         <ApexPointSeries TItem="ValeurTotaleParActifDto"
-                         Items="ValeurParActifInvestit"
+                         Items="Model.ValeurParActifInvestit"
                          SeriesType="SeriesType.Donut"
                          XValue="@(e => e.Actif)"
                          YValue="@(e => e.Valeur)"
                          OrderByDescending="e => e.Y"
                          ShowDataLabels />
     </ApexChart>
+}
+else if (Model.RecuparationEnCours)
+{
+    <_ChargementGraphique />
 }
 else
 {
@@ -21,5 +25,5 @@ else
     
 
 @code {
-    [Parameter] public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
+    [Parameter] public required ProfilViewModel Model { get; set; }
 }

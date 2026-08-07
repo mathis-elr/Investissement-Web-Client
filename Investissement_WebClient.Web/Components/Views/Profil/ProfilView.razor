@@ -39,7 +39,14 @@
             </div>
 
             <div class="perspectives-graphique">
-                <_GraphiquePerspectivePatrimoine PerspectivesValeurPatrimoineParAn="@PVM.PerspectivesValeurPatrimoineParAn" />
+                @if (PVM.RecuparationEnCours)
+                {
+                    <_ChargementGraphique />
+                }
+                else
+                {
+                    <_GraphiquePerspectivePatrimoine Model="@PVM" />
+                }
             </div>
         </div>
     </div>
@@ -93,7 +100,14 @@
         </div>
 
         <div class="graphique">
-            <_GraphiqueRepartitionActifs ValeurParActifInvestit="@PVM.ValeurParActifInvestit" />
+            @if (PVM.RecuparationEnCours)
+            {
+                <_ChargementGraphique />
+            }
+            else
+            {
+                <_GraphiqueRepartitionActifs Model="@PVM" />
+            }
         </div>
     </div>
 </div>
