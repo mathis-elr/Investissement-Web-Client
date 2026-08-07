@@ -37,6 +37,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    z-index: 0;
 }
 
 
@@ -48,32 +49,13 @@
     grid-row: 1/4;
     height: 100%;
     overflow: hidden;
+    gap: 10px;
 }
 
     .perspectives .content {
         display: grid;
         grid-template-rows: auto 1fr;
-        height: 100%;
-        width: 100%;
-    }
-
-.btn-deconnexion {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background: transparent;
-    color: goldenrod;
-    border: 1px solid rgba(218, 165, 32, 0.75);
-    border-radius: 999px;
-    padding: 7px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-    .btn-deconnexion:hover {
-        border-color: rgba(218, 165, 32, 0.85);
-        box-shadow: 0 0 8px rgba(218, 165, 32, 0.22);
-        transform: scale(0.96);
+        gap: 5px;
     }
 
 
@@ -92,11 +74,11 @@
         width: 100%
     }
 
-.form-grid label {
-    color: #999;
-    font-size: 16px;
-    font-weight: 500;
-}
+        .perspectives-infos .form-grid label {
+            color: #999;
+            font-size: 16px;
+            font-weight: 500;
+        }
 
 
 .info-compte {
@@ -111,7 +93,26 @@
 
     .info-compte .content {
         display: flex;
-        justify-content:space-between;
+        justify-content: space-between;
+    }
+
+.btn-deconnexion {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: transparent;
+    color: goldenrod;
+    border: 1px solid rgba(218, 165, 32, 0.75);
+    border-radius: 999px;
+    padding: 7px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn-deconnexion:hover {
+        border-color: rgba(218, 165, 32, 0.85);
+        box-shadow: 0 0 16px rgba(218, 165, 32, 0.22);
+        transform: translateX(2px);
     }
 
 .info {
@@ -132,14 +133,78 @@ span {
 .repartition-actifs {
     grid-column: 2;
     grid-row: 2/4;
-
     display: grid;
     grid-template-rows: auto 1fr;
     gap: 20px;
+    overflow: hidden;
 }
 
 .graphique {
     flex: 1;
-    overflow: hidden;
+    overflow: visible;
+    z-index: 1;
 }
 
+.repartition-actifs ::deep .apexcharts-canvas {
+    transform: translateX(-45px);
+}
+
+/* Base = petit / moyen écran */
+.repartition-actifs ::deep .apexcharts-legend.apx-legend-position-right {
+    display: grid !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background-color: #242424 !important;
+    border-radius: 10px;
+    height: 100% !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+
+/* AMELIORATION DE RENDU DU GRAPHIQUE PIE */
+.repartition-actifs ::deep .apexcharts-legend-series {
+    display: flex !important;
+    align-items: center !important;
+    margin: 15px 5px !important;
+}
+
+.repartition-actifs ::deep .apexcharts-legend-text {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #e5e5e5 !important;
+}
+
+.repartition-actifs ::deep .apexcharts-legend-marker {
+    margin-right: 7px !important;
+}
+
+.repartition-actifs ::deep .apexcharts-tooltip {
+    z-index: 9999 !important;
+    pointer-events: none;
+}
+
+/* Grand écran */
+@media (min-width: 1600px) {
+    .repartition-actifs ::deep .apexcharts-legend.apx-legend-position-right {
+        height: auto !important;
+        max-height: 100% !important;
+    }
+}
+
+/* Petit écran */
+@media (max-width: 1300px) {
+    .repartition-actifs ::deep .apexcharts-canvas {
+        transform: translateX(-25px);
+        transform-origin: center;
+    }
+
+    .repartition-actifs ::deep .apexcharts-legend-text {
+        font-size: 13px !important;
+    }
+
+    .repartition-actifs ::deep .apexcharts-legend-series {
+        margin: 4px 5px !important;
+    }
+}

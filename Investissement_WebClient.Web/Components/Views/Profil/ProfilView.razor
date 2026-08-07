@@ -62,8 +62,8 @@
             <div class="info">
                 <img src="icons/gain.svg" />
                 <span>Gain total</span>
-                <span class="vert fw-bolder">
-                    @(PVM.GainTotal == 0 ? "--,--" : PVM.ToStringPourcentage(PVM.GainTotal, "C2"))
+                <span class="@(PVM.GainTotal == 0 ? "blanc" : PVM.GainTotal > 0 ? "vert" : "rouge") fw-bolder">
+                    @(PVM.GainTotal == 0 ? "--,--": $"{(PVM.GainTotal > 0 ? "+" : "")}{PVM.ToStringPourcentage(PVM.GainTotal, "C2")}")
                 </span>
             </div>
 
@@ -89,7 +89,7 @@
 
     <div class="repartition-actifs">
         <div class="header">
-            <label>Répartition portefeuille</label>
+            <label>Allocation</label>
         </div>
 
         <div class="graphique">

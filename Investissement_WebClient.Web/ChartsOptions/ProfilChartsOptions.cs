@@ -78,9 +78,23 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 Height = "100%",
             },
 
-            Colors = Enumerable.Range(1, 20)
-                .Select(i => $"hsl({(i * 360 / 20)}, 65%, 55%)")
-                .ToList(),
+            Colors = new()
+            {
+                "#DAA520", // goldenrod
+                "#C6951E",
+                "#B7841C",
+                "#A87419",
+                "#986616",
+
+                "#7A6A53",
+                "#696969",
+                "#5A5A5A",
+                "#4A4A4A",
+
+                "#8E8E8E",
+                "#777777",
+                "#626262"
+            },
 
             Legend = new Legend
             {

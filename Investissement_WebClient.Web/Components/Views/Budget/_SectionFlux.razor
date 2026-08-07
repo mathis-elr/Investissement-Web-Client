@@ -5,7 +5,7 @@
     {
         <div class="un-flux">
             <span>@flux.Date.ToString("dd MMM")</span>
-            <span class="@(IsCredit ? "credit" : "debit")">@flux.Valeur €</span>
+            <span class="@(IsCredit ? "vert" : "rouge")">@flux.Valeur €</span>
             <input type="text" @bind="@flux.Libelle" />
             <select class="@(flux.Suggestion ? "select-suggestion" : "")"
                     value="@flux.IdCategorie"

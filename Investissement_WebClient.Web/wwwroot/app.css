@@ -27,39 +27,15 @@ body {
     box-sizing: border-box;
 }
 
-/*footer {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0.6;
-    transition: all 0.5s ease-in-out;
-}
-    footer:hover{
-        opacity: 1;
-    }
-
-.footer-content {
-    width: 100%;
-    text-align: center;
-}
-.footer-content label {
-    color: goldenrod;
-    font-size: 18px;
-    font-style: italic;
-}*/
-
 
 label {
     font-size: 26px;
     font-weight: bold;
 }
 
-.negatif{
-    color:red;
-}
-
-.posititf{
-    color: green;
+p {
+    color: grey;
+    margin-bottom: 0;
 }
 
 select,
@@ -93,27 +69,11 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
-
 select:hover {
     color : white;
     background-color: #1e1e1e;
 }
 
-button:disabled {
-    background-color: #999;
-    color: #585d60;
-    cursor: not-allowed;
-    opacity: 0.5;
-    pointer-events: none; /*desactive les effets de survol*/
-}
-
-.credit {
-    color: green;
-}
-
-.debit {
-    color: red;
-}
 
 .gris {
     color: grey;
@@ -135,10 +95,6 @@ button:disabled {
     color: white !important;
 }
 
-p {
-    color: grey;
-    margin-bottom:0;
-}
 .erreur{
     color:red;
     font-weight:bold;
@@ -198,6 +154,14 @@ p {
         background-color: darkgoldenrod;
         transform: scale(0.99);
     }
+
+button:disabled {
+    background-color: #999;
+    color: #585d60;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none; /*desactive les effets de survol*/
+}
 
 
 /* --- STRUCTURE GLOBALE TOAST--- */
@@ -312,4 +276,18 @@ html body .blazored-toast-container .blazored-toast .blazored-toast-close:hover:
 html, body, main, div {
     scrollbar-color: #444 transparent;
     scrollbar-width: thin; 
+}
+
+
+/* GRAND ECRANS */
+@media (min-width: 1600px) {
+    label {
+        font-size: 30px;
+    }
+
+    select,
+    input {
+        font-size: 16px;
+        height: 40px;
+    }
 }
