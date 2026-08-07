@@ -145,6 +145,12 @@ span {
     z-index: 1;
 }
 
+.graphique-centre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* --- GESTION DU GRAPHIQUE PIE --- */
 
 /* 1. On ne met PLUS de Flexbox sur le canvas pour ne pas tuer le placement Javascript */

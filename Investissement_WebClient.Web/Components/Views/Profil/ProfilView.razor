@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="perspectives-graphique">
+            <div class="perspectives-graphique @(PVM.RecuparationEnCours ? "graphique-centre" : "")">
                 @if (PVM.RecuparationEnCours)
                 {
                     <_ChargementGraphique />
@@ -53,7 +53,7 @@
 
     <div class="info-compte">
         <div class="header">
-            <label>@(PVM.PrenomUser != string.Empty ? "Bonjour " + PVM.PrenomUser : "")</label>
+            <label>Bonjour @(PVM.PrenomUser != string.Empty ? PVM.PrenomUser : "")</label>
             <button class="btn-deconnexion" title="Déconnexion" @onclick="Deconnexion"><img src="icons/logout.svg" /></button>
         </div>
 
@@ -99,7 +99,7 @@
             <label>Allocation</label>
         </div>
 
-        <div class="graphique">
+        <div class="graphique @(PVM.RecuparationEnCours ? "graphique-centre" : "")">
             @if (PVM.RecuparationEnCours)
             {
                 <_ChargementGraphique />
@@ -118,17 +118,25 @@
 
     protected override async Task OnInitializedAsync()
     {
+        PVM.OnChange += StateHasChanged;
+
         if (CreationStatus == "succes")
             TS.ShowSuccess("Votre compte a été créé avec succès !");
+
+        await PVM.LoadData();
+       
+        if (PVM.HasError)
+        {
+            TS.ShowError(PVM.ErrorMessage);
+            PVM.HasError = false;
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await PVM.LoadData();
             _ = LoadDataBoucle(_cts.Token);
-            StateHasChanged();
         }
     }
 
@@ -146,13 +154,7 @@
         catch (OperationCanceledException) { }
     }
 
-    public void Dispose()
-    {
-        _cts.Cancel();
-        _cts.Dispose();
-    }
-
-    private void CalculerEvolutionDuPatrimoine()
+    public void CalculerEvolutionDuPatrimoine()
     {
         PVM.CalculerEvolutionDuPatrimoine();
 
@@ -171,4 +173,12 @@
 
         Nav.NavigateTo("connexion");
     }
+
+    public void Dispose()
+    {
+        PVM.OnChange -= StateHasChanged;
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
 }

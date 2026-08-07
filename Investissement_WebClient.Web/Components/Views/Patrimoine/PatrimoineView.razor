@@ -14,12 +14,6 @@
 
     <div class="patrimoine-graphique">
 
-        @* @if(PVM.ValeurPatrimoineCourante != 0)
-        {
-            <div class="btn-rond precedent" @onclick="GraphiquePrecedent"><img src="icons/precedent.png"></div>
-            <div class="btn-rond suivant" @onclick="GraphiqueSuivant"><img src="icons/suivant.png"></div>
-        } *@
-
         <div class="options">
             <_OptionsAffichageGraphique Model="PVM" />
         </div>
@@ -49,58 +43,11 @@
                 }
             </div>
         }
-
-        @* <div class="rail @(graphiques[index])">
-            
-            @if (PVM.RecuparationEnCours)
-            {
-                <div class="page">
-                    <div class="recherche-donnee">            
-                        <_ChargementGraphique />
-                    </div>
-                </div>
-            }
-            else if (PVM.ValeurPatrimoineCourante == 0)
-            {
-                <div class="page">
-                    <div class="recherche-donnee">
-                        <p>Récuperer vos flux pour commencer à visualiser l'évolution de vôtre patrimoine.</p>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="page">
-                    <div class="options">
-                        <_OptionsAffichageGraphique Model="PVM" />
-                    </div>
-
-                    @if(PVM.TypeGraphiqueSelectionnee == TypeGraphique.Candle)
-                    {
-                        <_GraphiqueEvolutionPlusValueCandle BougiesPlusValue="@PVM.BougiesPlusValue" />
-                    }
-                    else
-                    {
-                        <_GraphiqueEvolutionPlusValueLine PointsPlusValue="@PVM.PointsPlusValue" />
-                    }
-                </div>
-
-                <div class="page">
-                    <_GraphiqueRepartitionActifs ValeurParActifInvestit="@PVM.ValeurParActifInvestit" />
-                </div>
-
-                <div class="page">
-                    <_GraphiqueValeurPatrimoineSurInvestissement BougiesJournalieresValeurPatrimoineSurInvestissementTotal="PVM.BougiesJournalieresValeurPatrimoineSurInvestissementTotal" />
-                </div>
-            }
-        </div> *@
     </div>
 </div>
 
 @code {
-    private CancellationTokenSource _cts = new();
-    private List<string> graphiques = ["graph1", "graph2", "graph3"];
-    private int index =  0;   
+    private CancellationTokenSource _cts = new(); 
 
     protected override async Task OnInitializedAsync()
     {
@@ -146,15 +93,5 @@
         PVM.OnChange -= StateHasChanged;
         _cts.Cancel();
         _cts.Dispose(); 
-    }
-
-    private void GraphiqueSuivant()
-    {
-        index = (index + 1) % graphiques.Count();
-    }
-    private void GraphiquePrecedent()
-    {
-        var nbGraph = graphiques.Count();
-        index = (index - 1 + nbGraph) % nbGraph;
     }
 }

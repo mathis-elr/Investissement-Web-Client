@@ -16,6 +16,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public int IdUser { get; set; }
         public string PrenomUser { get; set; } = string.Empty;
 
+        // MAJ VUE
+        public event Action OnChange = null!;
+        public void NotifyStateChanged() => OnChange.Invoke();
+
         // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal EvolutionAnnuellePourcentage { get; set; } = 8;
@@ -75,6 +79,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                  LoadValeurPatrimoineCourante(prixParActif),
                  LoadValeurInvestissementTotale()
                 );
+
+            NotifyStateChanged();
         }
 
         public void CalculerEvolutionDuPatrimoine()
