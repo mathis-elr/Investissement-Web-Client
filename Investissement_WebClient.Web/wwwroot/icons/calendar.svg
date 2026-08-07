@@ -1,0 +1,27 @@
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="5.5" width="16" height="14.5" rx="2.2"
+          stroke="goldenrod"
+          stroke-width="1.9"/>
+
+    <path d="M4 9H20"
+          stroke="goldenrod"
+          stroke-width="1.9"
+          stroke-linecap="round"/>
+
+    <path d="M8 3.8V7"
+          stroke="goldenrod"
+          stroke-width="1.9"
+          stroke-linecap="round"/>
+
+    <path d="M16 3.8V7"
+          stroke="goldenrod"
+          stroke-width="1.9"
+          stroke-linecap="round"/>
+
+    <rect x="7.2" y="11.8" width="2.1" height="2.1" rx="0.4" fill="goldenrod"/>
+    <rect x="11" y="11.8" width="2.1" height="2.1" rx="0.4" fill="goldenrod"/>
+    <rect x="14.8" y="11.8" width="2.1" height="2.1" rx="0.4" fill="goldenrod"/>
+
+    <rect x="7.2" y="15.5" width="2.1" height="2.1" rx="0.4" fill="goldenrod" opacity="0.75"/>
+    <rect x="11" y="15.5" width="2.1" height="2.1" rx="0.4" fill="goldenrod" opacity="0.75"/>
+</svg>

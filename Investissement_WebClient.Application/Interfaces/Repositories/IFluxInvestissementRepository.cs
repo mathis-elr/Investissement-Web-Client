@@ -9,6 +9,8 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<FluxInvestissement?> GetLastByUserId(int userId);
 
+        Task<FluxInvestissement?> GetFirstDateByUserId(int userId);
+
         Task<List<PositionActifDto>> GetPositionsParActifByUserId(int userId);
 
         Task<decimal> GetValeurInvestissementTotalByUserId(int userId);

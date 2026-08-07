@@ -1,8 +1,7 @@
 ﻿.patrimoine {
     display: grid;
-    grid-template-rows: auto 1fr; 
+    grid-template-rows: auto 1fr;
     gap: 20px;
-    padding: 20px;
     height: 100%;
     min-height: 0;
     box-sizing: border-box;

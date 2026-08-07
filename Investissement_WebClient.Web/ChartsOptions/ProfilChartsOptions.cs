@@ -1,6 +1,7 @@
-﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
+﻿using ApexCharts;
+using Investissement_WebClient.Application.DTO.FluxInvestissements;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Application.DTO.Profil;
-using ApexCharts;
 
 namespace Investissement_WebClient.Web.ChartsOptions
 {
@@ -65,6 +66,40 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 Theme = Mode.Dark,
             },
 
-        };   
+        };
+
+        public static ApexChartOptions<ValeurTotaleParActifDto> OptionsPieActif = new()
+        {
+            Chart = new Chart
+            {
+                ForeColor = "#FFFFFF",
+                Background = "transparent",
+                Width = "100%",
+                Height = "100%",
+            },
+
+            Colors = Enumerable.Range(1, 20)
+                .Select(i => $"hsl({(i * 360 / 20)}, 65%, 55%)")
+                .ToList(),
+
+            Legend = new Legend
+            {
+                Show = true,
+                Position = LegendPosition.Right,
+            },
+
+            DataLabels = new DataLabels
+            {
+                DropShadow = new DropShadow { Enabled = false },
+                Style = new DataLabelsStyle
+                {
+                    Colors = new List<string>
+                    {
+                        "#000000"
+                    },
+                    FontWeight = "bold"
+                }
+            }
+        }; 
     }
 }

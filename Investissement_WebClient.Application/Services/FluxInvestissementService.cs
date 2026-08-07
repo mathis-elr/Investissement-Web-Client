@@ -27,6 +27,12 @@ namespace Investissement_WebClient.Application.Services
             return dernierFlux?.Id;
         }
 
+        public async Task<DateTime?> GetDatePremierFlux(int userId)
+        {
+            var dernierFlux = await _fluxInvestissementRepository.GetFirstDateByUserId(userId);
+            return dernierFlux?.Date;
+        }
+
         public async Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(int userId)
         {
             return await CalculerInvestissementParMois(userId);

@@ -1,6 +1,8 @@
-﻿using Investissement_WebClient.Application.Interfaces.Services;
+﻿using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Application.DTO.Profil;
+using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Web.GestionSession;
+using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
@@ -13,12 +15,24 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // USER CONNECTE
         public int IdUser { get; set; }
         public string PrenomUser { get; set; } = string.Empty;
-        
+
         // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }
         public decimal EvolutionAnnuellePourcentage { get; set; } = 8;
         public int PerspectiveNbAnnees { get; set; } = 15;
         public List<ValeurParAnLineChartDto> PerspectivesValeurPatrimoineParAn { get; set; } = [];
+
+        // INFOS COMPTE
+        public bool RecuparationEnCours { get; set; } = false;
+        public decimal ValeurPatrimoineCourante { get; set; }
+        private decimal ValeurInvestissementTotal { get; set; }
+        public decimal GainTotal => ValeurPatrimoineCourante - ValeurInvestissementTotal;
+        public int NombreAnnes { get; set; }
+        public int NombreMois { get; set; }
+        public int NombreActifs => ValeurParActifInvestit.Count();
+
+        // REPARTITION ACTIFS
+        public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
 
         // GESTION D'ERREUR
         public bool HasError { get; set; } = false;
@@ -27,12 +41,40 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task LoadData()
         {
-            await _sessionService.Initialiser();
-            IdUser = _sessionService.Id;
-            PrenomUser = _sessionService.Prenom;
+            RecuparationEnCours = true;
 
-            await LoadInvestissementMoyenMensuel();
-            CalculerEvolutionDuPatrimoine();
+            try
+            {
+                await _sessionService.Initialiser();
+                IdUser = _sessionService.Id;
+                PrenomUser = _sessionService.Prenom;
+
+                var prixParActif = await _fluxInvestissementService.GetPrixParActif();
+
+                await Task.WhenAll(
+                     LoadValeurPatrimoineCourante(prixParActif),
+                     LoadProportionParActif(prixParActif),
+                     LoadInvestissementMoyenMensuel(),
+                     LoadValeurInvestissementTotale(),
+                     CalculerInvestisseurDepuis()
+                    );
+
+                CalculerEvolutionDuPatrimoine();
+            }
+            finally
+            {
+                RecuparationEnCours = false;
+            }
+        }
+
+        public async Task LoadInfosProfil()
+        {
+            var prixParActif = await _fluxInvestissementService.GetPrixParActif();
+
+            await Task.WhenAll(
+                 LoadValeurPatrimoineCourante(prixParActif),
+                 LoadValeurInvestissementTotale()
+                );
         }
 
         public void CalculerEvolutionDuPatrimoine()
@@ -104,10 +146,49 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
+        public string ToStringPourcentage(decimal valeur, string devise)
+        {
+            return valeur.ToString(devise, CultureInfo.GetCultureInfo("fr-FR"));
+        }
+
         private async Task LoadInvestissementMoyenMensuel()
         {
             InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMedianMensuel(IdUser);
             if (InvestissementMoyenMensuel == 0) InvestissementMoyenMensuel = 100;
+        }
+
+        private async Task CalculerInvestisseurDepuis()
+        {
+            var datePremierInvest = await _fluxInvestissementService.GetDatePremierFlux(IdUser);
+            if (datePremierInvest.HasValue)
+            {
+                var nbJours = (DateTime.Today - datePremierInvest.Value.Date).Days;
+                NombreAnnes = nbJours / 365;
+                NombreMois = (nbJours % 365) / 30;
+            }
+        }
+
+        private async Task LoadValeurPatrimoineCourante(Dictionary<string, decimal> prixParActif)
+        {
+            try
+            {
+                ValeurPatrimoineCourante = await _fluxInvestissementService.CalculerValeurCourante(prixParActif, IdUser);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = ex.Message;
+            }
+        }
+
+        private async Task LoadValeurInvestissementTotale()
+        {
+            ValeurInvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal(IdUser);
+        }
+
+        private async Task LoadProportionParActif(Dictionary<string, decimal> prixParActif)
+        {
+            ValeurParActifInvestit = await _fluxInvestissementService.GetValeurParActifInvestit(prixParActif, IdUser);
         }
     }
 }

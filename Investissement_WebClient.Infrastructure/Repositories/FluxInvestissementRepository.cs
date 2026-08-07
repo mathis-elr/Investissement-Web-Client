@@ -37,6 +37,16 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<FluxInvestissement?> GetFirstDateByUserId(int userId)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+
+            return await context.FluxInvestissement
+                .Where(f => f.UtilisateurId == userId)
+                .OrderBy(f => f.Date)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<PositionActifDto>> GetPositionsParActifByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();

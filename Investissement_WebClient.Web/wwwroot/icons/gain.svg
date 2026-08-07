@@ -1,0 +1,19 @@
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 17L8.2 12.8L11.4 15.4L19 7.8"
+          stroke="goldenrod"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <path d="M14.5 7.5H19.5V12.5"
+          stroke="goldenrod"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <path d="M4 20H20"
+          stroke="goldenrod"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          opacity="0.65"/>
+</svg>

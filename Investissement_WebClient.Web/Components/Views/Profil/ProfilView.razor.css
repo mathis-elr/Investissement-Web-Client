@@ -2,9 +2,8 @@
 .profil {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: auto 1fr;
     gap: 20px;
-    padding: 20px;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -14,22 +13,21 @@
 /* COMMUN BLOCS */
 .perspectives,
 .info-compte,
-.connect-tr {
-    padding: 20px;
-    min-height: 0;
-    max-height: 100%;
+.repartition-actifs {
+    padding: 12px 15px;
+    height: 100%;
+    width: 100%;
     background-color: #1e1e1e;
     border-radius: 10px;
     opacity: 0.8;
     overflow-y: auto;
     overflow-x: hidden;
     transition: all 0.3s ease-in-out;
-    position: relative;
 }
 
     .perspectives:hover,
     .info-compte:hover,
-    .connect-tr:hover {
+    .repartition-actifs:hover {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         opacity: 1;
     }
@@ -38,50 +36,51 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 
 /* BLOC PERSPECTIVES */
 .perspectives {
     display: grid;
-    grid-template-rows: auto auto 1fr;
-    gap: 20px;
+    grid-template-rows: auto 1fr;
     grid-column: 1;
-    grid-row: 1/3;
+    grid-row: 1/4;
     height: 100%;
     overflow: hidden;
 }
 
-.btn-calcul {
-    background-color: goldenrod;
-    color: black;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 15px;
+    .perspectives .content {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        height: 100%;
+        width: 100%;
+    }
+
+.btn-deconnexion {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: transparent;
+    color: goldenrod;
+    border: 1px solid rgba(218, 165, 32, 0.75);
+    border-radius: 999px;
+    padding: 7px;
     cursor: pointer;
-    border: none;
-    width: fit-content;
-    transition: ease-in-out 0.3s;
+    transition: all 0.2s ease-in-out;
 }
 
-    .btn-calcul:disabled {
-        background-color: #999;
-        color: #585d60;
-        cursor: not-allowed;
-        opacity: 0.5;
-        pointer-events: none; /*desactive les effets de survol*/
+    .btn-deconnexion:hover {
+        border-color: rgba(218, 165, 32, 0.85);
+        box-shadow: 0 0 8px rgba(218, 165, 32, 0.22);
+        transform: scale(0.96);
     }
 
-    .btn-calcul:hover {
-        transform: scale(0.95);
-        background-color: darkgoldenrod;
-    }
 
 .perspectives-infos {
     display: flex;
-    background-color: #242424;
     padding: 10px;
+    background-color: #242424;
     border-radius: 10px;
 }
 
@@ -95,16 +94,52 @@
 
 .form-grid label {
     color: #999;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 500;
 }
 
 
 .info-compte {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 5px;
+}
+
+    .info-compte .content {
+        display: flex;
+        justify-content:space-between;
+    }
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
+span {
+    font-size: 14px;
+    color: grey;
+}
+
+
+.repartition-actifs {
+    grid-column: 2;
+    grid-row: 2/4;
+
     display: grid;
     grid-template-rows: auto 1fr;
     gap: 20px;
-    grid-column: 2;
-    grid-row: 1;
+}
+
+.graphique {
+    flex: 1;
+    overflow: hidden;
 }
 

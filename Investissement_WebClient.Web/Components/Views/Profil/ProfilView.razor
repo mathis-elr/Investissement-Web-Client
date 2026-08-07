@@ -5,6 +5,7 @@
 @inject IToastService TS
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
+@implements IDisposable
 
 <PageTitle>Profil</PageTitle>
 
@@ -14,46 +15,91 @@
             <label>Perspectives</label>
         </div>
 
-        <div class="perspectives-infos">
-            <div class="form-grid">
-                <label>Investissement mensuel</label>
-                <div class="info">
-                    <input @bind="PVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
-                </div>
-                <label>€</label>
+        <div class="content">
+            <div class="perspectives-infos">
+                <div class="form-grid">
+                    <label>Investissement mensuel</label>
+                    <div class="info">
+                        <input @bind="PVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    </div>
+                    <label>€</label>
 
-                <label>Evolution Annuelle</label>
-                <div class="info">
-                    <input @bind="PVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
-                </div>
-                <label>%</label>
+                    <label>Evolution Annuelle</label>
+                    <div class="info">
+                        <input @bind="PVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    </div>
+                    <label>%</label>
 
-                <label>Nombre d'années</label>
-                <div class="info">
-                    <input @bind="PVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    <label>Nombre d'années</label>
+                    <div class="info">
+                        <input @bind="PVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                    </div>
+                    <label>ans</label>
                 </div>
-                <label>ans</label>
             </div>
-        </div>
 
-        <div class="perspectives-graphique">
-            <_GraphiquePerspectivePatrimoine PerspectivesValeurPatrimoineParAn="@PVM.PerspectivesValeurPatrimoineParAn" />
+            <div class="perspectives-graphique">
+                <_GraphiquePerspectivePatrimoine PerspectivesValeurPatrimoineParAn="@PVM.PerspectivesValeurPatrimoineParAn" />
+            </div>
         </div>
     </div>
 
     <div class="info-compte">
         <div class="header">
             <label>@(PVM.PrenomUser != string.Empty ? "Bonjour " + PVM.PrenomUser : "")</label>
-            <button class="btn-calcul" @onclick="Deconnexion">Déconnexion</button>
+            <button class="btn-deconnexion" title="Déconnexion" @onclick="Deconnexion"><img src="icons/logout.svg" /></button>
+        </div>
+
+        <div class="content">
+            <div class="info">
+                <img src="icons/wallet.svg" />
+                <span>Valeur Actuelle</span>
+                <span class="blanc fw-bolder">
+                    @(PVM.ValeurPatrimoineCourante == 0 ? "--,--" : PVM.ToStringPourcentage(PVM.ValeurPatrimoineCourante, "C2"))
+                </span>
+            </div>
+
+            <div class="info">
+                <img src="icons/gain.svg" />
+                <span>Gain total</span>
+                <span class="vert fw-bolder">
+                    @(PVM.GainTotal == 0 ? "--,--" : PVM.ToStringPourcentage(PVM.GainTotal, "C2"))
+                </span>
+            </div>
+
+            <div class="info">
+                <img src="icons/asset.svg" />
+                <span>Actifs suivis</span>
+                <span class="blanc fw-bolder">
+                    @PVM.NombreActifs
+                </span>
+            </div>
+
+            <div class="info">
+                <img src="icons/calendar.svg" />
+                <span>Investisseur depuis</span>
+                <span class="blanc fw-bolder">
+                    @PVM.NombreAnnes ans
+                    et
+                    @PVM.NombreMois mois
+                </span>
+            </div>
         </div>
     </div>
 
-    <div class="connect-tr">
+    <div class="repartition-actifs">
+        <div class="header">
+            <label>Répartition portefeuille</label>
+        </div>
 
+        <div class="graphique">
+            <_GraphiqueRepartitionActifs ValeurParActifInvestit="@PVM.ValeurParActifInvestit" />
+        </div>
     </div>
 </div>
 
 @code {
+    private CancellationTokenSource _cts = new();
     [Parameter][SupplyParameterFromQuery(Name = "creation")] public string? CreationStatus { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -67,8 +113,29 @@
         if (firstRender)
         {
             await PVM.LoadData();
+            _ = LoadDataBoucle(_cts.Token);
             StateHasChanged();
         }
+    }
+
+    private async Task LoadDataBoucle(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await PVM.LoadInfosProfil();
+                StateHasChanged();
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
+            }
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
     }
 
     private void CalculerEvolutionDuPatrimoine()

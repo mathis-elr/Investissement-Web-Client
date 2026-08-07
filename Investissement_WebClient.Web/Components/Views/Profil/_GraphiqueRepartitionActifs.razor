@@ -1,0 +1,25 @@
+﻿@* Pie : proportion investit par actif par rapport au total investit *@
+
+@if (ValeurParActifInvestit.Any())
+{
+    <ApexChart TItem="ValeurTotaleParActifDto"
+               Options="ProfilChartsOptions.OptionsPieActif">
+
+        <ApexPointSeries TItem="ValeurTotaleParActifDto"
+                         Items="ValeurParActifInvestit"
+                         SeriesType="SeriesType.Donut"
+                         XValue="@(e => e.Actif)"
+                         YValue="@(e => e.Valeur)"
+                         OrderByDescending="e => e.Y"
+                         ShowDataLabels />
+    </ApexChart>
+}
+else
+{
+    <span>Aucune donnée disponible</span>
+}
+    
+
+@code {
+    [Parameter] public IEnumerable<ValeurTotaleParActifDto> ValeurParActifInvestit { get; set; } = [];
+}

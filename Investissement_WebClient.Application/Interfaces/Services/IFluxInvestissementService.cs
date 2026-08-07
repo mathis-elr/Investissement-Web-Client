@@ -9,6 +9,8 @@ namespace Investissement_WebClient.Application.Interfaces.Services
 
         Task<string?> GetDernierFluxEnregistre(int userId);
 
+        Task<DateTime?> GetDatePremierFlux(int userId);
+
         Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(int userId);
 
         Task<Dictionary<string, decimal>> GetPrixParActif();
