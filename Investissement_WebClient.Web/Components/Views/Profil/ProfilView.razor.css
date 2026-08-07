@@ -145,39 +145,58 @@ span {
     z-index: 1;
 }
 
+/* --- GESTION DU GRAPHIQUE PIE --- */
+
+/* 1. On ne met PLUS de Flexbox sur le canvas pour ne pas tuer le placement Javascript */
 .repartition-actifs ::deep .apexcharts-canvas {
-    transform: translateX(-45px);
+    margin: 0 auto !important;
 }
 
-/* Base = petit / moyen écran */
+/* 2. PC : LÉGENDE À DROITE */
 .repartition-actifs ::deep .apexcharts-legend.apx-legend-position-right {
-    display: grid !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
     background-color: #242424 !important;
-    border-radius: 10px;
-    height: 100% !important;
-    max-height: none !important;
+    border-radius: 12px !important;
+    padding: 12px 14px !important;
+    width: 230px !important;
+    max-height: 200px !important; /* Déclenche le scroll proprement */
     overflow-y: auto !important;
     overflow-x: hidden !important;
+    /* Le secret anti-chevauchement : on ancre la légende à l'extrémité droite */
+    right: 15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
 }
 
+/* 3. MOBILE : LÉGENDE EN BAS */
+.repartition-actifs ::deep .apexcharts-legend.apx-legend-position-bottom {
+    background-color: #242424 !important;
+    border-radius: 12px !important;
+    padding: 12px 15px !important;
+    /* Le secret anti-coupure en bas : on force une marge inférieure */
+    margin: 10px auto 25px auto !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    max-height: 120px !important; /* Un peu plus court pour être sûr de ne pas toucher le bas */
+    overflow-y: auto !important;
+    transform: translateY(-10px) !important;
+}
 
-/* AMELIORATION DE RENDU DU GRAPHIQUE PIE */
+/* 4. DESIGN COMMUN (Textes, pastilles, scrollbar) */
 .repartition-actifs ::deep .apexcharts-legend-series {
+    margin: 4px 8px 4px 0 !important;
     display: flex !important;
     align-items: center !important;
-    margin: 15px 5px !important;
 }
 
 .repartition-actifs ::deep .apexcharts-legend-text {
-    font-size: 14px !important;
-    font-weight: 500 !important;
+    font-size: 13px !important;
     color: #e5e5e5 !important;
 }
 
 .repartition-actifs ::deep .apexcharts-legend-marker {
-    margin-right: 7px !important;
+    margin-right: 8px !important;
+    flex-shrink: 0 !important;
 }
 
 .repartition-actifs ::deep .apexcharts-tooltip {
@@ -185,26 +204,12 @@ span {
     pointer-events: none;
 }
 
-/* Grand écran */
-@media (min-width: 1600px) {
-    .repartition-actifs ::deep .apexcharts-legend.apx-legend-position-right {
-        height: auto !important;
-        max-height: 100% !important;
-    }
+.repartition-actifs ::deep .apexcharts-legend::-webkit-scrollbar {
+    width: 6px;
 }
 
-/* Petit écran */
-@media (max-width: 1300px) {
-    .repartition-actifs ::deep .apexcharts-canvas {
-        transform: translateX(-25px);
-        transform-origin: center;
-    }
-
-    .repartition-actifs ::deep .apexcharts-legend-text {
-        font-size: 13px !important;
-    }
-
-    .repartition-actifs ::deep .apexcharts-legend-series {
-        margin: 4px 5px !important;
-    }
+.repartition-actifs ::deep .apexcharts-legend::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
 }
+

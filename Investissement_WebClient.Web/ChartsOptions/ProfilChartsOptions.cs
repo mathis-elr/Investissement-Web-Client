@@ -95,11 +95,23 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 "#777777",
                 "#626262"
             },
-
             Legend = new Legend
             {
-                Show = true,
-                Position = LegendPosition.Right,
+                Position = LegendPosition.Right
+            },
+            Responsive = new List<Responsive<ValeurTotaleParActifDto>> 
+            {
+                new Responsive<ValeurTotaleParActifDto> 
+                {
+                    Breakpoint = 1300, 
+                    Options = new ApexChartOptions<ValeurTotaleParActifDto>
+                    {
+                        Legend = new Legend
+                        {
+                            Position = LegendPosition.Bottom
+                        }
+                    }
+                }
             },
 
             DataLabels = new DataLabels
