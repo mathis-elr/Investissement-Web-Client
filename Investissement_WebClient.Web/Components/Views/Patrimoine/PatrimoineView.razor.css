@@ -63,77 +63,7 @@ img {
     width: 55%;
 }
 
-/*.btn-rond {
-    display: flex;
-    align-items: center;
-    height:100%;
-    width:50px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 30px;
-    z-index: 100;
-    color: white;
-    position: absolute;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3px);
-    border: 1px solid rgba(173, 173, 173, 0.3);
-    user-select: none;
-    border-radius:15px;
-}*/
-
-/*.precedent {
-    justify-content: end;
-    left: 0;
-    transform: translateX(-25px);
-    transition: all 0.2s ease-in-out;
-}
-    .precedent:hover {
-        justify-content: center;
-        transform: translateX(-5px);
-    }
-
-.suivant {
-    justify-content: start;
-    right: 0;
-    transform: translateX(25px);
-    transition: all 0.2s ease-in-out;
-}
-    .suivant:hover {
-        justify-content: center;
-        transform: translateX(5px);
-    }*/
-
-/*.rail {
-    overflow: hidden;
-    display: flex;
-    gap: 0;
-    width: 300%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-}*/
-
-
-/*.page {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    gap:0;
-    overflow: hidden;
-    flex-shrink: 0;
-    width: 33.333%;
-}*/
-
-/*.graph1 {
-    transform: translateX(0%);
-}
-
-.graph2 {
-    transform: translateX(-33.333%);
-}
-
-.graph3 {
-    transform: translateX(-66.666%);
-}*/
+/* PARAMETRAGE DU GRAPHIQUE */
 
 ::deep .apexcharts-tooltip-series-group .apexcharts-tooltip-marker {
     color: goldenrod !important;

@@ -69,7 +69,7 @@
             <div class="info">
                 <img src="icons/gain.svg" />
                 <span>Gain total</span>
-                <span class="@(PVM.GainTotal == 0 ? "blanc" : PVM.GainTotal > 0 ? "vert" : "rouge") fw-bolder">
+                <span class="@PVM.DeterminerClasse(PVM.GainTotal) fw-bolder">
                     @(PVM.GainTotal == 0 ? "--,--": $"{(PVM.GainTotal > 0 ? "+" : "")}{PVM.ToStringPourcentage(PVM.GainTotal, "C2")}")
                 </span>
             </div>
@@ -148,7 +148,7 @@
             {
                 await PVM.LoadInfosProfil();
                 StateHasChanged();
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
         catch (OperationCanceledException) { }

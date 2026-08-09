@@ -8,7 +8,7 @@ namespace Investissement_WebClient.Application.Services
     {
         private readonly IActifRepository _actifRepository = actifRepository;
 
-        private readonly List<string> _motsInutiles = ["EUR", "(ACC)", "PEA", "SWAP", "(DIST)","ESG"];
+        private readonly List<string> _motsInutiles = ["EUR", "(ACC)", "PEA", "SWAP", "(DIST)","ESG", "USD"];
 
         public async Task<List<Actif>> GetAll()
         {

@@ -63,6 +63,8 @@
 ::deep .center{
     display:flex;
     justify-content:center;
+    align-items:center;
+    height: 100%;
 }
 
 .mes-actifs{
@@ -94,7 +96,6 @@
 }
 
 ::deep .content {
-    background-color: #242424;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -104,5 +105,5 @@
 }
 
     ::deep .content label {
-        font-size: 20px;
+        font-size: 18px;
     }

@@ -157,6 +157,16 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             return valeur.ToString(devise, CultureInfo.GetCultureInfo("fr-FR"));
         }
 
+        public string DeterminerClasse(decimal variationPrix)
+        {
+            return variationPrix switch
+            {
+                > 0 => "vert",
+                < 0 => "rouge",
+                _ => "blanc"
+            };
+        }
+
         private async Task LoadInvestissementMoyenMensuel()
         {
             InvestissementMoyenMensuel = await _fluxInvestissementService.CalculerInvestissementMedianMensuel(IdUser);
