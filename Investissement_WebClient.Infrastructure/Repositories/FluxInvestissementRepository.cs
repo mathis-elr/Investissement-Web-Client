@@ -104,12 +104,21 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<InvestissementParMoisDto>> GetInvestissementParMoisByUserId(int userId)
+        public async Task<List<InvestissementParMoisDto>> GetInvestissementParMoisByUserId(PeriodeHistoriqueInvest periode, int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var rawData = await context.FluxInvestissement
-                .Where(f => f.UtilisateurId == userId)
+            var query = context.FluxInvestissement
+            .AsNoTracking()
+            .Where(h => h.UtilisateurId == userId);
+
+            if (periode != PeriodeHistoriqueInvest.Tout)
+            {
+                var dateLimite = DateTime.UtcNow.AddDays(-((int)periode));
+                query = query.Where(h => h.Date >= dateLimite);
+            }
+
+            var rawData = await query
                 .GroupBy(t => new { t.Date.Year, t.Date.Month })
                 .Select(d => new
                 {

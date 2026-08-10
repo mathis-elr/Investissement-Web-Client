@@ -47,12 +47,6 @@
     flex-shrink: 0;
 }
 
-.graphique {
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-}
-
 .graphique-centre {
     display: flex;
     justify-content: center;

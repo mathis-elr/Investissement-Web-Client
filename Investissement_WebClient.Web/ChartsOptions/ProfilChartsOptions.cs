@@ -66,6 +66,11 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 Theme = Mode.Dark,
             },
 
+            Markers = new Markers
+            {
+                Colors = new List<string> { "goldenrod" },
+                StrokeWidth = 0,
+            },
         };
 
         public static ApexChartOptions<ValeurTotaleParActifDto> OptionsPieActif = new()
@@ -99,11 +104,12 @@ namespace Investissement_WebClient.Web.ChartsOptions
             {
                 Position = LegendPosition.Right
             },
+
             Responsive = new List<Responsive<ValeurTotaleParActifDto>> 
             {
                 new Responsive<ValeurTotaleParActifDto> 
                 {
-                    Breakpoint = 1300, 
+                    Breakpoint = 1000, 
                     Options = new ApexChartOptions<ValeurTotaleParActifDto>
                     {
                         Legend = new Legend

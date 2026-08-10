@@ -1,68 +1,68 @@
 ﻿<div class="header">
     <label>Investissements</label>
 
-    <div class="infos-invest">
-        <div class="form-grid">
-            <label>Investissement total</label>
-            <div class="info">
-                <span>@(Model.InvestissementTotal == 0 ? "--,--" : Model.InvestissementTotal.ToString("C"))</span>
-            </div>
-        </div>
+    <div class="info-invest-total">
+        <span class="goldenrod">@(Model.InvestissementTotal == 0 ? "--,--" : Model.InvestissementTotal.ToString("C"))</span>
+        <span class="gris">investis au total</span>
     </div>
 </div>
 
-<div class="options-content" style="--active-index: @(_modePerformances ? 1 : 0)">
-    <button class="btn-nav @(_modePerformances ? "" : "active")" @onclick="() => _modePerformances = false">Investissement mensuel</button>
-    <button class="btn-nav @(_modePerformances ? "active" : "")" @onclick="() => _modePerformances = true">Performances</button>
-</div>
 
+<div class="content">
+    <div class="header">
+        <div class="infos-invest">
 
-<div class="content @(_modePerformances ? "content-padding" : "")">
-    @if (_modePerformances)
-    {
-        <span>pas encore disponible ...</span>
-    }
-    else
-    {
+            <div class="info-invest">
+                <div class="variation">
+                    <span class="white">@Model.InvestissementMedianMensuel.ToString("C")</span>
+                    <span class="gris">
+                        médiane
+                    </span>
+                </div>
+                <span class="gris">sur @Model.NombreMoisInvestissement mois</span>
+            </div>
+
+            <div class="info-invest">
+                <div class="variation">
+                    <span class="goldenrod">
+                        @Model.InvestissementMoisEnCours.ToString("C")
+                    </span>
+                    <span class="gris">ce mois-ci</span>
+                </div>
+
+                <div class="variation">
+                    <span class="@(Model.InvestissementMedianMensuel > Model.InvestissementMoisEnCours ? "rouge" : "vert")">
+                        @(Model.InvestissementMedianMensuel < Model.InvestissementMoisEnCours ? "↗" : "↘")
+                        @Model.TauxEvolutionMoisCourantEtMedianne.ToString("P1")
+                    </span>
+
+                    <span class="gris">
+                        vs médiane
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bloc-options">
+            @foreach (var periode in Model.PeriodeHistoriqueInvestPossibles)
+            {
+                <div class="option">
+                    <span @onclick="async () => { await Model.ChangerPeriodeHistoriqueInvestSelectionnee(periode); }"
+                          class="@(Model.PeriodeHistoriqueInvestSelectionnee == periode ? "active" : "")">
+                        @Model.GetLibellePeriodeHistoriqueInvest(periode)
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="graphique">
         <_InvestissementMensuel Model="Model" />
-    }
+    </div>
 </div>
 
 
 
 @code {
     [Parameter] public required InvestissementViewModel Model { get; set; }
-
-    private bool _modePerformances { get; set; } = false;
-
-    private ApexChartOptions<InvestissementParMoisDto> _options = null!;
-
-    protected override void OnParametersSet()
-    {
-        _options = ProfilChartsOptions.OptionsInvestissementParMois;
-
-        _options.Annotations = new Annotations
-        {
-            Yaxis = new List<AnnotationsYAxis>
-            {
-                new AnnotationsYAxis
-                {
-                    Y = Model.InvestissementMedianMensuel,
-                    BorderColor = "grey",
-                    StrokeDashArray = 4,
-                    BorderWidth = 2,
-                    Label = new Label
-                    {
-                        Text = $"Médian : {Model.InvestissementMedianMensuel.ToString("C")}",
-                        Position = LabelPosition.Right,
-                        Style = new Style
-                        {
-                            Background = "#1e1e1e",
-                            Padding = new Padding { Left = 5, Right = 5, Top = 3, Bottom = 3 }
-                        }
-                    }
-                }
-            }
-        };
-    }
 }

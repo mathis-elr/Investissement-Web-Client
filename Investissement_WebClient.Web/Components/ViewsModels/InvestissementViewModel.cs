@@ -42,6 +42,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisDto> InvestissementsParMois { get; set; } = [];
         public IEnumerable<ValeurActifInfosDto> ValeurActifInfos { get; set; } = [];
+        public decimal InvestissementMoisEnCours => InvestissementsParMois.OrderByDescending(f => f.Date).FirstOrDefault()?.Investissement ?? decimal.MinValue;
+        public decimal TauxEvolutionMoisCourantEtMedianne => InvestissementMedianMensuel == 0 ? 0 : Math.Abs((InvestissementMoisEnCours - InvestissementMedianMensuel) / InvestissementMedianMensuel);
+        public int NombreMoisInvestissement => InvestissementsParMois.Count();
+
+        public IEnumerable<PeriodeHistoriqueInvest> PeriodeHistoriqueInvestPossibles => Enum.GetValues<PeriodeHistoriqueInvest>();
+        public PeriodeHistoriqueInvest PeriodeHistoriqueInvestSelectionnee { get; set; } = PeriodeHistoriqueInvest.Tout;
 
         // EVOLUTION ACTIFS
         public IEnumerable<InfoParActifDto> InfoParActifPeriodeAll => ValeurActifInfos
@@ -248,6 +254,54 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }
 
+        public string DeterminerClasse(decimal variationPrix)
+        {
+            return variationPrix switch
+            {
+                > 0 => "vert",
+                < 0 => "rouge",
+                _ => "gris"
+            };
+        }
+
+        public string GetLibellePeriodeHistoriqueInvest(PeriodeHistoriqueInvest periode)
+        {
+            return periode switch
+            {
+                PeriodeHistoriqueInvest.Ans => "1A",
+                PeriodeHistoriqueInvest.TroisAns => "3A",
+                PeriodeHistoriqueInvest.CinqAns => "5A",
+                PeriodeHistoriqueInvest.Tout => "Tout",
+                _ => string.Empty
+            };
+        }
+
+        public async Task ChangerPeriodeHistoriqueInvestSelectionnee(PeriodeHistoriqueInvest periode)
+        {
+            if (PeriodeHistoriqueInvestSelectionnee == periode || DemandeEnCours)
+                return;
+
+            PeriodeHistoriqueInvestSelectionnee = periode;
+  
+            await RafraichirGraphique();
+        }
+
+        private async Task RafraichirGraphique()
+        {
+            ChargementEncours = true;
+
+            try
+            {
+                await LoadInvestissementsParMois();
+
+                NotifyStateChanged();
+            }
+            finally
+            {
+                ChargementEncours = false;
+            }
+        }
+
         private async Task InitialiserSession()
         {
             await _sessionService.Initialiser();
@@ -271,7 +325,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadInvestissementsParMois()
         {
-            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(IdUser);
+            InvestissementsParMois = await _fluxInvestissementService.GetInvestissementParMois(PeriodeHistoriqueInvestSelectionnee, IdUser);
         }
     }
 }

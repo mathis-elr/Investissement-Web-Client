@@ -1,0 +1,33 @@
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+     xmlns="http://www.w3.org/2000/svg">
+
+    <!-- arc supérieur -->
+    <path d="M18.5 8.5
+             A7 7 0 0 0 6.8 6.3"
+          stroke="#1e1e1e"
+          stroke-width="1.6"
+          stroke-linecap="round"/>
+
+    <!-- pointe flèche supérieure -->
+    <path d="M7.2 3.8L6.3 6.8L9.3 7.6"
+          stroke="#1e1e1e"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- arc inférieur -->
+    <path d="M5.5 15.5
+             A7 7 0 0 0 17.2 17.7"
+          stroke="#1e1e1e"
+          stroke-width="1.6"
+          stroke-linecap="round"/>
+
+    <!-- pointe flèche inférieure -->
+    <path d="M14.7 16.4L17.7 17.2L16.8 20.2"
+          stroke="#1e1e1e"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+</svg>
+

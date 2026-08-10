@@ -139,29 +139,95 @@ select:hover {
     width: 100%;
 }
 
-.btn-submit {
-    background-color: goldenrod;
-    padding: 10px;
+button {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap: 5px;
+    padding: 5px;
+    font-weight: 400;
     font-size: 16px;
-    font-weight: bold;
-    border-radius: 15px;
+    border-radius: 10px;
     cursor: pointer;
     border: none;
+    width: fit-content;
     transition: ease-in-out 0.3s;
 }
 
-    .btn-submit:hover {
+    button:hover {
         background-color: darkgoldenrod;
-        transform: scale(0.99);
+        transform: scale(0.98);
     }
 
-button:disabled {
-    background-color: #999;
-    color: #585d60;
-    cursor: not-allowed;
-    opacity: 0.5;
-    pointer-events: none; /*desactive les effets de survol*/
+    button:disabled {
+        background-color: #999;
+        color: #585d60;
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none; /*desactive les effets de survol*/
+    }
+
+.btn-submit {
+    width: 100%;
+    background-color: goldenrod;
 }
+
+
+.graphique {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* OPTIONS AFFICHAGE GRAPHIQUES */
+.bloc-options {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,.15);
+    background-color: #242424;
+    border-radius: 30px;
+    padding: 0 5px;
+    gap: 0;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+    .option:not(:last-child)::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 14px;
+        background: rgba(255,255,255,.15);
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .option span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 25px;
+        border-radius: 999px;
+        transition: all 0.2s ease;
+    }
+
+        .option span:hover {
+            background-color: #000000;
+        }
+
+        .option span.active {
+            background-color: #000000;
+            color: goldenrod;
+            font-weight: bold;
+        }
+
 
 
 /* --- STRUCTURE GLOBALE TOAST--- */

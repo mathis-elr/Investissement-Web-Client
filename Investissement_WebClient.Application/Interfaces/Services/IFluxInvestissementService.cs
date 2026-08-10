@@ -1,5 +1,6 @@
 ﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.DTO.Patrimoine;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Application.Interfaces.Services
 {
@@ -11,7 +12,7 @@ namespace Investissement_WebClient.Application.Interfaces.Services
 
         Task<DateTime?> GetDatePremierFlux(int userId);
 
-        Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(int userId);
+        Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(PeriodeHistoriqueInvest periode, int userId);
 
         Task<Dictionary<string, decimal>> GetPrixParActif();
 

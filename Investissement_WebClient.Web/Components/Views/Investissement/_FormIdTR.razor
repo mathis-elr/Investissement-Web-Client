@@ -9,13 +9,18 @@
     <button class="btn-annuler" title="Annuler" @onclick="FermerEdition">
         ✕
     </button>
-    <div class="champ">
-        <p>+33</p>
-        <InputText @bind-Value="Model.TradeRepublicAcces.NumTel" placeholder="7 07 07 07 07" maxlength="9" />
-    </div>
 
-    <div class="champ">
-        <InputText @bind-Value="Model.TradeRepublicAcces.Pin" type="password" placeholder="Pin (4 chiffres)" />
+    <div class="form-grid">
+        <label>Num tel</label>
+        <div class="champ">
+            <p>+33</p>
+            <InputText @bind-Value="Model.TradeRepublicAcces.NumTel" placeholder="7 07 07 07 07" maxlength="9" />
+        </div>
+
+        <label>Pin</label>
+        <div class="champ">
+            <InputText @bind-Value="Model.TradeRepublicAcces.Pin" type="password" placeholder="Pin (4 chiffres)" />
+        </div>
     </div>
 
     <button class="btn-submit" disabled="@IsLoading">

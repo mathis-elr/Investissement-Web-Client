@@ -116,7 +116,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 Periode.SixMois => "6M",
                 Periode.Ans => "1A",
                 Periode.CinqAns => "5A",
-                Periode.Tout => "∞",
+                Periode.Tout => "Tout",
                 _ => string.Empty
             };
         }

@@ -13,10 +13,6 @@
         <_TransactionsInvestissement Model="@IVM"/>
     </div>
 
-    <div class="investissement-moyen">
-        <_InvestissementsHistorique Model="@IVM" />
-    </div>
-
     <div class="evolution-actifs">
         @if (IVM.ChargementEncours)
         {
@@ -37,6 +33,10 @@
                 <p>Ici vous pourrez voir l'évolution de tous les actifs dans lesquels vous investissez...</p>
             </div>
         }
+    </div>
+
+    <div class="investissement-moyen">
+        <_InvestissementsHistorique Model="@IVM" />
     </div>
 </div>
 

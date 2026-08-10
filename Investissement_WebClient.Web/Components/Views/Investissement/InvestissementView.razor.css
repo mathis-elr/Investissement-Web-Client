@@ -1,7 +1,7 @@
 ﻿/* --- LAYOUT PRINCIPAL --- */
 .investissement {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr auto;
     gap: 20px;
     height: 100%;
@@ -14,10 +14,8 @@
 .investissement-moyen,
 .transactions,
 .evolution-actifs {
-    padding: 20px;
     min-height: 0;
     max-height: 100%;
-    background-color: #1e1e1e;
     border-radius: 10px;
     opacity: 0.8;
     overflow-y: auto;
@@ -33,38 +31,44 @@
         opacity: 1;
     }
 
-    .transactions,
-    .investissement-moyen {
-        display: grid;
-        grid-template-rows: auto auto 1fr;
-        gap: 20px;
-        overflow: hidden;
-    }
+.transactions,
+.investissement-moyen {
+    padding: 20px;
+    background-color: #1e1e1e;
+    overflow: hidden;
+}
 
     /* BLOC TRANSACTIONS */
-    .transactions {
-        grid-column: 1;
-        grid-row: 1;
-    }
+.transactions {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 20px;
+    grid-column: 1;
+    grid-row: 1/3;
+}
 
 /* BLOC INVESTISSEMENT */
 .investissement-moyen {
-    grid-column: 2;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    grid-column: 2/3;
     grid-row: 1;
 }
 
 /* BLOC EVOLUTION ACTIFS */
 .evolution-actifs {
     display: grid;
-    grid-column: 1/3;
+    grid-column: 2/3;
     grid-row: 2;
 }
 
-::deep .center{
-    display:flex;
-    justify-content:center;
-    align-items:center;
+::deep .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
+    background-color: #1e1e1e;
 }
 
 .mes-actifs{
@@ -86,7 +90,6 @@
         transform: translateX(-50%);
     }
 }
-
 
 
 ::deep .header {

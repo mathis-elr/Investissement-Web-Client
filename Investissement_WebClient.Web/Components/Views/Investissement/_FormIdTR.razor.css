@@ -1,15 +1,22 @@
 ﻿.btn-annuler {
     text-decoration: none;
-    background-color: transparent;
+    background-color: rgba(255,0,0,0.1);
     border: none;
-    font-size: 28px;
     color: red;
+    font-size: 20px;
     cursor: pointer;
     transition: 0.2s ease-in-out;
+    width: 40px;
+    height: 40px;
 }
-    .btn-annuler:hover {
-        transform: rotateX(45deg);
-    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    align-items: center;
+    width: 100%
+}
 
 
 ::deep input.invalid {

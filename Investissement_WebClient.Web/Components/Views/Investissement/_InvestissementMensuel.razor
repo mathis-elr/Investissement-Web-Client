@@ -2,15 +2,14 @@
 {
     <ApexChart TItem="InvestissementParMoisDto"
                XAxisType="XAxisType.Datetime"
-               Options="_options">
+               Options="ProfilChartsOptions.OptionsInvestissementParMois">
 
         <ApexPointSeries TItem="InvestissementParMoisDto"
                          Items="Model.InvestissementsParMois"
                          SeriesType="SeriesType.Line"
                          Name="Investissement"
                          YValue="@(e => e.Investissement)"
-                         XValue="@(e => e.Date)"
-                         ShowDataLabels />
+                         XValue="@(e => e.Date)" />
     </ApexChart>
 }
 else if (Model.ChargementEncours)
@@ -26,35 +25,4 @@ else
 
 @code {
     [Parameter] public required InvestissementViewModel Model { get; set; }
-
-    private ApexChartOptions<InvestissementParMoisDto> _options = null!;
-
-    protected override void OnParametersSet()
-    {
-        _options = ProfilChartsOptions.OptionsInvestissementParMois;
-
-        _options.Annotations = new Annotations
-        {
-            Yaxis = new List<AnnotationsYAxis>
-            {
-                new AnnotationsYAxis
-                {
-                    Y = Model.InvestissementMedianMensuel,
-                    BorderColor = "grey",
-                    StrokeDashArray = 4,
-                    BorderWidth = 2,
-                    Label = new Label
-                    {
-                        Text = $"Médian : {Model.InvestissementMedianMensuel.ToString("C")}",
-                        Position = LabelPosition.Right,
-                        Style = new Style
-                        {
-                            Background = "#1e1e1e",
-                            Padding = new Padding { Left = 5, Right = 5, Top = 3, Bottom = 3 }
-                        }
-                    }
-                }
-            }
-        };
-    }
 }

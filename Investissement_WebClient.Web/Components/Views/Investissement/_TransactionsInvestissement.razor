@@ -2,49 +2,52 @@
 
 <div class="header">
     <label>Transactions</label>
-    @if (!Model.IdentifiantsRequis && !_afficherFormulaire)
+    @if (!Model.IdentifiantsRequis && !_afficherFormulaire && !Model.DemandeEnCours)
     {
         <div class="btn-edit" title="Editer mes identifiants" @onclick="() => _afficherFormulaire = true">
-            <img style="width:40%" src="icons/parametres.png" />
+            <img style="width:35%" src="icons/parametres.png" />
         </div>
     }
 </div>
 
 <div class="transactions-infos">
-        @if (Model.IdentifiantsRequis || _afficherFormulaire)
-        {
-            <_FormIdTR Model="@Model" OnAnnuler="MasquerFormulaire"/>
-        }
-        else if (Model.Etat == Etat.SmsRequis)
-        {
-            <div class="form-grid">
-                <label>Code sms</label>
-                <div class="info">
-                    <input type="text" inputmode="numeric" maxlength="4" @bind="Model.CodeSms" placeholder="ex : 1234" />
-                </div>
-                <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">
-                    @if (Model.VerificationEnCours)
-                    {
-                        <_Chargement />
-                    }
-                    else
-                    {
-                        <div>Vérifier</div>
-                    }
-                </button>
+    @if (Model.IdentifiantsRequis || _afficherFormulaire)
+    {
+        <_FormIdTR Model="@Model" OnAnnuler="MasquerFormulaire" />
+    }
+    else if (Model.Etat == Etat.SmsRequis)
+    {
+        <div class="form-grid">
+            <label>Code sms</label>
+            <div class="info">
+                <input type="text" inputmode="numeric" maxlength="4" @bind="Model.CodeSms" placeholder="ex : 1234" />
             </div>
-        }
-        else
-        {
-            <div class="infos">
-                <button class="btn-submit" @onclick="RecupererTransactions" disabled="@(Model.DemandeEnCours || Model.IdentifiantsRequis)">
-                    @if (Model.DemandeEnCours) { <_Chargement Couleur="black" /> }
-                    else { <span>Récuperer transactions</span> }
-                </button>
-    
-                <p>@Model.Message</p>
-            </div>
-        }
+            <button type="button" class="btn-verifier" @onclick="VerifierCodeSms">
+                @if (Model.VerificationEnCours)
+                {
+                    <_Chargement />
+                }
+                else
+                {
+                    <div>Vérifier</div>
+                }
+            </button>
+        </div>
+    }
+    else
+    {
+        <button class="btn-submit" @onclick="RecupererTransactions" disabled="@(Model.DemandeEnCours || Model.IdentifiantsRequis)">
+            @if (Model.DemandeEnCours)
+            {
+                <_Chargement Couleur="black" />
+            }
+            else
+            {
+                <img src="icons/sync.svg" />
+                <span>Synchroniser mes transactions</span>
+            }
+        </button>
+    }
 </div>
 
 <div class="content">
@@ -53,6 +56,10 @@
         <div class="center">
             <p><_Chargement Couleur="goldenrod" LargeurBouton="50"/></p>
         </div>
+    }
+    else if (Model.FluxInvestissement.Any() && _afficherFormulaire || Model.DemandeEnCours)
+    {
+
     }
     else if (Model.IdentifiantsRequis)
     {
@@ -64,19 +71,28 @@
         {
             <div class="mes-transactions-par-jour">
                 <div class="mes-transactions-par-jour-header">
-                    <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
+                    <div class="left">
+                        <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
+                        <div class="ordres">
+                            <span>@transactionsParDate.Count() ordre@(transactionsParDate.Count() > 1 ? "s" : "")</span>
+                        </div>
+                    </div>
+
                     <label class="goldenrod">@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite).ToString("C2"))</label>
                 </div>
                 <div class="mes-transactions-par-jour-content">
                     @foreach (var transaction in transactionsParDate)
                     {
                         <div class="une-transaction">
-                            <div class="cercle"></div>
-                            <div class="quantite">
-                                <span class="actif">@transaction.Actif</span>
-                                <span class="quantite @(@transaction.Quantite > 0 ? "vert" : "rouge")">@transaction.Quantite titres</span>
+                            <div class="@(transaction.Quantite > 0 ? "achat" : "vente")"></div>
+                            <div class="grid-start">
+                                <span>@transaction.Actif</span>
+                                <span class="@(Model.DeterminerClasse(transaction.Quantite))">@(transaction.Quantite > 0 ? "+" : "")@transaction.Quantite titre@(transaction.Quantite > 1 ? "s" : "")</span>
                             </div>
-                            <span class="prix">@transaction.Prix.ToString("C")</span>
+                            <div class="grid-end">
+                                <span class="prix">@transaction.Prix.ToString("C")</span>
+                                <span class="gris">valeur unitaire</span>
+                            </div>
                         </div>
                     }
                 </div>

@@ -33,9 +33,9 @@ namespace Investissement_WebClient.Application.Services
             return dernierFlux?.Date;
         }
 
-        public async Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(int userId)
+        public async Task<IEnumerable<InvestissementParMoisDto>> GetInvestissementParMois(PeriodeHistoriqueInvest periode, int userId)
         {
-            return await CalculerInvestissementParMois(userId);
+            return await CalculerInvestissementParMois(periode, userId);
         }
 
         public async Task<Dictionary<string,decimal>> GetPrixParActif()
@@ -73,7 +73,7 @@ namespace Investissement_WebClient.Application.Services
         
         public async Task<decimal> CalculerInvestissementMedianMensuel(int userId)
         {
-            var investissementParMois = await CalculerInvestissementParMois(userId);
+            var investissementParMois = await CalculerInvestissementParMois(PeriodeHistoriqueInvest.Tout, userId);
 
             if (investissementParMois.Count <= 1)
                 return investissementParMois.FirstOrDefault()?.Investissement ?? 0;
@@ -228,9 +228,9 @@ namespace Investissement_WebClient.Application.Services
             await _fluxInvestissementRepository.AddRange(fluxAInserer);
         }
 
-        private async Task<List<InvestissementParMoisDto>> CalculerInvestissementParMois(int userId)
+        private async Task<List<InvestissementParMoisDto>> CalculerInvestissementParMois(PeriodeHistoriqueInvest periode, int userId)
         {
-            return await _fluxInvestissementRepository.GetInvestissementParMoisByUserId(userId);
+            return await _fluxInvestissementRepository.GetInvestissementParMoisByUserId(periode, userId);
         }
     }
 }
