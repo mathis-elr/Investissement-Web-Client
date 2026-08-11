@@ -6,6 +6,8 @@ namespace Investissement_WebClient.Application.DTO.FluxInvestissements
     {
         public required string Actif { get; set; }
 
+        public string? Logo { get; set; }
+
         public decimal ValeurInvestit { get; set; }
 
         public Dictionary<LapsTemps, VariationDataDto> VariationsParLapsTemps { get; set; } = null!;

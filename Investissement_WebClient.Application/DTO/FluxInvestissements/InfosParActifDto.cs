@@ -5,6 +5,8 @@
     {
         public required string Actif { get; set; }
 
+        public string? Logo { get; set; }
+
         public decimal ValeurDetenue { get; set; }
 
         public decimal VariationPourcentage { get; set; }

@@ -17,6 +17,7 @@ using Investissement_WebClient.Web.Components;
 using Microsoft.EntityFrameworkCore;
 using Blazored.Toast;
 using ApexCharts;
+using Investissement_WebClient.Infrastructure.APIs.LogoDev;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,9 @@ builder.Services.Configure<TradeRepublicApiOptions>(
 builder.Services.Configure<YahooFinanceApiOptions>(
     builder.Configuration.GetSection("YahooFinanceApi"));
 
+builder.Services.Configure<LogoDevApiOptions>(
+    builder.Configuration.GetSection("LogoDevApi"));
+
 
 // services
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
@@ -56,11 +60,10 @@ builder.Services.AddScoped<IActifService, ActifService>();
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 
 builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService>();
-builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
+builder.Services.AddHttpClient<ILogoDevApiService, LogoDevApiService>();
 builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 
 builder.Services.AddScoped<ICryptService, CryptService>();
-
 
 // views models
 builder.Services.AddScoped<InvestissementViewModel>();

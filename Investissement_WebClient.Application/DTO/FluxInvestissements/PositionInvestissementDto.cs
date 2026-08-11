@@ -6,6 +6,8 @@
 
         public string Ticker { get; set; } = string.Empty;
 
+        public string? Logo { get; set; }
+
         public decimal TotalQuantite { get; set; }
 
         public decimal TotalValeurInvestie { get; set; }

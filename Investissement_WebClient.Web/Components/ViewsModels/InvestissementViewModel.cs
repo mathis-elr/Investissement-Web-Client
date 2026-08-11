@@ -55,6 +55,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             .Select(v => new InfoParActifDto 
             { 
                 Actif = v.Actif,
+                Logo = v.Logo,
                 ValeurDetenue = v.ValeurInvestit,
                 VariationValeur = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationValeur).FirstOrDefault(),
                 VariationPourcentage = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationPourcentage).FirstOrDefault(),

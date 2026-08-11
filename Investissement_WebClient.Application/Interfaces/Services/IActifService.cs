@@ -11,5 +11,7 @@ namespace Investissement_WebClient.Application.Interfaces.Services
         string NettoyerLibelle(string libelle);
 
         Task<int> AddActif(Actif actif);
+
+        Task UpdateActif(Actif actif);
     }
 }

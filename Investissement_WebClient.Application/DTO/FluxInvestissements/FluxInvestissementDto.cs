@@ -8,6 +8,8 @@
         
         public required string Ticker { get; set; }
 
+        public string? Logo { get; set; }
+
         public decimal Prix { get; set; }
 
         public decimal Quantite { get; set; }

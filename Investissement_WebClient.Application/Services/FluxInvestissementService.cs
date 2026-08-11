@@ -10,14 +10,27 @@ namespace Investissement_WebClient.Application.Services
 {
     public class FluxInvestissementService(IFluxInvestissementRepository fluxInvestissementRepository,
                                            IYahooFinanceApiService yahooFinanceApiService,
+                                           ILogoDevApiService logoDevApiService,
                                            IActifService actifService) : IFluxInvestissementService
     {
         private readonly IFluxInvestissementRepository _fluxInvestissementRepository = fluxInvestissementRepository;
         private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
+        private readonly ILogoDevApiService _logoDevApiService = logoDevApiService;
         private readonly IActifService _actifService = actifService;
 
         public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId)
         {
+            //script pour recuperer les logos
+            //var actifs = await _actifService.GetAll();
+            //foreach (var actif in actifs)
+            //{
+            //    if (actif.Logo == null)
+            //    {
+            //        var logo = await _logoDevApiService.GetLogoByNameAsync(actif.Libelle);
+            //        actif.Logo = logo;
+            //        await _actifService.UpdateActif(actif);
+            //    }
+            //}
             return await _fluxInvestissementRepository.GetAllByUserId(userId);
         }
 
@@ -123,6 +136,7 @@ namespace Investissement_WebClient.Application.Services
                 return new ValeurActifInfosDto
                 {
                     Actif = t.Actif,
+                    Logo = t.Logo,
                     ValeurInvestit = Math.Round(valeurActuelle, 2),
                     VariationsParLapsTemps = variationsParLapsTemps
                 };
@@ -202,11 +216,16 @@ namespace Investissement_WebClient.Application.Services
                     var ticker = await _yahooFinanceApiService
                         .GetTickerByIsinAsync(transaction.ISIN);
 
+                    var libelleNettoye = _actifService.NettoyerLibelle(transaction.Actif);
+
+                    var logo = await _logoDevApiService.GetLogoByNameAsync(libelleNettoye);
+
                     var nouvelActif = new Actif
                     {
-                        Libelle = _actifService.NettoyerLibelle(transaction.Actif),
+                        Libelle = libelleNettoye,
                         ISIN = transaction.ISIN,
-                        Ticker = ticker ?? string.Empty
+                        Ticker = ticker ?? string.Empty,
+                        Logo = logo
                     };
 
                     var actifId = await _actifService.AddActif(nouvelActif);
@@ -220,6 +239,14 @@ namespace Investissement_WebClient.Application.Services
                 else
                 {
                     nvFlux.ActifId = actif.Id;
+
+                    if (actif.Logo == null)
+                    {
+
+                        var logo = await _logoDevApiService.GetLogoByNameAsync(actif.Libelle);
+                        actif.Logo = logo;
+                        await _actifService.UpdateActif(actif);
+                    }
                 }
 
                 fluxAInserer.Add(nvFlux);

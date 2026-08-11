@@ -30,7 +30,6 @@
         font-size: 16px;
     }
 
-
 select, input {
     width: 100%;
     transition: 0.4s ease-in-out;
@@ -54,8 +53,8 @@ select, input {
 }
 
     .mes-transactions-par-jour span {
-        font-size: 15px;
-        font-weight: 300;
+        font-size: 13px;
+        font-weight: normal;
     }
 
 .mes-transactions-par-jour-header {

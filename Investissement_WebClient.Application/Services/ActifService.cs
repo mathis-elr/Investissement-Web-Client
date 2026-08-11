@@ -37,5 +37,10 @@ namespace Investissement_WebClient.Application.Services
         {
             return await _actifRepository.Add(actif);
         }
+
+        public async Task UpdateActif(Actif actif)
+        {
+            await _actifRepository.Update(actif);
+        }
     }
 }

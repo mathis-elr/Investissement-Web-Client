@@ -27,5 +27,12 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await context.SaveChangesAsync();
             return actif.Id;
         }
+
+        public async Task Update(Actif actif)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            context.Update(actif);
+            await context.SaveChangesAsync();
+        }
     }
 }

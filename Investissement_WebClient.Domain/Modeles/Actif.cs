@@ -9,5 +9,7 @@
         public required string ISIN { get; init; }
 
         public required string Ticker { get; set; }
+
+        public byte[]? Logo { get; set; }
     }
 }

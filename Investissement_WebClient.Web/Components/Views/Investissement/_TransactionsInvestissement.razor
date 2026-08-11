@@ -92,7 +92,10 @@
                     @foreach (var transaction in transactionsParDate)
                     {
                         <div class="une-transaction">
-                            <div class="@(transaction.Quantite > 0 ? "achat" : "vente")"></div>
+                            @* <div class="@(transaction.Quantite > 0 ? "achat" : "vente")"></div> *@
+                            <div class="icon">
+                                <img src="@transaction.Logo" />
+                            </div>
                             <div class="grid-start">
                                 <span>@transaction.Actif</span>
                                 <span class="@(Model.DeterminerClasse(transaction.Quantite))">@(transaction.Quantite > 0 ? "+" : "")@transaction.Quantite titre@(transaction.Quantite > 1 ? "s" : "")</span>

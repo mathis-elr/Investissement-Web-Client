@@ -9,5 +9,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
         Task<IEnumerable<string>> GetAllTickers();
 
         Task<int> Add(Actif actif);
+
+        Task Update(Actif actif);
     }
 }

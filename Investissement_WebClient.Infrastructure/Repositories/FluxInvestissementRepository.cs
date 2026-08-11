@@ -22,6 +22,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 Date = t.Date,
                 Actif = t.Actif!.Libelle,
                 Ticker = t.Actif.Ticker,
+                Logo = t.Actif.Logo != null ? $"data:image/png;base64,{Convert.ToBase64String(t.Actif.Logo)}" : null,
                 Prix = t.Prix,
                 Quantite = t.Type == TypeFlux.Achat ? t.Quantite : -t.Quantite,
             }).ToListAsync();
@@ -85,12 +86,14 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .GroupBy(t => new
                 {
                     t.Actif!.Libelle,
-                    t.Actif.Ticker
+                    t.Actif.Ticker,
+                    t.Actif.Logo
                 })
                 .Select(g => new PositionInvestissementDto
                 {
                     Actif = g.Key.Libelle,
                     Ticker = g.Key.Ticker,
+                    Logo = g.Key.Logo != null ? $"data:image/png;base64,{Convert.ToBase64String(g.Key.Logo)}" : null,
                     TotalQuantite = g.Sum(t =>
                         t.Type == TypeFlux.Achat
                             ? t.Quantite
