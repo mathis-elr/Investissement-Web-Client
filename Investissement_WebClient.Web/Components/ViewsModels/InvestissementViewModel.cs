@@ -38,11 +38,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         // INVESTISSEMENT HISTORIQUE
         public bool ChargementEncours { get; set; } = false;
+        public bool ChargementGraphique { get; set; } = false;
         public decimal InvestissementMedianMensuel { get; set; }
         public decimal InvestissementTotal { get; set; }
         public IEnumerable<InvestissementParMoisDto> InvestissementsParMois { get; set; } = [];
         public IEnumerable<ValeurActifInfosDto> ValeurActifInfos { get; set; } = [];
-        public decimal InvestissementMoisEnCours => InvestissementsParMois.OrderByDescending(f => f.Date).FirstOrDefault()?.Investissement ?? decimal.MinValue;
+        public decimal InvestissementMoisEnCours => InvestissementsParMois.Count() == 0 ? 0 : InvestissementsParMois.OrderByDescending(f => f.Date).FirstOrDefault()?.Investissement ?? 0;
         public decimal TauxEvolutionMoisCourantEtMedianne => InvestissementMedianMensuel == 0 ? 0 : Math.Abs((InvestissementMoisEnCours - InvestissementMedianMensuel) / InvestissementMedianMensuel);
         public int NombreMoisInvestissement => InvestissementsParMois.Count();
 
@@ -288,7 +289,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task RafraichirGraphique()
         {
-            ChargementEncours = true;
+            ChargementGraphique = true;
 
             try
             {
@@ -298,7 +299,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
             finally
             {
-                ChargementEncours = false;
+                ChargementGraphique = false;
             }
         }
 

@@ -1,7 +1,15 @@
 ﻿@inject IToastService TS
 
 <div class="header">
-    <label>Transactions</label>
+    @if (!_afficherFormulaire)
+    {
+        <label>Transactions</label>
+    }
+    else
+    {
+        <label>Configuration Trade Republic</label>
+    }
+
     @if (!Model.IdentifiantsRequis && !_afficherFormulaire && !Model.DemandeEnCours)
     {
         <div class="btn-edit" title="Editer mes identifiants" @onclick="() => _afficherFormulaire = true">
@@ -11,7 +19,7 @@
 </div>
 
 <div class="transactions-infos">
-    @if (Model.IdentifiantsRequis || _afficherFormulaire)
+    @if ((Model.IdentifiantsRequis || _afficherFormulaire) && !Model.ChargementEncours)
     {
         <_FormIdTR Model="@Model" OnAnnuler="MasquerFormulaire" />
     }

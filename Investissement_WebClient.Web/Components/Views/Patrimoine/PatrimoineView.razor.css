@@ -47,12 +47,6 @@
     flex-shrink: 0;
 }
 
-.graphique-centre {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 img {
     width: 55%;
 }

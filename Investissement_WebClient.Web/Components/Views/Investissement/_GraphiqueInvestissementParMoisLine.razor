@@ -1,0 +1,16 @@
+﻿<ApexChart TItem="InvestissementParMoisDto"
+           XAxisType="XAxisType.Datetime"
+           Options="ProfilChartsOptions.OptionsInvestissementParMois">
+
+    <ApexPointSeries TItem="InvestissementParMoisDto"
+                     Items="Model.InvestissementsParMois"
+                     SeriesType="SeriesType.Line"
+                     Name="Investissement"
+                     YValue="@(e => e.Investissement)"
+                     XValue="@(e => e.Date)" />
+</ApexChart>
+
+
+@code {
+    [Parameter] public required InvestissementViewModel Model { get; set; }
+}

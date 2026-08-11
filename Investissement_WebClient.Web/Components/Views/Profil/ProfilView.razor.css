@@ -138,17 +138,6 @@ span {
     overflow: hidden;
 }
 
-.graphique {
-    flex: 1;
-    overflow: visible;
-    z-index: 1;
-}
-
-.graphique-centre {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 /* --- GESTION DU GRAPHIQUE PIE --- */
 

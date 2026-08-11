@@ -1,21 +1,38 @@
 ﻿<div class="un-actif">
     <div class="header">
+        <label>🖼️</label>
         <label>@Actif.Actif</label>
-        <label>
-            @Actif.ValeurDetenue.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))
-        </label>
     </div>
     <div class="content">
-        <div class="item">
-            @{
-                (string couleurVarVal, string signeVarVal) = DeterminerSigne(Actif.VariationValeur);
-                (string couleurVarPour, string signeVarPour) = DeterminerSigne(Actif.VariationPourcentage);
-            }
-            <span class="@couleurVarVal">
-                @(signeVarVal + Actif.VariationValeur.ToString("C", CultureInfo.GetCultureInfo("fr-FR")))
+        @{
+            (string couleurVarVal, string signeVarVal) = DeterminerSigne(Actif.VariationValeur);
+            (string couleurVarPour, string signeVarPour) = DeterminerSigne(Actif.VariationPourcentage);
+        }
+
+        <div class="info">
+            <label class="goldenrod">
+                @Actif.ValeurDetenue.ToString("C", CultureInfo.GetCultureInfo("fr-FR"))
+            </label>
+            <span class="gris">
+                Valeur actuelle
             </span>
-            <span class="@couleurVarPour">
+        </div>
+
+        <div class="info">
+            <label class="@couleurVarVal">
+                @(signeVarVal + Actif.VariationValeur.ToString("C", CultureInfo.GetCultureInfo("fr-FR")))
+            </label>
+            <span class="gris">
+                Gain
+            </span>
+        </div>
+
+        <div class="info">
+            <label class="@couleurVarPour">
                 @(signeVarVal + Actif.VariationPourcentage + "%")
+            </label>
+            <span class="gris">
+                Performance
             </span>
         </div>
     </div>

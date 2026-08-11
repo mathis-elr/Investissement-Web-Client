@@ -1,14 +1,21 @@
-﻿.btn-annuler {
-    text-decoration: none;
-    background-color: rgba(255,0,0,0.1);
-    border: none;
-    color: red;
-    font-size: 20px;
-    cursor: pointer;
-    transition: 0.2s ease-in-out;
+﻿.btn-retour {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 40px;
     height: 40px;
+    background: #242424;
+    border: 1px solid rgba(218,165,32,.25);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: .25s ease;
 }
+
+    .btn-retour:hover {
+        border-color: rgba(218,165,32,.6);
+        box-shadow: 0 0 12px rgba(218,165,32,.15);
+        transform: translateX(-2px);
+    }
 
 .form-grid {
     display: grid;
@@ -34,3 +41,11 @@
         align-items:center;
         gap:3px;
     }
+
+.description {
+    color: #8a8a8a;
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: 420px;
+}
+

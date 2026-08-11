@@ -1,36 +1,65 @@
 ﻿.un-actif {
-    display: grid;
-    gap: 2px;
+    display: flex;
+    gap: 15px;
     border-radius: 10px;
-    padding: 5px;
+    padding: 3px 8px;
     background-color: #242424;
-    width: 350px;
+    width: auto;
 }
 
 .header {
     display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
 }
+
+    .header label {
+        font-size: 16px;
+    }
 
 .content {
-    display: grid;
-    gap: 3px;
-}
-
-
-.item {
     display: flex;
     justify-content: space-between;
-    gap: 30px;
+    align-items: center;
+    gap: 25px;
 }
 
-label {
-    color: white;
-    font-size: 18px;
+.info {
+    display: grid;
+    position: relative;
 }
+
+    .info:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        right: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 35px;
+        background: linear-gradient( transparent, rgba(255,255,255,.25), transparent );
+    }
+
+    .info label {
+        white-space: nowrap;
+        font-size: 15px;
+    }
 
 span {
-    color: white;
-    font-size: 16px;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+@media (min-width: 1700px) {
+    .header label {
+        font-size: 20px;
+    }
+
+    .info label {
+
+        font-size: 19px;
+    }
+
+    span {
+        font-size: 15px;
+    }
 }

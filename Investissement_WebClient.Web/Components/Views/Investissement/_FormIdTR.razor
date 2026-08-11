@@ -6,9 +6,13 @@
 
     <DataAnnotationsValidator />
 
-    <button class="btn-annuler" title="Annuler" @onclick="FermerEdition">
-        ✕
+    <button class="btn-retour" title="Retour aux transactions" @onclick="FermerEdition">
+        <img src="icons/back.svg" />
     </button>
+
+    <span class="description">
+        Renseignez vos informations de connexion afin de synchroniser automatiquement vos transactions.
+    </span>
 
     <div class="form-grid">
         <label>Num tel</label>
@@ -19,7 +23,7 @@
 
         <label>Pin</label>
         <div class="champ">
-            <InputText @bind-Value="Model.TradeRepublicAcces.Pin" type="password" placeholder="Pin (4 chiffres)" />
+            <InputText @bind-Value="Model.TradeRepublicAcces.Pin" type="password" placeholder="0123" maxlenght="4" />
         </div>
     </div>
 

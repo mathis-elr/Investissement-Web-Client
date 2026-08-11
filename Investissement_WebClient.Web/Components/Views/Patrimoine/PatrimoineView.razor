@@ -24,13 +24,7 @@
                 <_ChargementGraphique />
             </div>
         }
-        else if (PVM.ValeurPatrimoineCourante == 0)
-        {
-            <div class="graphique graphique-centre">
-                <p>Récuperer vos flux pour commencer à visualiser l'évolution de vôtre patrimoine.</p>
-            </div>
-        }
-        else
+        else if (PVM.PointsPlusValue.Any() || PVM.BougiesPlusValue.Any())
         {
             <div class="graphique">
                 @if (PVM.TypeGraphiqueSelectionnee == TypeGraphique.Candle)
@@ -41,6 +35,12 @@
                 {
                     <_GraphiqueEvolutionPlusValueLine PointsPlusValue="@PVM.PointsPlusValue" />
                 }
+            </div>
+        }
+        else
+        {
+            <div class="graphique graphique-centre">
+                <p>Récuperer vos flux pour commencer à visualiser l'évolution de vôtre patrimoine.</p>
             </div>
         }
     </div>

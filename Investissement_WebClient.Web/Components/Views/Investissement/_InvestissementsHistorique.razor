@@ -1,5 +1,5 @@
 ﻿<div class="header">
-    <label>Investissements</label>
+    <label>Historique d'investissement</label>
 
     <div class="info-invest-total">
         <span class="goldenrod">@(Model.InvestissementTotal == 0 ? "--,--" : Model.InvestissementTotal.ToString("C"))</span>
@@ -14,7 +14,7 @@
 
             <div class="info-invest">
                 <div class="variation">
-                    <span class="white">@Model.InvestissementMedianMensuel.ToString("C")</span>
+                    <span class="white">@(Model.InvestissementMedianMensuel == 0 ? "--,--" : Model.InvestissementMedianMensuel.ToString("C"))</span>
                     <span class="gris">
                         médiane
                     </span>
@@ -25,15 +25,15 @@
             <div class="info-invest">
                 <div class="variation">
                     <span class="goldenrod">
-                        @Model.InvestissementMoisEnCours.ToString("C")
+                        @(Model.InvestissementMoisEnCours == 0 ? "--,--" : Model.InvestissementMoisEnCours.ToString("C"))
                     </span>
                     <span class="gris">ce mois-ci</span>
                 </div>
 
                 <div class="variation">
-                    <span class="@(Model.InvestissementMedianMensuel > Model.InvestissementMoisEnCours ? "rouge" : "vert")">
-                        @(Model.InvestissementMedianMensuel < Model.InvestissementMoisEnCours ? "↗" : "↘")
-                        @Model.TauxEvolutionMoisCourantEtMedianne.ToString("P1")
+                    <span class="@(Model.InvestissementMedianMensuel == Model.InvestissementMoisEnCours ? "gris" : Model.InvestissementMedianMensuel > Model.InvestissementMoisEnCours ? "rouge" : "vert")">
+                        @(Model.InvestissementMedianMensuel == Model.InvestissementMoisEnCours ? "" : Model.InvestissementMedianMensuel < Model.InvestissementMoisEnCours ? "↗" : "↘")
+                        @(Model.TauxEvolutionMoisCourantEtMedianne == 0 ? "--,--" : Model.TauxEvolutionMoisCourantEtMedianne.ToString("P1"))
                     </span>
 
                     <span class="gris">
@@ -56,9 +56,24 @@
         </div>
     </div>
 
-    <div class="graphique">
-        <_InvestissementMensuel Model="Model" />
-    </div>
+    @if (Model.ChargementEncours || Model.ChargementGraphique)
+    {
+        <div class="graphique graphique-centre">
+            <_ChargementGraphique />
+        </div>
+    }
+    else if (Model.InvestissementsParMois.Any())
+    {
+        <div class="graphique">
+            <_GraphiqueInvestissementParMoisLine Model="Model" />
+        </div>
+    }
+    else
+    {
+        <div class="graphique graphique-centre">
+            <p>Aucun investissement effecuté.</p>
+        </div>
+    }
 </div>
 
 
