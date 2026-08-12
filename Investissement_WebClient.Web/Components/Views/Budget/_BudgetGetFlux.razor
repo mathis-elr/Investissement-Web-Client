@@ -3,7 +3,7 @@
 
 <div class="header">
     <label>Flux @Model.DateActiveString</label>
-    <button type="button" class="btn-transactions" @onclick="() => GetTransactions()">
+    <button type="button" class="btn-submit" @onclick="() => GetTransactions()">
         @if (Model.ActionEnCours)
         {
             <_Chargement />

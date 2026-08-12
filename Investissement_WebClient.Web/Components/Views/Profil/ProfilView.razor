@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="perspectives-graphique @(PVM.RecuparationEnCours ? "graphique-centre" : "")">
+            <div class="perspectives-graphique @(PVM.RecuparationEnCours ? "center" : "")">
                 @if (PVM.RecuparationEnCours)
                 {
                     <_ChargementGraphique />
@@ -99,7 +99,7 @@
             <label>Allocation</label>
         </div>
 
-        <div class="graphique @(PVM.RecuparationEnCours ? "graphique-centre" : "")">
+        <div class="graphique @(PVM.RecuparationEnCours ? "center" : "")">
             @if (PVM.RecuparationEnCours)
             {
                 <_ChargementGraphique />

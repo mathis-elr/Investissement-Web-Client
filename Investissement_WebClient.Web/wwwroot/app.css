@@ -39,9 +39,9 @@ p {
 }
 
 select,
-input{
+input {
     font-size: 16px;
-    padding: 5px;
+    padding: 0 5px;
     border-radius: 7px;
     color: white;
     border: solid 1px goldenrod;
@@ -51,8 +51,6 @@ input{
     transition: 0.4s ease-in-out;
 }
 
-    input:hover,
-    select:hover,
     input:focus,
     select:focus {
         outline: none !important;
@@ -187,17 +185,18 @@ button {
         display: block;
     }
 
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #1E1E1E;
+}
 
 .graphique {
     flex: 1;
     min-height: 0;
     overflow: hidden;
-}
-
-.graphique-centre {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 /* OPTIONS AFFICHAGE GRAPHIQUES */

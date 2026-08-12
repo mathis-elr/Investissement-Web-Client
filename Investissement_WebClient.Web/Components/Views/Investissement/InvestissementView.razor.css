@@ -63,14 +63,6 @@
     grid-row: 2;
 }
 
-::deep .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    background-color: #1e1e1e;
-}
-
 .mes-actifs{
     display:flex;
     gap: 15px;

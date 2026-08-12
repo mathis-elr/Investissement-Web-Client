@@ -1,11 +1,10 @@
-﻿@using Investissement_WebClient.Application.DTO.FluxBancaires
-<div class="credits-debits">
-    <label>@Titre</label>
+﻿<div class="credits-debits">
+    <label class="titre-section">@Titre</label>
     @foreach (var flux in Flux)
     {
         <div class="un-flux">
-            <span>@flux.Date.ToString("dd MMM")</span>
-            <span class="@(IsCredit ? "vert" : "rouge")">@flux.Valeur €</span>
+            <span class="date-flux">@flux.Date.ToString("dd MMM")</span>
+            <span class="montant-flux @(IsCredit ? "vert" : "rouge")">@flux.Valeur €</span>
             <input type="text" @bind="@flux.Libelle" />
             <select class="@(flux.Suggestion ? "select-suggestion" : "")"
                     value="@flux.IdCategorie"
@@ -15,7 +14,7 @@
                 @foreach (var categorie in Categories)
                 {
                     <option value="@categorie.Id" selected="@(categorie.Id == flux.IdCategorie)">
-                        @(flux.Suggestion && flux.IdCategorie == categorie.Id ? "🪄" : "")
+                        @(flux.Suggestion && flux.IdCategorie == categorie.Id ? "✨" : "")
                         @categorie.Libelle
                     </option>
                 }
