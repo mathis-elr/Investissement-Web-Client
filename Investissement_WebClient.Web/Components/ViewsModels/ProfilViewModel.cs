@@ -18,7 +18,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         // MAJ VUE
         public event Action OnChange = null!;
-        public void NotifyStateChanged() => OnChange.Invoke();
+        public void NotifyStateChanged() => OnChange?.Invoke();
 
         // PROPRIETES PERSPECTIVES
         public decimal InvestissementMoyenMensuel { get; set; }

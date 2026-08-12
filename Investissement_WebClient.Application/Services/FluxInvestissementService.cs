@@ -10,27 +10,14 @@ namespace Investissement_WebClient.Application.Services
 {
     public class FluxInvestissementService(IFluxInvestissementRepository fluxInvestissementRepository,
                                            IYahooFinanceApiService yahooFinanceApiService,
-                                           ILogoDevApiService logoDevApiService,
                                            IActifService actifService) : IFluxInvestissementService
     {
         private readonly IFluxInvestissementRepository _fluxInvestissementRepository = fluxInvestissementRepository;
         private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
-        private readonly ILogoDevApiService _logoDevApiService = logoDevApiService;
         private readonly IActifService _actifService = actifService;
 
         public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId)
         {
-            //script pour recuperer les logos
-            //var actifs = await _actifService.GetAll();
-            //foreach (var actif in actifs)
-            //{
-            //    if (actif.Logo == null)
-            //    {
-            //        var logo = await _logoDevApiService.GetLogoByNameAsync(actif.Libelle);
-            //        actif.Logo = logo;
-            //        await _actifService.UpdateActif(actif);
-            //    }
-            //}
             return await _fluxInvestissementRepository.GetAllByUserId(userId);
         }
 
@@ -154,37 +141,6 @@ namespace Investissement_WebClient.Application.Services
             };
         }
 
-        //public async Task<IEnumerable<InfoParActifDto>> CalculerInfosInvestParActif(Dictionary<string, decimal> prixParActif, int userId)
-        //{
-        //    await using var context = await _dbFactory.CreateDbContextAsync();
-        //    var rawData = await context.FluxInvestissement
-        //        .Where(f => f.UtilisateurId == userId)
-        //        .GroupBy(t => new { t.Actif!.Libelle, t.Actif.Ticker })
-        //        .Select(g => new
-        //        {
-        //            g.Key.Libelle,
-        //            g.Key.Ticker,
-        //            TotalQuantite = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)t.Quantite : (decimal)-t.Quantite),
-        //            TotalInvesti = g.Sum(t => t.Type == TypeFlux.Achat ? (decimal)(t.Quantite * t.Prix) : (decimal)(-t.Quantite * t.Prix))
-        //        })
-        //        .ToListAsync();
-
-        //    return rawData.Where(t => t.TotalQuantite > 0).Select(t =>
-        //    {
-        //        var prixActuel = prixParActif[t.Ticker];
-        //        var valeurDetenue = t.TotalQuantite * prixActuel;
-
-        //        return new InfoParActifDto
-        //        {
-        //            Actif = t.Libelle,
-        //            ValeurDetenue = Math.Round(valeurDetenue, 2),
-        //            VariationValeur = Math.Round(valeurDetenue - t.TotalInvesti, 2),
-        //            VariationPourcentage = Math.Round((valeurDetenue - t.TotalInvesti) / t.TotalInvesti * 100, 2)
-
-        //        };
-        //    }).ToList();
-        //}
-
         public async Task MapperTransactions(List<FluxInvestissementImportDto> transactions, int userId)
         {
             if (transactions.Count == 0)
@@ -218,14 +174,11 @@ namespace Investissement_WebClient.Application.Services
 
                     var libelleNettoye = _actifService.NettoyerLibelle(transaction.Actif);
 
-                    var logo = await _logoDevApiService.GetLogoByNameAsync(libelleNettoye);
-
                     var nouvelActif = new Actif
                     {
                         Libelle = libelleNettoye,
                         ISIN = transaction.ISIN,
                         Ticker = ticker ?? string.Empty,
-                        Logo = logo
                     };
 
                     var actifId = await _actifService.AddActif(nouvelActif);
@@ -239,14 +192,6 @@ namespace Investissement_WebClient.Application.Services
                 else
                 {
                     nvFlux.ActifId = actif.Id;
-
-                    if (actif.Logo == null)
-                    {
-
-                        var logo = await _logoDevApiService.GetLogoByNameAsync(actif.Libelle);
-                        actif.Logo = logo;
-                        await _actifService.UpdateActif(actif);
-                    }
                 }
 
                 fluxAInserer.Add(nvFlux);

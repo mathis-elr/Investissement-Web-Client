@@ -16,5 +16,7 @@
         public string PinKey { get; set; } = string.Empty;
 
         public string DernierIdEnregistreKey { get; set; } = string.Empty;
+
+        public string LogoBaseUrl { get; set; } = string.Empty;
     }
 }

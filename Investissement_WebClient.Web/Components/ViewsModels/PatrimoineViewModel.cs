@@ -21,7 +21,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         // MAJ VUE
         public event Action OnChange = null!;
-        public void NotifyStateChanged() => OnChange.Invoke();
+        public void NotifyStateChanged() => OnChange?.Invoke();
 
         // DATAS INFOS PATRIMOINE
         public bool RecuparationEnCours { get; set; } = false;
