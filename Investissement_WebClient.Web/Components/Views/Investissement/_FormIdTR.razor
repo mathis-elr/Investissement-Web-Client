@@ -6,12 +6,15 @@
 
     <DataAnnotationsValidator />
 
-    <button class="btn-retour" title="Retour aux transactions" @onclick="FermerEdition">
-        <img src="icons/back.svg" />
-    </button>
+    @if (!Model.IdentifiantsRequis)
+    {
+        <button class="btn-retour" title="Retour aux transactions" @onclick="FermerEdition">
+            <img src="icons/back.svg" />
+        </button>
+    }
 
     <span class="description">
-        Renseignez vos informations de connexion afin de synchroniser automatiquement vos transactions.
+        Renseignez vos informations de connexion afin de pouvoir synchroniser vos transactions Trade Republic.
     </span>
 
     <div class="form-grid">

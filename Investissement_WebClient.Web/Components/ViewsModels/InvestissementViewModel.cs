@@ -28,7 +28,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         // TRANSACTIONS
         public TradeRepublicAccesDto TradeRepublicAcces { get; set; } = new TradeRepublicAccesDto();
-        public bool IdentifiantsRequis => string.IsNullOrEmpty(TradeRepublicAcces.NumTel) || string.IsNullOrEmpty(TradeRepublicAcces.Pin);
+        public bool IdentifiantsRequis { get; set; } = false;
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
         public string Message { get; set; } = "Aucune demande en cours ...";
         public Etat Etat { get; set; } = Etat.Neutre;
@@ -143,7 +143,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public async Task DemandeCodeSms()
         {
             DemandeEnCours = true;
-            Message = "Tentative de connexion avec l'emetteur ...";
+            Message = "Tentative de connexion avec l'emetteur, cette opération dure en moyenne 30 secondes ...";
 
             try
             {
@@ -153,7 +153,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 {
                     ErrorMessage = messageRecu;
                     HasError = true;
-                    return; 
+                    return;
                 }
 
                 Message = messageRecu;
@@ -246,14 +246,16 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         }
         public async Task LoadIdentifiantsRequis()
         {
-            TradeRepublicAcces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser) ?? new TradeRepublicAccesDto();
+            var acces = await _tradeRepublicApiService.GetTradeRepublicAcces(IdUser);
 
-            if (IdentifiantsRequis)
-                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
-            else
+            if(acces == null)
             {
-                Message = "Aucune demande en cours ...";
+                TradeRepublicAcces = new TradeRepublicAccesDto();
+                IdentifiantsRequis = true;
+                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
             }
+            else
+                Message = "Aucune demande en cours ...";  
         }
 
         public string DeterminerClasse(decimal variationPrix)

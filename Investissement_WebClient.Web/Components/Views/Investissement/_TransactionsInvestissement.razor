@@ -1,9 +1,13 @@
 ﻿@inject IToastService TS
 
 <div class="header">
-    @if (!_afficherFormulaire)
+    @if (!_afficherFormulaire && !Model.IdentifiantsRequis && !Model.DemandeEnCours)
     {
         <label>Transactions</label>
+    }
+    else if (Model.DemandeEnCours)
+    {
+        <label>Synchronisation Trade Republic</label>
     }
     else
     {
@@ -19,12 +23,14 @@
 </div>
 
 <div class="transactions-infos">
-    @if ((Model.IdentifiantsRequis || _afficherFormulaire) && !Model.ChargementEncours)
+    @if (_afficherFormulaire || Model.IdentifiantsRequis)
     {
         <_FormIdTR Model="@Model" OnAnnuler="MasquerFormulaire" />
     }
     else if (Model.Etat == Etat.SmsRequis)
     {
+        <p>Vous allez recevoir une notification contenant un code de la part de Trade Republic sur vôtre téléphone, renseignez ce code de 4 chiffres et cliquez sur "Vérifier".</p>
+
         <div class="form-grid">
             <label>Code sms</label>
             <div class="info">
@@ -55,6 +61,11 @@
                 <span>Synchroniser mes transactions</span>
             }
         </button>
+
+        @if (Model.DemandeEnCours)
+        {
+            <p>@Model.Message</p>
+        }
     }
 </div>
 
@@ -72,6 +83,7 @@
     else if (Model.IdentifiantsRequis)
     {
         <p>Vous pourez consulter vos transactions ici dès que vous aurez enregistré vos identifiants Trade Republic et récuperer vos transactions.</p>
+
     }
     else if (Model.FluxInvestissement.Any())
     {
@@ -92,7 +104,6 @@
                     @foreach (var transaction in transactionsParDate)
                     {
                         <div class="une-transaction">
-                            @* <div class="@(transaction.Quantite > 0 ? "achat" : "vente")"></div> *@
                             <div class="icon">
                                 <img src="@transaction.Logo" />
                             </div>
@@ -112,7 +123,7 @@
     }
     else
     {
-        <p>Commencez dès maintenant à suivre vos investissement en cliquant sur le bouton "Récuperer mes transactions"</p>
+        <p>Aucune synchornisation effectué avec Trade Republic, cliquez sur "Synchroniser mes transactions" pour récuperez vos flux.</p>
     }
 </div>
 
@@ -139,8 +150,6 @@
             Model.ReinitiliserGestionErreur();
             return;
         }
-
-        TS.ShowSuccess(Model.Message);
     }
 
 
