@@ -52,7 +52,7 @@
                                      Items="categorie.BudgetCategorieParMois"
                                      Name="@categorie.Categorie"
                                      SeriesType="SeriesType.Line"
-                                     YValue="@(e => e.Budget)"
+                                     YValue="@(e => categorie.Categorie == "Patrimoine" ? Math.Abs(e.Budget) : e.Budget)"
                                      XValue="@(e => e.Date)" />
                 }
 
