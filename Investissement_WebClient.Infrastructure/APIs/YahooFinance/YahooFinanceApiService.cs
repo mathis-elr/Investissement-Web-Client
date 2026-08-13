@@ -29,15 +29,35 @@ namespace Investissement_WebClient.Infrastructure.APIs.YahooFinance
 
             try
             {
-                //UN SEUL appel pour TOUS les tickers en même temps.
+                // On ajoute le taux EUR/USD aux tickers à interroger
+                var listeTickers = tickers.ToList();
+                if (!listeTickers.Contains("EURUSD=X"))
+                {
+                    listeTickers.Add("EURUSD=X");
+                }
+
                 IReadOnlyDictionary<string, Security> resultats =
-                    await Yahoo.Symbols(tickers.ToArray()).QueryAsync();
-                
+                    await Yahoo.Symbols(listeTickers.ToArray()).QueryAsync();
+
+                // Récupération du taux de change EUR -> USD (ex: 1.08)
+                decimal tauxEurUsd = 1.0m;
+                if (resultats.TryGetValue("EURUSD=X", out var dataFx))
+                {
+                    tauxEurUsd = (decimal)dataFx.RegularMarketPrice;
+                }
+
                 foreach (var ticker in tickers)
                 {
                     if (resultats.TryGetValue(ticker, out var data))
                     {
-                        dictionnairePrix[ticker] = (decimal)Math.Round(data.RegularMarketPrice, 2);
+                        decimal prixOriginal = (decimal)data.RegularMarketPrice;
+                        string devise = data.Currency; 
+
+                        // Si c'est en USD, on convertit en EUR
+                        if (string.Equals(devise, "USD", StringComparison.OrdinalIgnoreCase))
+                            prixOriginal = prixOriginal / tauxEurUsd;
+
+                        dictionnairePrix[ticker] = Math.Round(prixOriginal, 2);
                     }
                     else
                     {
