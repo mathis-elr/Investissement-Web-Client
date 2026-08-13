@@ -33,7 +33,46 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         public List<FluxBancaireDto> Flux { get; set; } = [];
 
         // RECAPITULATIF GLOBAL
+        public IEnumerable<PeriodeBudget> PeriodeBudgetPossibles => Enum.GetValues<PeriodeBudget>();
+        public PeriodeBudget PeriodeBudgetSelectionnee { get; set; } = PeriodeBudget.Tout;
+
         public IEnumerable<BudgetsParCategorieDto> BudgetLineCharts { get; set; } = [];
+        public List<string> CouleursGraphique = new List<string> { "#22c55e", "#3b82f6", "#ef4444", "#eab308" };
+
+        public decimal RevenusMoyens => BudgetLineCharts
+            .FirstOrDefault(b => b.Categorie.Equals("Revenus", StringComparison.OrdinalIgnoreCase))?
+            .BudgetCategorieParMois
+            .Average(b => b.Budget) ?? 0;
+
+        public decimal DepensesMoyennnes => BudgetLineCharts
+            .Where(b => b.Categorie.Equals("Vie quotidienne", StringComparison.OrdinalIgnoreCase)
+                     || b.Categorie.Equals("Loisirs/Plaisirs", StringComparison.OrdinalIgnoreCase)) 
+            .SelectMany(b => b.BudgetCategorieParMois)
+            .GroupBy(m => m.Date)
+            .Select(g => g.Sum(m => m.Budget))
+            .DefaultIfEmpty(0)
+            .Average();
+
+        public decimal TauxEpargne => BudgetLineCharts
+            .SelectMany(b => b.BudgetCategorieParMois, (b, m) => new { b.Categorie, m.Budget })
+            .GroupBy(_ => 1)
+            .Select(g =>
+            {
+                var revenus = g.Where(x => x.Categorie.Equals("Revenus", StringComparison.OrdinalIgnoreCase))
+                               .Sum(x => x.Budget);
+                var epargne = g.Where(x => x.Categorie.Equals("Patrimoine", StringComparison.OrdinalIgnoreCase))
+                               .Sum(x => x.Budget);
+                return revenus == 0 ? 0 : Math.Abs(epargne) / revenus;
+            })
+            .FirstOrDefault();
+
+        public decimal SoldeMoyenFinMois => BudgetLineCharts
+            .SelectMany(b => b.BudgetCategorieParMois)
+            .GroupBy(m => m.Date)
+            .Select(g => g.Sum(m => m.Budget))
+            .DefaultIfEmpty(0)
+            .Average();
+
 
         // HISTORIQUE MENSUEL
         public DateTime DateDebut { get; set; } = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-2);
@@ -171,6 +210,50 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
         }
 
+        public void EditerMoisComplete()
+        {
+            StatutMoisActif!.Statut = Statut.edition;
+            NotifyStateChanged();
+        }
+
+        public string GetLibellePeriodeBudget(PeriodeBudget periode)
+        {
+            return periode switch
+            {
+                PeriodeBudget.TroisMois => "3M",
+                PeriodeBudget.SixMois => "6M",
+                PeriodeBudget.Ans => "1A",
+                PeriodeBudget.Tout => "Tout",
+                _ => string.Empty
+            };
+        }
+
+        public async Task ChangerPeriodeBudgetSelectionnee(PeriodeBudget periode)
+        {
+            if (PeriodeBudgetSelectionnee == periode)
+                return;
+
+            PeriodeBudgetSelectionnee = periode;
+
+            await RafraichirGraphique();
+        }
+
+        private async Task RafraichirGraphique()
+        {
+            //ChargementGraphique = true;
+
+            //try
+            //{
+            //    await LoadInvestissementsParMois();
+
+            //    NotifyStateChanged();
+            //}
+            //finally
+            //{
+            //    ChargementGraphique = false;
+            //}
+        }
+
         private async Task LoadCategories()
         {
             Categories = await _fluxBancaireService.GetCategorieFlux();
@@ -183,12 +266,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
             if(ConnexionBanqueRequise)
                 UrlConnexionPowens = GetUrlConnexionPowens();
-        }
-
-        public void EditerMoisComplete()
-        {
-            StatutMoisActif!.Statut = Statut.edition;
-            NotifyStateChanged();
         }
 
         private async Task LoadBudgetParCategorie()

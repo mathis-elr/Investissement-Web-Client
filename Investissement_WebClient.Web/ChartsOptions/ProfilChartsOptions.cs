@@ -1,7 +1,6 @@
-﻿using ApexCharts;
-using Investissement_WebClient.Application.DTO.FluxInvestissements;
-using Investissement_WebClient.Application.DTO.Patrimoine;
+﻿using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Application.DTO.Profil;
+using ApexCharts;
 
 namespace Investissement_WebClient.Web.ChartsOptions
 {
@@ -9,6 +8,16 @@ namespace Investissement_WebClient.Web.ChartsOptions
     {
         public static ApexChartOptions<ValeurParAnLineChartDto> OptionsValeurParAn = new()
         {
+            Yaxis = new List<YAxis>
+            {
+                new YAxis
+                {
+                    Labels = new YAxisLabels
+                    {
+                        Formatter = @"function(val) { return Math.round(val).toLocaleString('fr-FR') + ' €'; }"
+                    }
+                }
+            },
 
             Stroke = new Stroke
             {
@@ -33,43 +42,6 @@ namespace Investissement_WebClient.Web.ChartsOptions
             Tooltip = new Tooltip
             {
                 Theme = Mode.Dark,
-            },
-        };
-
-        public static ApexChartOptions<InvestissementParMoisDto> OptionsInvestissementParMois = new()
-        {
-            Colors = new List<string> { "goldenrod" },
-
-            Stroke = new Stroke
-            {
-                Curve = Curve.Smooth,
-                Width = 3,
-                LineCap = LineCap.Round,
-            },
-
-            Chart = new Chart
-            {
-                ForeColor = "#FFFFFF",
-                Background = "transparent",
-                Toolbar = new Toolbar { Show = false },
-                Width = "100%",
-                Height = "100%"
-            },
-
-            Grid = new Grid
-            {
-                BorderColor = "#444"
-            },
-
-            Tooltip = new Tooltip
-            {
-                Theme = Mode.Dark,
-            },
-
-            Markers = new Markers
-            {
-                Colors = new List<string> { "goldenrod" },
-                StrokeWidth = 0,
             },
         };
 

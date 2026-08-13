@@ -282,7 +282,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         public async Task ChangerPeriodeHistoriqueInvestSelectionnee(PeriodeHistoriqueInvest periode)
         {
-            if (PeriodeHistoriqueInvestSelectionnee == periode || DemandeEnCours)
+            if (PeriodeHistoriqueInvestSelectionnee == periode || ChargementGraphique)
                 return;
 
             PeriodeHistoriqueInvestSelectionnee = periode;

@@ -85,6 +85,7 @@ select, input {
     border: 1px solid transparent;
     border-radius: 7px;
     padding: 5px;
+    gap:30px;
     transition: 0.25s ease-in-out;
 }
 
