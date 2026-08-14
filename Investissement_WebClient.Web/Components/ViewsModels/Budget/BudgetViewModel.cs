@@ -6,7 +6,6 @@ using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.Extensions.Options;
 
-
 namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 {
     public class BudgetViewModel(IFluxBancaireService fluxBancaireService,

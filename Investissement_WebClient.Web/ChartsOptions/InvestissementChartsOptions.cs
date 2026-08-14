@@ -1,5 +1,5 @@
-﻿using ApexCharts;
-using Investissement_WebClient.Application.DTO.FluxInvestissements;
+﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
+using ApexCharts;
 
 namespace Investissement_WebClient.Web.ChartsOptions
 {

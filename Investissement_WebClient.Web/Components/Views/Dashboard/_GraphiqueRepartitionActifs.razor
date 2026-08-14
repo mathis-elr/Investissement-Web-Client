@@ -3,7 +3,7 @@
 @if (Model.ValeurParActifInvestit.Any())
 {
     <ApexChart TItem="ValeurTotaleParActifDto"
-               Options="ProfilChartsOptions.OptionsPieActif">
+               Options="DashboardChartsOptions.OptionsPieActif">
 
         <ApexPointSeries TItem="ValeurTotaleParActifDto"
                          Items="Model.ValeurParActifInvestit"
@@ -26,5 +26,5 @@ else
     
 
 @code {
-    [Parameter] public required ProfilViewModel Model { get; set; }
+    [Parameter] public required DashboardViewModel Model { get; set; }
 }

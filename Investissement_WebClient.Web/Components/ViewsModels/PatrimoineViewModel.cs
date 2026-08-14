@@ -1,7 +1,7 @@
-﻿using Investissement_WebClient.Application.DTO.Patrimoine;
-using Investissement_WebClient.Application.Interfaces.Services;
-using Investissement_WebClient.Domain.Enums;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Domain.Enums;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels

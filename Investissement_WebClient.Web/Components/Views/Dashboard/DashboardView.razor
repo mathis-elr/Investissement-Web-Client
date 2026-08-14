@@ -1,13 +1,13 @@
 ﻿@page "/"
 @attribute [Authorize]
-@inject ProfilViewModel PVM
+@inject DashboardViewModel DVM
 @inject IJSRuntime JS
 @inject IToastService TS
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
 @implements IDisposable
 
-<PageTitle>Profil</PageTitle>
+<PageTitle>Dashboard</PageTitle>
 
 <div class="profil">
     <div class="perspectives">
@@ -20,32 +20,32 @@
                 <div class="form-grid">
                     <label>Investissement mensuel</label>
                     <div class="info">
-                        <input @bind="PVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                        <input @bind="DVM.InvestissementMoyenMensuel" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                     </div>
                     <label>€</label>
 
                     <label>Evolution Annuelle</label>
                     <div class="info">
-                        <input @bind="PVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                        <input @bind="DVM.EvolutionAnnuellePourcentage" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                     </div>
                     <label>%</label>
 
                     <label>Nombre d'années</label>
                     <div class="info">
-                        <input @bind="PVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
+                        <input @bind="DVM.PerspectiveNbAnnees" @bind:event="oninput" @onchange="CalculerEvolutionDuPatrimoine" />
                     </div>
                     <label>ans</label>
                 </div>
             </div>
 
-            <div class="perspectives-graphique @(PVM.RecuparationEnCours ? "center" : "")">
-                @if (PVM.RecuparationEnCours)
+            <div class="perspectives-graphique @(DVM.RecuparationEnCours ? "center" : "")">
+                @if (DVM.RecuparationEnCours)
                 {
                     <_ChargementGraphique />
                 }
                 else
                 {
-                    <_GraphiquePerspectivePatrimoine Model="@PVM" />
+                    <_GraphiquePerspectivePatrimoine Model="@DVM" />
                 }
             </div>
         </div>
@@ -53,24 +53,24 @@
 
     <div class="info-compte">
         <div class="header">
-            <label>Bonjour @(PVM.PrenomUser != string.Empty ? PVM.PrenomUser : "")</label>
+            <label>Bonjour @(DVM.PrenomUser != string.Empty ? DVM.PrenomUser : "")</label>
             <button class="btn-deconnexion" title="Déconnexion" @onclick="Deconnexion"><img src="icons/logout.svg" /></button>
         </div>
 
-        <div class="content @(!PVM.ValeurParActifInvestit.Any() ? "flou" : "")">
+        <div class="content @(!DVM.ValeurParActifInvestit.Any() ? "flou" : "")">
             <div class="info">
                 <img src="icons/wallet.svg" />
                 <span>Valeur Actuelle</span>
                 <span class="blanc fw-bolder">
-                    @(PVM.ValeurPatrimoineCourante == 0 ? "--,--" : PVM.ToStringPourcentage(PVM.ValeurPatrimoineCourante, "C2"))
+                    @(DVM.ValeurPatrimoineCourante == 0 ? "--,--" : DVM.ToStringPourcentage(DVM.ValeurPatrimoineCourante, "C2"))
                 </span>
             </div>
 
             <div class="info">
                 <img src="icons/gain.svg" />
                 <span>Gain total</span>
-                <span class="@PVM.DeterminerClasse(PVM.GainTotal) fw-bolder">
-                    @(PVM.GainTotal == 0 ? "--,--": $"{(PVM.GainTotal > 0 ? "+" : "")}{PVM.ToStringPourcentage(PVM.GainTotal, "C2")}")
+                <span class="@DVM.DeterminerClasse(DVM.GainTotal) fw-bolder">
+                    @(DVM.GainTotal == 0 ? "--,--": $"{(DVM.GainTotal > 0 ? "+" : "")}{DVM.ToStringPourcentage(DVM.GainTotal, "C2")}")
                 </span>
             </div>
 
@@ -78,7 +78,7 @@
                 <img src="icons/asset.svg" />
                 <span>Actifs suivis</span>
                 <span class="blanc fw-bolder">
-                    @PVM.NombreActifs
+                    @DVM.NombreActifs
                 </span>
             </div>
 
@@ -86,9 +86,9 @@
                 <img src="icons/calendar.svg" />
                 <span>Investisseur depuis</span>
                 <span class="blanc fw-bolder">
-                    @PVM.NombreAnnes ans
+                    @DVM.NombreAnnes ans
                     et
-                    @PVM.NombreMois mois
+                    @DVM.NombreMois mois
                 </span>
             </div>
         </div>
@@ -96,7 +96,7 @@
 
     <div class="repartition-actifs">
 
-        @if (!PVM.ValeurParActifInvestit.Any())
+        @if (!DVM.ValeurParActifInvestit.Any())
         {
             <div class="bloc-empty">
                 <_EmptyStateCard Icone="icons/asset.svg"
@@ -108,18 +108,18 @@
             </div>
         }
 
-        <div class="header @(!PVM.ValeurParActifInvestit.Any() ? "flou" : "")">
+        <div class="header @(!DVM.ValeurParActifInvestit.Any() ? "flou" : "")">
             <label>Allocation</label>
         </div>
 
-        <div class="graphique @(PVM.RecuparationEnCours ? "center" : "") @(!PVM.ValeurParActifInvestit.Any() ? "flou" : "")">
-            @if (PVM.RecuparationEnCours)
+        <div class="graphique @(DVM.RecuparationEnCours ? "center" : "") @(!DVM.ValeurParActifInvestit.Any() ? "flou" : "")">
+            @if (DVM.RecuparationEnCours)
             {
                 <_ChargementGraphique />
             }
             else
             {
-                <_GraphiqueRepartitionActifs Model="@PVM" />
+                <_GraphiqueRepartitionActifs Model="@DVM" />
             }
         </div>
     </div>
@@ -131,17 +131,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        PVM.OnChange += StateHasChanged;
+        DVM.OnChange += StateHasChanged;
 
         if (CreationStatus == "succes")
             TS.ShowSuccess("Votre compte a été créé avec succès !");
 
-        await PVM.LoadData();
+        await DVM.LoadData();
        
-        if (PVM.HasError)
+        if (DVM.HasError)
         {
-            TS.ShowError(PVM.ErrorMessage);
-            PVM.HasError = false;
+            TS.ShowError(DVM.ErrorMessage);
+            DVM.HasError = false;
         }
     }
 
@@ -159,7 +159,7 @@
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await PVM.LoadInfosProfil();
+                await DVM.LoadInfosProfil();
                 StateHasChanged();
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
@@ -169,13 +169,13 @@
 
     public void CalculerEvolutionDuPatrimoine()
     {
-        PVM.CalculerEvolutionDuPatrimoine();
+        DVM.CalculerEvolutionDuPatrimoine();
 
-        if (PVM.HasError)
+        if (DVM.HasError)
         {
-            TS.ShowError(PVM.ErrorMessage);
-            PVM.HasError = false;
-            PVM.ErrorMessage = string.Empty;
+            TS.ShowError(DVM.ErrorMessage);
+            DVM.HasError = false;
+            DVM.ErrorMessage = string.Empty;
         }
     }
 
@@ -189,7 +189,7 @@
 
     public void Dispose()
     {
-        PVM.OnChange -= StateHasChanged;
+        DVM.OnChange -= StateHasChanged;
         _cts.Cancel();
         _cts.Dispose();
     }

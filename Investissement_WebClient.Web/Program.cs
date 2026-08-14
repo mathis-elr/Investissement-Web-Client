@@ -70,7 +70,7 @@ builder.Services.AddScoped<InscriptionViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<ConnexionViewModel>();
 builder.Services.AddScoped<BudgetViewModel>();
-builder.Services.AddScoped<ProfilViewModel>();
+builder.Services.AddScoped<DashboardViewModel>();
 
 
 // repositories

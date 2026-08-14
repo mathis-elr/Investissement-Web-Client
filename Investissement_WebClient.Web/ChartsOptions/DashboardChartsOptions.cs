@@ -4,7 +4,7 @@ using ApexCharts;
 
 namespace Investissement_WebClient.Web.ChartsOptions
 {
-    public static class ProfilChartsOptions
+    public static class DashboardChartsOptions
     {
         public static ApexChartOptions<ValeurParAnLineChartDto> OptionsValeurParAn = new()
         {

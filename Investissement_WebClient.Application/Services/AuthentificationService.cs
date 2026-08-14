@@ -1,6 +1,6 @@
-﻿using Investissement_WebClient.Application.DTO.Auth;
-using Investissement_WebClient.Application.Interfaces.Repositories;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.AspNetCore.Identity;
 

@@ -1,12 +1,12 @@
-﻿using Investissement_WebClient.Application.DTO.Patrimoine;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.DTO.Patrimoine;
 using Investissement_WebClient.Application.DTO.Profil;
-using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Web.GestionSession;
 using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class ProfilViewModel(SessionService sessionService, 
+    public class DashboardViewModel(SessionService sessionService, 
                                  IFluxInvestissementService fluxInvestissementService)
     {
         private readonly SessionService _sessionService = sessionService;

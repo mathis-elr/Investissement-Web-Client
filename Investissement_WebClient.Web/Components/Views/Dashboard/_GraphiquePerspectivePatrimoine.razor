@@ -6,7 +6,7 @@ else
 {
     <ApexChart @ref="_chart"
                TItem="ValeurParAnLineChartDto"
-               Options="ProfilChartsOptions.OptionsValeurParAn">
+               Options="DashboardChartsOptions.OptionsValeurParAn">
 
         <ApexPointSeries TItem="ValeurParAnLineChartDto"
                          Items="Model.PerspectivesValeurPatrimoineParAn"
@@ -27,7 +27,7 @@ else
 }
 
 @code {
-    [Parameter] public required ProfilViewModel Model { get; set; }
+    [Parameter] public required DashboardViewModel Model { get; set; }
     private ApexChart<ValeurParAnLineChartDto>? _chart { get; set; }
 
     protected override async Task OnParametersSetAsync()
