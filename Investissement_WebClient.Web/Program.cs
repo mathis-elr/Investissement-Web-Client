@@ -4,6 +4,7 @@ using Investissement_WebClient.Infrastructure.APIs.TradeRepublic;
 using Investissement_WebClient.Web.Components.ViewsModels.Budget;
 using Investissement_WebClient.Infrastructure.APIs.YahooFinance;
 using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Infrastructure.Repositories;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Infrastructure.APIs.Powens;
@@ -35,6 +36,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
+
+builder.Services.Configure<CryptOptions>(
+    builder.Configuration.GetSection("Security"));
 
 builder.Services.Configure<PowensApiOptions>(
     builder.Configuration.GetSection("PowensApi"));

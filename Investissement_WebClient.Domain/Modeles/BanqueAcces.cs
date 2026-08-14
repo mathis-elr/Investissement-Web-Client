@@ -4,7 +4,7 @@ namespace Investissement_WebClient.Domain.Modeles
     {
         public int Id { get; set; }
 
-        public required string AccesToken { get; set; }
+        public required string AccesTokenCrypte { get; set; }
 
         public int IdCompteCourant { get; set; }
 

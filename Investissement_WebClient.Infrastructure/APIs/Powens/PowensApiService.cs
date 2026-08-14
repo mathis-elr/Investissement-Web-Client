@@ -2,6 +2,7 @@ using Investissement_WebClient.Infrastructure.APIs.Powens.Responses;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
+using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Microsoft.Extensions.DependencyInjection;
 using Investissement_WebClient.Domain.Modeles;
@@ -15,15 +16,21 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
     {
         private readonly IBanqueAccesRepository _banqueAccesRepository;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CryptOptions _optionsEncryption;
+        private readonly ICryptService _encryptService;
         private readonly PowensApiOptions _options;
         private readonly HttpClient _httpClient;
 
         public PowensApiService(IBanqueAccesRepository banqueAccesRepository,
+                                IOptions<CryptOptions> optionsEncryption,
                                 IOptions<PowensApiOptions> options,
                                 IServiceScopeFactory scopeFactory,
+                                ICryptService encryptService,
                                 HttpClient httpClient)
         {
             _banqueAccesRepository = banqueAccesRepository;
+            _optionsEncryption = optionsEncryption.Value;
+            _encryptService = encryptService;
             _scopeFactory = scopeFactory;
             _options = options.Value;
             _httpClient = httpClient;
@@ -93,11 +100,13 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
         public async Task GetFlux(DateTime dateDebut, DateTime dateFin, int userId)
         {
             var acces = await _banqueAccesRepository.GetByUserId(userId) ?? throw new Exception("Aucune instance du token est enregistré");
+            var tokenClair = _encryptService.Decrypt(acces.AccesTokenCrypte, _optionsEncryption.MasterKey);
+
             var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
             var dateFinString = dateFin.ToString("yyyy-MM-dd");
             var requete = $"{_options.AccountsEndPoint}/{acces.IdCompteCourant}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
 
-            var reponse = await RequeteGetAvecToken(acces.AccesToken, requete);
+            var reponse = await RequeteGetAvecToken(tokenClair, requete);
 
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
@@ -126,7 +135,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
             if (acces != null)
             {
-                acces.AccesToken = token;
+                acces.AccesTokenCrypte = _encryptService.Encrypt(token, _optionsEncryption.MasterKey);
                 acces.IdCompteCourant = idCompteCourant;
                 acces.DateCreation = DateTime.Now;
                 acces.DateExpiration = DateTime.Now.AddDays(90);
@@ -136,7 +145,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             {
                 var newAcces = new BanqueAcces
                 {
-                    AccesToken = token,
+                    AccesTokenCrypte = _encryptService.Encrypt(token, _optionsEncryption.MasterKey),
                     IdCompteCourant = idCompteCourant,
                     DateCreation = DateTime.Now,
                     DateExpiration = DateTime.Now.AddDays(90),

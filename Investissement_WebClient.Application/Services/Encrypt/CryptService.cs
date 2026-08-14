@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Investissement_WebClient.Application.Services
+namespace Investissement_WebClient.Application.Services.Encrypt
 {
     public class CryptService : ICryptService
     {

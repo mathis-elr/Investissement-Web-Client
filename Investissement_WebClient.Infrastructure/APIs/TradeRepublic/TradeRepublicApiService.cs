@@ -2,6 +2,7 @@
 using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Domain.Modeles;
@@ -17,28 +18,31 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
     {
         private readonly ITradeRepublicAccesRepository _tradeRepublicAccesRepository;
         private readonly IFluxInvestissementService _fluxInvestissementService;
-        private readonly TradeRepublicApiOptions _options;
+        private readonly TradeRepublicApiOptions _optionsTradeRepublic;
+        private readonly CryptOptions _optionsEncryption;
         private readonly ICryptService _encryptService;
         private readonly HttpClient _httpClient;
 
         public TradeRepublicApiService(ITradeRepublicAccesRepository tradeRepublicAccesRepository,
+                                       IOptions<TradeRepublicApiOptions> optionsTradeRepublic,
                                        IFluxInvestissementService fluxInvestissementService,
-                                       IOptions<TradeRepublicApiOptions> options,
+                                       IOptions<CryptOptions> optionsEncryption,
                                        ICryptService encryptService, 
                                        HttpClient httpClient)
         {
             _tradeRepublicAccesRepository = tradeRepublicAccesRepository;   
             _fluxInvestissementService = fluxInvestissementService;
+            _optionsEncryption = optionsEncryption.Value;
             _encryptService = encryptService;
-            _options = options.Value;
+            _optionsTradeRepublic = optionsTradeRepublic.Value;
             _httpClient = httpClient;
 
-            _httpClient.BaseAddress = new Uri(_options.BaseUri);
+            _httpClient.BaseAddress = new Uri(_optionsTradeRepublic.BaseUri);
             _httpClient.Timeout = TimeSpan.FromSeconds(120);
 
-            if (!_httpClient.DefaultRequestHeaders.Contains(_options.CleeApiKey))
+            if (!_httpClient.DefaultRequestHeaders.Contains(_optionsTradeRepublic.CleeApiKey))
             {
-                _httpClient.DefaultRequestHeaders.Add(_options.CleeApiKey, _options.CleeApiValue);
+                _httpClient.DefaultRequestHeaders.Add(_optionsTradeRepublic.CleeApiKey, _optionsTradeRepublic.CleeApiValue);
             }
         }
 
@@ -48,7 +52,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
             {
                 var accesTR = await GetTradeRepublicAcces(userId) ?? throw new Exception("Identifiants Trade Republic manquants");
 
-                var request = new HttpRequestMessage(HttpMethod.Post, _options.RequestSmsEndPoint);
+                var request = new HttpRequestMessage(HttpMethod.Post, _optionsTradeRepublic.RequestSmsEndPoint);
 
                 var jsonPayload = "{\"num-tel\":\"+33" + accesTR.NumTel + "\", \"pin\":\"" + accesTR.Pin + "\"}";
                 request.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
@@ -89,7 +93,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
                     throw new Exception("Format du code invalide, 4 chiffres requis");
 
                 var body = new { code = codeSms };
-                var response = await _httpClient.PostAsJsonAsync(_options.ConfirmSmsEndPoint, body);
+                var response = await _httpClient.PostAsJsonAsync(_optionsTradeRepublic.ConfirmSmsEndPoint, body);
 
                 int codeStatus = (int)response.StatusCode;
 
@@ -122,10 +126,10 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
             try
             {
                 var dernierIdEnregistreValue = await _fluxInvestissementService.GetDernierFluxEnregistre(userId);
-                var request = new HttpRequestMessage(HttpMethod.Get, _options.DatasEndPoint);
+                var request = new HttpRequestMessage(HttpMethod.Get, _optionsTradeRepublic.DatasEndPoint);
 
                 if (!string.IsNullOrEmpty(dernierIdEnregistreValue))
-                    request.Headers.Add(_options.DernierIdEnregistreKey, dernierIdEnregistreValue);
+                    request.Headers.Add(_optionsTradeRepublic.DernierIdEnregistreKey, dernierIdEnregistreValue);
 
                 var response = await _httpClient.SendAsync(request);
 
@@ -186,8 +190,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 
             var accesDto = acces != null ? new TradeRepublicAccesDto
             {
-                NumTel = acces.NumTel,
-                Pin = _encryptService.Decrypt(acces.PinCrypte.ToString(), _options.MasterKey)
+                NumTel = _encryptService.Decrypt(acces.NumTelCrypte, _optionsEncryption.MasterKey),
+                Pin = _encryptService.Decrypt(acces.PinCrypte, _optionsEncryption.MasterKey)
             } : null;
 
             return accesDto;
@@ -199,17 +203,17 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 
             if (acces != null)
             {
-                var numTelEtier = accesDto.NumTel.Replace(" ", "");
+                var numTelEntier = accesDto.NumTel.Replace(" ", "");
 
-                acces.NumTel = numTelEtier;
-                acces.PinCrypte = _encryptService.Encrypt(accesDto.Pin, _options.MasterKey);
+                acces.NumTelCrypte = _encryptService.Encrypt(numTelEntier, _optionsEncryption.MasterKey);
+                acces.PinCrypte = _encryptService.Encrypt(accesDto.Pin, _optionsEncryption.MasterKey);
             }
             else
             {
                 var newAcces = new TradeRepublicAcces
                 {
-                    NumTel = accesDto.NumTel,
-                    PinCrypte = _encryptService.Encrypt(accesDto.Pin, _options.MasterKey),
+                    NumTelCrypte = _encryptService.Encrypt(accesDto.NumTel, _optionsEncryption.MasterKey),
+                    PinCrypte = _encryptService.Encrypt(accesDto.Pin, _optionsEncryption.MasterKey),
                     UtilisateurId = userId
                 };
 

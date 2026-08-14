@@ -2,8 +2,6 @@
 {
     public class TradeRepublicApiOptions
     {
-        public string MasterKey { get; set; } = string.Empty;
-
         public string BaseUri { get; set; } = string.Empty;
         public string RequestSmsEndPoint { get; set; } = string.Empty;
         public string ConfirmSmsEndPoint { get; set; } = string.Empty;
