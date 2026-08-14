@@ -1,22 +1,22 @@
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-	<!-- Camembert complet -->
-	<circle cx="12" cy="12" r="9" fill="goldenrod"/>
-
-	<!-- Séparateur vertical haut -->
-	<path d="M12 12V2.4"
-          stroke="#242424"
-          stroke-width="1.6"
+    <!-- Camembert complet -->
+    <circle cx="12" cy="12" r="9" fill="goldenrod"/>
+	
+    <!-- Séparateur vertical haut -->
+    <path d="M12 12V3.8" 
+          stroke="#242424" 
+          stroke-width="1.6" 
           stroke-linecap="round"/>
-
-	<!-- Séparateur horizontal droite -->
-	<path d="M12 12H20.3"
-          stroke="#242424"
-          stroke-width="1.6"
+	
+    <!-- Séparateur horizontal droite -->
+    <path d="M12 12H20.3" 
+          stroke="#242424" 
+          stroke-width="1.6" 
           stroke-linecap="round"/>
-
-	<!-- Séparateur diagonal bas droite -->
-	<path d="M12 12L16.7 18.7"
-          stroke="#242424"
-          stroke-width="1.6"
+	
+    <!-- Séparateur diagonal bas droite -->
+    <path d="M12 12L16.7 18.7" 
+          stroke="#242424" 
+          stroke-width="1.6" 
           stroke-linecap="round"/>
 </svg>

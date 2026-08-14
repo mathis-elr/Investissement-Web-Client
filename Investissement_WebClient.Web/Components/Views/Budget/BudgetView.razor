@@ -4,16 +4,29 @@
 @inject IToastService TS
 @inject RecuperationFluxBancairesWorker BankWorker
 @implements IDisposable
+@inject NavigationManager Nav
 
 <PageTitle>Budget</PageTitle>
 
+@if (BVM.ConnexionBanqueRequise)
+{
+    <div class="bloc-empty">
+        <_EmptyStateCard Icone="icons/wallet.svg"
+                         Titre="Banque non-synchronisée"
+                         Description="Connectez votre banque en toute sécurité grâce à Powens afin de récupérer vos flux et analyser votre budget."
+                         TexteBouton="Synchroniser ma banque"
+                         InfoBulle="Votre accès bancaire doit être renouvelé pour récupérer les derniers flux (sécurité tous les 90 jours)."
+                         OnClick="@(() => Nav.NavigateTo(BVM.UrlConnexionPowens, forceLoad: true))" />
+    </div>
+}
+
 <div class="budget">
 
-    <div class="flux">
+    <div class="flux @(BVM.ConnexionBanqueRequise ? "flou" : "")">
         <_BudgetSidebar Model="@BVM" />
     </div>
 
-    <div class="flux-stats">
+    <div class="flux-stats @(BVM.ConnexionBanqueRequise ? "flou" : "")">
         @switch (BVM.StatutMoisActif?.Statut)
         {
             case null:

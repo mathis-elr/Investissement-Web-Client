@@ -30,7 +30,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public TradeRepublicAccesDto TradeRepublicAcces { get; set; } = new TradeRepublicAccesDto();
         public bool IdentifiantsRequis { get; set; } = false;
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
-        public string Message { get; set; } = "Aucune demande en cours ...";
+        public string Message { get; set; } = string.Empty;
         public Etat Etat { get; set; } = Etat.Neutre;
         public string CodeSms { get; set; } = string.Empty;
         public bool DemandeEnCours { get; set; } = false;
@@ -143,7 +143,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public async Task DemandeCodeSms()
         {
             DemandeEnCours = true;
-            Message = "Tentative de connexion avec l'emetteur, cette opération dure en moyenne 30 secondes ...";
+            Message = "Tentative de connexion avec l'emetteur, cette opération dure en moyenne 45 secondes ...";
 
             try
             {
@@ -238,7 +238,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public void FinDeDemande()
         {
             Etat = Etat.Neutre;
-            Message = "Aucune demande en cours ...";
+            Message = string.Empty;
             DemandeEnCours = false;
             VerificationEnCours = false;
 
@@ -252,10 +252,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             {
                 TradeRepublicAcces = new TradeRepublicAccesDto();
                 IdentifiantsRequis = true;
-                Message = "Synchronisation de vos identifiants Trade Republic nécéssaire";
             }
             else
-                Message = "Aucune demande en cours ...";  
+            {
+                IdentifiantsRequis = false;
+                NotifyStateChanged();
+            }
         }
 
         public string DeterminerClasse(decimal variationPrix)

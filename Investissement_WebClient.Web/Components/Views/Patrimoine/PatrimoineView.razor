@@ -3,20 +3,30 @@
 @implements IDisposable
 @inject IToastService TS
 @inject PatrimoineViewModel PVM
+@inject NavigationManager Nav
 
 <PageTitle>Patrimoine</PageTitle>
 
+@if (PVM.AucuneDonnees)
+{
+    <div class="bloc-empty">
+        <_EmptyStateCard Icone="icons/gain.svg"
+                         Titre="Aucune donnée de patrimoine"
+                         Description="Pour calculer et afficher l'évolution de votre patrimoine net, synchronisez d'abord vos flux."
+                         TexteBouton="Accéder à Investissement"
+                         InfoBulle="Synchronisez vos actifs."
+                         OnClick="@(() => Nav.NavigateTo("investissement", forceLoad: true))" />
+    </div>
+}
+
+
 <div class="patrimoine">
     
-    <div class="patrimoine-infos">
+    <div class="patrimoine-infos @(PVM.AucuneDonnees ? "flou" : "")">
         <_PatrimoineInfos Model="@PVM" />
     </div>
 
-    <div class="patrimoine-graphique">
-
-        <div class="options">
-            <_OptionsAffichageGraphique Model="PVM" />
-        </div>
+    <div class="patrimoine-graphique @(PVM.AucuneDonnees ? "flou" : "")">
 
         @if (PVM.RecuparationEnCours)
         {
@@ -26,6 +36,10 @@
         }
         else if (PVM.PointsPlusValue.Any() || PVM.BougiesPlusValue.Any())
         {
+            <div class="options">
+                <_OptionsAffichageGraphique Model="PVM" />
+            </div>
+
             <div class="graphique">
                 @if (PVM.TypeGraphiqueSelectionnee == TypeGraphique.Candle)
                 {
@@ -54,9 +68,6 @@
         PVM.OnChange += StateHasChanged;
 
         await PVM.StartLoadData();
-
-        if (PVM.ValeurPatrimoineCourante == 0) 
-            TS.ShowWarning("ℹ️ Commencez à recupérer vos flux dans 'Investissement' pour pouvoir suivre l'évolution de vôtre patrimoine");
 
         if (PVM.HasError)
         {

@@ -38,7 +38,7 @@
     overflow: hidden;
 }
 
-    /* BLOC TRANSACTIONS */
+/* BLOC TRANSACTIONS */
 .transactions {
     display: grid;
     grid-template-rows: auto auto 1fr;
@@ -83,6 +83,14 @@
     }
 }
 
+::deep form {
+    display: grid;
+    gap: 20px;
+}
+
+::deep .form-grid label {
+    font-size: 16px;
+}
 
 ::deep .header {
     display: flex;

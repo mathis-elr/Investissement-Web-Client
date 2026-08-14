@@ -12,6 +12,10 @@
             <img src="icons/back.svg" />
         </button>
     }
+    else
+    {
+        <label>Configuration Trade Republic</label>
+    }
 
     <span class="description">
         Renseignez vos informations de connexion afin de pouvoir synchroniser vos transactions Trade Republic.
@@ -20,7 +24,7 @@
     <div class="form-grid">
         <label>Num tel</label>
         <div class="champ">
-            <p>+33</p>
+            <span class="prefix">+33</span>
             <InputText @bind-Value="Model.TradeRepublicAcces.NumTel" placeholder="7 07 07 07 07" maxlength="9" />
         </div>
 
@@ -37,9 +41,25 @@
         }
         else
         {
+            <img src="icons/save.svg" />
             <span>Enregistrer</span>
         }
     </button>
+
+    <div class="security-card">
+        <div class="security-item">
+            <img src="icons/lock.svg" class="sec-icon" alt="" />
+            <span>Données chiffrées et confidentielles</span>
+        </div>
+        <div class="security-item">
+            <img src="icons/shield.svg" class="sec-icon" alt="" />
+            <span>Accès en lecture seule (aucun retrait ou achat possible)</span>
+        </div>
+        <div class="security-item">
+            <img src="icons/phone.svg" class="sec-icon" alt="" />
+            <span>Confirmation requise via votre mobile lors de la synchronisation</span>
+        </div>
+    </div>
 </EditForm>
 
 @code{
@@ -63,7 +83,8 @@
             return;
         }
 
-        await Model.LoadIdentifiantsRequis();
+        if (Model.IdentifiantsRequis)
+            await Model.LoadIdentifiantsRequis();
 
         IsLoading = false;
         FermerEdition();

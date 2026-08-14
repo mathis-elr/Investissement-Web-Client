@@ -64,6 +64,13 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #ffffff;
+        -webkit-box-shadow: 0 0 0px 1000px #1e1e1e inset;
+        transition: background-color 5000s ease-in-out 0s;
+    }
 input[type=number] {
     -moz-appearance: textfield;
 }
@@ -168,6 +175,28 @@ button {
 .btn-submit {
     width: 100%;
     background-color: goldenrod;
+}
+
+.bloc-empty {
+    display: grid;
+    justify-self: center;
+    align-self: center;
+    max-width: 500px;
+    height: fit-content;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border: 1px solid goldenrod;
+    position: fixed;
+    z-index: 999;
+}
+
+
+.flou {
+    filter: blur(5px) brightness(0.7);
+    pointer-events: none; 
+    user-select: none;
+    transition: filter 0.3s ease;
 }
 
 .icon {

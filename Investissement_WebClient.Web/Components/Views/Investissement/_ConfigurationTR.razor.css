@@ -39,7 +39,7 @@
     .champ{
         display:inline-flex;
         align-items:center;
-        gap:3px;
+        gap:7px;
     }
 
 .description {
@@ -48,4 +48,31 @@
     line-height: 1.4;
     max-width: 420px;
 }
+
+
+.security-card {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: #8f8f8f;
+}
+
+.sec-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
 

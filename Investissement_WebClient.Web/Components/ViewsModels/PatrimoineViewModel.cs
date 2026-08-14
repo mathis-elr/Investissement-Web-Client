@@ -26,6 +26,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // DATAS INFOS PATRIMOINE
         public bool RecuparationEnCours { get; set; } = false;
         public decimal ValeurPatrimoineCourante { get; set; }
+        public bool AucuneDonnees { get; set; } = false;
         private decimal ValeurInvestissementTotal { get; set; }
         public decimal GainTotal => ValeurPatrimoineCourante - ValeurInvestissementTotal;
         public IEnumerable<VariationDto> Variations { get; set; } = [];
@@ -61,7 +62,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
                 await LoadValeurPatrimoineCourante(prixParActif);
 
-                if (ValeurPatrimoineCourante != 0)
+                if (!AucuneDonnees)
                 {
                     await LoadValeurInvestissementTotale();
 
@@ -193,6 +194,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             try
             {
                 ValeurPatrimoineCourante = await _fluxInvestissementService.CalculerValeurCourante(prixParActif, IdUser);
+                AucuneDonnees = ValeurPatrimoineCourante == 0;
+
             }
             catch (Exception ex)
             {

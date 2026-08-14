@@ -1,0 +1,23 @@
+﻿<div class="bloc">
+    <div class="icon"><img src="@Icone" /></div>
+
+    <label>@Titre</label>
+
+    <span>@((MarkupString)Description)</span>
+
+    <button type="button"
+            class="btn-submit"
+            @onclick="OnClick"
+            title="@InfoBulle">
+        @TexteBouton
+    </button>
+</div>
+
+@code {
+    [Parameter] public string Icone { get; set; } = string.Empty;
+    [Parameter] public string Titre { get; set; } = string.Empty;
+    [Parameter] public string Description { get; set; } = string.Empty;
+    [Parameter] public string TexteBouton { get; set; } = string.Empty;
+    [Parameter] public string InfoBulle { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnClick { get; set; }
+}

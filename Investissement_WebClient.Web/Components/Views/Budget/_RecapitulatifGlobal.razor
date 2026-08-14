@@ -17,87 +17,82 @@
     }
 </div>
 
-@if (Model.ConnexionBanqueRequise)
-{
-    <div class="synchronisation-requise">
-        <_SynchronisationBanque Model="@Model" />
-    </div>
-}
-else
-{
-    <div class="content">
-        @if (Model.ActionEnCours)
-        {
-            <_ChargementGraphique />
-        }
-        else if (Model.BudgetLineCharts.Any())
-        {
-            <div class="infos">
-                <div class="info">
-                    <span>Solde net en fin de mois</span>
-                    <label class="@(Model.SoldeMoyenFinMois == 0 ? "goldenrod" : Model.SoldeMoyenFinMois > 0 ? "vert" : "rouge")">
-                        @Model.SoldeMoyenFinMois.ToString("C")
-                    </label>
-                </div>
-
-                <div class="info">
-                    <span>Dépenses moyennes</span>
-                    <label class="rouge">@Model.DepensesMoyennnes.ToString("C")</label>
-                </div>
-
-                <div class="info">
-                    <span>Taux d'épargne</span>
-                    <label class="goldenrod">@Model.TauxEpargne.ToString("P")</label>
-                </div>
+<div class="content">
+    @if (Model.ActionEnCours)
+    {
+        <_ChargementGraphique />
+    }
+    else if (Model.BudgetLineCharts.Any())
+    {
+        <div class="infos">
+            <div class="info">
+                <span>Solde net en fin de mois</span>
+                <label class="@(Model.SoldeMoyenFinMois == 0 ? "goldenrod" : Model.SoldeMoyenFinMois > 0 ? "vert" : "rouge")">
+                    @Model.SoldeMoyenFinMois.ToString("C")
+                </label>
             </div>
 
-            <div class="graphique">
-                <ApexChart TItem="BudgetParMoisLineChartDto"
-                           Options="BudgetChartsOptions.OptionBudgetLineChart">
-
-                    @foreach (var categorie in Model.BudgetLineCharts)
-                    {
-                        <ApexPointSeries TItem="BudgetParMoisLineChartDto"
-                                         Items="categorie.BudgetCategorieParMois"
-                                         Name="@categorie.Categorie"
-                                         SeriesType="SeriesType.Line"
-                                         YValue="@(e => categorie.Categorie == "Patrimoine" ? Math.Abs(e.Budget) : e.Budget)"
-                                         XValue="@(e => e.Date)" />
-                    }
-
-                </ApexChart>
+            <div class="info">
+                <span>Dépenses moyennes</span>
+                <label class="rouge">@Model.DepensesMoyennnes.ToString("C")</label>
             </div>
 
-            <div class="legende">
-                @for (int i = 0; i < Model.BudgetLineCharts.Count(); i++)
+            <div class="info">
+                <span>Taux d'épargne</span>
+                <label class="goldenrod">@Model.TauxEpargne.ToString("P")</label>
+            </div>
+        </div>
+
+        <div class="graphique">
+            <ApexChart TItem="BudgetParMoisLineChartDto"
+            Options="BudgetChartsOptions.OptionBudgetLineChart">
+
+                @foreach (var categorie in Model.BudgetLineCharts)
                 {
-                    var categorie = Model.BudgetLineCharts.ElementAt(i);
-                    var couleur = Model.CouleursGraphique[i % Model.CouleursGraphique.Count];
-                    var moyenne = categorie.BudgetCategorieParMois.Average(b => b.Budget);
-
-                    <div class="categorie">
-                        <div class="categorie-header">
-                            <span class="pastille" style="background-color: @couleur;"></span>
-                            <span class="nom-cat">@categorie.Categorie</span>
-                        </div>
-                        @if (categorie.Categorie == "Patrimoine")
-                        {
-                            <label class="goldenrod">@Math.Abs(moyenne).ToString("C")</label>
-                        }
-                        else
-                        {
-                            <label class="@(moyenne > 0 ? "vert" : "rouge")">@moyenne.ToString("C")</label>
-                        }
-                    </div>
+                    <ApexPointSeries TItem="BudgetParMoisLineChartDto"
+                    Items="categorie.BudgetCategorieParMois"
+                    Name="@categorie.Categorie"
+                    SeriesType="SeriesType.Line"
+                    YValue="@(e => categorie.Categorie == "Patrimoine" ? Math.Abs(e.Budget) : e.Budget)"
+                    XValue="@(e => e.Date)" />
                 }
-            </div>
-        }
-        else
-        {
-            <p>Aucune données enregistrées, récuperer et completer les flux d'une période au minimum pour visualiser le récapitulatif</p>
-        }
-    </div>
-}
+
+            </ApexChart>
+        </div>
+
+        <div class="legende">
+            @for (int i = 0; i < Model.BudgetLineCharts.Count(); i++)
+            {
+                var categorie = Model.BudgetLineCharts.ElementAt(i);
+                var couleur = Model.CouleursGraphique[i % Model.CouleursGraphique.Count];
+                var moyenne = categorie.BudgetCategorieParMois.Average(b => b.Budget);
+
+                <div class="categorie">
+                    <div class="categorie-header">
+                        <span class="pastille" style="background-color: @couleur;"></span>
+                        <span class="nom-cat">@categorie.Categorie</span>
+                    </div>
+                    @if (categorie.Categorie == "Patrimoine")
+                    {
+                        <label class="goldenrod">@Math.Abs(moyenne).ToString("C")</label>
+                    }
+                    else
+                    {
+                        <label class="@(moyenne > 0 ? "vert" : "rouge")">@moyenne.ToString("C")</label>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else if (Model.ConnexionBanqueRequise)
+    {
+        <p>Synchronisez d'abord votre banque pour en récupérer les flux.</p>
+    }
+    else
+    {
+        <p>Aucune données enregistrées, récuperer et completer les flux d'une période au minimum pour visualiser le récapitulatif</p>
+    }
+</div>
 
 
 

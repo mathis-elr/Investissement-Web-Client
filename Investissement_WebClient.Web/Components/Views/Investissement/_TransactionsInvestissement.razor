@@ -1,7 +1,7 @@
 ﻿@inject IToastService TS
 
 <div class="header">
-    @if (!_afficherFormulaire && !Model.IdentifiantsRequis && !Model.DemandeEnCours)
+    @if (!_afficherFormulaire && !Model.DemandeEnCours)
     {
         <label>Transactions</label>
     }
@@ -23,9 +23,9 @@
 </div>
 
 <div class="transactions-infos">
-    @if (_afficherFormulaire || Model.IdentifiantsRequis)
+    @if (_afficherFormulaire)
     {
-        <_FormIdTR Model="@Model" OnAnnuler="MasquerFormulaire" />
+        <_ConfigurationTR Model="@Model" OnAnnuler="MasquerFormulaire" />
     }
     else if (Model.Etat == Etat.SmsRequis)
     {
