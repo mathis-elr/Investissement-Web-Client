@@ -64,6 +64,9 @@
             TS.ShowInfo("Synchronisation des flux lancée en arrière-plan ...");
             BankWorker.DeclencherSynchronisationImmediate(BVM.IdUser);
         }
+        
+        if (SyncStatus == "error")
+            TS.ShowError("Erreur lors de la synchronisation de la banque, veuillez réessayer plus tard.");
     }
 
     public void Dispose()

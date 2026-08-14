@@ -76,8 +76,7 @@
         await IVM.FinaliserConnexionBanque(CodeRetour!);
         if (IVM.HasError)
         {
-            TS.ShowError(IVM.ErrorMessage);
-            return;
+            Nav.NavigateTo("/budget?sync=error", replace: true);
         }
 
         Nav.NavigateTo("/budget?sync=ok", replace: true);

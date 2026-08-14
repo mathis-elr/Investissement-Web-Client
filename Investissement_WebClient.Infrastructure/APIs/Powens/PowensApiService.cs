@@ -93,7 +93,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     break;
 
                 default:
-                    throw new Exception("Erreur inconnue, code erreur:" + reponse.StatusCode);
+                    Console.WriteLine("Erreur inconnue, code erreur:" + reponse.StatusCode);
+                    throw new Exception("Une erreur inattendue est survenue, ressayer plus tard.");
             }
         }
 
