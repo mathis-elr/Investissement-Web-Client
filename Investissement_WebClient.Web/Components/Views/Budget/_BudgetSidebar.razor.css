@@ -5,12 +5,6 @@
     gap: 20px;
 }
 
-    .recap:hover,
-    .active-recapitulatif-global {
-        background-color: darkgoldenrod;
-        transform: scale(0.98);
-    }
-
 .btn-get-transactions:disabled {
     background-color: #999;
     color: #585d60;
@@ -114,9 +108,15 @@ select, input {
     cursor: pointer;
     margin-bottom: 15px;
     font-size: 18px;
-    background-color: goldenrod;
-    color: #1a1a1a;
+    border: 1px solid goldenrod;
+    color: goldenrod;
 }
+    .recap:hover,
+    .active-recapitulatif-global {
+        background-color: goldenrod;
+        color: #1e1e1e;
+        transform: scale(0.98);
+    }
 
 .un-mois:not(.disabled, .recap):hover,
 .un-mois.active {

@@ -23,7 +23,8 @@
                 <_EditionFluxMensuel Model="@BVM" />
                 break;
             case Statut.complete:
-                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" /> // la cle permet de forcer la mise à jour
+                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" />
+                // la cle permet de forcer la mise à jour
                 break;
             case Statut.aucune_donnees:
                 <_BudgetGetFlux Model="@BVM" />
@@ -32,6 +33,7 @@
     </div>
 
 </div>
+
 
 @code {
     private CancellationTokenSource _cts = new();
@@ -49,9 +51,6 @@
             TS.ShowInfo("Synchronisation des flux lancée en arrière-plan ...");
             BankWorker.DeclencherSynchronisationImmediate(BVM.IdUser);
         }
-
-        if (BVM.ConnexionBanqueRequise)
-            TS.ShowWarning("ℹ️ Synchronisation avec vôtre banque requise pour récuperer les flux mensuel.");
     }
 
     public void Dispose()

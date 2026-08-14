@@ -1,17 +1,9 @@
-﻿@using Investissement_WebClient.Web.Components.ViewsModels.Budget
-@inject NavigationManager Nav
-
-<div class="header">
+﻿<div class="header">
     <label>Historique</label>
 
     @if (Model.ConnexionBanqueRequise)
     {
-        <button type="button" class="btn-submit"
-                @onclick="RedirigerVersPowens"
-                title="Votre accès bancaire doit être renouvelé pour récupérer les derniers flux (sécurité tous les 90 jours).">
-            <img src="icons/sync.svg" />
-            Synchroniser ma banque
-        </button>
+        <p class="fst-italic">Banque non synchronisée</p>
     }
     else if (Model.DateExpirationSync.HasValue)
     {
@@ -62,7 +54,7 @@
 
         <div class="un-mois @(estIndisponible || Model.ConnexionBanqueRequise ? "disabled" : estActif ? "active" : "")"
              @onclick="() => { if (!estIndisponible && !Model.ConnexionBanqueRequise) { Model.LoadFluxUnMois(unMois); } }"
-             title="@(estIndisponible ? $"Vous pourrez voir vox flux à partir du 5 {unMois.Date.AddMonths(1).ToString("MMMM yyyy")}" : "Cliquer pour consulter les flux du mois")">
+             title="@(Model.ConnexionBanqueRequise ? "Connexion à une banque requise" : estIndisponible ? $"Vous pourrez voir vox flux à partir du 5 {unMois.Date.AddMonths(1).ToString("MMMM yyyy")}" : "Cliquer pour consulter les flux du mois")">
 
             <div class="gauche">
                 <img src='/icons/@(icon + ".svg")' />
@@ -76,9 +68,4 @@
 
 @code{
     [Parameter] public required BudgetViewModel Model { get; set; }
-
-    public void RedirigerVersPowens()
-    {
-        Nav.NavigateTo(Model.UrlConnexionPowens, forceLoad: true);
-    }
 }

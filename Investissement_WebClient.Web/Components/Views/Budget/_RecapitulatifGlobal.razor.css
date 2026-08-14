@@ -1,21 +1,11 @@
-.solde {
-    display: grid;
-    text-align: right;
+.synchronisation-requise {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    height: 100%; 
+    text-align: center;
 }
-
-    .solde label {
-        font-size: 20px;
-        font-weight: 600;
-        line-height: 1.2;
-    }
-
-    .solde span {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #8e8e93; /* Gris iOS neutre */
-        margin-top: 2px;
-    }
 
 .content {
     display: grid;
