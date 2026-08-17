@@ -53,8 +53,8 @@ input {
 
     input:focus,
     select:focus {
-        outline: none !important;
-        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
+        outline: none;
+        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
     }
 
 

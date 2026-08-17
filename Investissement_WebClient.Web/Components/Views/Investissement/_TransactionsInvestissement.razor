@@ -69,7 +69,18 @@
     }
 </div>
 
+@if (!Model.DemandeEnCours || !Model.FluxInvestissement.Any() && _afficherFormulaire)
+{
+    <div class="filtres">
+        <div class="recherche">
+            <img src="icons/aucune-donnee.svg" />
+            <input type="text" @bind="Model.TexteRecherche" @bind:event="oninput" placeholder="Rechercher une transaction ..." />
+        </div>
+    </div>
+}
+
 <div class="content">
+
     @if (Model.ChargementEncours)
     {
         <div class="center">
@@ -87,7 +98,7 @@
     }
     else if (Model.FluxInvestissement.Any())
     {
-        @foreach (var transactionsParDate in Model.FluxInvestissement.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key)!)
+        @foreach (var transactionsParDate in Model.FluxInvestissementFiltres.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key)!)
         {
             <div class="mes-transactions-par-jour">
                 <div class="mes-transactions-par-jour-header">

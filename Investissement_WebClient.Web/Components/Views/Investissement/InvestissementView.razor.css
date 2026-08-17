@@ -41,7 +41,7 @@
 /* BLOC TRANSACTIONS */
 .transactions {
     display: grid;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto auto 1fr;
     gap: 20px;
     grid-column: 1;
     grid-row: 1/3;

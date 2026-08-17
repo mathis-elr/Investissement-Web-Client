@@ -38,6 +38,45 @@ select, input {
     overflow-y: auto;
 }
 
+.filtres {
+    display: grid;
+    gap: 10px;
+}
+
+
+.recherche {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+/*    border: 1px solid rgba(218,165,32,.5);*/
+    background-color: #242424;
+    border-radius: 9px;
+    padding: 5px 10px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+    .recherche img {
+        width: 22px;
+        height: 22px;
+        opacity: .7;
+        flex-shrink: 0;
+    }
+
+    .recherche input {
+        all: unset;
+        width: 100%;
+        outline: none;
+        border: none;
+        box-shadow: none;
+    }
+
+        .recherche input:focus {
+            outline: none;
+            border: none;
+            box-shadow: none;
+        }
+
+
 .mes-transactions-par-jour {
     display: flex;
     flex-direction: column;

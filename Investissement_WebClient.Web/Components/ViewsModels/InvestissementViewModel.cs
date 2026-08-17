@@ -30,11 +30,31 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public TradeRepublicAccesDto TradeRepublicAcces { get; set; } = new TradeRepublicAccesDto();
         public bool IdentifiantsRequis { get; set; } = false;
         public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
+
+        public IEnumerable<FluxInvestissementDto> FluxInvestissementFiltres =>
+            string.IsNullOrWhiteSpace(TexteRecherche)
+                ? FluxInvestissement
+                : FluxInvestissement.Where(f =>
+                    (f.Actif.Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase))
+                    || f.Date.ToString("dd MM yy").Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase)
+                    || f.Date.ToString("dddd MMMM yyyy").Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase)
+                    || f.Prix.ToString().Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase)
+                    || f.Quantite.ToString().Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase));
+
         public string Message { get; set; } = string.Empty;
         public Etat Etat { get; set; } = Etat.Neutre;
         public string CodeSms { get; set; } = string.Empty;
         public bool DemandeEnCours { get; set; } = false;
         public bool VerificationEnCours { get; set; } = false;
+        private string _texteRecherche { get; set; } = string.Empty;
+        public string TexteRecherche
+        {
+            get => _texteRecherche;
+            set
+            {
+                _texteRecherche = value;
+            }
+        }
 
         // INVESTISSEMENT HISTORIQUE
         public bool ChargementEncours { get; set; } = false;
