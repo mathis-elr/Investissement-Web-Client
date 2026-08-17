@@ -1,9 +1,8 @@
 nav {
     display: flex;
-    justify-content: center;
     align-items: center;
-    border-radius: 15px;
     background-color: #1e1e1e;
+    border-radius: 15px;
     padding: 5px;
     width: fit-content;
     margin: 0 auto;
@@ -11,29 +10,53 @@ nav {
     transition: all 0.3s ease-in-out;
 }
 
-    nav:hover {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-
 ::deep .nav-link {
     text-decoration: none;
-    border-radius: 13px;
     color: #808080;
-    font-weight: bold;
+/*    font-weight: bold;*/
     padding: .4rem 1rem;
     background-color: transparent;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+/*    border-bottom: 1px solid transparent;
+    position: relative;*/
 }
     ::deep .nav-link:hover:not(.active) {
         color: #b3b3b3;
-        background-color: rgba(255, 255, 255, 0.03);
+    }
+    ::deep .nav-link.active {
+        background-color: rgba(218,165,32,0.1);
+        border: 1px solid goldenrod;
+        box-shadow: 0 0px 3px goldenrod;
+        border-radius: 13px;
+        color: goldenrod;
     }
 
-    ::deep .nav-link.active {
-        background-color: #242424;
-        color: goldenrod;
-        transform: scale(1.01); 
+/*    ::deep .nav-link.active {
+        color: white;
     }
+
+    ::deep .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        border-radius: 10px;
+        background: goldenrod;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: 0.5s ease-in-out;
+    }
+
+    ::deep .nav-link.active::after {
+        transform: scaleX(0.6);
+        box-shadow: 0 0px 7px goldenrod;
+    }
+
+    ::deep .nav-link.active:hover::after {
+        transform: scaleX(0.5);
+        color: #808080;
+    }*/
 
 ::deep .link {
     font-family: 'Consolas', monospace;
