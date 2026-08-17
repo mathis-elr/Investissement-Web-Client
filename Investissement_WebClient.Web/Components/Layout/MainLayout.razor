@@ -1,12 +1,15 @@
 ﻿@using Investissement_WebClient.Web.GestionSession
 
 @inherits LayoutComponentBase
+@inject NavigationManager Navigation
 @inject SessionService Session
+@inject IJSRuntime JS
 
 <_Notification />
 
 <div class="main-layout">
-    <nav class="glass-card">
+    <nav>
+        <div class="slider"></div>
         <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
             <div class="link">Dashboard</div>
         </NavLink>
@@ -33,10 +36,33 @@
     private string AnneeCreation { get; set; } = string.Empty;
     private string AnneeCourante { get; set; } = DateTime.Now.Year.ToString();
 
+    private IJSObjectReference? module;
+
     protected override async Task OnInitializedAsync()
     {
+        Navigation.LocationChanged += NavigationChanged;
         await Session.Initialiser();
         PrenomUser = Session.Prenom;
         AnneeCreation = Session.AnneeCreation;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./Components/Layout/MainLayout.razor.js");
+
+            await module.InvokeVoidAsync("moveSlider");
+        }
+    }
+
+    private async void NavigationChanged(object? sender,LocationChangedEventArgs e)
+    {
+        if (module is not null)
+        {
+            await module.InvokeVoidAsync("moveSlider");
+        }
     }
 }
