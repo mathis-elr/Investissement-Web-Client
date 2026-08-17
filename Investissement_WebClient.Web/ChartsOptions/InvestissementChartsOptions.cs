@@ -18,13 +18,28 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 }
             },
 
+            Xaxis = new XAxis
+            {
+                Type = XAxisType.Category,
+                TickPlacement = TickPlacement.On,
+                Labels = new XAxisLabels
+                {
+                    Rotate = 0,
+                    Formatter = @"function(val) { 
+                        if (!val) return '';
+                        var d = new Date(val);
+                        if (isNaN(d.getTime())) return val;
+                        return d.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' });
+                    }"
+                }
+            },
+
             Colors = new List<string> { "goldenrod" },
 
             Stroke = new Stroke
             {
                 Curve = Curve.Smooth,
                 Width = 3,
-                LineCap = LineCap.Round,
             },
 
             Chart = new Chart
@@ -46,11 +61,17 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 Theme = Mode.Dark,
             },
 
+
             Markers = new Markers
             {
                 Colors = new List<string> { "goldenrod" },
                 StrokeWidth = 0,
             },
+
+            Legend = new Legend
+            {
+                Show = false
+            }
         };
     }
 }
