@@ -1,19 +1,22 @@
-﻿<div class="resume-patrimoine">
-    <span class="valeur-totale-courante">
-        <label>
-            @(Model.ValeurPatrimoineCourante == 0 ? "--,--" : Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2"))
-        </label>
-    </span>
+﻿
+<div class="resume-patrimoine">
+    <img src="icons/gain.svg" />
 
-    <span class="gain-total @Model.DeterminerClasse(Model.GainTotal)">
-        <span>
-            @(Model.GainTotal == 0 ? "--,--" : Model.ToStringPourcentage(Model.GainTotal, "C2")) 
+    <div class="infos-patrimoine">
+        <span class="valeur-totale-courante">
+            <label>
+                @(Model.ValeurPatrimoineCourante == 0 ? "--,--" : Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2"))
+            </label>
         </span>
-        <label>depuis le départ</label>
-    </span>
-</div>
 
-<div class="separateur-card"></div>
+        <span class="gain-total @Model.DeterminerClasse(Model.GainTotal)">
+            <span>
+                @(Model.GainTotal == 0 ? "--,--" : Model.ToStringPourcentage(Model.GainTotal, "C2"))
+            </span>
+            <label>depuis le départ</label>
+        </span>
+    </div>
+</div>
 
 <div class="variations-prix">
     @foreach (var variation in Model.Variations)

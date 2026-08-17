@@ -1,19 +1,26 @@
 ﻿.resume-patrimoine {
     display: flex;
-    flex-direction: column;
+    align-items:center;
+    gap:10px;
+}
+
+    .resume-patrimoine img {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+.infos-patrimoine {
+    display: grid;
     align-items: center;
     gap: 6px;
 }
 
-.valeur-totale-courante {
-    line-height: 1;
-    font-size: 32px;
-    font-weight: bold;
-}
-
     .valeur-totale-courante label {
         line-height: 1;
-        font-size: 30px;
+        font-size: 32px;
         font-weight: bold;
     }
 
@@ -39,27 +46,24 @@
 
 .variations-prix {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 0;
+    gap: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 5px 20px;
 }
 
 .variation-prix {
-    display: flex;
-    align-items: baseline;
+    display: grid;
     gap: 4px;
+    text-align: center;
 }
 
-.variation-prix:not(:last-child)::after {
-    content: "";
-    width: 1px;
-    height: 16px;
 
-    background: rgba(255,255,255,.12);
-
-    margin-left: 18px;
-    margin-right: 18px;
-}
+    .variation-prix:not(:last-child) {
+        border-right: 1px solid rgba(255,255,255,.12);
+        padding-right: 20px;
+    }
 
 
 .variation-prix label {
@@ -71,7 +75,7 @@
 @media (max-width: 1400px) {
 
     .valeur-totale-courante label {
-        font-size: 24px;
+        font-size: 26px;
     }
 
     .gain-total span {

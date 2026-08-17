@@ -108,7 +108,7 @@ select:hover {
 .separateur-card {
     width: 100%;
     height: 1px;
-    margin: 4px 0 2px;
+    margin-bottom: 10px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
 }
 

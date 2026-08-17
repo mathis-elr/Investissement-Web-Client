@@ -31,7 +31,7 @@ nav {
     padding: .4rem 1rem;
 }
 
-    ::deep nav-link.active .link {
+    ::deep .nav-link.active .link {
         color: goldenrod;
         font-weight: 600;
     }

@@ -40,7 +40,7 @@ namespace Investissement_WebClient.Application.Services
                 new() { Label = "7J", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 7) },
                 new() { Label = "1M", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 30) },
                 new() { Label = "1A", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 365) },
-                new() { Label = "All", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 0) },
+                new() { Label = "Tout", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 0) },
             };
         }
 
