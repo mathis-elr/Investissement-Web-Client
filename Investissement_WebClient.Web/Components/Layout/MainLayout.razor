@@ -24,6 +24,10 @@
 
         <NavLink class="nav-link" href="/budget">
             <div class="link">Budget</div>
+        </NavLink>     
+
+        <NavLink class="nav-link" href="/investissementV2">
+            <div class="link">Investissement V2</div>
         </NavLink>
     </nav>
 
@@ -34,7 +38,6 @@
 @code{
     private string PrenomUser { get; set; } = string.Empty;
     private string AnneeCreation { get; set; } = string.Empty;
-    private string AnneeCourante { get; set; } = DateTime.Now.Year.ToString();
 
     private IJSObjectReference? module;
 
@@ -43,7 +46,6 @@
         Navigation.LocationChanged += NavigationChanged;
         await Session.Initialiser();
         PrenomUser = Session.Prenom;
-        AnneeCreation = Session.AnneeCreation;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
