@@ -7,15 +7,13 @@ using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class InvestissementViewModel(SessionService sessionService,
-                                         IFluxInvestissementService fluxInvestissementService,
+    public class InvestissementViewModel(IFluxInvestissementService fluxInvestissementService,
                                          ITradeRepublicApiService tradeRepublicApiService,
-                                         IPowensApiService powensDataService)
+                                         SessionService sessionService)
     {
-        private readonly SessionService _sessionService = sessionService;
         private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
         private readonly ITradeRepublicApiService _tradeRepublicApiService = tradeRepublicApiService;
-        private readonly IPowensApiService _powensDataService = powensDataService;
+        private readonly SessionService _sessionService = sessionService;
 
 
         // USER CONNECTE
@@ -85,28 +83,14 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public bool HasError { get; set; } = false;
         public string ErrorMessage { get; set; } = string.Empty;
 
-        public async Task FinaliserAjoutBanque(int connectionBanqueId)
-        {
-            await InitialiserSession();
-
-            try
-            {
-                await _powensDataService.SaveBanque(connectionBanqueId, IdUser);
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                ErrorMessage = ex.Message;
-            }
-        }
-
         public async Task LoadData()
         {
             ChargementEncours = true;
 
             try
             {
-                await InitialiserSession();
+                await _sessionService.Initialiser();
+                IdUser = _sessionService.Id;
 
                 await LoadIdentifiantsRequis();
 
@@ -326,12 +310,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             {
                 ChargementGraphique = false;
             }
-        }
-
-        private async Task InitialiserSession()
-        {
-            await _sessionService.Initialiser();
-            IdUser = _sessionService.Id;
         }
 
         private async Task LoadFluxInvestissement()

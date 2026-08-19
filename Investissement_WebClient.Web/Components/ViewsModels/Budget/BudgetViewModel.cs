@@ -98,16 +98,29 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         public string MessageErreur { get; set; } = string.Empty;
         public bool HasErreur { get; set; } = false;
 
+
+        public async Task FinaliserAjoutBanque(int connectionBanqueId)
+        {
+            await InitialiserSession();
+
+            try
+            {
+                await _powensApiService.SaveBanque(connectionBanqueId, IdUser);
+            }
+            catch (Exception ex)
+            {
+                HasErreur = true;
+                MessageErreur = ex.Message;
+            }
+        }
+
         public async Task StartLoadData()
         {
             ActionEnCours = true;
 
             try
             {
-                GetUrlConnexionPowens();
-
-                await _sessionService.Initialiser();
-                IdUser = _sessionService.Id;
+                await InitialiserSession();
 
                 await LoadDateLimiteValiditeSyncBanque();
 
@@ -240,6 +253,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             await RafraichirGraphique();
         }
 
+        public async Task InitialiserUrlConnexionPowens()
+        {
+            UrlConnexionPowens = await GetUrlConnexionPowens();
+        }
+
+        private async Task InitialiserSession()
+        {
+            await _sessionService.Initialiser();
+            IdUser = _sessionService.Id;
+        }
+
         private async Task RafraichirGraphique()
         {
             //ChargementGraphique = true;
@@ -265,9 +289,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         {
             DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
             ConnexionBanqueRequise = !DateExpirationSync.HasValue;
-
-            if(ConnexionBanqueRequise)
-                UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
         private async Task LoadBudgetParCategorie()

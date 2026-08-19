@@ -76,9 +76,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         public async Task VerifierUtilisateurPowensExists(int userId)
         {
-            var utilisateurPowens =
-                await _utilisateurPowensRepository.GetByUserId(userId);
-
+            var utilisateurPowens = await _utilisateurPowensRepository.GetByUserId(userId);
             if (utilisateurPowens != null)
                 return;
 

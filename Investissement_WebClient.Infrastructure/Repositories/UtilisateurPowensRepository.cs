@@ -13,7 +13,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.UtilisateurPowens
                 .Include(u => u.Banques)
-                .Where(u => u.Id == userId)
+                .Where(u => u.UtilisateurId == userId)
                 .FirstOrDefaultAsync();
         }
 

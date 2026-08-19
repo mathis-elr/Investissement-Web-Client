@@ -16,7 +16,7 @@
                          Description="Connectez votre banque en toute sécurité grâce à Powens afin de récupérer vos flux et analyser votre budget."
                          TexteBouton="Synchroniser ma banque"
                          InfoBulle="Votre accès bancaire doit être renouvelé pour récupérer les derniers flux (sécurité tous les 90 jours)."
-                         OnClick="@(() => Nav.NavigateTo(BVM.UrlConnexionPowens, forceLoad: true))" />
+                         OnClick="@SynchroniserBanque" />
     </div>
 }
 
@@ -36,8 +36,8 @@
                 <_EditionFluxMensuel Model="@BVM" />
                 break;
             case Statut.complete:
-                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" />
                 // la cle permet de forcer la mise à jour
+                <_RecapitulatifFluxMensuel @key="BVM.StatutMoisActif.Date" Model="@BVM" />
                 break;
             case Statut.aucune_donnees:
                 <_BudgetGetFlux Model="@BVM" />
@@ -50,23 +50,57 @@
 
 @code {
     private CancellationTokenSource _cts = new();
+    [Parameter][SupplyParameterFromQuery(Name = "connection_id")] public int? ConnectionBanqueId { get; set; }
     [Parameter][SupplyParameterFromQuery(Name = "sync")] public string? SyncStatus { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         BVM.OnChange += StateHasChanged;
+    }
 
-        await BVM.StartLoadData();
-
+    protected override async Task OnParametersSetAsync()
+    {
         if (SyncStatus == "ok")
         {
             TS.ShowSuccess("Banque synchronisée avec succès !");
             TS.ShowInfo("Synchronisation des flux lancée en arrière-plan ...");
             BankWorker.DeclencherSynchronisationImmediate(BVM.IdUser);
+            SyncStatus = null; 
         }
-        
-        if (SyncStatus == "error")
+        else if (SyncStatus == "error")
+        {
             TS.ShowError("Erreur lors de la synchronisation de la banque, veuillez réessayer plus tard.");
+            SyncStatus = null;
+        }
+
+        if (ConnectionBanqueId != null)
+        {
+            var id = ConnectionBanqueId.Value;
+            ConnectionBanqueId = null;
+            await FinaliserAjoutBanque();
+        }
+        else if (string.IsNullOrEmpty(SyncStatus))
+        {
+            await BVM.StartLoadData();
+        }
+    }
+
+    private async Task SynchroniserBanque()
+    {
+        await BVM.InitialiserUrlConnexionPowens();
+        Nav.NavigateTo(BVM.UrlConnexionPowens, forceLoad: true);
+    }
+
+    private async Task FinaliserAjoutBanque()
+    {
+        await BVM.FinaliserAjoutBanque(ConnectionBanqueId.Value);
+        if (BVM.HasErreur)
+        {
+            Nav.NavigateTo("/budget?sync=error", replace: true);
+            return;
+        }
+
+        Nav.NavigateTo("/budget?sync=ok", replace: true);
     }
 
     public void Dispose()
@@ -75,46 +109,5 @@
         _cts.Cancel();
         _cts.Dispose();
     }
-
-    
-    // public async Task SynchronisationBanque()
-    // {
-    //     TS.ShowSuccess("Banque synchronisée avec succès !");
-
-    //     TS.ShowInfo("Récupération des transactions en cours, cette opération dure environ 15 secondes.");
-
-    //     await Task.Delay(15000);
-
-    //     var stopwatch = new System.Diagnostics.Stopwatch();
-    //     stopwatch.Start();
-
-    //     var ajd = DateTime.Now;
-    //     var minDate = new DateTime(year: ajd.Year,
-    //                                month: ajd.AddMonths(-2).Month,
-    //                                day: 1); le premier d'il y a deux mois
-    //     var maxDate = new DateTime(year: ajd.Year,
-    //                                month: ajd.AddMonths(-1).Month,
-    //                                day: DateTime.DaysInMonth(ajd.Year, ajd.AddMonths(-1).Month)); le dernier jour du mois dernier
-
-    //     Console.WriteLine("date min: " + minDate);
-    //     Console.WriteLine("date max: " + maxDate);
-
-    //     for (int i = 0; i < 30; i++)
-    //     {
-    //         await Task.Delay(1000);
-    //         await BVM.GetFlux(minDate, maxDate);
-    //         Console.WriteLine("Temps au chrono depuis le depart " + stopwatch.ElapsedMilliseconds + " ms, données récupérées ? " + BVM.Flux.Any());
-    //     }
-
-    //     stopwatch.Stop();
-
-    //     if (BVM.HasErreur)
-    //         TS.ShowError("Erreur lors de la récupération des flux, veuillez réessayer plus tard.");
-    //     else
-    //     {
-    //         TS.ShowSuccess("Récupération des flux terminée.");
-    //         BVM.NotifyStateChanged();
-    //     }
-    // }
 }
 

@@ -50,17 +50,12 @@
 
 
 @code{
-    [Parameter][SupplyParameterFromQuery(Name = "connection_id")] public int ConnectionBanqueId { get; set; } = -1;
     private CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
         IVM.OnChange += StateHasChanged;
-
-        if (ConnectionBanqueId != -1)
-            await FinaliserAjoutBanque();
-        else
-            await IVM.LoadData();
+        await IVM.LoadData();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,17 +64,6 @@
         {
             _ = LoadDataBoucle(_cts.Token);
         }
-    }
-
-    private async Task FinaliserAjoutBanque()
-    {
-        await IVM.FinaliserAjoutBanque(ConnectionBanqueId);
-        if (IVM.HasError)
-        {
-            Nav.NavigateTo("/budget?sync=error", replace: true);
-        }
-
-        Nav.NavigateTo("/budget?sync=ok", replace: true);
     }
 
     private async Task LoadDataBoucle(CancellationToken stoppingToken)
