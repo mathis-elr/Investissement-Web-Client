@@ -7,6 +7,7 @@ using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Infrastructure.Repositories;
 using Investissement_WebClient.Application.Interfaces.APIs;
+using Investissement_WebClient.Infrastructure.APIs.LogoDev;
 using Investissement_WebClient.Infrastructure.APIs.Powens;
 using Investissement_WebClient.Web.Components.ViewsModels;
 using Investissement_WebClient.Infrastructure.Workers;
@@ -37,17 +38,12 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContextFactory<InvestissementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
-builder.Services.Configure<CryptOptions>(
-    builder.Configuration.GetSection("Security"));
-
-builder.Services.Configure<PowensApiOptions>(
-    builder.Configuration.GetSection("PowensApi"));
-
-builder.Services.Configure<TradeRepublicApiOptions>(
-    builder.Configuration.GetSection("TradeRepublicApi"));
-
-builder.Services.Configure<YahooFinanceApiOptions>(
-    builder.Configuration.GetSection("YahooFinanceApi"));
+// options
+builder.Services.Configure<CryptOptions>(builder.Configuration.GetSection("Security"));
+builder.Services.Configure<PowensApiOptions>(builder.Configuration.GetSection("PowensApi"));
+builder.Services.Configure<TradeRepublicApiOptions>(builder.Configuration.GetSection("TradeRepublicApi"));
+builder.Services.Configure<YahooFinanceApiOptions>(builder.Configuration.GetSection("YahooFinanceApi"));
+builder.Services.Configure<LogoDevApiOptions>(builder.Configuration.GetSection("LogoDevApi"));
 
 
 // services
@@ -58,11 +54,13 @@ builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
 builder.Services.AddScoped<IActifService, ActifService>();
 
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
+builder.Services.AddScoped<ILogoDevApiService, LogoDevApiService>();
 
 builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService>();
 builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 
 builder.Services.AddScoped<ICryptService, CryptService>();
+
 
 // views models
 builder.Services.AddScoped<InvestissementViewModel>();
@@ -76,11 +74,13 @@ builder.Services.AddScoped<DashboardViewModel>();
 // repositories
 builder.Services.AddScoped<IFluxInvestissementRepository, FluxInvestissementRepository>();
 builder.Services.AddScoped<ITradeRepublicAccesRepository, TradeRepublicAccesRepository>();
+builder.Services.AddScoped<IUtilisateurPowensRepository, UtilisateurPowensRepository>();
 builder.Services.AddScoped<IValeurPatrimoineRepository, ValeurPatrimoineRepository>();
 builder.Services.AddScoped<ICategorieFluxRepository, CategorieFluxRepository>();
+builder.Services.AddScoped<ICompteBanqueRepository, CompteBanqueRepository>();
 builder.Services.AddScoped<IFluxBancaireRepository, FluxBancaireRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
-builder.Services.AddScoped<IBanqueAccesRepository, BanqueAccesRepository>();
+builder.Services.AddScoped<IBanqueRepository, BanqueRepository>();
 builder.Services.AddScoped<IActifRepository, ActifRepository>();
 
 

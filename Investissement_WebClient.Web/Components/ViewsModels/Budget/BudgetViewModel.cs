@@ -5,14 +5,17 @@ using Investissement_WebClient.Infrastructure.APIs.Powens;
 using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.Extensions.Options;
+using Investissement_WebClient.Application.Interfaces.Repositories;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 {
-    public class BudgetViewModel(IFluxBancaireService fluxBancaireService,
+    public class BudgetViewModel(IUtilisateurPowensRepository utilisateurPowensRepository,
+                                 IFluxBancaireService fluxBancaireService,
                                  IOptions<PowensApiOptions> options,
                                  IPowensApiService powensApiService,
                                  SessionService sessionService)
     {
+        private readonly IUtilisateurPowensRepository _utilisateurPowensRepository = utilisateurPowensRepository;
         private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly IPowensApiService _powensApiService = powensApiService;
@@ -181,7 +184,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
             var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
 
-            await GetFlux(dateDebut, dateFin);
+            //await GetFlux(dateDebut, dateFin);
 
             await RefreshData();
             NotifyStateChanged();
@@ -206,7 +209,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
         {
-            await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
+            //await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
         }
 
         public void EditerMoisComplete()
@@ -264,7 +267,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             ConnexionBanqueRequise = !DateExpirationSync.HasValue;
 
             if(ConnexionBanqueRequise)
-                UrlConnexionPowens = GetUrlConnexionPowens();
+                UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
         private async Task LoadBudgetParCategorie()
@@ -349,16 +352,18 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             }
         }
 
-        private string GetUrlConnexionPowens()
+        private async Task<string> GetUrlConnexionPowens()
         {
-            var fullConnectUrl =
-                new Uri(new Uri(_powensApiOptions.BaseUri),
-                        _powensApiOptions.ConnectEndPoint);
+            await _powensApiService.VerifierUtilisateurPowensExists(IdUser);
+
+            var code = await _powensApiService.GenerateCodeTemporaireByUserId(IdUser);
+
+            var fullConnectUrl = new Uri(new Uri(_powensApiOptions.BaseUri), _powensApiOptions.ConnectEndPoint);
 
             var encodedRedirect =
                 Uri.EscapeDataString(_powensApiOptions.RedirectUri);
 
-            return $"{fullConnectUrl}?client_id={_powensApiOptions.ClientId}&redirect_uri={encodedRedirect}";
+            return $"{fullConnectUrl}?client_id={_powensApiOptions.ClientId}&redirect_uri={encodedRedirect}&code={code}";
         }
     }
 }

@@ -9,11 +9,11 @@ namespace Investissement_WebClient.Infrastructure.Repositories
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
-        public async Task<DateTime?> GetDateDernierFluxByUserId(int userId)
+        public async Task<DateTime?> GetDateDernierFluxByCompteId(int compteId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.FluxBancaire
-                .Where(f => f.UtilisateurId == userId)
+                .Where(f => f.CompteBanqueId == compteId)
                 .OrderByDescending(f => f.Date)
                 .Select(f => (DateTime?)f.Date)
                 .FirstOrDefaultAsync();
@@ -70,7 +70,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId)
+        public async Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId, int compteId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -88,14 +88,13 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                     Date = f.Date,
                     Valeur = f.Valeur,
                     Libelle = f.Libelle ?? string.Empty,
-                    UtilisateurId = userId
+                    UtilisateurId = userId,
+                    CompteBanqueId = compteId
                 });
 
             context.FluxBancaire.AddRange(nvFlux);
 
             await context.SaveChangesAsync();
-
-            Console.WriteLine("DEBUG_SYNC: 6. Enregistrement des flux en base terminé avec succès.");
         }
 
         public async Task UpdateRangeForUserId(List<FluxBancaireDto> fluxMensuelVM, int userId)

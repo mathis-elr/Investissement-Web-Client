@@ -5,7 +5,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
     public interface IFluxBancaireRepository
     {
-        Task<DateTime?> GetDateDernierFluxByUserId(int userId);
+        Task<DateTime?> GetDateDernierFluxByCompteId(int compteId);
 
         Task<List<FluxBancaire>> GetByUserId(int userId);
 
@@ -15,7 +15,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<List<BudgetCategorieRawDto>> GetBudgetParMacroCategorieParMois(int userId);
 
-        Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId);
+        Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId, int comptePowensId);
 
         Task UpdateRangeForUserId(List<FluxBancaireDto> fluxMensuelVM, int userId);
 

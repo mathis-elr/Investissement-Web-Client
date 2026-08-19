@@ -7,6 +7,9 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
+        [JsonPropertyName("name")]
+        public string? NomCompte { get; set; }
+
         [JsonPropertyName("type")]
         public string? Type { get; set; }
     }

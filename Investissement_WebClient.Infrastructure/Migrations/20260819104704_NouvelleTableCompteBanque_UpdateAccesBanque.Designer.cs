@@ -4,6 +4,7 @@ using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260819104704_NouvelleTableCompteBanque_UpdateAccesBanque")]
+    partial class NouvelleTableCompteBanque_UpdateAccesBanque
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.ToTable("Actif");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Banque", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.BanqueAcces", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,35 +60,31 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AccesTokenCrypte")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateExpiration")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdConnectionPowens")
+                    b.Property<int>("IdBanque")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdConnectorPowens")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nom")
+                    b.Property<string>("NomBanque")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UtilisateurId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UtilisateurPowensId")
+                    b.Property<int>("UtilisateurId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UtilisateurId");
 
-                    b.HasIndex("UtilisateurPowensId");
-
-                    b.ToTable("Banque");
+                    b.ToTable("BanqueAcces");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CategorieFlux", b =>
@@ -231,23 +230,23 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BanqueId")
+                    b.Property<int>("BanqueAccesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdComptePowens")
+                    b.Property<int>("IdCompte")
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TypePowens")
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BanqueId");
+                    b.HasIndex("BanqueAccesId");
 
                     b.ToTable("CompteBanque");
                 });
@@ -255,9 +254,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxBancaire", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CompteBanqueId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -281,8 +277,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompteBanqueId");
 
                     b.HasIndex("IdCategorie");
 
@@ -390,31 +384,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.ToTable("Utilisateur");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.UtilisateurPowens", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccessTokenCrypte")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdUtilisateurPowens")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UtilisateurId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UtilisateurId");
-
-                    b.ToTable("UtilisateurPowens");
-                });
-
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.ValeurPatrimoine", b =>
                 {
                     b.Property<int>("Id")
@@ -444,38 +413,30 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.ToTable("ValeurPatrimoine");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Banque", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.BanqueAcces", b =>
                 {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", null)
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
                         .WithMany("BanquesAcces")
-                        .HasForeignKey("UtilisateurId");
-
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.UtilisateurPowens", "UtilisateurPowens")
-                        .WithMany("Banques")
-                        .HasForeignKey("UtilisateurPowensId")
+                        .HasForeignKey("UtilisateurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UtilisateurPowens");
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CompteBanque", b =>
                 {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Banque", "Banque")
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.BanqueAcces", "BanqueAcces")
                         .WithMany("Comptes")
-                        .HasForeignKey("BanqueId")
+                        .HasForeignKey("BanqueAccesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Banque");
+                    b.Navigation("BanqueAcces");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxBancaire", b =>
                 {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.CompteBanque", "CompteBanque")
-                        .WithMany()
-                        .HasForeignKey("CompteBanqueId");
-
                     b.HasOne("Investissement_WebClient.Domain.Modeles.CategorieFlux", "Categorie")
                         .WithMany()
                         .HasForeignKey("IdCategorie")
@@ -488,8 +449,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Categorie");
-
-                    b.Navigation("CompteBanque");
 
                     b.Navigation("Utilisateur");
                 });
@@ -524,17 +483,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Navigation("Utilisateur");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.UtilisateurPowens", b =>
-                {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
-                        .WithMany()
-                        .HasForeignKey("UtilisateurId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Utilisateur");
-                });
-
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.ValeurPatrimoine", b =>
                 {
                     b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
@@ -546,7 +494,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Navigation("Utilisateur");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Banque", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.BanqueAcces", b =>
                 {
                     b.Navigation("Comptes");
                 });
@@ -554,11 +502,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Utilisateur", b =>
                 {
                     b.Navigation("BanquesAcces");
-                });
-
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.UtilisateurPowens", b =>
-                {
-                    b.Navigation("Banques");
                 });
 #pragma warning restore 612, 618
         }

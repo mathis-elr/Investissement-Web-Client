@@ -50,15 +50,15 @@
 
 
 @code{
-    [Parameter][SupplyParameterFromQuery(Name = "code")] public string? CodeRetour { get; set; }
+    [Parameter][SupplyParameterFromQuery(Name = "connection_id")] public int ConnectionBanqueId { get; set; } = -1;
     private CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
         IVM.OnChange += StateHasChanged;
 
-        if (CodeRetour != null)
-            await FinaliserConnexionBanque();
+        if (ConnectionBanqueId != -1)
+            await FinaliserAjoutBanque();
         else
             await IVM.LoadData();
     }
@@ -71,9 +71,9 @@
         }
     }
 
-    private async Task FinaliserConnexionBanque()
+    private async Task FinaliserAjoutBanque()
     {
-        await IVM.FinaliserConnexionBanque(CodeRetour!);
+        await IVM.FinaliserAjoutBanque(ConnectionBanqueId);
         if (IVM.HasError)
         {
             Nav.NavigateTo("/budget?sync=error", replace: true);

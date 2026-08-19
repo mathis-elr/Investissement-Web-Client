@@ -7,13 +7,15 @@ using Investissement_WebClient.Domain.Modeles;
 namespace Investissement_WebClient.Application.Services
 {
     public class FluxBancaireService(ICategorieFluxRepository categorieFluxRepository,
+                                     ICompteBanqueRepository compteBanqueRepository,   
                                      IFluxBancaireRepository fluxBancaireRepository,
-                                     IBanqueAccesRepository banqueAccesRepository,
+                                     IBanqueRepository banqueAccesRepository,
                                      IPowensApiService powensApiService) : IFluxBancaireService
     {
         private readonly ICategorieFluxRepository _categorieFluxRepository = categorieFluxRepository;
-        private readonly IBanqueAccesRepository _banqueAccesRepository = banqueAccesRepository;
+        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly IFluxBancaireRepository _fluxBancaireRepository = fluxBancaireRepository;
+        private readonly IBanqueRepository _banqueAccesRepository = banqueAccesRepository;
         private readonly IPowensApiService _powensApiService = powensApiService;
 
         public async Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId)
@@ -22,9 +24,9 @@ namespace Investissement_WebClient.Application.Services
             return acces?.DateExpiration;
         }
 
-        public async Task<DateTime?> GetDateDernierFlux(int userId)
+        public async Task<DateTime?> GetDateDernierFlux(int compteId)
         {
-            return await _fluxBancaireRepository.GetDateDernierFluxByUserId(userId);
+            return await _fluxBancaireRepository.GetDateDernierFluxByCompteId(compteId);
         }
 
         public async Task<List<FluxBancaireDto>> GetFluxBancaire(int userId)
@@ -61,18 +63,21 @@ namespace Investissement_WebClient.Application.Services
 
             var finMoisPrecedent = new DateTime(currentDate.Year, currentDate.Month, 1).AddDays(-1);
 
-            var idsUsers = await _banqueAccesRepository.GetAll();
+            var comptes = await _compteBanqueRepository.GetAll();
 
-            foreach (var idUser in idsUsers)
+            if(comptes == null || !comptes.Any())
+                return;
+
+            foreach (var compte in comptes)
             {
-                var derniereDate = await GetDateDernierFlux(idUser);
+                var derniereDate = await GetDateDernierFlux(compte!.Id);
 
                 if (derniereDate.HasValue && derniereDate.Value >= finMoisPrecedent)
                     continue;
 
                 var dateDebut = derniereDate ?? new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(-2);
 
-                await _powensApiService.GetFlux(dateDebut, finMoisPrecedent, idUser);
+                await _powensApiService.GetFlux(dateDebut, finMoisPrecedent, compte);
             }
         }
 
@@ -130,12 +135,12 @@ namespace Investissement_WebClient.Application.Services
                 .ToList();
         }
 
-        public async Task AddFluxBancaire(List<FluxBancaireImportDto>? flux, int userId)
+        public async Task AddFluxBancaire(List<FluxBancaireImportDto>? flux, int userId, int compteId)
         {
             if (flux == null || flux.Count == 0)
                 return;
 
-            await _fluxBancaireRepository.AddRangeForUserId(flux, userId);
+            await _fluxBancaireRepository.AddRangeForUserId(flux, userId, compteId);
 
             await DeterminerCategorieFlux();
         }

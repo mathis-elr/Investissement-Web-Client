@@ -11,5 +11,7 @@
         public required string MdpHash { get; set; }
 
         public DateTime DateCreationCompte { get; set; }
+
+        public ICollection<Banque> BanquesAcces { get; set; } = [];
     }
 }

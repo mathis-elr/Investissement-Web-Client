@@ -85,13 +85,13 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         public bool HasError { get; set; } = false;
         public string ErrorMessage { get; set; } = string.Empty;
 
-        public async Task FinaliserConnexionBanque(string codeRetour)
+        public async Task FinaliserAjoutBanque(int connectionBanqueId)
         {
             await InitialiserSession();
 
             try
             {
-                await _powensDataService.GetToken(codeRetour, IdUser);
+                await _powensDataService.SaveBanque(connectionBanqueId, IdUser);
             }
             catch (Exception ex)
             {

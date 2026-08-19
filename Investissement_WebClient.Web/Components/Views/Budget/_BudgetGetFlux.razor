@@ -24,18 +24,18 @@
 
     private async Task GetTransactions()
     {
-        await Model.GetFluxMensuel();
+        // await Model.GetFluxMensuel();
 
-        if (Model.HasErreur)
-        {
-            TS.ShowError(Model.MessageErreur);
-            Model.HasErreur = false;
-            Model.MessageErreur = string.Empty;
-            Model.ActionEnCours = false;
-            return;
-        }
+        // if (Model.HasErreur)
+        // {
+        //     TS.ShowError(Model.MessageErreur);
+        //     Model.HasErreur = false;
+        //     Model.MessageErreur = string.Empty;
+        //     Model.ActionEnCours = false;
+        //     return;
+        // }
 
-        TS.ShowSuccess($"Données de {Model.DateActiveString} récupéré avec succès");
-        await Model.MajVue();
+        // TS.ShowSuccess($"Données de {Model.DateActiveString} récupéré avec succès");
+        // await Model.MajVue();
     }
 }

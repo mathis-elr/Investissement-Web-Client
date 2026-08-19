@@ -15,6 +15,9 @@ namespace Investissement_WebClient.Domain.Modeles
 
         public bool Suggestion { get; set; } = false;
 
+        public int? CompteBanqueId { get; set; }
+        public CompteBanque? CompteBanque { get; set; }
+
         public int UtilisateurId { get; set; }
         public Utilisateur Utilisateur { get; set; } = null!;
     }

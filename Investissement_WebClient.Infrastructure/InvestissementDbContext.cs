@@ -10,7 +10,9 @@ public class InvestissementDbContext(DbContextOptions<InvestissementDbContext> o
 
     public DbSet<TradeRepublicAcces> TradeRepublicAcces { get; set; }
 
-    public DbSet<BanqueAcces> BanqueAcces { get; set; }
+    public DbSet<UtilisateurPowens> UtilisateurPowens { get; set; }
+    public DbSet<Banque> Banque { get; set; }
+    public DbSet<CompteBanque> CompteBanque { get; set; }
 
     public DbSet<Actif> Actif { get; set; }
     public DbSet<FluxInvestissement> FluxInvestissement { get; set; }
