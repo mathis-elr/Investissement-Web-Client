@@ -188,7 +188,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 
         public async Task<TradeRepublicAccesDto?> GetTradeRepublicAcces(int userId)
         {
-            var acces = await _tradeRepublicAccesRepository.GetByUserId(userId);
+            var acces = await _tradeRepublicAccesRepository.GetLoginByUserId(userId);
 
             var accesDto = acces != null ? new TradeRepublicAccesDto
             {
@@ -201,7 +201,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 
         public async Task SaveAcces(TradeRepublicAccesDto accesDto, int userId)
         {
-            var acces = await _tradeRepublicAccesRepository.GetByUserId(userId);
+            var acces = await _tradeRepublicAccesRepository.GetLoginByUserId(userId);
 
             if (acces != null)
             {

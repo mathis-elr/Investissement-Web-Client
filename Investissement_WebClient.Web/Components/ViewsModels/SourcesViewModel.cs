@@ -5,24 +5,28 @@ using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.Extensions.Options;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
+using Investissement_WebClient.Application.DTO.Auth;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class SourcesViewModel(ICompteBanqueRepository compteBanqueRepository,
+    public class SourcesViewModel(ITradeRepublicAccesRepository tradeRepublicAccesRepository,
+                                  ICompteBanqueRepository compteBanqueRepository,
                                   IOptions<PowensApiOptions> options,
                                   IPowensApiService powensApiService,
                                   SessionService sessionService)
     {
-        private readonly ICompteBanqueRepository _sourceRepository = compteBanqueRepository;
+        private readonly ITradeRepublicAccesRepository _tradeRepublicAccesRepository = tradeRepublicAccesRepository;
+        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly IPowensApiService _powensApiService = powensApiService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
 
         // CONNEXION BANQUE
         public string UrlConnexionPowens { get; set; } = string.Empty;
-        public List<CompteBanqueDto> Sources { get; set; } = [];
+        public List<SourceDto> Sources { get; set; } = [];
         public bool AucuneSource => Sources.Count == 0;
-        public CompteBanqueDto? SourceSelectionne { get; set; }
+        public SourceDto? SourceSelectionne { get; set; }
+
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -46,7 +50,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             {
                 await InitialiserSession();
 
-                await LoadComptesBanque();
+                await Task.WhenAll(
+                    LoadComptesBanque(),
+                    LoadCompteTradeRepublic()
+                );
 
                 if (AucuneSource)
                     return;
@@ -79,7 +86,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
-        public async Task ChangerSourceSelectionne(CompteBanqueDto source)
+        public async Task ChangerSourceSelectionne(SourceDto source)
         {
             SourceSelectionne = source;
         }
@@ -92,8 +99,15 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadComptesBanque()
         {
-            Sources = await _sourceRepository.GetAllByUserId(IdUser);
+            Sources = await _compteBanqueRepository.GetAllByUserId(IdUser);
         } 
+
+        private async Task LoadCompteTradeRepublic()
+        {
+            var tradeRepublicAcces = await _tradeRepublicAccesRepository.GetByUserId(IdUser);
+            if (tradeRepublicAcces != null)
+                Sources.Add(tradeRepublicAcces);
+        }
 
         private async Task<string> GetUrlConnexionPowens()
         {

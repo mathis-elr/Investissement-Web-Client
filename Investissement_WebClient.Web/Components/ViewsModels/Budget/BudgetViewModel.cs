@@ -23,9 +23,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         // CONNEXION BANQUE
         public string UrlConnexionPowens { get; set; } = string.Empty;
-        public List<CompteBanqueDto> ComptesBanque { get; set; } = [];
+        public List<SourceDto> ComptesBanque { get; set; } = [];
         public bool AucunCompteBancaire => ComptesBanque.Count == 0;
-        public CompteBanqueDto? CompteSelectionne { get; set; }
+        public SourceDto? CompteSelectionne { get; set; }
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -246,7 +246,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
-        public async Task ChangerCompteSelectionne(CompteBanqueDto compte)
+        public async Task ChangerCompteSelectionne(SourceDto compte)
         {
             CompteSelectionne = compte;
             await LoadBudgetParCategorie();

@@ -27,20 +27,18 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<CompteBanqueDto>> GetAllByUserId(int userId)
+        public async Task<List<SourceDto>> GetAllByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.CompteBanque
                 .Include(c => c.Banque)
                     .ThenInclude(b => b.UtilisateurPowens)
                 .Where(c => c.Banque.UtilisateurPowens.UtilisateurId == userId)
-                .Select(c => new CompteBanqueDto
+                .Select(c => new SourceDto
                 {
                     Id = c.Id,
-                    IdComptePowens = c.IdComptePowens,
-                    Nom = c.Nom,
-                    TypePowens = c.TypePowens,
-                    Banque = c.Banque
+                    NomCompte = c.Nom,
+                    NomSource = c.Banque.Nom,
                 })
                 .ToListAsync();
         }

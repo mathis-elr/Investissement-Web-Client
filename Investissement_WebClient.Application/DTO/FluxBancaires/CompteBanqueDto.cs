@@ -13,7 +13,5 @@ namespace Investissement_WebClient.Application.DTO.FluxBancaires
         public string TypePowens { get; set; } = string.Empty;
 
         public Banque Banque { get; set; } = null!;
-
-        public bool Selectionne { get; set; } = false;
     }
 }

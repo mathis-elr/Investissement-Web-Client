@@ -9,7 +9,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<IEnumerable<CompteBanque>> GetAllByBanqueId(int banqueId);
 
-        Task<List<CompteBanqueDto>> GetAllByUserId(int userId);
+        Task<List<SourceDto>> GetAllByUserId(int userId);
 
         Task<CompteBanque?> GetByBanqueId(int banqueId);
 
