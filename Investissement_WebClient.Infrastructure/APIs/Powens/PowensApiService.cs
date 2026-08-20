@@ -267,6 +267,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     IdComptePowens = compte.Id,
                     Nom = compte?.NomCompte ?? "Inconnue",
                     TypePowens = compte?.Type ?? "Inconnu",
+                    TypeCompte = TypeCompteExtensions.ToTypeCompte(compte?.Type),
                     Solde = compte?.Solde ?? 0,
                     BanqueId = banqueIdLocal,
                 };
