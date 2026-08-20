@@ -9,24 +9,22 @@ using Microsoft.Extensions.Options;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 {
-    public class BudgetViewModel(IUtilisateurPowensRepository utilisateurPowensRepository,
-                                 ICompteBanqueRepository compteBanqueRepository,
+    public class BudgetViewModel(ICompteBanqueRepository compteBanqueRepository,
                                  IFluxBancaireService fluxBancaireService,
                                  IOptions<PowensApiOptions> options,
                                  IPowensApiService powensApiService,
                                  SessionService sessionService)
     {
-        private readonly IUtilisateurPowensRepository _utilisateurPowensRepository = utilisateurPowensRepository;
         private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
-        private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly IPowensApiService _powensApiService = powensApiService;
+        private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
 
         // CONNEXION BANQUE
         public string UrlConnexionPowens { get; set; } = string.Empty;
         public List<CompteBanqueDto> ComptesBanque { get; set; } = [];
-        public bool AucuneCompteBancaire => ComptesBanque.Count == 0;
+        public bool AucunCompteBancaire => ComptesBanque.Count == 0;
         public CompteBanqueDto? CompteSelectionne { get; set; }
 
         // USER CONNECTE
@@ -37,7 +35,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         public event Action OnChange = null!;
         public void NotifyStateChanged() => OnChange?.Invoke();
 
-        public List<FluxBancaireDto> Flux { get; set; } = [];
+        // FLUX BANCAIRES
+        public List<FluxBancaireDto> TousLesFlux { get; set; } = [];
+        public List<FluxBancaireDto> FluxCourant => TousLesFlux
+                .Where(f => f.CompteBancaireId == CompteSelectionne?.Id)
+                .ToList();
 
         // RECAPITULATIF GLOBAL
         public IEnumerable<PeriodeBudget> PeriodeBudgetPossibles => Enum.GetValues<PeriodeBudget>();
@@ -45,11 +47,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         public IEnumerable<BudgetsParCategorieDto> BudgetLineCharts { get; set; } = [];
         public List<string> CouleursGraphique = new List<string> { "#22c55e", "#3b82f6", "#ef4444", "#eab308" };
-
-        public decimal RevenusMoyens => BudgetLineCharts
-            .FirstOrDefault(b => b.Categorie.Equals("Revenus", StringComparison.OrdinalIgnoreCase))?
-            .BudgetCategorieParMois
-            .Average(b => b.Budget) ?? 0;
 
         public decimal DepensesMoyennnes => BudgetLineCharts
             .Where(b => b.Categorie.Equals("Vie quotidienne", StringComparison.OrdinalIgnoreCase)
@@ -128,11 +125,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
                 await Task.WhenAll(
                     LoadComptesBanque(),
                     LoadFlux(),
-                    LoadBudgetParCategorie(),
                     LoadCategories()
                 );
 
-                DateDebut = Flux.Count != 0 ? Flux.Min(f => f.Date) : DateDebut;
+                if (AucunCompteBancaire)
+                    return;
+
+                CompteSelectionne = ComptesBanque.First();
+
+                await LoadBudgetParCategorie();
+
+                DateDebut = FluxCourant.Count != 0 ? FluxCourant.Min(f => f.Date) : DateDebut;
                 DeterminerStatutMois();
             }
             finally
@@ -141,17 +144,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             }
         }
 
-        public async Task MajVue()
-        {
-            await LoadFlux();
-            LoadFluxUnMois(StatutMoisActif!);
-            DeterminerStatutMois();
-            ActionEnCours = false;
-
-            NotifyStateChanged();
-        }
-
-        public void SetRecapGlobalMode()
+        public void SetRecapGlobal()
         {
             FluxMensuel = [];
             DateActive = null;
@@ -168,7 +161,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             DateActive = date;
 
             DateEditMensuel = date;
-            FluxMensuel = Flux
+            FluxMensuel = FluxCourant
                 .Where(f => f.Date.Month == date.Month && f.Date.Year == date.Year)
                 .OrderByDescending(f => f.Date)
                 .ToList();
@@ -179,29 +172,25 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             NotifyStateChanged();
         }
 
-        public async Task LoadFlux()
-        {
-            Flux = await _fluxBancaireService.GetFluxBancaire(IdUser);
-        }
+        //public async Task GetFluxMensuel()
+        //{
+        //    ActionEnCours = true;
 
-        public async Task LoadComptesBanque()
-        {
-            ComptesBanque = await _compteBanqueRepository.GetAllByUserId(IdUser);
-        }
+        //    var dateDebut = new DateTime(DateActive!.Value.Year, DateActive.Value.Month, 1);
+        //    var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
+        //    var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
 
-        public async Task GetFluxMensuel()
-        {
-            ActionEnCours = true;
+        //    await GetFlux(dateDebut, dateFin);
 
-            var dateDebut = new DateTime(DateActive!.Value.Year, DateActive.Value.Month, 1);
-            var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
-            var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
+        //    await RefreshData();
+        //    NotifyStateChanged();
+        //}
 
-            //await GetFlux(dateDebut, dateFin);
 
-            await RefreshData();
-            NotifyStateChanged();
-        }
+        //public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
+        //{
+        //    await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
+        //}
 
         public async Task UpdateFluxMensuel()
         {
@@ -212,7 +201,10 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
             await _fluxBancaireService.UpdateFluxMensuel(FluxMensuel, IdUser);
 
-            await RefreshData();
+            await LoadFlux();
+            LoadFluxUnMois(StatutMoisActif!);
+            CalculerStatsGraphique();
+
             DeterminerStatutMois();
 
             ActionEnCours = false;
@@ -220,10 +212,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             NotifyStateChanged();
         }
 
-        public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
-        {
-            //await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
-        }
 
         public void EditerMoisComplete()
         {
@@ -250,7 +238,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
             PeriodeBudgetSelectionnee = periode;
 
-            await RafraichirGraphique();
+            //await RafraichirGraphique();
         }
 
         public async Task InitialiserUrlConnexionPowens()
@@ -258,10 +246,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
-        public void ChangerCompteSelectionne(CompteBanqueDto compte)
+        public async Task ChangerCompteSelectionne(CompteBanqueDto compte)
         {
             CompteSelectionne = compte;
-            NotifyStateChanged();
+            await LoadBudgetParCategorie();
+            SetRecapGlobal();
         }
 
         private async Task InitialiserSession()
@@ -270,20 +259,14 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             IdUser = _sessionService.Id;
         }
 
-        private async Task RafraichirGraphique()
+        private async Task LoadFlux()
         {
-            //ChargementGraphique = true;
+            TousLesFlux = await _fluxBancaireService.GetFluxBancaire(IdUser);
+        }
 
-            //try
-            //{
-            //    await LoadInvestissementsParMois();
-
-            //    NotifyStateChanged();
-            //}
-            //finally
-            //{
-            //    ChargementGraphique = false;
-            //}
+        private async Task LoadComptesBanque()
+        {
+            ComptesBanque = await _compteBanqueRepository.GetAllByUserId(IdUser);
         }
 
         private async Task LoadCategories()
@@ -293,15 +276,25 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         private async Task LoadBudgetParCategorie()
         {
-            BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(IdUser);
+            if (CompteSelectionne != null)
+                BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(CompteSelectionne.Id);
         }
 
-        private async Task RefreshData()
-        {
-            await LoadFlux();
-            LoadFluxUnMois(StatutMoisActif!);
-            CalculerStatsGraphique();
-        }
+        //private async Task RafraichirGraphique()
+        //{
+        //    ChargementGraphique = true;
+
+        //    try
+        //    {
+        //        await LoadInvestissementsParMois();
+
+        //        NotifyStateChanged();
+        //    }
+        //    finally
+        //    {
+        //        ChargementGraphique = false;
+        //    }
+        //}
 
         private void CalculerStatsGraphique()
         {
@@ -343,7 +336,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
                     estMoisCourant ||
                     aujourdHui.Day < 5 && estMoisPrecedent;
 
-                var fluxDuMois = Flux
+                var fluxDuMois = FluxCourant
                     .Where(f => f.Date.Year == dateCourante.Year &&
                                 f.Date.Month == dateCourante.Month)
                     .ToList();

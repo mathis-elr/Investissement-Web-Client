@@ -14,6 +14,8 @@ namespace Investissement_WebClient.Application.DTO.FluxBancaires
         public int IdCategorie { get; set; }
 
         public bool Suggestion { get; set; }
+
+        public int? CompteBancaireId { get; set; }
     }
 }
 

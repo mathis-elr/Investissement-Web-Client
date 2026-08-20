@@ -13,7 +13,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<Dictionary<string, int?>> GetCorrespondancesCategories();
 
-        Task<List<BudgetCategorieRawDto>> GetBudgetParMacroCategorieParMois(int userId);
+        Task<List<BudgetCategorieRawDto>> GetBudgetParMacroCategorieParMois(int compteId);
 
         Task AddRangeForUserId(List<FluxBancaireImportDto> flux, int userId, int comptePowensId);
 

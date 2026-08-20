@@ -27,7 +27,8 @@ namespace Investissement_WebClient.Application.Services
                 Valeur = f.Valeur,
                 Libelle = f.Libelle,
                 IdCategorie = f.Categorie == null ? 0 : f.Categorie.Id,
-                Suggestion = f.Suggestion
+                Suggestion = f.Suggestion,
+                CompteBancaireId = f.CompteBanqueId
             }).ToList();
         }
 
@@ -65,9 +66,9 @@ namespace Investissement_WebClient.Application.Services
                 await _fluxBancaireRepository.UpdateRangeSuggestions(fluxModifies);
         }
 
-        public async Task<IEnumerable<BudgetsParCategorieDto>> CalculerBudgetCategorieParMois(int userId)
+        public async Task<IEnumerable<BudgetsParCategorieDto>> CalculerBudgetCategorieParMois(int compteId)
         {
-            var rawData = await _fluxBancaireRepository.GetBudgetParMacroCategorieParMois(userId);
+            var rawData = await _fluxBancaireRepository.GetBudgetParMacroCategorieParMois(compteId);
 
             var moisPossibles = rawData
                 .Select(r => r.Date)

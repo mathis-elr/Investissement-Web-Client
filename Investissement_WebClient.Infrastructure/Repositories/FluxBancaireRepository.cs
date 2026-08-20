@@ -47,12 +47,12 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToDictionaryAsync(g => g.Key, g => g.First().IdCategorie);
         }
 
-        public async Task<List<BudgetCategorieRawDto>> GetBudgetParMacroCategorieParMois(int userId)
+        public async Task<List<BudgetCategorieRawDto>> GetBudgetParMacroCategorieParMois(int compteId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
             return await context.FluxBancaire
-                .Where(f => f.UtilisateurId == userId)
+                .Where(f => f.CompteBanqueId == compteId)
                 .Where(f => f.IdCategorie != null)
                 .Where(f => f.Categorie!.MacroCategorie != null)
                 .GroupBy(t => new

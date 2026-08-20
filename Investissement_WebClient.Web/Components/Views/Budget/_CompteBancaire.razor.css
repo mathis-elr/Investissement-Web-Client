@@ -25,8 +25,7 @@
     .un-compte .banque {
         font-size: 10px;
         text-transform: uppercase;
-        letter-spacing: .08em;
-        color: #9ca3af;
+        color: grey;
     }
 
     .un-compte .compte {
@@ -34,3 +33,13 @@
         font-weight: 600;
         color: white;
     }
+
+@media (min-height: 800px) {
+    .un-compte .banque {
+        font-size: 14px;
+    }
+
+    .un-compte .compte {
+        font-size: 18px;
+    }
+}

@@ -8,7 +8,7 @@
 
 <PageTitle>Budget</PageTitle>
 
-@if (BVM.AucuneCompteBancaire)
+@if (BVM.AucunCompteBancaire)
 {
     <div class="bloc-empty">
         <_EmptyStateCard Icone="icons/wallet.svg"
@@ -20,12 +20,12 @@
 }
 
 <div class="budget">
-    <div class="comptes @(BVM.AucuneCompteBancaire ? "flou" : "")">
-        @if (!BVM.AucuneCompteBancaire)
+    <div class="comptes @(BVM.AucunCompteBancaire ? "flou" : "")">
+        @if (!BVM.AucunCompteBancaire)
         {
             @foreach (var compte in BVM.ComptesBanque)
             {
-                <_CompteBancaire Compte="@compte" Selectionne="@BVM.CompteSelectionne" OnClick="@(() => BVM.ChangerCompteSelectionne(compte))" />
+                <_CompteBancaire Compte="@compte" Selectionne="@BVM.CompteSelectionne" OnClick="@(async () => await BVM.ChangerCompteSelectionne(compte))" />
             }
         }
         else
@@ -35,15 +35,15 @@
         <button class="btn-ajouter" @onclick="@SynchroniserBanque">+</button>
     </div>
 
-    <div class="flux @(BVM.AucuneCompteBancaire ? "flou" : "")">
+    <div class="flux @(BVM.AucunCompteBancaire ? "flou" : "")">
         <_BudgetSidebar Model="@BVM" />
     </div>
 
-    <div class="flux-stats @(BVM.AucuneCompteBancaire ? "flou" : "")">
+    <div class="flux-stats @(BVM.AucunCompteBancaire ? "flou" : "")">
         @switch (BVM.StatutMoisActif?.Statut)
         {
             case null:
-                <_RecapitulatifGlobal Model="@BVM" />
+                <_RecapitulatifGlobal @key="BVM.CompteSelectionne" Model="@BVM" />
                 break;
             case Statut.a_completer or Statut.edition:
                 <_EditionFluxMensuel Model="@BVM" />
@@ -66,7 +66,7 @@
     [Parameter][SupplyParameterFromQuery(Name = "connection_id")] public int? ConnectionBanqueId { get; set; }
     [Parameter][SupplyParameterFromQuery(Name = "sync")] public string? SyncStatus { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         BVM.OnChange += StateHasChanged;
     }
@@ -106,7 +106,7 @@
 
     private async Task FinaliserAjoutBanque()
     {
-        await BVM.FinaliserAjoutBanque(ConnectionBanqueId.Value);
+        await BVM.FinaliserAjoutBanque(ConnectionBanqueId!.Value);
         if (BVM.HasErreur)
         {
             Nav.NavigateTo("/budget?sync=error", replace: true);

@@ -10,7 +10,7 @@ namespace Investissement_WebClient.Application.Interfaces.Services
 
         Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux();
 
-        Task<IEnumerable<BudgetsParCategorieDto>> CalculerBudgetCategorieParMois(int userId);
+        Task<IEnumerable<BudgetsParCategorieDto>> CalculerBudgetCategorieParMois(int compteId);
 
         Task AddFluxBancaire(List<FluxBancaireImportDto>? flux, int userId, int comptePowensId);
 
