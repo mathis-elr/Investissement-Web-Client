@@ -15,5 +15,7 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
         Task VerifierEtSynchroniserFluxBancairesAsync();
 
         Task GetFlux(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque);
+
+        Task SynchroniserSoldeComptes();
     }
 }

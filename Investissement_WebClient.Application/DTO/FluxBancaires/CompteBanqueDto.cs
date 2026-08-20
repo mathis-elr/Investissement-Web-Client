@@ -1,4 +1,5 @@
-﻿using Investissement_WebClient.Domain.Modeles;
+﻿using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.DTO.FluxBancaires
 {
@@ -11,6 +12,8 @@ namespace Investissement_WebClient.Application.DTO.FluxBancaires
         public string Nom { get; set; } = string.Empty;
 
         public string TypePowens { get; set; } = string.Empty;
+
+        public TypeCompte TypeCompte { get; set; }
 
         public Banque Banque { get; set; } = null!;
 

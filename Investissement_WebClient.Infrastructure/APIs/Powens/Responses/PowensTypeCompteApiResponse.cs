@@ -12,5 +12,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
 
         [JsonPropertyName("type")]
         public string? Type { get; set; }
+
+        [JsonPropertyName("balance")]
+        public decimal? Solde { get; set; }
     }
 }

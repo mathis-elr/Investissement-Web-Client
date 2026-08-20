@@ -52,14 +52,12 @@ builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
 builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
 builder.Services.AddScoped<IActifService, ActifService>();
+builder.Services.AddScoped<ICryptService, CryptService>();
 
 builder.Services.AddScoped<IYahooFinanceApiService, YahooFinanceApiService>();
 builder.Services.AddScoped<ILogoDevApiService, LogoDevApiService>();
-
 builder.Services.AddHttpClient<ITradeRepublicApiService, TradeRepublicApiService>();
 builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
-
-builder.Services.AddScoped<ICryptService, CryptService>();
 
 
 // views models
@@ -67,8 +65,8 @@ builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<InscriptionViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<ConnexionViewModel>();
-builder.Services.AddScoped<BudgetViewModel>();
 builder.Services.AddScoped<DashboardViewModel>();
+builder.Services.AddScoped<BudgetViewModel>();
 
 
 // repositories
@@ -86,6 +84,7 @@ builder.Services.AddScoped<IActifRepository, ActifRepository>();
 
 // workers
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
+builder.Services.AddHostedService<RecuperationSoldeComptesWorker>();
 builder.Services.AddSingleton<RecuperationFluxBancairesWorker>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<RecuperationFluxBancairesWorker>());
 

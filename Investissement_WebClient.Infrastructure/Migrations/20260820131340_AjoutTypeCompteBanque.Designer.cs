@@ -4,6 +4,7 @@ using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260820131340_AjoutTypeCompteBanque")]
+    partial class AjoutTypeCompteBanque
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,7 +239,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Solde")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TypeCompte")

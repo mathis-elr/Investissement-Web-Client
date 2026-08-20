@@ -8,6 +8,14 @@ namespace Investissement_WebClient.Infrastructure.Repositories
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
+        public async Task<IEnumerable<Banque>> GetAll()
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            return await context.Banque
+                .Include(b => b.UtilisateurPowens)
+                .ToListAsync();
+        }
+
         public async Task<Banque?> GetByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();

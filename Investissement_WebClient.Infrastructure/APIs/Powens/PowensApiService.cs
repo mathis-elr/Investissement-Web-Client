@@ -8,6 +8,7 @@ using Investissement_WebClient.Domain.Modeles;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Investissement_WebClient.Domain.Extensions;
 
 namespace Investissement_WebClient.Infrastructure.APIs.Powens
 {
@@ -129,7 +130,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
             var comptes = await _compteBanqueRepository.GetAll();
 
-            if (comptes == null || !comptes.Any())
+            if (!comptes.Any())
                 return;
 
             foreach (var compte in comptes)
@@ -172,6 +173,30 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _fluxBancaireService.AddFluxBancaire(flux, utilisateurPowens.UtilisateurId, compteBanque.Id);
         }
 
+        public async Task SynchroniserSoldeComptes()
+        {
+            var banques = await _banqueAccesRepository.GetAll();
+
+            if (!banques.Any())
+                return;
+
+            foreach(var banque in banques)
+            {
+                var comptesPowens = await GetComptes(banque.UtilisateurPowens.AccessTokenCrypte, banque.IdConnectionPowens);
+                var comptesPowensDict = comptesPowens.ToDictionary(c => c.Id);
+
+                foreach(var compte in banque.Comptes)
+                {
+                    if(!comptesPowensDict.TryGetValue(compte.IdComptePowens, out var comptePowens))
+                        continue;
+
+                    if(compte.Solde != comptePowens.Solde)
+                        compte.Solde = comptePowens.Solde ?? 0;
+                }
+            }
+            await _compteBanqueRepository.SaveChanges();
+        }
+
         private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -205,6 +230,18 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             return compte == null ? throw new Exception("L'API n'a renvoyé aucune connection pour cet utilisateur.") : compte.IdConnector;
         }
 
+        private async Task<IEnumerable<PowensTypeCompteApiResponse>> GetComptes(string token, int connectionBanqueId)
+        {
+            var reponse = await RequeteGetAvecToken(token, string.Format(_options.AccountsConnectionEndPoint, connectionBanqueId));
+            var reponseString = await reponse.Content.ReadAsStringAsync();
+            var comptes = JsonSerializer.Deserialize<PowensComptesApiResponse>(reponseString);
+
+            if (comptes?.Comptes == null || !comptes.Comptes.Any())
+                throw new Exception("L'API n'a renvoyé aucun compte pour cet utilisateur.");
+
+            return comptes.Comptes;
+        }
+
         private async Task SaveUtiliteurPowens(int userId, string token, int idUtilisateurPowens)
         {
             var nouvelUtilisateur = new UtilisateurPowens
@@ -218,15 +255,10 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         private async Task SaveComptes(string token, int idBanqueLocal, int connectionBanqueId)
         {
-            var reponse = await RequeteGetAvecToken(token, string.Format(_options.AccountsConnectionEndPoint, connectionBanqueId));
-            var reponseString = await reponse.Content.ReadAsStringAsync();
-            var comptes = JsonSerializer.Deserialize<PowensComptesApiResponse>(reponseString);
-
-            if (comptes?.Comptes == null || !comptes.Comptes.Any())
-                throw new Exception("L'API n'a renvoyé aucun compte pour cet utilisateur.");
+            var comptes = await GetComptes(token, connectionBanqueId);
 
             var comptesExistants = await _compteBanqueRepository.GetAllByBanqueId(idBanqueLocal);
-            var nouveauxComptes = comptes.Comptes.Where(c => !comptesExistants.Any(ce => ce.IdComptePowens == c.Id)).ToList();
+            var nouveauxComptes = comptes.Where(c => !comptesExistants.Any(ce => ce.IdComptePowens == c.Id)).ToList();
 
             foreach (var compte in nouveauxComptes)
             {
@@ -235,6 +267,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     IdComptePowens = compte.Id,
                     Nom = compte?.NomCompte ?? "Inconnue",
                     TypePowens = compte?.Type ?? "Inconnu",
+                    TypeCompte = TypeCompteExtensions.ToTypeCompte(compte?.Type),
+                    Solde = compte?.Solde ?? 0,
                     BanqueId = idBanqueLocal
                 };
 
