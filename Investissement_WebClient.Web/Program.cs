@@ -79,7 +79,6 @@ builder.Services.AddScoped<ICategorieFluxRepository, CategorieFluxRepository>();
 builder.Services.AddScoped<ICompteBanqueRepository, CompteBanqueRepository>();
 builder.Services.AddScoped<IFluxBancaireRepository, FluxBancaireRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
-builder.Services.AddScoped<ISourceRepository, SourceRepository>();
 builder.Services.AddScoped<IBanqueRepository, BanqueRepository>();
 builder.Services.AddScoped<IActifRepository, ActifRepository>();
 

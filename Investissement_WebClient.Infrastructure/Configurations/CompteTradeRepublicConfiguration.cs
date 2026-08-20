@@ -8,10 +8,6 @@ namespace Investissement_WebClient.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<CompteTradeRepublic> builder)
         {
-            builder.HasOne(c => c.Source)
-                .WithOne()
-                .HasForeignKey<CompteTradeRepublic>(c => c.SourceId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

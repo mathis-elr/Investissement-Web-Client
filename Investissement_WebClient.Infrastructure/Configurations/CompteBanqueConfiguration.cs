@@ -10,11 +10,6 @@ namespace Investissement_WebClient.Infrastructure.Configurations
         {
             builder.Property(c => c.Solde)
                 .HasPrecision(18, 2);
-
-            builder.HasOne(c => c.Source)
-                .WithOne()
-                .HasForeignKey<CompteBanque>(c => c.SourceId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

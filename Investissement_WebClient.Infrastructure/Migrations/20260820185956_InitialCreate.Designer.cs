@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    [Migration("20260820151907_AjoutSource")]
-    partial class AjoutSource
+    [Migration("20260820185956_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,7 +242,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("SourceId")
+                    b.Property<int>("TypeCompte")
                         .HasColumnType("int");
 
                     b.Property<string>("TypePowens")
@@ -252,9 +252,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BanqueId");
-
-                    b.HasIndex("SourceId")
-                        .IsUnique();
 
                     b.ToTable("CompteBanque");
                 });
@@ -275,13 +272,12 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SourceId")
+                    b.Property<int>("UtilisateurId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SourceId")
-                        .IsUnique();
+                    b.HasIndex("UtilisateurId");
 
                     b.ToTable("TradeRepublicAcces");
                 });
@@ -365,34 +361,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.HasIndex("UtilisateurId");
 
                     b.ToTable("FluxInvestissement");
-                });
-
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Source", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TypeCompte")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UtilisateurId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UtilisateurId");
-
-                    b.ToTable("Source");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Utilisateur", b =>
@@ -504,26 +472,18 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Source", "Source")
-                        .WithOne()
-                        .HasForeignKey("Investissement_WebClient.Domain.Modeles.CompteBanque", "SourceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Banque");
-
-                    b.Navigation("Source");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CompteTradeRepublic", b =>
                 {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Source", "Source")
-                        .WithOne()
-                        .HasForeignKey("Investissement_WebClient.Domain.Modeles.CompteTradeRepublic", "SourceId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Source");
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxBancaire", b =>
@@ -565,17 +525,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Actif");
-
-                    b.Navigation("Utilisateur");
-                });
-
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Source", b =>
-                {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
-                        .WithMany()
-                        .HasForeignKey("UtilisateurId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.Navigation("Utilisateur");
                 });

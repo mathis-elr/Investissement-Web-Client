@@ -12,8 +12,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.TradeRepublicAcces
-                .Include(t => t.Source)
-                .Where(b => b.Source.UtilisateurId == userId)
+                .Where(b => b.Utilisateur.Id == userId)
                 .FirstOrDefaultAsync();
         }
 

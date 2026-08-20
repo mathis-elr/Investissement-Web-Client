@@ -1,12 +1,10 @@
-﻿@using Investissement_WebClient.Domain.Modeles
-
-<div class="un-compte @(Selectionne?.Id == Source.Id ? "actif" : "")" @onclick="@OnClick">
+﻿<div class="un-compte @(Selectionne?.Id == Source.Id ? "actif" : "")" @onclick="@OnClick">
     <span class="banque">@Source.Nom</span>
     <span class="compte">@Source.Nom</span>
 </div>
 
 @code {
-    [Parameter] public required Source Source { get; set; }
-    [Parameter] public required Source? Selectionne { get; set; }
+    [Parameter] public required CompteBanqueDto Source { get; set; }
+    [Parameter] public required CompteBanqueDto? Selectionne { get; set; }
     [Parameter] public EventCallback OnClick { get; set; }
 }

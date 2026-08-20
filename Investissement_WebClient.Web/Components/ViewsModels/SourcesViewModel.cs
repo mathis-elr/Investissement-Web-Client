@@ -4,24 +4,25 @@ using Investissement_WebClient.Infrastructure.APIs.Powens;
 using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.Extensions.Options;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class SourcesViewModel(ISourceRepository sourceRepository,
+    public class SourcesViewModel(ICompteBanqueRepository compteBanqueRepository,
                                   IOptions<PowensApiOptions> options,
                                   IPowensApiService powensApiService,
                                   SessionService sessionService)
     {
-        private readonly ISourceRepository _sourceRepository = sourceRepository;
+        private readonly ICompteBanqueRepository _sourceRepository = compteBanqueRepository;
         private readonly IPowensApiService _powensApiService = powensApiService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
 
         // CONNEXION BANQUE
         public string UrlConnexionPowens { get; set; } = string.Empty;
-        public List<Source> Sources { get; set; } = [];
+        public List<CompteBanqueDto> Sources { get; set; } = [];
         public bool AucuneSource => Sources.Count == 0;
-        public Source? SourceSelectionne { get; set; }
+        public CompteBanqueDto? SourceSelectionne { get; set; }
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -78,7 +79,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
-        public async Task ChangerSourceSelectionne(Source source)
+        public async Task ChangerSourceSelectionne(CompteBanqueDto source)
         {
             SourceSelectionne = source;
         }

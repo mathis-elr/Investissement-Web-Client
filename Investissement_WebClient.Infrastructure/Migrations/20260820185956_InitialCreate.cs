@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AjoutSource : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -90,25 +90,24 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Source",
+                name: "TradeRepublicAcces",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nom = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    TypeCompte = table.Column<int>(type: "int", nullable: false),
+                    NumTelCrypte = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PinCrypte = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UtilisateurId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Source", x => x.Id);
+                    table.PrimaryKey("PK_TradeRepublicAcces", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Source_Utilisateur_UtilisateurId",
+                        name: "FK_TradeRepublicAcces_Utilisateur_UtilisateurId",
                         column: x => x.UtilisateurId,
                         principalTable: "Utilisateur",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,27 +154,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TradeRepublicAcces",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NumTelCrypte = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PinCrypte = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SourceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TradeRepublicAcces", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TradeRepublicAcces_Source_SourceId",
-                        column: x => x.SourceId,
-                        principalTable: "Source",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Banque",
                 columns: table => new
                 {
@@ -211,10 +189,10 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdComptePowens = table.Column<int>(type: "int", nullable: false),
                     TypePowens = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeCompte = table.Column<int>(type: "int", nullable: false),
                     Nom = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Solde = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    BanqueId = table.Column<int>(type: "int", nullable: false),
-                    SourceId = table.Column<int>(type: "int", nullable: false)
+                    BanqueId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -225,12 +203,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         principalTable: "Banque",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CompteBanque_Source_SourceId",
-                        column: x => x.SourceId,
-                        principalTable: "Source",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -310,12 +282,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                 column: "BanqueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompteBanque_SourceId",
-                table: "CompteBanque",
-                column: "SourceId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FluxBancaire_CompteBanqueId",
                 table: "FluxBancaire",
                 column: "CompteBanqueId");
@@ -341,15 +307,9 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                 column: "UtilisateurId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Source_UtilisateurId",
-                table: "Source",
-                column: "UtilisateurId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TradeRepublicAcces_SourceId",
+                name: "IX_TradeRepublicAcces_UtilisateurId",
                 table: "TradeRepublicAcces",
-                column: "SourceId",
-                unique: true);
+                column: "UtilisateurId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Utilisateur_Email",
@@ -395,9 +355,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Banque");
-
-            migrationBuilder.DropTable(
-                name: "Source");
 
             migrationBuilder.DropTable(
                 name: "UtilisateurPowens");
