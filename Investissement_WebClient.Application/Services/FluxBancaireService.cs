@@ -6,18 +6,10 @@ using Investissement_WebClient.Domain.Modeles;
 namespace Investissement_WebClient.Application.Services
 {
     public class FluxBancaireService(ICategorieFluxRepository categorieFluxRepository,  
-                                     IFluxBancaireRepository fluxBancaireRepository,
-                                     IBanqueRepository banqueAccesRepository) : IFluxBancaireService
+                                     IFluxBancaireRepository fluxBancaireRepository) : IFluxBancaireService
     {
         private readonly ICategorieFluxRepository _categorieFluxRepository = categorieFluxRepository;
         private readonly IFluxBancaireRepository _fluxBancaireRepository = fluxBancaireRepository;
-        private readonly IBanqueRepository _banqueAccesRepository = banqueAccesRepository;
-
-        public async Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId)
-        {
-            var acces = await _banqueAccesRepository.GetByUserId(userId);
-            return acces?.DateExpiration;
-        }
 
         public async Task<DateTime?> GetDateDernierFlux(int compteId)
         {

@@ -110,8 +110,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     IdConnectionPowens = connectionBanqueId,
                     IdConnectorPowens = idConnector,
                     Nom = await GetNomBanque(tokenClair, idConnector),
-                    DateCreation = DateTime.Now,
-                    DateExpiration = DateTime.Now.AddDays(90),
                     UtilisateurPowensId = utilisateurPowens.Id
                 };
                 await _banqueAccesRepository.Add(newBanque);

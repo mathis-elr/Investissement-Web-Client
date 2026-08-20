@@ -4,8 +4,6 @@ namespace Investissement_WebClient.Application.Interfaces.Services
 {
     public interface IFluxBancaireService
     {
-        Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId);
-
         Task<DateTime?> GetDateDernierFlux(int compteId);
 
         Task<List<FluxBancaireDto>> GetFluxBancaire(int userId);

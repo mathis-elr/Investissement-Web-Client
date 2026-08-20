@@ -8,25 +8,38 @@
 
 <PageTitle>Budget</PageTitle>
 
-@if (BVM.ConnexionBanqueRequise)
+@if (BVM.AucuneCompteBancaire)
 {
     <div class="bloc-empty">
         <_EmptyStateCard Icone="icons/wallet.svg"
-                         Titre="Banque non-synchronisée"
-                         Description="Connectez votre banque en toute sécurité grâce à Powens afin de récupérer vos flux et analyser votre budget."
-                         TexteBouton="Synchroniser ma banque"
-                         InfoBulle="Votre accès bancaire doit être renouvelé pour récupérer les derniers flux (sécurité tous les 90 jours)."
+                         Titre="Aucun compte bancaire synchronisé"
+                         Description="Connectez votre première banque afin de récupérer les flux de vos compte et analyser votre budget."
+                         TexteBouton="Synchroniser mes comptes"
                          OnClick="@SynchroniserBanque" />
     </div>
 }
 
 <div class="budget">
+    <div class="comptes @(BVM.AucuneCompteBancaire ? "flou" : "")">
+        @if (!BVM.AucuneCompteBancaire)
+        {
+            @foreach (var compte in BVM.ComptesBanque)
+            {
+                <_CompteBancaire Compte="@compte" Selectionne="@BVM.CompteSelectionne" OnClick="@(() => BVM.ChangerCompteSelectionne(compte))" />
+            }
+        }
+        else
+        {
+            <p>Aucun comptes synchornisé</p>
+        }
+        <button class="btn-ajouter" @onclick="@SynchroniserBanque">+</button>
+    </div>
 
-    <div class="flux @(BVM.ConnexionBanqueRequise ? "flou" : "")">
+    <div class="flux @(BVM.AucuneCompteBancaire ? "flou" : "")">
         <_BudgetSidebar Model="@BVM" />
     </div>
 
-    <div class="flux-stats @(BVM.ConnexionBanqueRequise ? "flou" : "")">
+    <div class="flux-stats @(BVM.AucuneCompteBancaire ? "flou" : "")">
         @switch (BVM.StatutMoisActif?.Statut)
         {
             case null:

@@ -10,12 +10,14 @@ using Microsoft.Extensions.Options;
 namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 {
     public class BudgetViewModel(IUtilisateurPowensRepository utilisateurPowensRepository,
+                                 ICompteBanqueRepository compteBanqueRepository,
                                  IFluxBancaireService fluxBancaireService,
                                  IOptions<PowensApiOptions> options,
                                  IPowensApiService powensApiService,
                                  SessionService sessionService)
     {
         private readonly IUtilisateurPowensRepository _utilisateurPowensRepository = utilisateurPowensRepository;
+        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly IPowensApiService _powensApiService = powensApiService;
@@ -23,6 +25,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         // CONNEXION BANQUE
         public string UrlConnexionPowens { get; set; } = string.Empty;
+        public List<CompteBanqueDto> ComptesBanque { get; set; } = [];
+        public bool AucuneCompteBancaire => ComptesBanque.Count == 0;
+        public CompteBanqueDto? CompteSelectionne { get; set; }
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -84,8 +89,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         public string? DateActiveString => DateActive?.ToString("MMMM yyyy");
 
         // ENREGISTREMENT MENSUEL
-        public DateTime? DateExpirationSync { get; set; } = null;
-        public bool ConnexionBanqueRequise { get; set; } = false;
         public DateTime DateEditMensuel { get; set; } = DateTime.Today;
         public List<FluxBancaireDto> FluxMensuel { get; set; } = [];
         public List<FluxBancaireDto> CreditsFluxMensuel => FluxMensuel.Where(f => f.Valeur >= 0).ToList();
@@ -122,9 +125,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             {
                 await InitialiserSession();
 
-                await LoadDateLimiteValiditeSyncBanque();
-
                 await Task.WhenAll(
+                    LoadComptesBanque(),
                     LoadFlux(),
                     LoadBudgetParCategorie(),
                     LoadCategories()
@@ -182,16 +184,14 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             Flux = await _fluxBancaireService.GetFluxBancaire(IdUser);
         }
 
+        public async Task LoadComptesBanque()
+        {
+            ComptesBanque = await _compteBanqueRepository.GetAllByUserId(IdUser);
+        }
+
         public async Task GetFluxMensuel()
         {
             ActionEnCours = true;
-
-            if (ConnexionBanqueRequise)
-            {
-                HasErreur = true;
-                MessageErreur = "Cette action nécéssite la synchronisation avec vôtre banque";
-                return;
-            }
 
             var dateDebut = new DateTime(DateActive!.Value.Year, DateActive.Value.Month, 1);
             var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
@@ -258,6 +258,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             UrlConnexionPowens = await GetUrlConnexionPowens();
         }
 
+        public void ChangerCompteSelectionne(CompteBanqueDto compte)
+        {
+            CompteSelectionne = compte;
+            NotifyStateChanged();
+        }
+
         private async Task InitialiserSession()
         {
             await _sessionService.Initialiser();
@@ -283,12 +289,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         private async Task LoadCategories()
         {
             Categories = await _fluxBancaireService.GetCategorieFlux();
-        }
-
-        private async Task LoadDateLimiteValiditeSyncBanque()
-        {
-            DateExpirationSync = await _fluxBancaireService.GetDateLimiteValiditeSyncBanque(IdUser);
-            ConnexionBanqueRequise = !DateExpirationSync.HasValue;
         }
 
         private async Task LoadBudgetParCategorie()

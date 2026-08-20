@@ -1,0 +1,10 @@
+﻿<div class="un-compte @(Selectionne?.Id == Compte.Id ? "actif" : "")" @onclick="@OnClick">
+    <span class="banque">@Compte.Banque.Nom</span>
+    <span class="compte">@Compte.Nom</span>
+</div>
+
+@code {
+    [Parameter] public required CompteBanqueDto Compte { get; set; }
+    [Parameter] public required CompteBanqueDto? Selectionne { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+}

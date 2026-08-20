@@ -10,10 +10,6 @@ namespace Investissement_WebClient.Domain.Modeles
 
         public required string Nom { get; set; }
 
-        public DateTime DateCreation { get; set; }
-
-        public DateTime DateExpiration { get; set; }
-
         public ICollection<CompteBanque> Comptes { get; set; } = [];
 
         public int UtilisateurPowensId { get; set; }
