@@ -1,16 +1,17 @@
-﻿using Investissement_WebClient.Infrastructure.APIs.TradeRepublic.Responses;
+﻿using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Application.DTO.FluxInvestissements;
+using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Services.Encrypt;
-using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.DTO.Auth;
-using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
-using System.Text.Json.Serialization;
+using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Infrastructure.APIs.TradeRepublic.Responses;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
+using System.Numerics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 {
@@ -210,11 +211,17 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
             }
             else
             {
-                var newAcces = new TradeRepublicAcces
+                var newAcces = new CompteTradeRepublic
                 {
                     NumTelCrypte = _encryptService.Encrypt(accesDto.NumTel, _optionsEncryption.MasterKey),
                     PinCrypte = _encryptService.Encrypt(accesDto.Pin, _optionsEncryption.MasterKey),
-                    UtilisateurId = userId
+                    Source = new Source 
+                    {
+                        Nom = "Trade Républic",
+                        Type = TypeSource.TradeRepublic,
+                        TypeCompte = TypeCompte.Investissement,
+                        UtilisateurId = userId
+                    },
                 };
 
                 await _tradeRepublicAccesRepository.Add(newAcces);

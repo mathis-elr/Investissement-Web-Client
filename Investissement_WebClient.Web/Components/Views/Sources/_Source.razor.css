@@ -1,0 +1,45 @@
+﻿.un-compte {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 150px;
+    padding: 5px 7px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(218,165,32,.35);
+    border-radius: 14px;
+    transition: .2s;
+    cursor: pointer;
+}
+
+    .un-compte:hover {
+        background: rgba(218,165,32,.08);
+        border-color: rgba(218,165,32,.65);
+    }
+
+    .un-compte.actif {
+        background: rgba(218,165,32,.12);
+        border-color: goldenrod;
+        box-shadow: 0 0 0 1px rgba(218,165,32,.25);
+    }
+
+    .un-compte .banque {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: grey;
+    }
+
+    .un-compte .compte {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+    }
+
+@media (min-height: 800px) {
+    .un-compte .banque {
+        font-size: 14px;
+    }
+
+    .un-compte .compte {
+        font-size: 18px;
+    }
+}

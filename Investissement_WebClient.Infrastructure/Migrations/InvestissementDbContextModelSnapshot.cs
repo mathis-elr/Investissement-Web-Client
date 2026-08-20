@@ -239,7 +239,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TypeCompte")
+                    b.Property<int>("SourceId")
                         .HasColumnType("int");
 
                     b.Property<string>("TypePowens")
@@ -250,7 +250,37 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
                     b.HasIndex("BanqueId");
 
+                    b.HasIndex("SourceId")
+                        .IsUnique();
+
                     b.ToTable("CompteBanque");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CompteTradeRepublic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NumTelCrypte")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PinCrypte")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SourceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId")
+                        .IsUnique();
+
+                    b.ToTable("TradeRepublicAcces");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxBancaire", b =>
@@ -334,7 +364,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.ToTable("FluxInvestissement");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.TradeRepublicAcces", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Source", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -342,13 +372,15 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("NumTelCrypte")
+                    b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PinCrypte")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeCompte")
+                        .HasColumnType("int");
 
                     b.Property<int>("UtilisateurId")
                         .HasColumnType("int");
@@ -357,7 +389,7 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
                     b.HasIndex("UtilisateurId");
 
-                    b.ToTable("TradeRepublicAcces");
+                    b.ToTable("Source");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Utilisateur", b =>
@@ -469,7 +501,26 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Source", "Source")
+                        .WithOne()
+                        .HasForeignKey("Investissement_WebClient.Domain.Modeles.CompteBanque", "SourceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Banque");
+
+                    b.Navigation("Source");
+                });
+
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.CompteTradeRepublic", b =>
+                {
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Source", "Source")
+                        .WithOne()
+                        .HasForeignKey("Investissement_WebClient.Domain.Modeles.CompteTradeRepublic", "SourceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Source");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.FluxBancaire", b =>
@@ -515,12 +566,12 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Navigation("Utilisateur");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.TradeRepublicAcces", b =>
+            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Source", b =>
                 {
                     b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
                         .WithMany()
                         .HasForeignKey("UtilisateurId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Utilisateur");

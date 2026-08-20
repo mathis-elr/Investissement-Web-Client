@@ -1,0 +1,102 @@
+﻿@page "/sources"
+@attribute [Authorize]
+@inject SourcesViewModel SVM
+@inject IToastService TS
+@inject NavigationManager Nav
+
+<PageTitle>Sources</PageTitle>
+
+@if (SVM.AucuneSource)
+{
+    <div class="bloc-empty">
+        <_EmptyStateCard Icone="icons/wallet.svg"
+                         Titre="Aucune source synchronisée"
+                         Description="Connectez votre première première source afin de récupérer les flux de vos compte et les analyser."
+                         TexteBouton="Synchroniser ma première source"
+                         OnClick="@SynchroniserSource" />
+    </div>
+}
+
+<div class="sources">
+    <div class="liste-sources @(SVM.AucuneSource ? "flou" : "")">
+        @if (!SVM.AucuneSource)
+        {
+            @foreach (var source in SVM.Sources)
+            {
+                <_Source Source="@source" Selectionne="@SVM.SourceSelectionne" OnClick="@(async () => await SVM.ChangerSourceSelectionne(source))" />
+            }
+        }
+        else
+        {
+            <p>Aucun comptes synchornisé</p>
+        }
+        <button class="btn-ajouter" @onclick="@SynchroniserSource">+</button>
+    </div>
+
+    <div>
+
+    </div>
+</div>
+
+@code {
+    private CancellationTokenSource _cts = new();
+    [Parameter][SupplyParameterFromQuery(Name = "connection_id")] public int? ConnectionBanqueId { get; set; }
+    [Parameter][SupplyParameterFromQuery(Name = "sync")] public string? SyncStatus { get; set; }
+
+    protected override void OnInitialized()
+    {
+        SVM.OnChange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (SyncStatus == "ok")
+        {
+            TS.ShowSuccess("Banque synchronisée avec succès !");
+            TS.ShowInfo("Synchronisation des flux lancée en arrière-plan ...");
+            //BankWorker.DeclencherSynchronisationImmediate(SVM.IdUser);
+            SyncStatus = null;
+        }
+        else if (SyncStatus == "error")
+        {
+            TS.ShowError("Erreur lors de la synchronisation de la banque, veuillez réessayer plus tard.");
+            SyncStatus = null;
+        }
+
+        if (ConnectionBanqueId != null)
+        {
+            var id = ConnectionBanqueId.Value;
+            ConnectionBanqueId = null;
+            await FinaliserAjoutBanque();
+        }
+        else if (string.IsNullOrEmpty(SyncStatus))
+        {
+            await SVM.StartLoadData();
+        }
+    }
+
+    private async Task SynchroniserSource()
+    {
+        await SVM.InitialiserUrlConnexionPowens();
+        Nav.NavigateTo(SVM.UrlConnexionPowens, forceLoad: true);
+    }
+
+    private async Task FinaliserAjoutBanque()
+    {
+        await SVM.FinaliserAjoutBanque(ConnectionBanqueId!.Value);
+        if (SVM.HasErreur)
+        {
+            Nav.NavigateTo("/sources?sync=error", replace: true);
+            return;
+        }
+
+        Nav.NavigateTo("/sources?sync=ok", replace: true);
+    }
+
+    public void Dispose()
+    {
+        SVM.OnChange -= StateHasChanged;
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+}

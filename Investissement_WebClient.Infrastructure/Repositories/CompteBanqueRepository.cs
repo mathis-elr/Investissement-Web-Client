@@ -1,8 +1,7 @@
-﻿using Investissement_WebClient.Application.DTO.FluxBancaires;
-using Investissement_WebClient.Application.Interfaces.Repositories;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 
 namespace Investissement_WebClient.Infrastructure.Repositories
 {
@@ -41,7 +40,6 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                     IdComptePowens = c.IdComptePowens,
                     Nom = c.Nom,
                     TypePowens = c.TypePowens,
-                    TypeCompte = c.TypeCompte,
                     Banque = c.Banque
                 })
                 .ToListAsync();

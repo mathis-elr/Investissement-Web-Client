@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Investissement_WebClient.Domain.Extensions;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Infrastructure.APIs.Powens
 {
@@ -102,11 +103,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var banquesEnregistrees = await _banqueAccesRepository.GetAllByUserId(userId);
             var idConnector = await GetIdConnector(tokenClair, connectionBanqueId);
 
-            var idBanque = 0;
+            Banque? newBanque = null;
             var banqueExiste = banquesEnregistrees?.FirstOrDefault(b => b.IdConnectorPowens == idConnector);
             if (banqueExiste == null)
             {
-                var newBanque = new Banque
+                newBanque = new Banque
                 {
                     IdConnectionPowens = connectionBanqueId,
                     IdConnectorPowens = idConnector,
@@ -114,12 +115,9 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     UtilisateurPowensId = utilisateurPowens.Id
                 };
                 await _banqueAccesRepository.Add(newBanque);
-                idBanque = newBanque.Id;
             }
-            else
-                idBanque = banqueExiste.Id;
 
-            await SaveComptes(tokenClair, idBanque, connectionBanqueId);
+            await SaveComptes(tokenClair, newBanque ?? banqueExiste!, connectionBanqueId);
         }
 
         public async Task VerifierEtSynchroniserFluxBancairesAsync()
@@ -253,11 +251,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _utilisateurPowensRepository.Add(nouvelUtilisateur);
         }
 
-        private async Task SaveComptes(string token, int idBanqueLocal, int connectionBanqueId)
+        private async Task SaveComptes(string token, Banque banque, int connectionBanqueId)
         {
             var comptes = await GetComptes(token, connectionBanqueId);
 
-            var comptesExistants = await _compteBanqueRepository.GetAllByBanqueId(idBanqueLocal);
+            var comptesExistants = await _compteBanqueRepository.GetAllByBanqueId(banque.Id);
             var nouveauxComptes = comptes.Where(c => !comptesExistants.Any(ce => ce.IdComptePowens == c.Id)).ToList();
 
             foreach (var compte in nouveauxComptes)
@@ -267,9 +265,15 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     IdComptePowens = compte.Id,
                     Nom = compte?.NomCompte ?? "Inconnue",
                     TypePowens = compte?.Type ?? "Inconnu",
-                    TypeCompte = TypeCompteExtensions.ToTypeCompte(compte?.Type),
                     Solde = compte?.Solde ?? 0,
-                    BanqueId = idBanqueLocal
+                    BanqueId = banque.Id,
+                    Source = new Source
+                    {
+                        Nom = compte?.NomCompte ?? "Inconnue",
+                        Type = TypeSource.Powens,
+                        TypeCompte = TypeCompteExtensions.ToTypeCompte(compte?.Type),
+                        UtilisateurId = banque.UtilisateurPowens.UtilisateurId
+                    }
                 };
 
                 await _compteBanqueRepository.Add(newCompte);

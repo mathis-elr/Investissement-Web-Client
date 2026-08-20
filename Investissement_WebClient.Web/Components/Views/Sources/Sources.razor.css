@@ -1,0 +1,63 @@
+﻿.comptes {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.liste-sources {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: fit-content;
+    gap: 30px;
+    padding: 7px 13px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    opacity: 0.8;
+    overflow-x: auto;
+    overflow-y: hidden;
+    transition: all 0.3s ease-in-out;
+}
+    .liste-sources:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
+
+
+.btn-ajouter {
+    gap: 2px;
+    min-width: 150px;
+    padding: 5px 7px;
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed rgba(218,165,32,.35);
+    border-radius: 14px;
+    color: white;
+    height: 100%;
+}
+
+    .btn-ajouter:hover {
+        background: rgba(218,165,32,.08);
+        border: 1px solid rgba(218,165,32,.65);
+        transform: scale(1);
+    }
+
+::deep .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+::deep .content {
+    display: grid;
+    height: 100%;
+    overflow-y: auto;
+}
+
+
+::deep .btn-submit {
+    width: fit-content;
+}

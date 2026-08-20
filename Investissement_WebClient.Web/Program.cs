@@ -66,6 +66,7 @@ builder.Services.AddScoped<InscriptionViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<ConnexionViewModel>();
 builder.Services.AddScoped<DashboardViewModel>();
+builder.Services.AddScoped<SourcesViewModel>();
 builder.Services.AddScoped<BudgetViewModel>();
 
 
@@ -78,6 +79,7 @@ builder.Services.AddScoped<ICategorieFluxRepository, CategorieFluxRepository>();
 builder.Services.AddScoped<ICompteBanqueRepository, CompteBanqueRepository>();
 builder.Services.AddScoped<IFluxBancaireRepository, FluxBancaireRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
+builder.Services.AddScoped<ISourceRepository, SourceRepository>();
 builder.Services.AddScoped<IBanqueRepository, BanqueRepository>();
 builder.Services.AddScoped<IActifRepository, ActifRepository>();
 

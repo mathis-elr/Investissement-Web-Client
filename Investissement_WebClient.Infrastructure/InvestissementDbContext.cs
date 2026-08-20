@@ -8,8 +8,9 @@ public class InvestissementDbContext(DbContextOptions<InvestissementDbContext> o
 {
     public DbSet<Utilisateur> Utilisateur { get; set; }
 
-    public DbSet<TradeRepublicAcces> TradeRepublicAcces { get; set; }
+    public DbSet<CompteTradeRepublic> TradeRepublicAcces { get; set; }
 
+    public DbSet<Source> Source { get; set; }
     public DbSet<UtilisateurPowens> UtilisateurPowens { get; set; }
     public DbSet<Banque> Banque { get; set; }
     public DbSet<CompteBanque> CompteBanque { get; set; }

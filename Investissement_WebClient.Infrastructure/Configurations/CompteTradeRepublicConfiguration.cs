@@ -4,16 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Infrastructure.Configurations
 {
-    internal class CompteBanqueConfiguration : IEntityTypeConfiguration<CompteBanque>
+    internal class CompteTradeRepublicConfiguration : IEntityTypeConfiguration<CompteTradeRepublic>
     {
-        public void Configure(EntityTypeBuilder<CompteBanque> builder)
+        public void Configure(EntityTypeBuilder<CompteTradeRepublic> builder)
         {
-            builder.Property(c => c.Solde)
-                .HasPrecision(18, 2);
-
             builder.HasOne(c => c.Source)
                 .WithOne()
-                .HasForeignKey<CompteBanque>(c => c.SourceId)
+                .HasForeignKey<CompteTradeRepublic>(c => c.SourceId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace Investissement_WebClient.Domain.Modeles
 {
-    public class TradeRepublicAcces
+    public class CompteTradeRepublic
     {
         public int Id { get; set; }
 
@@ -8,7 +8,7 @@
 
         public required string PinCrypte { get; set; }
 
-        public int UtilisateurId { get; set; }
-        public Utilisateur Utilisateur { get; set; } = null!;
+        public int SourceId { get; set; }
+        public Source Source { get; set; } = null!;
     }
 }

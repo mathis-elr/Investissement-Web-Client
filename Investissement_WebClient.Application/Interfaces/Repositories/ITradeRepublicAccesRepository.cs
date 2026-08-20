@@ -4,8 +4,8 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
     public interface ITradeRepublicAccesRepository
     {
-        Task<TradeRepublicAcces?> GetByUserId(int userId);
+        Task<CompteTradeRepublic?> GetByUserId(int userId);
 
-        Task Add(TradeRepublicAcces acces);
+        Task Add(CompteTradeRepublic acces);
     }
 }
