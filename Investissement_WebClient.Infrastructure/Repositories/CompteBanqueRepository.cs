@@ -8,7 +8,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
-        public async Task<IEnumerable<CompteBanque?>> GetAll()
+        public async Task<IEnumerable<CompteBanque>> GetAll()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.CompteBanque
@@ -17,7 +17,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<CompteBanque?>> GetAllByBanqueId(int banqueId)
+        public async Task<IEnumerable<CompteBanque>> GetAllByBanqueId(int banqueId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.CompteBanque

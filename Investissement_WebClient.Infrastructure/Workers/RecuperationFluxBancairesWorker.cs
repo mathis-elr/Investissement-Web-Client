@@ -1,4 +1,5 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Services;
+using Investissement_WebClient.Application.Interfaces.APIs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -7,8 +8,8 @@ namespace Investissement_WebClient.Infrastructure.Workers
     public class RecuperationFluxBancairesWorker(IServiceProvider serviceProvider) : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private int _dernierUserIdCible;
         private readonly SemaphoreSlim _signalSyncImmediate = new(0); // Permet de réveiller le worker instantanément
+        private int _dernierUserIdCible;
 
         public void DeclencherSynchronisationImmediate(int userId)
         {
@@ -28,12 +29,12 @@ namespace Investissement_WebClient.Infrastructure.Workers
                     if (isJourOk || signaled)
                     {
                         using var scope = _serviceProvider.CreateScope();
-                        var fluxBancaireService = scope.ServiceProvider.GetRequiredService<IFluxBancaireService>();
+                        var powensApiService = scope.ServiceProvider.GetRequiredService<IPowensApiService>();
 
                         if (signaled)
-                            await ExecuterBoucleRatissageAsync(fluxBancaireService, stoppingToken);
+                            await ExecuterBoucleRatissageAsync(powensApiService, stoppingToken);
                         else
-                            await fluxBancaireService.VerifierEtSynchroniserFluxBancairesAsync();
+                            await powensApiService.VerifierEtSynchroniserFluxBancairesAsync();
                     }
 
                     await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
@@ -49,7 +50,7 @@ namespace Investissement_WebClient.Infrastructure.Workers
             }
         }
 
-        private async Task ExecuterBoucleRatissageAsync(IFluxBancaireService fluxBancaireService, CancellationToken stoppingToken)
+        private async Task ExecuterBoucleRatissageAsync(IPowensApiService powensApiService, CancellationToken stoppingToken)
         {
             for (int i = 0; i < 15; i++)
             {
@@ -57,7 +58,10 @@ namespace Investissement_WebClient.Infrastructure.Workers
 
                 await Task.Delay(2000, stoppingToken);
 
-                await fluxBancaireService.VerifierEtSynchroniserFluxBancairesAsync();
+                await powensApiService.VerifierEtSynchroniserFluxBancairesAsync();
+
+                using var scope = _serviceProvider.CreateScope();
+                var fluxBancaireService = scope.ServiceProvider.GetRequiredService<IFluxBancaireService>();
 
                 var flux = await fluxBancaireService.GetFluxBancaire(_dernierUserIdCible);
                 if (flux.Count != 0) break;
@@ -65,31 +69,3 @@ namespace Investissement_WebClient.Infrastructure.Workers
         }
     }
 }
-
-
-//using Investissement_WebClient.Application.Interfaces.Services;
-//using Microsoft.Extensions.DependencyInjection;
-//using Microsoft.Extensions.Hosting;
-
-//namespace Investissement_WebClient.Infrastructure.Workers
-//{
-//    public class RecuperationFluxBancairesWorker(IServiceProvider serviceProvider) : BackgroundService
-//    {
-//        private readonly IServiceProvider _serviceProvider = serviceProvider;
-
-//        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-//        {
-//            while (!stoppingToken.IsCancellationRequested)
-//            {
-//                if (DateTime.Now.Day >= 5)
-//                {
-//                    using var scope = _serviceProvider.CreateScope();
-//                    var fluxBancaireService = scope.ServiceProvider.GetRequiredService<IFluxBancaireService>();
-//                    await fluxBancaireService.VerifierEtSynchroniserFluxBancairesAsync();
-//                }
-
-//                await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
-//            }
-//        }
-//    }
-//}

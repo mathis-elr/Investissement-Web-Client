@@ -6,11 +6,11 @@ namespace Investissement_WebClient.Application.Interfaces.Services
     {
         Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId);
 
+        Task<DateTime?> GetDateDernierFlux(int compteId);
+
         Task<List<FluxBancaireDto>> GetFluxBancaire(int userId);
 
         Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux();
-
-        Task VerifierEtSynchroniserFluxBancairesAsync();
 
         Task<IEnumerable<BudgetsParCategorieDto>> CalculerBudgetCategorieParMois(int userId);
 

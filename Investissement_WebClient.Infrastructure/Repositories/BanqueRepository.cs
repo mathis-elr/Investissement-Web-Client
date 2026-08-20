@@ -18,7 +18,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Banque?>> GetAllByUserId(int userId)
+        public async Task<IEnumerable<Banque>> GetAllByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.Banque

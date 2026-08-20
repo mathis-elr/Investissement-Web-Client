@@ -6,7 +6,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
     {
         Task<Banque?> GetByUserId(int userId);
 
-        Task<IEnumerable<Banque?>> GetAllByUserId(int userId);
+        Task<IEnumerable<Banque>> GetAllByUserId(int userId);
 
         Task Add(Banque acces);
 

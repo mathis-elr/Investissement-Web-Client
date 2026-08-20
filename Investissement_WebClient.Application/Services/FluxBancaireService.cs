@@ -1,22 +1,17 @@
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
-using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Services
 {
-    public class FluxBancaireService(ICategorieFluxRepository categorieFluxRepository,
-                                     ICompteBanqueRepository compteBanqueRepository,   
+    public class FluxBancaireService(ICategorieFluxRepository categorieFluxRepository,  
                                      IFluxBancaireRepository fluxBancaireRepository,
-                                     IBanqueRepository banqueAccesRepository,
-                                     IPowensApiService powensApiService) : IFluxBancaireService
+                                     IBanqueRepository banqueAccesRepository) : IFluxBancaireService
     {
         private readonly ICategorieFluxRepository _categorieFluxRepository = categorieFluxRepository;
-        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly IFluxBancaireRepository _fluxBancaireRepository = fluxBancaireRepository;
         private readonly IBanqueRepository _banqueAccesRepository = banqueAccesRepository;
-        private readonly IPowensApiService _powensApiService = powensApiService;
 
         public async Task<DateTime?> GetDateLimiteValiditeSyncBanque(int userId)
         {
@@ -55,30 +50,6 @@ namespace Investissement_WebClient.Application.Services
             })
                 .OrderBy(f => f.Libelle)
                 .ToList();
-        }
-
-        public async Task VerifierEtSynchroniserFluxBancairesAsync()
-        {
-            var currentDate = DateTime.Now;
-
-            var finMoisPrecedent = new DateTime(currentDate.Year, currentDate.Month, 1).AddDays(-1);
-
-            var comptes = await _compteBanqueRepository.GetAll();
-
-            if(comptes == null || !comptes.Any())
-                return;
-
-            foreach (var compte in comptes)
-            {
-                var derniereDate = await GetDateDernierFlux(compte!.Id);
-
-                if (derniereDate.HasValue && derniereDate.Value >= finMoisPrecedent)
-                    continue;
-
-                var dateDebut = derniereDate ?? new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(-2);
-
-                await _powensApiService.GetFlux(dateDebut, finMoisPrecedent, compte);
-            }
         }
 
         public async Task DeterminerCategorieFlux()

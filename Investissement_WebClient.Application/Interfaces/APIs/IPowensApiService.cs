@@ -12,6 +12,8 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
 
         Task SaveBanque(int connectionId, int userId);
 
+        Task VerifierEtSynchroniserFluxBancairesAsync();
+
         Task GetFlux(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque);
     }
 }
