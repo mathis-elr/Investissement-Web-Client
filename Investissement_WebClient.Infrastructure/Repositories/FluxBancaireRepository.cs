@@ -28,6 +28,15 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<FluxBancaire>> GetByCompteId(int compteId)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            return await context.FluxBancaire
+                .Where(f => f.CompteBanqueId == compteId)
+                .Include(f => f.Categorie)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<FluxBancaire>> GetAllSansCategorie()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();

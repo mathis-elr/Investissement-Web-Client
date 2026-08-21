@@ -1,4 +1,4 @@
-using Investissement_WebClient.Application.Interfaces.Repositories;
+﻿using Investissement_WebClient.Web.Components.ViewsModels.Budget;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
@@ -7,25 +7,19 @@ using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.Extensions.Options;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
+namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class BudgetViewModel(ICompteBanqueRepository compteBanqueRepository,
-                                 IFluxBancaireService fluxBancaireService,
-                                 IOptions<PowensApiOptions> options,
-                                 IPowensApiService powensApiService,
-                                 SessionService sessionService)
+    public class CompteCourantViewModel(IFluxBancaireService fluxBancaireService,
+                                        IOptions<PowensApiOptions> options,
+                                        IPowensApiService powensApiService,
+                                        SessionService sessionService)
     {
-        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
         private readonly IPowensApiService _powensApiService = powensApiService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
 
-        // CONNEXION BANQUE
-        public string UrlConnexionPowens { get; set; } = string.Empty;
-        public List<SourceDto> ComptesBanque { get; set; } = [];
-        public bool AucunCompteBancaire => ComptesBanque.Count == 0;
-        public SourceDto? CompteSelectionne { get; set; }
+        public int CompteCourantId { get; set; }
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -36,9 +30,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
         public void NotifyStateChanged() => OnChange?.Invoke();
 
         // FLUX BANCAIRES
-        public List<FluxBancaireDto> TousLesFlux { get; set; } = [];
-        public List<FluxBancaireDto> FluxCourant => TousLesFlux
-                .Where(f => f.CompteBancaireId == CompteSelectionne?.Id)
+        public List<FluxBancaireDto> FluxCompte { get; set; } = [];
+        public List<FluxBancaireDto> FluxCourant => FluxCompte
+                .Where(f => f.CompteBancaireId == CompteCourantId)
                 .ToList();
 
         // RECAPITULATIF GLOBAL
@@ -50,7 +44,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         public decimal DepensesMoyennnes => BudgetLineCharts
             .Where(b => b.Categorie.Equals("Vie quotidienne", StringComparison.OrdinalIgnoreCase)
-                     || b.Categorie.Equals("Loisirs/Plaisirs", StringComparison.OrdinalIgnoreCase)) 
+                     || b.Categorie.Equals("Loisirs/Plaisirs", StringComparison.OrdinalIgnoreCase))
             .SelectMany(b => b.BudgetCategorieParMois)
             .GroupBy(m => m.Date)
             .Select(g => g.Sum(m => m.Budget))
@@ -114,7 +108,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             }
         }
 
-        public async Task StartLoadData()
+        public async Task StartLoadData(int compteCourantId)
         {
             ActionEnCours = true;
 
@@ -122,16 +116,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             {
                 await InitialiserSession();
 
+                CompteCourantId = compteCourantId;
+
                 await Task.WhenAll(
-                    LoadComptesBanque(),
-                    LoadFlux(),
+                    LoadFluxCompte(),
                     LoadCategories()
                 );
-
-                if (AucunCompteBancaire)
-                    return;
-
-                CompteSelectionne = ComptesBanque.First();
 
                 await LoadBudgetParCategorie();
 
@@ -172,26 +162,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             NotifyStateChanged();
         }
 
-        //public async Task GetFluxMensuel()
-        //{
-        //    ActionEnCours = true;
-
-        //    var dateDebut = new DateTime(DateActive!.Value.Year, DateActive.Value.Month, 1);
-        //    var dernierJourDuMois = DateTime.DaysInMonth(DateActive.Value.Year, DateActive.Value.Month);
-        //    var dateFin = new DateTime(DateActive.Value.Year, DateActive.Value.Month, dernierJourDuMois);
-
-        //    await GetFlux(dateDebut, dateFin);
-
-        //    await RefreshData();
-        //    NotifyStateChanged();
-        //}
-
-
-        //public async Task GetFlux(DateTime dateDebut, DateTime dateFin)
-        //{
-        //    await _powensApiService.GetFlux(dateDebut, dateFin, IdUser);
-        //}
-
         public async Task UpdateFluxMensuel()
         {
             ActionEnCours = true;
@@ -201,7 +171,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
             await _fluxBancaireService.UpdateFluxMensuel(FluxMensuel, IdUser);
 
-            await LoadFlux();
+            await LoadFluxCompte();
             LoadFluxUnMois(StatutMoisActif!);
             CalculerStatsGraphique();
 
@@ -241,32 +211,15 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
             //await RafraichirGraphique();
         }
 
-        public async Task InitialiserUrlConnexionPowens()
-        {
-            UrlConnexionPowens = await GetUrlConnexionPowens();
-        }
-
-        public async Task ChangerCompteSelectionne(SourceDto compte)
-        {
-            CompteSelectionne = compte;
-            await LoadBudgetParCategorie();
-            SetRecapGlobal();
-        }
-
         private async Task InitialiserSession()
         {
             await _sessionService.VerifierInitialisation();
             IdUser = _sessionService.Id;
         }
 
-        private async Task LoadFlux()
+        private async Task LoadFluxCompte()
         {
-            TousLesFlux = await _fluxBancaireService.GetFluxBancaire(IdUser);
-        }
-
-        private async Task LoadComptesBanque()
-        {
-            ComptesBanque = await _compteBanqueRepository.GetAllByUserId(IdUser);
+            FluxCompte = await _fluxBancaireService.GetFluxByCompteId(CompteCourantId);
         }
 
         private async Task LoadCategories()
@@ -276,8 +229,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         private async Task LoadBudgetParCategorie()
         {
-            if (CompteSelectionne != null)
-                BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(CompteSelectionne.Id);
+            BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(CompteCourantId);
         }
 
         //private async Task RafraichirGraphique()

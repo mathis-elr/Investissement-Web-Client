@@ -34,9 +34,23 @@
         <button class="btn-ajouter" @onclick="@SynchroniserSource">+</button>
     </div>
 
-    <div>
+    @switch (SVM.SourceSelectionne?.TypeCompte)
+    {
+        case null:
+            break;
 
-    </div>
+        case TypeCompte.Epargne:
+            <CompteEpargne/>
+            break;
+
+        case TypeCompte.Investissement:
+            <CompteInvestissement />
+            break;
+
+        default:
+            <CompteCourant IdCompte="SVM.SourceSelectionne.Id"/>
+            break;
+    }
 </div>
 
 @code {

@@ -89,7 +89,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
             try
             {
-                await _sessionService.Initialiser();
+                await _sessionService.VerifierInitialisation();
                 IdUser = _sessionService.Id;
 
                 await LoadIdentifiantsRequis();

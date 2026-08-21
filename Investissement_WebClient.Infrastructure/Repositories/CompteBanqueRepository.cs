@@ -39,6 +39,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                     Id = c.Id,
                     NomCompte = c.Nom,
                     NomSource = c.Banque.Nom,
+                    TypeCompte = c.TypeCompte
                 })
                 .ToListAsync();
         }

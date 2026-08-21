@@ -1,0 +1,137 @@
+﻿.header {
+    display: flex;
+    flex-direction: column;
+    align-items: start !important;
+    gap: 20px;
+}
+
+.btn-get-transactions:disabled {
+    background-color: #999;
+    color: #585d60;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none; /*desactive les effets de survol*/
+}
+
+
+.transactions-infos {
+    display: grid;
+    background-color: #242424;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+    .transactions-infos .form-grid {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+        width: 100%
+    }
+
+.form-grid .message {
+    display: flex;
+    justify-content: center;
+    font-size: 18px;
+    font-style: italic;
+    color: goldenrod;
+}
+
+.form-grid label {
+    color: #999;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+select, input {
+    width: 100%;
+    transition: 0.4s ease-in-out;
+}
+
+.transactions-infos input:hover,
+.transactions-infos select:hover,
+.transactions-infos input:focus,
+.transactions-infos select:focus {
+    outline: none !important;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 10px;
+    padding: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.transactions .content label {
+    font-size: 20px;
+}
+
+.un-mois {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #242424;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 5px;
+    gap: 30px;
+    transition: 0.25s ease-in-out;
+}
+
+    .un-mois .mois {
+        color: white;
+        text-transform: capitalize;
+    }
+
+    .un-mois .gauche {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .un-mois .statut-badge {
+        color: grey;
+        font-size: 13px;
+        font-style: italic;
+    }
+
+
+.recap {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border: 1px solid goldenrod;
+    color: goldenrod;
+}
+
+    .recap:hover,
+    .active-recapitulatif-global {
+        background-color: goldenrod;
+        color: #1e1e1e;
+        transform: scale(0.98);
+    }
+
+.un-mois:not(.disabled, .recap):hover,
+.un-mois.active {
+    cursor: pointer;
+    border-left: 5px solid goldenrod;
+    background-color: #252525;
+}
+
+.un-mois.active {
+    box-shadow: 0 4px 5px rgba(218, 165, 32, 0.15);
+}
+
+.disabled {
+    cursor: not-allowed;
+    color: grey;
+    opacity: 0.6;
+}

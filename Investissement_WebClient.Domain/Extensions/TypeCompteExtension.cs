@@ -8,9 +8,9 @@ public static class TypeCompteExtensions
     {
         return typePowens?.ToLowerInvariant() switch
         {
-            "checking" => TypeCompte.CompteCourant,
-            "joint" => TypeCompte.CompteCourant,
-            "card" => TypeCompte.CompteCourant,
+            "checking" => TypeCompte.Courant,
+            "joint" => TypeCompte.Courant,
+            "card" => TypeCompte.Courant,
 
             "savings" => TypeCompte.Epargne,
             "deposit" => TypeCompte.Epargne,

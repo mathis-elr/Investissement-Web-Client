@@ -1,6 +1,7 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Infrastructure.Repositories
@@ -17,8 +18,9 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .Select(c => new SourceDto
                 {
                     Id = -1,
-                    NomCompte = "Investissement",
-                    NomSource = "Trade Républic"
+                    NomCompte = "Portefeuille",
+                    NomSource = "Trade Républic",
+                    TypeCompte = TypeCompte.Investissement
                 })
                 .FirstOrDefaultAsync();
         }

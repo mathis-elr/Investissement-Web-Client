@@ -1,0 +1,38 @@
+﻿@attribute [Authorize]
+@inject CompteCourantViewModel CVM
+@inject NavigationManager Nav
+@inject IToastService TS
+
+<div class="compte-courant">
+    <div class="sidebar">
+        <_CompteCourantSidebar Model="@CVM" />
+    </div>
+    <div class="content">
+        @switch (CVM.StatutMoisActif?.Statut)
+        {
+            case null:
+                <_CompteCourantRecap @key="CVM.CompteCourantId" Model="@CVM" />
+                break;
+            case Statut.a_completer or Statut.edition:
+                <_CompteCourantEditionFluxMensuel Model="@CVM" />
+                break;
+            case Statut.complete:
+                // la cle permet de forcer la mise à jour
+                <_CompteCourantRecapFluxMensuel @key="CVM.StatutMoisActif.Date" Model="@CVM" />
+                break;
+            case Statut.aucune_donnees:
+                @* <_BudgetGetFlux Model="@BVM" /> *@
+                break;
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public required int IdCompte { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CVM.OnChange += StateHasChanged;
+        await CVM.StartLoadData(IdCompte);
+    }
+}

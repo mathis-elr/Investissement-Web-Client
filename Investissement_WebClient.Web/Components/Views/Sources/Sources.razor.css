@@ -1,7 +1,7 @@
-﻿.comptes {
+﻿.sources {
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: 20px;
+    gap: 10px;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -10,7 +10,7 @@
 
 .liste-sources {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 20px;
     height: fit-content;
     gap: 30px;
@@ -36,7 +36,8 @@
     border: 1px dashed rgba(218,165,32,.35);
     border-radius: 14px;
     color: white;
-    height: 100%;
+    font-size: 25px;
+    font-weight: bold;
 }
 
     .btn-ajouter:hover {

@@ -44,7 +44,7 @@
     protected override async Task OnInitializedAsync()
     {
         Navigation.LocationChanged += NavigationChanged;
-        await Session.Initialiser();
+        await Session.VerifierInitialisation();
         PrenomUser = Session.Prenom;
     }
 

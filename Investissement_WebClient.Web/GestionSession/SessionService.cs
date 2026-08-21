@@ -9,7 +9,15 @@ namespace Investissement_WebClient.Web.GestionSession
         public string Prenom { get; private set; } = string.Empty;
         public bool IsConnected { get; private set; }
 
-        public async Task Initialiser()
+        public async Task VerifierInitialisation()
+        {
+            if (IsConnected)
+                return;
+
+            await Initialiser();
+        }
+
+        private async Task Initialiser()
         {
             var authState = await authStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;

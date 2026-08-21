@@ -1,0 +1,42 @@
+﻿<div class="header">
+    <label>Récapitulatif @Model.DateActiveString</label>
+    <button type="button" class="btn-submit" @onclick="Model.EditerMoisComplete">
+        <img src="icons/edition-noir.svg" />
+        Modifier les flux
+    </button>
+</div>
+
+<div class="recapitulatif">
+    <div class="content">
+        <ApexChart TItem="ValeurParCategorieBarChartDto"
+                   Options="BudgetChartsOptions.OptionsRecapitulatifBudgetMensuel">
+
+            <ApexPointSeries TItem="ValeurParCategorieBarChartDto"
+                             Items="Model.StatsGraphique"
+                             Name="Valeur"
+                             XValue="@(e =>  e.Categorie)"
+                             YValue="@(e => e.Valeur)"
+                             Color="#00FF00"
+                             SeriesType="SeriesType.Bar"
+                             DataPointMutator="PointMutator"
+                             ShowDataLabels />
+        </ApexChart>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required CompteCourantViewModel Model { get; set; }
+
+    private void PointMutator(IDataPoint<ValeurParCategorieBarChartDto> point)
+    {
+        var dataPoint = (DataPoint<ValeurParCategorieBarChartDto>)point;
+        if (dataPoint.Y > 0)
+        {
+            dataPoint.FillColor = "#00FF00";
+        }
+        else
+        {
+            dataPoint.FillColor = "#FF0000";
+        }
+    }
+}

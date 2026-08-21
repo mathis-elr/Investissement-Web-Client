@@ -2,7 +2,7 @@
 {
     public enum TypeCompte
     {
-        CompteCourant,
+        Courant,
         Epargne,
         Investissement,
         Credit,

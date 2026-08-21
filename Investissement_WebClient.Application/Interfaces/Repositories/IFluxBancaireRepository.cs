@@ -9,6 +9,8 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<List<FluxBancaire>> GetByUserId(int userId);
 
+        Task<List<FluxBancaire>> GetByCompteId(int compteId);
+
         Task<IEnumerable<FluxBancaire>> GetAllSansCategorie();
 
         Task<Dictionary<string, int?>> GetCorrespondancesCategories();

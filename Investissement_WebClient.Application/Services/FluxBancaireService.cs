@@ -32,6 +32,21 @@ namespace Investissement_WebClient.Application.Services
             }).ToList();
         }
 
+        public async Task<List<FluxBancaireDto>> GetFluxByCompteId(int compteId)
+        {
+            var flux = await _fluxBancaireRepository.GetByCompteId(compteId);
+            return flux.Select(f => new FluxBancaireDto
+            {
+                Id = f.Id,
+                Date = f.Date,
+                Valeur = f.Valeur,
+                Libelle = f.Libelle,
+                IdCategorie = f.Categorie == null ? 0 : f.Categorie.Id,
+                Suggestion = f.Suggestion,
+                CompteBancaireId = f.CompteBanqueId
+            }).ToList();
+        }
+
         public async Task<IEnumerable<CategorieFluxDto>> GetCategorieFlux()
         {
             var categories = await _categorieFluxRepository.GetAll();
