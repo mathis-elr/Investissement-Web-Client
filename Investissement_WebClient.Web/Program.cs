@@ -47,9 +47,11 @@ builder.Services.Configure<LogoDevApiOptions>(builder.Configuration.GetSection("
 
 
 // services
+builder.Services.AddScoped<ICompteTradeRepubliqueService, CompteTradeRepubliqueService>();
 builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
+builder.Services.AddScoped<ICompteBanqueService, CompteBanqueService>();
 builder.Services.AddScoped<IFluxBancaireService, FluxBancaireService>();
 builder.Services.AddScoped<IActifService, ActifService>();
 builder.Services.AddScoped<ICryptService, CryptService>();

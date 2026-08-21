@@ -1,6 +1,11 @@
 ﻿<div class="un-compte @(Selectionne?.Id == Source.Id ? "actif" : "")" @onclick="@OnClick">
-    <span class="banque">@Source.NomSource</span>
-    <span class="compte">@Source.NomCompte</span>
+    <div class="icon">
+        <img src="@Source.LogoUrl" />
+    </div>
+    <div class="infos">
+        <span class="banque">@Source.NomSource</span>
+        <span class="compte">@Source.NomCompte</span>
+    </div>
 </div>
 
 @code {

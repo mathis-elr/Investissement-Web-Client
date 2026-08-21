@@ -1,4 +1,4 @@
-﻿using Investissement_WebClient.Application.Interfaces.Repositories;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Infrastructure.APIs.Powens;
@@ -7,14 +7,14 @@ using Microsoft.Extensions.Options;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
-    public class SourcesViewModel(ITradeRepublicAccesRepository tradeRepublicAccesRepository,
-                                  ICompteBanqueRepository compteBanqueRepository,
+    public class SourcesViewModel(ICompteTradeRepubliqueService tradeRepubliqueService,
+                                  ICompteBanqueService compteBanqueService,
                                   IOptions<PowensApiOptions> options,
                                   IPowensApiService powensApiService,
                                   SessionService sessionService)
     {
-        private readonly ITradeRepublicAccesRepository _tradeRepublicAccesRepository = tradeRepublicAccesRepository;
-        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
+        private readonly ICompteTradeRepubliqueService _tradeRepubliqueService = tradeRepubliqueService;
+        private readonly ICompteBanqueService _compteBanqueService = compteBanqueService;
         private readonly IPowensApiService _powensApiService = powensApiService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
@@ -97,12 +97,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
         private async Task LoadComptesBanque()
         {
-            Sources = await _compteBanqueRepository.GetAllByUserId(IdUser);
+            Sources = await _compteBanqueService.GetAllByUserId(IdUser);
         } 
 
         private async Task LoadCompteTradeRepublic()
         {
-            var tradeRepublicAcces = await _tradeRepublicAccesRepository.GetByUserId(IdUser);
+            var tradeRepublicAcces = await _tradeRepubliqueService.GetByUserId(IdUser);
             if (tradeRepublicAcces != null)
                 Sources.Add(tradeRepublicAcces);
         }

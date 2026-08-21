@@ -9,13 +9,13 @@ using Microsoft.Extensions.Options;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 {
-    public class BudgetViewModel(ICompteBanqueRepository compteBanqueRepository,
+    public class BudgetViewModel(ICompteBanqueService compteBanqueService,
                                  IFluxBancaireService fluxBancaireService,
                                  IOptions<PowensApiOptions> options,
                                  IPowensApiService powensApiService,
                                  SessionService sessionService)
     {
-        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
+        private readonly ICompteBanqueService _compteBanqueService = compteBanqueService;
         private readonly IFluxBancaireService _fluxBancaireService = fluxBancaireService;
         private readonly IPowensApiService _powensApiService = powensApiService;
         private readonly PowensApiOptions _powensApiOptions = options.Value;
@@ -266,7 +266,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
 
         private async Task LoadComptesBanque()
         {
-            ComptesBanque = await _compteBanqueRepository.GetAllByUserId(IdUser);
+            ComptesBanque = await _compteBanqueService.GetAllByUserId(IdUser);
         }
 
         private async Task LoadCategories()
