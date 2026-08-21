@@ -1,0 +1,93 @@
+﻿@attribute [Authorize]
+@inject CompteTradeRepublicViewModel CVM
+@inject NavigationManager Nav
+@inject IToastService TS
+@implements IDisposable
+
+<div class="compte-tr">
+
+    @if (CVM.SynchronisationTransactions)
+    {
+        <div class="bloc-modal">
+            <_CompteTradeRepubliqueSynchronisation Model="@CVM" />
+        </div>
+    }
+
+    @if (CVM.ParametrageIdentifiants)
+    {
+        <div class="bloc-modal">
+            <_CompteTradeRepubliqueParametrage Model="@CVM" />
+        </div>
+    }
+
+    <div class="sidebar">
+        <_CompteTradeRepubliqueSidebar Model="@CVM" />
+    </div>
+    <div class="content">
+        @switch (CVM.PageSelectionnee)
+        {
+            case PagesCompteTradeRepublic.Evolution:
+                <_CompteTradeRepublicEvolution Model="@CVM" />
+                break;
+
+            case PagesCompteTradeRepublic.Allocation:
+                <_CompteTradeRepublicAllocation Model="@CVM" />
+                break;
+
+            case PagesCompteTradeRepublic.Actifs:
+                <_CompteTradeRepubliqueEvolutionActifs InfoInvestParActif="@CVM.InfoParActifPeriodeAll" />
+                break;
+
+            case PagesCompteTradeRepublic.Transactions:
+                <_CompteTradeRepublicTransactions Model="@CVM" />
+                break;  
+        }
+    </div>
+    
+    <div class="mes-actifs">
+        <div class="defilement-actifs">
+            <_CompteTradeRepubliqueEvolutionActifs InfoInvestParActif="@CVM.InfoParActifPeriodeAll" />
+            <_CompteTradeRepubliqueEvolutionActifs InfoInvestParActif="@CVM.InfoParActifPeriodeAll" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private CancellationTokenSource _cts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CVM.OnChange += StateHasChanged;
+        await CVM.LoadData();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && CVM.FluxInvestissement.Any())
+        {
+            _ = LoadDataBoucle(_cts.Token);
+        }
+    }
+
+    private async Task LoadDataBoucle(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+
+                await CVM.LoadDataPrixParActif();
+                StateHasChanged();
+            }
+        }
+        catch (OperationCanceledException) { Console.WriteLine("Arret du chargement investissement"); }
+    }
+
+    public void Dispose()
+    {
+        CVM.OnChange -= StateHasChanged;
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+}

@@ -1,0 +1,73 @@
+﻿.bloc {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+    .bloc .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        height: 60px;
+        width: 60px;
+        font-size: 30px;
+    }
+
+    .bloc label {
+        font-size: 20px;
+    }
+
+    .bloc span {
+        color: grey;
+    }
+
+    .bloc .btn-submit {
+        width: fit-content;
+    }
+
+.description {
+    max-width: 500px;
+    color: grey;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.verification-sms {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+    .verification-sms input {
+        width: 160px;
+        height: 55px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 8px;
+        border-radius: 12px;
+        border: 1px solid #333;
+        background-color: #242424;
+        color: white;
+        transition: all .2s ease;
+    }
+
+        .verification-sms input:focus {
+            outline: none;
+            border-color: goldenrod;
+            box-shadow: 0 0 10px rgba(218,165,32,.25);
+        }
+
+.btn-verifier {
+    min-width: 160px;
+}
+
+.message-synchro {
+    color: grey;
+    font-size: 14px;
+    margin: 0;
+}

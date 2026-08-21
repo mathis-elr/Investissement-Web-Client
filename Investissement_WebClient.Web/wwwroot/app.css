@@ -177,7 +177,7 @@ button {
     background-color: goldenrod;
 }
 
-.bloc-empty {
+.bloc-modal {
     display: grid;
     justify-self: center;
     align-self: center;

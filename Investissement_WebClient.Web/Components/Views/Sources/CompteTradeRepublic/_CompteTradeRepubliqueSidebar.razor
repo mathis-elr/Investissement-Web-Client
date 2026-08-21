@@ -1,0 +1,23 @@
+﻿<div class="header">
+    <label>Trade Républic</label>
+    <div class="btn-edit" title="Editer mes identifiants" @onclick="() => {Model.ParametrageIdentifiants = true; Model.NotifyStateChanged();}">
+        <img src="icons/tuning.svg"/>
+    </div>
+
+    <div class="btn-sync" title="Synchroniser mes transactions" @onclick="() => {Model.SynchronisationTransactions = true; Model.NotifyStateChanged();}">
+        <img src="icons/sync-orange.svg" />
+    </div>
+</div>
+
+<div class="pages">
+    @foreach(var _page in Model.Pages)
+    {
+        <div class="page @(Model.PageSelectionnee == _page ? "active" : "")" @onclick="() => Model.ChangerContent(_page)">
+            <span>@_page.ToString()</span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public required CompteTradeRepublicViewModel Model { get; set; }
+}

@@ -1,8 +1,7 @@
 ﻿@foreach (var actif in InfoInvestParActif)
 {
-    <_InfosActif Actif="actif" />
+    <_CompteTradeRepubliqueInfosActif Actif="actif" />
 }
-
 
 @code {
     [Parameter] public IEnumerable<InfoParActifDto> InfoInvestParActif { get; set; } = [];

@@ -1,0 +1,76 @@
+﻿.btn-retour {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #242424;
+    border: 1px solid rgba(218,165,32,.25);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+    .btn-retour:hover {
+        border-color: rgba(218,165,32,.6);
+        box-shadow: 0 0 12px rgba(218,165,32,.15);
+        transform: translateX(-2px);
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    align-items: center;
+    width: 100%
+}
+
+
+::deep input.invalid {
+    border-color: red;
+    background-color: rgba(255, 0, 0, 0.02);
+}
+
+    ::deep input.invalid:hover,
+    ::deep input.invalid:focus {
+        box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
+    }
+
+.champ {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.description {
+    color: #8a8a8a;
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: 420px;
+}
+
+
+.security-card {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: #8f8f8f;
+}
+
+.sec-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    opacity: 0.8;
+}

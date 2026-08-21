@@ -63,6 +63,7 @@ builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 
 
 // views models
+builder.Services.AddScoped<CompteTradeRepublicViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<CompteCourantViewModel>();
 builder.Services.AddScoped<InscriptionViewModel>();

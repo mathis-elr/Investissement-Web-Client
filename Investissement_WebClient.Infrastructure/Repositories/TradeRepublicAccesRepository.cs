@@ -11,7 +11,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         public async Task<CompteTradeRepublic?> GetByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.TradeRepublicAcces
+            return await context.CompteTradeRepublic
                 .Where(b => b.Utilisateur.Id == userId)
                 .FirstOrDefaultAsync();
         }
@@ -19,7 +19,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         public async Task<CompteTradeRepublic?> GetLoginByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.TradeRepublicAcces
+            return await context.CompteTradeRepublic
                 .Where(b => b.Utilisateur.Id == userId)
                 .FirstOrDefaultAsync();
         }
@@ -27,7 +27,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         public async Task Add(CompteTradeRepublic acces)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            await context.TradeRepublicAcces.AddAsync(acces);
+            await context.CompteTradeRepublic.AddAsync(acces);
             await context.SaveChangesAsync();
         }
     }

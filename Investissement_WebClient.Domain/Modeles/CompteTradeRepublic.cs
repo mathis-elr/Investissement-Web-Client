@@ -8,6 +8,8 @@
 
         public required string PinCrypte { get; set; }
 
+        public DateTime? DerniereSynchronisation { get; set; }
+
         public int UtilisateurId { get; set; }
         public Utilisateur Utilisateur { get; set; } = null!;
     }

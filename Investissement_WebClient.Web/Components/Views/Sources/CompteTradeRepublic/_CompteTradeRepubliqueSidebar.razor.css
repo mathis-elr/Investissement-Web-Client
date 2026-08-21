@@ -1,0 +1,63 @@
+﻿.btn-edit,
+.btn-sync {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 0.6s ease-in-out;
+}
+
+    .btn-sync:hover {
+        transform: rotate(180deg);
+    }
+
+.btn-edit:hover circle {
+    transition: transform .25s ease;
+}
+
+    .btn-edit:hover .point-haut {
+        transform: translateX(6px);
+    }
+
+    .btn-edit:hover .point-milieu {
+        transform: translateX(-6px);
+    }
+
+    .btn-edit:hover .point-bas {
+        transform: translateX(6px);
+    }
+
+.pages {
+    display: grid;
+    gap: 10px;
+}
+
+.page {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #242424;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 5px;
+    gap: 30px;
+    transition: 0.25s ease-in-out;
+}
+
+.page:not(.disabled, .recap):hover,
+.page.active {
+    cursor: pointer;
+    border-left: 5px solid goldenrod;
+    background-color: #252525;
+}
+
+.page.active {
+    box-shadow: 0 4px 5px rgba(218, 165, 32, 0.15);
+}
+
+.disabled {
+    cursor: not-allowed;
+    color: grey;
+    opacity: 0.6;
+}

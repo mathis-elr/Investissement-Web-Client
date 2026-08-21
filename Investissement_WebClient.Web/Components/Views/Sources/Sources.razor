@@ -44,7 +44,14 @@
             break;
 
         case TypeCompte.Investissement:
-            <CompteInvestissement />
+            if(SVM.SourceSelectionne.Id == -1)
+            {
+                <CompteTradeRepublic />
+            }
+            else
+            {
+                <CompteInvestissement />
+            }
             break;
 
         default:

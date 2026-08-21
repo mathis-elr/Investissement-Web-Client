@@ -1,0 +1,111 @@
+﻿@inject IToastService TS
+
+<div class="bloc">
+
+    <div class="icon">
+        <img src="icons/sync-orange.svg" />
+    </div>
+
+    @if (Model.Etat == Etat.SmsRequis)
+    {
+        <p class="description">
+            Vous allez recevoir une notification contenant un code Trade Republic.
+            Renseignez le code à 4 chiffres reçu puis cliquez sur <b>Vérifier</b>.
+        </p>
+
+        <div class="verification-sms">
+
+            <input type="text"
+                   inputmode="numeric"
+                   maxlength="4"
+                   @bind="Model.CodeSms"
+                   placeholder="1234" />
+
+            <button type="button"
+                    class="btn-verifier"
+                    @onclick="VerifierCodeSms">
+
+                @if (Model.VerificationEnCours)
+                {
+                    <_Chargement />
+                }
+                else
+                {
+                    <span>Vérifier</span>
+                }
+
+            </button>
+
+        </div>
+    }
+    else
+    {
+        <button class="btn-submit"
+                @onclick="RecupererTransactions"
+                disabled="@(Model.DemandeEnCours || Model.IdentifiantsRequis)">
+
+            @if (Model.DemandeEnCours)
+            {
+                <_Chargement Couleur="black" />
+            }
+            else
+            {  
+                <span> Synchroniser mes transactions</span>
+                }
+
+        </button>
+
+        @if (Model.DemandeEnCours)
+        {
+            <p class="message-synchro">
+                @Model.Message
+            </p>
+        }
+    }
+</div>
+
+
+@code {
+    [Parameter] public required CompteTradeRepublicViewModel Model { get; set; }
+
+    private async Task RecupererTransactions()
+    {
+        if (Model.DemandeEnCours)
+        {
+            TS.ShowError("Veuillez patienter, une demande est déjà en cours");
+            return;
+        }
+
+        await Model.DemandeCodeSms();
+
+        if (Model.HasError)
+        {
+            Model.FinDemandeSynchronisationnchronisation();
+            await Task.Yield();
+            TS.ShowError(Model.ErrorMessage);
+            Model.ReinitiliserGestionErreur();
+            return;
+        }
+    }
+
+
+    private async Task VerifierCodeSms()
+    {
+        switch (await Model.VerfierCodeSms())
+        {
+            case null:
+                TS.ShowError(Model.ErrorMessage);
+                Model.ReinitiliserGestionErreur();
+                break;
+            case false:
+                TS.ShowWarning("Toutes les transactions ont déjà été récupérées.");
+                break;
+            default:
+                TS.ShowSuccess("Les transactions on été récupérées avec succès !");
+                break;
+
+        }
+
+        Model.FinDemandeSynchronisationnchronisation();
+    }
+}
