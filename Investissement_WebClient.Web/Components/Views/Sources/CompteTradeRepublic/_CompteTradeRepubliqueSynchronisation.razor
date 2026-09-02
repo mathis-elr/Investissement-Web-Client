@@ -2,16 +2,18 @@
 
 <div class="bloc">
 
-    <div class="icon">
-        <img src="icons/sync-orange.svg" />
-    </div>
+    <button class="btn-retour" title="Fermer" @onclick="FermerSync">
+        <img src="icons/close.svg" />
+    </button>
+
+    <label>Synchronisation des transactions</label>
 
     @if (Model.Etat == Etat.SmsRequis)
     {
-        <p class="description">
-            Vous allez recevoir une notification contenant un code Trade Republic.
-            Renseignez le code à 4 chiffres reçu puis cliquez sur <b>Vérifier</b>.
-        </p>
+        <span class="description">
+            Vous allez recevoir une notification Trade Republic contenant un code.
+            Renseignez ce code à 4 chiffres dans le champ ci-dessous puis cliquez sur <b>Vérifier</b>.
+        </span>
 
         <div class="verification-sms">
 
@@ -40,6 +42,10 @@
     }
     else
     {
+        <span class="description">
+            @Model.Message
+        </span>
+
         <button class="btn-submit"
                 @onclick="RecupererTransactions"
                 disabled="@(Model.DemandeEnCours || Model.IdentifiantsRequis)">
@@ -51,22 +57,16 @@
             else
             {  
                 <span> Synchroniser mes transactions</span>
-                }
+            }
 
         </button>
-
-        @if (Model.DemandeEnCours)
-        {
-            <p class="message-synchro">
-                @Model.Message
-            </p>
-        }
     }
 </div>
 
 
 @code {
     [Parameter] public required CompteTradeRepublicViewModel Model { get; set; }
+    [Parameter] public EventCallback OnAnnuler { get; set; }
 
     private async Task RecupererTransactions()
     {
@@ -107,5 +107,10 @@
         }
 
         Model.FinDemandeSynchronisationnchronisation();
+    }
+
+    public void FermerSync()
+    {
+        OnAnnuler.InvokeAsync();
     }
 }

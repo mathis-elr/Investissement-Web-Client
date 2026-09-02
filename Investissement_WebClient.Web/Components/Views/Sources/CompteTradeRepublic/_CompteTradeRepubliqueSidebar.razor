@@ -1,11 +1,14 @@
 ﻿<div class="header">
-    <label>Trade Républic</label>
-    <div class="btn-edit" title="Editer mes identifiants" @onclick="() => {Model.ParametrageIdentifiants = true; Model.NotifyStateChanged();}">
-        <img src="icons/tuning.svg"/>
-    </div>
+    <label>Portefeuille</label>
 
-    <div class="btn-sync" title="Synchroniser mes transactions" @onclick="() => {Model.SynchronisationTransactions = true; Model.NotifyStateChanged();}">
-        <img src="icons/sync-orange.svg" />
+    <div class="parametrage">
+        <div class="btn-edit" title="Editer mes identifiants" @onclick="() => { Model.ParametrageIdentifiants = true; Model.NotifyStateChanged(); }">
+            <img src="icons/tuning.svg" />
+        </div>
+
+        <div class="btn-sync" title="Synchroniser mes transactions" @onclick="() => { Model.SynchronisationTransactions = true; Model.NotifyStateChanged(); }">
+            <img src="icons/sync-orange.svg" />
+        </div>
     </div>
 </div>
 

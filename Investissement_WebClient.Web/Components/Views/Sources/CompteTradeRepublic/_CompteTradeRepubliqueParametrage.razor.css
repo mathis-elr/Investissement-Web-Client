@@ -8,13 +8,13 @@
     border: 1px solid rgba(218,165,32,.25);
     border-radius: 12px;
     cursor: pointer;
-    transition: .25s ease;
+    transition: all .35s ease;
 }
 
     .btn-retour:hover {
         border-color: rgba(218,165,32,.6);
         box-shadow: 0 0 12px rgba(218,165,32,.15);
-        transform: translateX(-2px);
+        transform: none;
     }
 
 .form-grid {
@@ -24,6 +24,10 @@
     align-items: center;
     width: 100%
 }
+
+    .form-grid label {
+        font-size: 18px;
+    }
 
 
 ::deep input.invalid {

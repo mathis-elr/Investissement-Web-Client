@@ -9,21 +9,21 @@
     @if (CVM.SynchronisationTransactions)
     {
         <div class="bloc-modal">
-            <_CompteTradeRepubliqueSynchronisation Model="@CVM" />
+            <_CompteTradeRepubliqueSynchronisation Model="@CVM" OnAnnuler="() => { CVM.SynchronisationTransactions = false; }" />
         </div>
     }
 
     @if (CVM.ParametrageIdentifiants)
     {
         <div class="bloc-modal">
-            <_CompteTradeRepubliqueParametrage Model="@CVM" />
+            <_CompteTradeRepubliqueParametrage Model="@CVM" OnAnnuler="() => { CVM.ParametrageIdentifiants = false; }" />
         </div>
     }
 
-    <div class="sidebar">
+    <div class="sidebar @(CVM.SynchronisationTransactions || CVM.ParametrageIdentifiants ? "flou" : "")">
         <_CompteTradeRepubliqueSidebar Model="@CVM" />
     </div>
-    <div class="content">
+    <div class="content @(CVM.SynchronisationTransactions || CVM.ParametrageIdentifiants ? "flou" : "")">
         @switch (CVM.PageSelectionnee)
         {
             case PagesCompteTradeRepublic.Evolution:
@@ -44,7 +44,7 @@
         }
     </div>
     
-    <div class="mes-actifs">
+    <div class="mes-actifs @(CVM.SynchronisationTransactions || CVM.ParametrageIdentifiants ? "flou" : "")">
         <div class="defilement-actifs">
             <_CompteTradeRepubliqueEvolutionActifs InfoInvestParActif="@CVM.InfoParActifPeriodeAll" />
             <_CompteTradeRepubliqueEvolutionActifs InfoInvestParActif="@CVM.InfoParActifPeriodeAll" />

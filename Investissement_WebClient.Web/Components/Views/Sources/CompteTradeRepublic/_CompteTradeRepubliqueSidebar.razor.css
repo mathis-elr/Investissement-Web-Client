@@ -1,15 +1,24 @@
-﻿.btn-edit,
+﻿.header {
+    gap: 30px;
+}
+
+.parametrage{
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
 .btn-sync {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: transparent;
     cursor: pointer;
-    transition: transform 0.6s ease-in-out;
+    transition: transform 0.4s ease-in-out;
 }
 
     .btn-sync:hover {
-        transform: rotate(180deg);
+        transform: rotate(90deg);
     }
 
 .btn-edit:hover circle {
@@ -45,16 +54,20 @@
     transition: 0.25s ease-in-out;
 }
 
-.page:not(.disabled, .recap):hover,
-.page.active {
-    cursor: pointer;
-    border-left: 5px solid goldenrod;
-    background-color: #252525;
-}
+    .page:not(.disabled, .recap):hover,
+    .page.active {
+        cursor: pointer;
+        border-left: 5px solid goldenrod;
+        background-color: #252525;
+    }
 
-.page.active {
-    box-shadow: 0 4px 5px rgba(218, 165, 32, 0.15);
-}
+    .page.active {
+        box-shadow: 0 4px 5px rgba(218, 165, 32, 0.15);
+    }
+
+    .page span {
+        font-size: 18px;
+    }
 
 .disabled {
     cursor: not-allowed;

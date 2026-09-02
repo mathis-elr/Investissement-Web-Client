@@ -57,7 +57,7 @@ select, input {
     box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
 }
 
-.content {
+.mois-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -76,7 +76,7 @@ select, input {
     align-items: center;
     justify-content: space-between;
     background-color: #242424;
-    border: 1px solid transparent;
+    border-left: 5px solid transparent;
     border-radius: 7px;
     padding: 5px;
     gap: 30px;
@@ -122,7 +122,7 @@ select, input {
 .un-mois:not(.disabled, .recap):hover,
 .un-mois.active {
     cursor: pointer;
-    border-left: 5px solid goldenrod;
+    border-color: goldenrod;
     background-color: #252525;
 }
 

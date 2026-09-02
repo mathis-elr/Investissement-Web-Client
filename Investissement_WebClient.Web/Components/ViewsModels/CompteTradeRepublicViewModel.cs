@@ -46,7 +46,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                     || f.Prix.ToString().Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase)
                     || f.Quantite.ToString().Contains(TexteRecherche, StringComparison.OrdinalIgnoreCase));
 
-        public string Message { get; set; } = string.Empty;
+        public string Message { get; set; } = "Cliquez sur le bouton pour lancer la synchronisation (cette opération peut durer un certain temps)";
         public Etat Etat { get; set; } = Etat.Neutre;
         public string CodeSms { get; set; } = string.Empty;
         public bool DemandeEnCours { get; set; } = false;

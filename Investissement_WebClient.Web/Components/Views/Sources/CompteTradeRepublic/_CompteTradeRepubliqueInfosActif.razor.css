@@ -7,9 +7,8 @@
 }
 
 .header {
-    display: flex;
     justify-self: start;
-    gap: 10px;
+    gap: 5px;
 }
 
     .header label {

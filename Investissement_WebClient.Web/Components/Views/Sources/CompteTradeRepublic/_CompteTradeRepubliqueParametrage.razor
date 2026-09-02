@@ -6,6 +6,10 @@
 
     <DataAnnotationsValidator />
 
+    <button class="btn-retour" title="Fermer" @onclick="FermerEdition">
+        <img src="icons/close.svg" />
+    </button>
+
     <label>Paramétrage des identifiants</label>
 
     <span class="description">
@@ -55,6 +59,7 @@
 
 @code {
     [Parameter] public CompteTradeRepublicViewModel Model { get; set; } = null!;
+    [Parameter] public EventCallback OnAnnuler { get; set; }
 
     public bool IsLoading { get; set; } = false;
 
@@ -88,5 +93,10 @@
         {
             TS.ShowError(erreur);
         }
+    }
+
+    public void FermerEdition()
+    {
+        OnAnnuler.InvokeAsync();
     }
 }

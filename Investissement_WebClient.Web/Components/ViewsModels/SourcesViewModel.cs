@@ -48,10 +48,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             {
                 await InitialiserSession();
 
+                var trAccesTask = LoadCompteTradeRepublic();
+
                 await Task.WhenAll(
                     LoadComptesBanque(),
-                    LoadCompteTradeRepublic()
+                    trAccesTask
                 );
+
+                var trAcces = await trAccesTask;
+
+                if (trAcces != null)
+                    Sources.Add(trAcces);
 
                 if (AucuneSource)
                     return;
@@ -100,11 +107,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             Sources = await _compteBanqueService.GetAllByUserId(IdUser);
         } 
 
-        private async Task LoadCompteTradeRepublic()
+        private async Task<SourceDto?> LoadCompteTradeRepublic()
         {
-            var tradeRepublicAcces = await _tradeRepubliqueService.GetByUserId(IdUser);
-            if (tradeRepublicAcces != null)
-                Sources.Add(tradeRepublicAcces);
+            return await _tradeRepubliqueService.GetByUserId(IdUser);
         }
 
         private async Task<string> GetUrlConnexionPowens()

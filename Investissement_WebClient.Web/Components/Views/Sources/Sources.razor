@@ -91,7 +91,7 @@
             ConnectionBanqueId = null;
             await FinaliserAjoutBanque(id);
         }
-        else if (string.IsNullOrEmpty(SyncStatus))
+        else
         {
             await SVM.StartLoadData();
         }
