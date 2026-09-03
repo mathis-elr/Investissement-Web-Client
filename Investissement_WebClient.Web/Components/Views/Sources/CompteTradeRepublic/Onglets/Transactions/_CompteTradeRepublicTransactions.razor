@@ -1,76 +1,72 @@
 ﻿@inject IToastService TS
 
-<div class="header">
-    <label>Historique des transactions</label>
-</div>
+<div class="transactions">
+    <div class="header">
+        <label>Historique des transactions</label>
+    </div>
 
-@if (!Model.DemandeEnCours || !Model.FluxInvestissement.Any())
-{
-    <div class="filtres">
+    @if (!Model.DemandeEnCours || !Model.FluxInvestissement.Any())
+    {
         <div class="recherche">
             <img src="icons/aucune-donnee.svg" />
             <input type="text" @bind="Model.TexteRecherche" @bind:event="oninput" placeholder="Rechercher une transaction ..." />
         </div>
-    </div>
-}
-
-<div class="content">
-
-    @if (Model.ChargementEncours)
-    {
-        <div class="center">
-            <p><_Chargement Couleur="goldenrod" LargeurBouton="50" /></p>
-        </div>
     }
-    else if (Model.FluxInvestissement.Any() || Model.DemandeEnCours)
-    {
 
-    }
-    else if (Model.IdentifiantsRequis)
-    {
-        <p>Vous pourez consulter vos transactions ici dès que vous aurez enregistré vos identifiants Trade Republic et récuperer vos transactions.</p>
+    <div class="content-transactions">
 
-    }
-    else if (Model.FluxInvestissement.Any())
-    {
-        @foreach (var transactionsParDate in Model.FluxInvestissementFiltres.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key)!)
+        @if (Model.ChargementEncours)
         {
-            <div class="mes-transactions-par-jour">
-                <div class="mes-transactions-par-jour-header">
-                    <div class="left">
-                        <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
-                        <div class="ordres">
-                            <span>@transactionsParDate.Count() ordre@(transactionsParDate.Count() > 1 ? "s" : "")</span>
-                        </div>
-                    </div>
-
-                    <label class="goldenrod">@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite).ToString("C2"))</label>
-                </div>
-                <div class="mes-transactions-par-jour-content">
-                    @foreach (var transaction in transactionsParDate)
-                    {
-                        <div class="une-transaction">
-                            <div class="icon">
-                                <img src="@transaction.Logo" />
-                            </div>
-                            <div class="grid-start">
-                                <span>@transaction.Actif</span>
-                                <span class="@(Model.DeterminerClasse(transaction.Quantite))">@(transaction.Quantite > 0 ? "+" : "")@transaction.Quantite titre@(transaction.Quantite > 1 ? "s" : "")</span>
-                            </div>
-                            <div class="grid-end">
-                                <span class="prix">@transaction.Prix.ToString("C")</span>
-                                <span class="gris">valeur unitaire</span>
-                            </div>
-                        </div>
-                    }
-                </div>
+            <div class="center">
+                <p><_Chargement Couleur="goldenrod" LargeurBouton="50" /></p>
             </div>
         }
-    }
-    else
-    {
-        <p>Aucune synchornisation effectué avec Trade Republic, cliquez sur "Synchroniser mes transactions" pour récuperez vos flux.</p>
-    }
+        else if (Model.IdentifiantsRequis)
+        {
+            <p>Vous pourez consulter vos transactions ici dès que vous aurez enregistré vos identifiants Trade Republic et récuperer vos transactions.</p>
+
+        }
+        else if (Model.FluxInvestissement.Any())
+        {
+            @foreach (var transactionsParDate in Model.FluxInvestissementFiltres.GroupBy(i => i.Date.Date).OrderByDescending(i => i.Key)!)
+            {
+                <div class="mes-transactions-par-jour">
+                    <div class="mes-transactions-par-jour-header">
+                        <div class="left">
+                            <label>@transactionsParDate.Key.ToString("D") &nbsp</label>
+                            <div class="ordres">
+                                <span>@transactionsParDate.Count() ordre@(transactionsParDate.Count() > 1 ? "s" : "")</span>
+                            </div>
+                        </div>
+
+                        <label class="goldenrod">@(transactionsParDate.Sum(tr => tr.Prix * tr.Quantite).ToString("C2"))</label>
+                    </div>
+                    <div class="mes-transactions-par-jour-content">
+                        @foreach (var transaction in transactionsParDate)
+                        {
+                            <div class="une-transaction">
+                                <div class="icon">
+                                    <img src="@transaction.Logo" />
+                                </div>
+                                <div class="grid-start">
+                                    <span>@transaction.Actif</span>
+                                    <span class="@(Model.DeterminerClasse(transaction.Quantite))">@(transaction.Quantite > 0 ? "+" : "")@transaction.Quantite titre@(transaction.Quantite > 1 ? "s" : "")</span>
+                                </div>
+                                <div class="grid-end">
+                                    <span class="prix">@transaction.Prix.ToString("C")</span>
+                                    <span class="gris">valeur unitaire</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Aucune synchornisation effectué avec Trade Republic, cliquez sur "Synchroniser mes transactions" pour récuperez vos flux.</p>
+        }
+    </div>
 </div>
 
 @code {

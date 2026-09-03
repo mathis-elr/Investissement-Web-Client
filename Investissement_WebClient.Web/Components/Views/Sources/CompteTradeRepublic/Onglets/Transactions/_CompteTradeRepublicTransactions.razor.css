@@ -1,11 +1,11 @@
-﻿.btn-verifier {
-    background-color: green;
+﻿.transactions {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 20px;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
-
-    .btn-verifier:hover {
-        background-color: darkgreen;
-        transform: scale(0.98);
-    }
 
 .transactions-infos {
     display: grid;
@@ -34,25 +34,20 @@ select, input {
     box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
 }
 
-.content {
+.content-transactions {
     overflow-y: auto;
+    min-height: 0;
 }
-
-.filtres {
-    display: grid;
-    gap: 10px;
-}
-
 
 .recherche {
     display: flex;
     align-items: center;
     gap: 10px;
-    /*    border: 1px solid rgba(218,165,32,.5);*/
     background-color: #242424;
     border-radius: 9px;
     padding: 5px 10px;
-    transition: border-color .2s ease, box-shadow .2s ease;
+    height: fit-content;
+    transition: box-shadow .2s ease;
 }
 
     .recherche img {
@@ -205,182 +200,3 @@ select, input {
         transform: rotate(45deg);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*button {
-    padding: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 15px;
-    cursor: pointer;
-    border: none;
-    width: fit-content;
-    transition: ease-in-out 0.3s;
-}
-
-.btn-verifier {
-    background-color: green;
-}
-
-.btn-verifier:hover {
-    background-color: darkgreen;
-    transform: scale(0.98);
-}
-
-.transactions-infos {
-    display: grid;
-    background-color: #242424;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-    .transactions-infos .form-grid {
-        display: grid;
-        grid-template-columns: auto auto auto auto;
-        gap: 10px;
-        align-items: center;
-        width: 100%
-    }
-
-.form-grid label {
-    color: #999;
-    font-size: 20px;
-    font-weight: 500;
-}
-
-
-select, input {
-    width: 100%;
-    transition: 0.4s ease-in-out;
-}
-
-.transactions-infos input:hover,
-.transactions-infos select:hover,
-.transactions-infos input:focus,
-.transactions-infos select:focus {
-    outline: none !important;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4) !important;
-}
-
-.content{
-    overflow-y:auto;
-}
-
-.mes-transactions-par-jour {
-    display: flex;
-    flex-direction: column;
-}
-
-.mes-transactions-par-jour-header {
-    display: flex;
-    align-items: center;
-}
-
-    .mes-transactions-par-jour-header span {
-        width: 15px;
-        height: 5px;
-        background-color: goldenrod;
-        border-radius: 40px;
-        margin-right: 12px;
-        display: inline-block;
-        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
-    }
-
-    .mes-transactions-par-jour-header label:first-child::first-letter {
-        text-transform: uppercase;
-    }
-
-.mes-transactions-par-jour-content {
-    display: flex;
-    flex-direction: column;
-    padding: 7px;
-    gap: 15px;
-    background-color: #242424;
-    border-radius: 10px;
-}
-
-.une-transaction {
-    display: flex;
-    align-items: center;
-    background-color: #202020;
-    border-radius: 7px;
-    padding: 5px;
-    transition: 0.25s ease-in-out;
-}
-
-    .une-transaction:hover {
-        transform: translateX(4px);
-    }
-
-
-    .une-transaction span:first-child {
-        width: 8px;
-        height: 8px;
-        background-color: goldenrod;
-        border-radius: 50%;
-        margin-right: 12px;
-        display: inline-block;
-        box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
-        flex-shrink: 0;
-    }
-
-    .une-transaction .actif {
-        color: #999;
-    }
-
-    .une-transaction .prix {
-        display: inline-block;
-        color: goldenrod;
-    }
-
-::deep form {
-    display: grid;
-    align-items: center;
-    grid-template-columns: auto 1fr 1fr auto;
-    gap: 15px;
-}
-
-
-.infos {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 15px;
-    border-radius: 8px;
-}
-
-.btn-edit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-}
-
-    .btn-edit:hover {
-        transform: rotate(45deg);
-    }
-
-
-*/
