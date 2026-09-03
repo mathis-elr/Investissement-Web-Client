@@ -1,6 +1,6 @@
 ﻿using Investissement_WebClient.Domain.Enums;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels.Budget
+namespace Investissement_WebClient.Web.Components.ViewsModels.Sources
 {
     public class StatutParMoisVM
     {

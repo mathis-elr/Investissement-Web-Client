@@ -1,7 +1,7 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.Auth;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels
+namespace Investissement_WebClient.Web.Components.ViewsModels.Authentification
 {
     public class InscriptionViewModel(IAuthentificationService authentificationService)
     {

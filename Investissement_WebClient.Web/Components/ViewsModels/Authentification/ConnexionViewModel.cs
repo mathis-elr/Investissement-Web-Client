@@ -2,7 +2,7 @@
 using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Web.GestionSession;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels
+namespace Investissement_WebClient.Web.Components.ViewsModels.Authentification
 {
     public class ConnexionViewModel(IAuthentificationService authentificationService)
     {

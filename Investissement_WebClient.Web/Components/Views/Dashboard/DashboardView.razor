@@ -96,32 +96,6 @@
 
     <div class="repartition-actifs">
 
-        @if (!DVM.ValeurParActifInvestit.Any())
-        {
-            <div class="bloc-empty">
-                <_EmptyStateCard Icone="icons/asset.svg"
-                                 Titre="Vous n'investissez dans aucun actif"
-                                 Description="Pour afficher la répartition de vos actifs, synchronisez d'abord vos flux."
-                                 TexteBouton="Accéder à Investissement"
-                                 InfoBulle="Synchronisez vos actifs."
-                                 OnClick="@(() => Nav.NavigateTo("investissement", forceLoad: true))" />
-            </div>
-        }
-
-        <div class="header @(!DVM.ValeurParActifInvestit.Any() ? "flou" : "")">
-            <label>Allocation</label>
-        </div>
-
-        <div class="graphique @(DVM.RecuparationEnCours ? "center" : "") @(!DVM.ValeurParActifInvestit.Any() ? "flou" : "")">
-            @if (DVM.RecuparationEnCours)
-            {
-                <_ChargementGraphique />
-            }
-            else
-            {
-                <_GraphiqueRepartitionActifs Model="@DVM" />
-            }
-        </div>
     </div>
 </div>
 

@@ -1,4 +1,4 @@
-﻿using Investissement_WebClient.Web.Components.ViewsModels.Budget;
+﻿using Investissement_WebClient.Web.Components.ViewsModels.Sources;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;

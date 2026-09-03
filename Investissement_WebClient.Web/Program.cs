@@ -1,7 +1,8 @@
+using Investissement_WebClient.Web.Components.ViewsModels.CompteTradeRepublic.Onglets;
+using Investissement_WebClient.Web.Components.ViewsModels.Authentification;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Infrastructure.APIs.TradeRepublic;
-using Investissement_WebClient.Web.Components.ViewsModels.Budget;
 using Investissement_WebClient.Infrastructure.APIs.YahooFinance;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Services.Encrypt;
@@ -19,7 +20,6 @@ using Investissement_WebClient.Web.Components;
 using Microsoft.EntityFrameworkCore;
 using Blazored.Toast;
 using ApexCharts;
-using Investissement_WebClient.Web.Components.ViewsModels.CompteTradeRepublic.Onglets;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,14 +68,12 @@ builder.Services.AddScoped<TradeRepublicTransactionsViewModel>();
 builder.Services.AddScoped<TradeRepublicAllocationViewModel>();
 builder.Services.AddScoped<TradeRepublicEvolutionViewModel>();
 builder.Services.AddScoped<CompteTradeRepublicViewModel>();
-builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<CompteCourantViewModel>();
 builder.Services.AddScoped<InscriptionViewModel>();
 builder.Services.AddScoped<PatrimoineViewModel>();
 builder.Services.AddScoped<ConnexionViewModel>();
 builder.Services.AddScoped<DashboardViewModel>();
 builder.Services.AddScoped<SourcesViewModel>();
-builder.Services.AddScoped<BudgetViewModel>();
 
 
 // repositories
