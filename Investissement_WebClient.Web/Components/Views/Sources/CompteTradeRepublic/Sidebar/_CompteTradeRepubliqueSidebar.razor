@@ -1,5 +1,24 @@
-﻿<div class="header">
-    <label>Portefeuille</label>
+﻿<div class="header-sidebar">
+
+    <div class="sidebar-titre">Portefeuille</div>
+
+    <div class="resume-patrimoine">
+        <div class="infos-patrimoine">
+            <span class="valeur-totale-courante">
+                <div class="sidebar-solde">
+                    @(Model.ValeurPatrimoineCourante == 0 ? "--,--" : Model.ToStringPourcentage(Model.ValeurPatrimoineCourante, "C2"))
+                </div>
+            </span>
+
+            <span class="gain-total @Model.DeterminerClasse(Model.GainTotal)">
+                <span>
+                    @(Model.GainTotal > 0 ? "+" : "")
+                    @(Model.GainTotal == 0 ? "--,--" : Model.ToStringPourcentage(Model.GainTotal, "C2"))
+                </span>
+                <label>depuis le départ</label>
+            </span>
+        </div>
+    </div>
 
     <div class="parametrage">
         <div class="btn-edit" title="Editer mes identifiants" @onclick="() => { Model.ParametrageIdentifiants = true; Model.NotifyStateChanged(); }">

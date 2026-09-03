@@ -34,14 +34,20 @@ namespace Investissement_WebClient.Application.Services
         {
             var historique = await _valeurPatrimoineRepository.GetAllHistoriqueByUserId(userId);
 
-            return new List<VariationDto>
+            var variations = new List<VariationDto>();
+            foreach (var periode in Enum.GetValues<Periode>())
             {
-                new() { Label = "24H", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 1) },
-                new() { Label = "7J", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 7) },
-                new() { Label = "1M", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 30) },
-                new() { Label = "1A", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 365) },
-                new() { Label = "Tout", Valeur = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, 0) },
-            };
+                (var varPourcentage, var varValeure) = CalculVariationPeriode(valeurActuelle, valeurInvestissementTotal, historique, (int)periode);
+                variations.Add(
+                    new VariationDto
+                    {
+                        Periode = periode,
+                        VariationPourcentage = varPourcentage,
+                        VariationValeure = varValeure
+                    });
+            }
+
+            return variations;
         }
 
         public async Task SaveValeurPatrimoine(Dictionary<string, decimal> prixParActif)
@@ -67,13 +73,13 @@ namespace Investissement_WebClient.Application.Services
             await _valeurPatrimoineRepository.AddRange(nouvellesValeursPatrimoine);
         }
 
-        private decimal CalculVariationPeriode(decimal valeurActuelle, decimal valeurInvestissementTotal, List<ValeurPatrimoine> historique, int periode)
+        private (decimal VariationPourcentage, decimal VariationValeure) CalculVariationPeriode(decimal valeurActuelle, decimal valeurInvestissementTotal, List<ValeurPatrimoine> historique, int periode)
         {
             if (valeurInvestissementTotal == 0 || historique.Count == 0)
-                return 0;
+                return (0,0);
 
             decimal ancienProfit;
-            if (periode == 0)
+            if (periode == int.MaxValue)
             {
                 ancienProfit = historique
                     .OrderBy(h => h.Date)
@@ -90,7 +96,7 @@ namespace Investissement_WebClient.Application.Services
                     .ToList();
 
                 if (historiquePeriode.Count == 0)
-                    return 0;
+                    return (0,0);
 
                 ancienProfit = historiquePeriode
                     .Select(h => h.Valeur - h.InvestissementTotal)
@@ -99,7 +105,10 @@ namespace Investissement_WebClient.Application.Services
 
             decimal nouveauProfit = valeurActuelle - valeurInvestissementTotal;
 
-            return (nouveauProfit - ancienProfit) / valeurInvestissementTotal;
+            var variationValeure = nouveauProfit - ancienProfit;
+            var variationPourcentage = variationValeure / valeurInvestissementTotal;
+
+            return (variationPourcentage, variationValeure);
         }
     }
 }

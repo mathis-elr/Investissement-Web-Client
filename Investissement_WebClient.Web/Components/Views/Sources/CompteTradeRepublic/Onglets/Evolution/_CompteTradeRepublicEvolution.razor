@@ -1,0 +1,111 @@
+﻿@attribute [Authorize]
+@implements IDisposable
+@inject IToastService TS
+@inject TradeRepublicEvolutionViewModel TVM
+@inject NavigationManager Nav
+
+@if (TVM.AucuneDonnees)
+{
+    <div class="bloc-empty">
+        <_EmptyStateCard Icone="icons/gain.svg"
+                         Titre="Aucune donnée de patrimoine"
+                         Description="Pour calculer et afficher l'évolution de votre patrimoine net, synchronisez d'abord vos flux."
+                         TexteBouton="Accéder à Investissement"
+                         InfoBulle="Synchronisez vos actifs."
+                         OnClick="@(() => Nav.NavigateTo("investissement", forceLoad: true))" />
+    </div>
+}
+
+<div class="patrimoine-graphique @(TVM.AucuneDonnees ? "flou" : "")">
+
+    @if (TVM.RecuparationEnCours)
+    {
+        <div class="graphique center">
+            <_ChargementGraphique />
+        </div>
+    }
+    else if (TVM.PointsPlusValue.Any() || TVM.BougiesPlusValue.Any())
+    {
+        <div class="header-graphique">
+            <div class="variations-container">
+                <div class="metrique-principale">
+                    <span class="montant @TVM.DeterminerClasse(TVM.VariationSelectionnee.VariationValeure)">
+                        @(TVM.VariationSelectionnee.VariationValeure > 0 ? "+" : "")@TVM.VariationSelectionnee.VariationValeure.ToString("C2")
+                    </span>
+                    <span class="badge-pourcentage @TVM.DeterminerClasse(TVM.VariationSelectionnee.VariationPourcentage)">
+                        @(TVM.VariationSelectionnee.VariationPourcentage > 0 ? "+" : "")@TVM.ToStringPourcentage(TVM.VariationSelectionnee.VariationPourcentage, "P2")
+                    </span>
+                </div>
+                <span class="periode-label">sur la période sélectionnée</span>
+            </div>
+
+            <div class="options">
+                <_CompteTROptionsAffichageGraphique Model="TVM" />
+            </div>
+        </div>
+
+        <div class="graphique">
+            @if (TVM.TypeGraphiqueSelectionnee == TypeGraphique.Candle)
+            {
+                <_CompteTRGraphiqueEvolutionPlusValueCandle BougiesPlusValue="@TVM.BougiesPlusValue" />
+            }
+            else
+            {
+                <_CompteTRGraphiqueEvolutionPlusValueLine PointsPlusValue="@TVM.PointsPlusValue" />
+            }
+        </div>
+    }
+    else
+    {
+        <div class="graphique center">
+            <p>Récuperer vos flux pour commencer à visualiser l'évolution de vôtre patrimoine.</p>
+        </div>
+    }
+</div>
+
+@code {
+    private CancellationTokenSource _cts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        TVM.OnChange += StateHasChanged;
+
+        await TVM.StartLoadData();
+
+        if (TVM.HasError)
+        {
+            TS.ShowError(TVM.ErrorMessage);
+            TVM.HasError = false;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _ = LoadDataBoucle(_cts.Token);
+        }
+    }
+
+    private async Task LoadDataBoucle(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await TVM.StartLoadData();
+                StateHasChanged();
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // les données de yahoo ne se mettent pas à jour plus régulièrement que 1mn
+            }
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    // déclenchement lors du déclenchement du catch de LoadData (quand on change de page) pour stopper la boucle
+    public void Dispose()
+    {
+        TVM.OnChange -= StateHasChanged;
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+}

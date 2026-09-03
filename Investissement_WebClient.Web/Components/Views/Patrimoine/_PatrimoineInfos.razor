@@ -21,9 +21,10 @@
 <div class="variations-prix">
     @foreach (var variation in Model.Variations)
     {
-        <span class="variation-prix @Model.DeterminerClasse(variation.Valeur)">
-            <label>@variation.Label</label>
-            @Model.ToStringPourcentage(variation.Valeur, "P2")
+        <span class="variation-prix @Model.DeterminerClasse(variation.VariationValeure)">
+            <label>@variation.Periode.ToString()</label>
+            @Model.ToStringPourcentage(variation.VariationPourcentage, "P2")
+            @variation.VariationValeure.ToString("C2")
         </span>
     }
 </div>

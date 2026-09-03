@@ -1,0 +1,119 @@
+﻿.header-sidebar {
+    display: grid;
+    gap: 10px;
+}
+
+.sidebar-titre {
+    line-height: 1;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.sidebar-solde {
+    line-height: 1;
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.parametrage {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-sync {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid grey;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    height: fit-content;
+    padding: 3px 0;
+    transition: all 0.4s ease-in-out;
+}
+
+.btn-edit:hover,
+.btn-sync:hover {
+    border-color: goldenrod;
+}
+
+.pages {
+    display: grid;
+    gap: 10px;
+}
+
+.page {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #242424;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 5px;
+    gap: 30px;
+    transition: 0.25s ease-in-out;
+}
+
+    .page:not(.disabled, .recap):hover,
+    .page.active {
+        cursor: pointer;
+        border-left: 5px solid goldenrod;
+        background-color: #252525;
+    }
+
+    .page.active {
+        box-shadow: 0 4px 5px rgba(218, 165, 32, 0.15);
+    }
+
+    .page span {
+        font-size: 18px;
+    }
+
+.disabled {
+    cursor: not-allowed;
+    color: grey;
+    opacity: 0.6;
+}
+
+.resume-patrimoine {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .resume-patrimoine img {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+.infos-patrimoine {
+    display: grid;
+    align-items: center;
+    gap: 6px;
+}
+
+.gain-total {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+    .gain-total span {
+        line-height: 1;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+
+    .gain-total label {
+        font-size: 12px;
+        font-weight: normal;
+        color: grey;
+    }

@@ -119,7 +119,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.YahooFinance
 
                     foreach (LapsTemps periode in Enum.GetValues(typeof(LapsTemps)))
                     {
-                        if (periode == LapsTemps.All) continue;
+                        if (periode == LapsTemps.Tout) continue;
 
                         DateTime dateCible = DateTime.Today.AddDays(-(int)periode);
 

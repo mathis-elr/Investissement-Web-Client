@@ -75,8 +75,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 Actif = v.Actif,
                 Logo = v.Logo,
                 ValeurDetenue = v.ValeurInvestit,
-                VariationValeur = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationValeur).FirstOrDefault(),
-                VariationPourcentage = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationPourcentage).FirstOrDefault(),
+                VariationValeur = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.Tout).Select(v => v.Value.VariationValeur).FirstOrDefault(),
+                VariationPourcentage = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.Tout).Select(v => v.Value.VariationPourcentage).FirstOrDefault(),
             });
 
         // GESTION D'ERREUR

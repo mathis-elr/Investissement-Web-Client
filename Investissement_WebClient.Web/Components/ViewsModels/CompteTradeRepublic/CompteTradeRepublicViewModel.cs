@@ -1,9 +1,10 @@
-﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
-using Investissement_WebClient.Application.Interfaces.Services;
+﻿using Investissement_WebClient.Application.DTO.Auth;
+using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Application.DTO.Auth;
-using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Web.GestionSession;
+using System.Globalization;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
@@ -29,6 +30,13 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // VUE MODAL
         public bool SynchronisationTransactions { get; set; }
         public bool ParametrageIdentifiants { get; set; }
+
+        // VALEURE PATRIMOINE
+
+        public decimal ValeurPatrimoineCourante { get; set; }
+        public bool AucuneDonnees { get; set; } = false;
+        private decimal ValeurInvestissementTotal { get; set; }
+        public decimal GainTotal => ValeurPatrimoineCourante - ValeurInvestissementTotal;
 
 
         // TRANSACTIONS
@@ -82,8 +90,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
                 Actif = v.Actif,
                 Logo = v.Logo,
                 ValeurDetenue = v.ValeurInvestit,
-                VariationValeur = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationValeur).FirstOrDefault(),
-                VariationPourcentage = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.All).Select(v => v.Value.VariationPourcentage).FirstOrDefault(),
+                VariationValeur = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.Tout).Select(v => v.Value.VariationValeur).FirstOrDefault(),
+                VariationPourcentage = v.VariationsParLapsTemps.Where(v => v.Key == LapsTemps.Tout).Select(v => v.Value.VariationPourcentage).FirstOrDefault(),
             });
 
         // GESTION D'ERREUR
@@ -109,6 +117,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
 
                     var prixParActif = await LoadPrixParActif();
                     await Task.WhenAll(
+                        LoadValeurInvestissementTotale(),
+                        LoadValeurPatrimoineCourante(prixParActif),
                         LoadInvestissementTotal(prixParActif),
                         LoadInvestissementsParMois(),
                         LoadValeurInfoParActif(prixParActif)
@@ -300,6 +310,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             };
         }
 
+        public string ToStringPourcentage(decimal valeur, string devise)
+        {
+            return valeur.ToString(devise, CultureInfo.GetCultureInfo("fr-FR"));
+        }
+
         public async Task ChangerPeriodeHistoriqueInvestSelectionnee(PeriodeHistoriqueInvest periode)
         {
             if (PeriodeHistoriqueInvestSelectionnee == periode || ChargementGraphique)
@@ -324,6 +339,26 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             {
                 ChargementGraphique = false;
             }
+        }
+
+        private async Task LoadValeurPatrimoineCourante(Dictionary<string, decimal> prixParActif)
+        {
+            try
+            {
+                ValeurPatrimoineCourante = await _fluxInvestissementService.CalculerValeurCourante(prixParActif, IdUser);
+                AucuneDonnees = ValeurPatrimoineCourante == 0;
+
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = ex.Message;
+            }
+        }
+
+        private async Task LoadValeurInvestissementTotale()
+        {
+            ValeurInvestissementTotal = await _fluxInvestissementService.CalculerValeurInvestissementTotal(IdUser);
         }
 
         private async Task LoadFluxInvestissement()

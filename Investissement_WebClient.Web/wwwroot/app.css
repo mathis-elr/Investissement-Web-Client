@@ -233,6 +233,7 @@ button {
     display: flex;
     align-items: center;
     width: fit-content;
+    height: fit-content;
     border: 1px solid rgba(255,255,255,.15);
     background-color: #242424;
     border-radius: 30px;

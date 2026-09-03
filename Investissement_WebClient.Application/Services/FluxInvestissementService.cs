@@ -107,9 +107,9 @@ namespace Investissement_WebClient.Application.Services
 
                 foreach (LapsTemps periode in Enum.GetValues(typeof(LapsTemps)))
                 {
-                    if (periode == LapsTemps.All)
+                    if (periode == LapsTemps.Tout)
                     {
-                        variationsParLapsTemps[LapsTemps.All] = new VariationDataDto
+                        variationsParLapsTemps[LapsTemps.Tout] = new VariationDataDto
                         {
                             VariationValeur = valeurActuelle - t.TotalValeurInvestie,
                             VariationPourcentage = Math.Round((valeurActuelle - t.TotalValeurInvestie) / t.TotalValeurInvestie * 100, 2)

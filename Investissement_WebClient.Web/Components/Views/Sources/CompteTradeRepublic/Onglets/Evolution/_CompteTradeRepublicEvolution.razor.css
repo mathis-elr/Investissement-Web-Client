@@ -1,0 +1,120 @@
+﻿.patrimoine {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    justify-items: center;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    opacity: 0.8;
+    overflow: hidden;
+    padding: 15px 10px 10px 0;
+    box-sizing: border-box;
+    min-height: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+    .patrimoine:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 1;
+    }
+
+.patrimoine-infos {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: white;
+    opacity: 0.8;
+    width: fit-content;
+}
+
+.patrimoine-graphique {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.header-graphique {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.options {
+    display: flex;
+    justify-content: end;
+    gap: 25px;
+    flex-shrink: 0;
+}
+
+img {
+    width: 55%;
+}
+
+.variations-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 4px;
+}
+
+.metrique-principale {
+    display: flex;
+    gap: 10px;
+}
+
+    .metrique-principale .montant {
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+.badge-pourcentage {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    line-height: 1.2;
+}
+
+.periode-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+}
+
+.badge-pourcentage.vert {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #10b981 !important;
+}
+
+.badge-pourcentage.rouge {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #ef4444 !important;
+}
+
+
+.badge-pourcentage.gris {
+    background-color: rgba(156, 163, 175, 0.12);
+    color: #9ca3af !important;
+}
+
+
+/* PARAMETRAGE DU GRAPHIQUE */
+
+::deep .apexcharts-tooltip-series-group .apexcharts-tooltip-marker {
+    color: goldenrod !important;
+}
+
+::deep .apexcharts-series-markers .apexcharts-marker {
+    fill: goldenrod;
+    stroke: black;
+    stroke-width: 5px;
+}

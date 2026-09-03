@@ -19,6 +19,7 @@ using Investissement_WebClient.Web.Components;
 using Microsoft.EntityFrameworkCore;
 using Blazored.Toast;
 using ApexCharts;
+using Investissement_WebClient.Web.Components.ViewsModels.CompteTradeRepublic.Onglets;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,6 +64,9 @@ builder.Services.AddHttpClient<IPowensApiService, PowensApiService>();
 
 
 // views models
+builder.Services.AddScoped<TradeRepublicTransactionsViewModel>();
+builder.Services.AddScoped<TradeRepublicAllocationViewModel>();
+builder.Services.AddScoped<TradeRepublicEvolutionViewModel>();
 builder.Services.AddScoped<CompteTradeRepublicViewModel>();
 builder.Services.AddScoped<InvestissementViewModel>();
 builder.Services.AddScoped<CompteCourantViewModel>();

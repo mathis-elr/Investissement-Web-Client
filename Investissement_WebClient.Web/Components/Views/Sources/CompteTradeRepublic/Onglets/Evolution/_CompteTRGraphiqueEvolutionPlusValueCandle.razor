@@ -1,0 +1,26 @@
+﻿@*Graphique Candle : evolution des plus/moins values au cours du temps par rapport à l'investissement total et à la valeur du patrimoine*@
+
+@if (BougiesPlusValue.Any())
+{
+    <ApexChart TItem="BougieChartDto"
+               XAxisType="XAxisType.Datetime"
+               Options="PatrimoineChartsOptions.OptionsBougiesPlusValue">
+
+        <ApexCandleSeries TItem="BougieChartDto"
+                          Items="BougiesPlusValue"
+                          XValue="@(e => e.Date)"
+                          Open="@(e => e.Ouverture)"
+                          High="@(e => e.Haut)"
+                          Low="@(e => e.Bas)"
+                          Close="@(e => e.Fermeture)"
+                          OrderByDescending="e => e.X" />
+    </ApexChart>
+}
+else
+{
+    <_Chargement Couleur="black" />
+}
+
+@code {
+    [Parameter] public IEnumerable<BougieChartDto> BougiesPlusValue { get; set; } = [];
+}
