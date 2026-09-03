@@ -13,7 +13,6 @@
 .sidebar,
 .content {
     padding: 13px;
-    gap: 30px;
     min-height: 0;
     max-height: 100%;
     background-color: #1e1e1e;
@@ -31,6 +30,7 @@
     }
 
 .sidebar {
+    gap: 30px;
     grid-row: 1;
     grid-column: 1;
     display: grid;

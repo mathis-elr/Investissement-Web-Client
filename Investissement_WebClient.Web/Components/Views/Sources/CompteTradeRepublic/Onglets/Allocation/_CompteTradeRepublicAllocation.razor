@@ -1,5 +1,39 @@
 ﻿@inject TradeRepublicAllocationViewModel TVM
+@inject IToastService TS
+
+<div class="content-allocation">
+    <div class="header-allocation">
+        <label>Allocation</label>
+
+        <div class="bloc-options">
+            @foreach (var typeAllocation in TVM.TypeGraphiquesPossibles)
+            {
+                <div class="option">
+                    <span @onclick="async () => { await TVM.ChangerTypeAllocationSelectionnee(typeAllocation); }"
+                          class="@(TVM.TypeAllocationSelectionnee == typeAllocation ? "active" : "")">
+                        @TVM.GetLibelleTypeAllocation(typeAllocation)
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="repartition-actifs">
+        <_CompteTRGraphiqueRepartitionAllocation Model="TVM" />
+    </div>
+</div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        TVM.OnChange += StateHasChanged;
 
+        await TVM.LoadData();
+
+        if (TVM.HasError)
+        {
+            TS.ShowError(TVM.ErrorMessage);
+            TVM.HasError = false;
+        }
+    }
 }

@@ -53,24 +53,29 @@ namespace Investissement_WebClient.Web.ChartsOptions
                 Background = "transparent",
                 Width = "100%",
                 Height = "100%",
+                ParentHeightOffset = 0,
+                Toolbar = new Toolbar { Show = false }
             },
 
             Colors = new()
             {
-                "#DAA520", // goldenrod
-                "#C6951E",
-                "#B7841C",
-                "#A87419",
-                "#986616",
+            // Poids lourds (Top allocations) : Doré lumineux -> Ambre riche
+                "#F59E0B", // Ambre vif (tranche 1)
+                "#D97706", // Doré chaud
+                "#B45309", // Bronze soutenu
+                "#92400E", // Cuivre sombre
 
-                "#7A6A53",
-                "#696969",
-                "#5A5A5A",
-                "#4A4A4A",
+                // Poids intermédiaires : Terres & Taupes chauds contrastés
+                "#A88365", // Taupe doré
+                "#8C6D53", // Bronze terre
+                "#78583E", // Café
 
-                "#8E8E8E",
-                "#777777",
-                "#626262"
+                // Petites positions : Ardoises & Gris clairs (très lisibles sur noir)
+                "#94A3B8", // Ardoise claire (évite de se perdre dans le fond)
+                "#64748B", // Acier
+                "#475569", // Ardoise sombre
+                "#334155", // Bleu-nuit ardoise
+                "#CBD5E1"  // Argent pour le reste / "Autres"
             },
             Legend = new Legend
             {

@@ -57,6 +57,12 @@ img {
     width: 55%;
 }
 
+.gauche {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .variations-container {
     display: flex;
     flex-direction: column;

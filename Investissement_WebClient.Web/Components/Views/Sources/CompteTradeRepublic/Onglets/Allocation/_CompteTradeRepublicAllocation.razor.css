@@ -1,2 +1,94 @@
-﻿body {
+﻿.content-allocation {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    gap: 10px;
+}
+
+.header-allocation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.repartition-actifs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0; 
+}
+
+.option span {
+    width: 100px;
+}
+
+/* --- GESTION DU GRAPHIQUE PIE --- */
+
+/* 1. On ne met PLUS de Flexbox sur le canvas pour ne pas tuer le placement Javascript */
+.repartition-actifs ::deep .apexcharts-canvas {
+    margin: 0 auto !important;
+}
+
+/* 2. PC : LÉGENDE À DROITE */
+.repartition-actifs ::deep .apexcharts-legend.apx-legend-position-right {
+    background-color: #242424 !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 12px !important;
+    padding: 14px 16px !important;
+    width: 250px !important;
+    max-height: 320px !important; /* 👈 Augmenté pour ne plus couper la liste */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    /* On retire le right: 15px fixe et on la repositionne par rapport au centre */
+    right: auto !important;
+    left: calc(50% + 100px) !important; /* 👈 Colle la légende à 30px du bord du donut */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+/* 3. MOBILE : LÉGENDE EN BAS */
+.repartition-actifs ::deep .apexcharts-legend.apx-legend-position-bottom {
+    background-color: #242424 !important;
+    border-radius: 12px !important;
+    padding: 12px 15px !important;
+    /* Le secret anti-coupure en bas : on force une marge inférieure */
+    margin: 10px auto 25px auto !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    max-height: 120px !important; /* Un peu plus court pour être sûr de ne pas toucher le bas */
+    overflow-y: auto !important;
+    transform: translateY(-10px) !important;
+}
+
+/* 4. DESIGN COMMUN (Textes, pastilles, scrollbar) */
+.repartition-actifs ::deep .apexcharts-legend-series {
+    margin: 4px 8px 4px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.repartition-actifs ::deep .apexcharts-legend-text {
+    font-size: 13px !important;
+    color: #e5e5e5 !important;
+}
+
+.repartition-actifs ::deep .apexcharts-legend-marker {
+    margin-right: 8px !important;
+    flex-shrink: 0 !important;
+}
+
+.repartition-actifs ::deep .apexcharts-tooltip {
+    z-index: 9999 !important;
+    pointer-events: none;
+}
+
+.repartition-actifs ::deep .apexcharts-legend::-webkit-scrollbar {
+    width: 6px;
+}
+
+.repartition-actifs ::deep .apexcharts-legend::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
 }

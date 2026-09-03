@@ -1,0 +1,30 @@
+﻿@* Pie : proportion investit par actif par rapport au total investit *@
+
+@if (Model.ValeuresAllocationSelectionnee.Any())
+{
+    <ApexChart TItem="ValeurTotaleParActifDto"
+               Options="DashboardChartsOptions.OptionsPieActif">
+
+        <ApexPointSeries TItem="ValeurTotaleParActifDto"
+                         Items="Model.ValeuresAllocationSelectionnee"
+                         SeriesType="SeriesType.Donut"
+                         XValue="@(e => e.Actif)"
+                         YValue="@(e => e.Valeur)"
+                         OrderByDescending="e => e.Y"
+                         ShowDataLabels />
+    </ApexChart>
+}
+else if (Model.RecuparationEnCours)
+{
+    <_ChargementGraphique />
+}
+else
+{
+    <p>Synchroniser vos flux pour visualiser les allocations</p>
+
+}
+    
+
+@code {
+    [Parameter] public required TradeRepublicAllocationViewModel Model { get; set; }
+}

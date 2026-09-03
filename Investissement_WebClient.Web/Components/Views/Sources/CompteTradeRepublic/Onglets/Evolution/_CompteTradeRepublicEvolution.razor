@@ -27,17 +27,22 @@
     else if (TVM.PointsPlusValue.Any() || TVM.BougiesPlusValue.Any())
     {
         <div class="header-graphique">
-            <div class="variations-container">
-                <div class="metrique-principale">
-                    <span class="montant @TVM.DeterminerClasse(TVM.VariationSelectionnee.VariationValeure)">
-                        @(TVM.VariationSelectionnee.VariationValeure > 0 ? "+" : "")@TVM.VariationSelectionnee.VariationValeure.ToString("C2")
-                    </span>
-                    <span class="badge-pourcentage @TVM.DeterminerClasse(TVM.VariationSelectionnee.VariationPourcentage)">
-                        @(TVM.VariationSelectionnee.VariationPourcentage > 0 ? "+" : "")@TVM.ToStringPourcentage(TVM.VariationSelectionnee.VariationPourcentage, "P2")
-                    </span>
+            <div class="gauche">
+                <label>Evolution</label>
+
+                <div class="variations-container">
+                    <div class="metrique-principale">
+                        <span class="montant @TVM.DeterminerClasse(TVM.VariationSelectionnee.VariationValeure)">
+                            @(TVM.VariationSelectionnee.VariationValeure > 0 ? "+" : "")@TVM.VariationSelectionnee.VariationValeure.ToString("C2")
+                        </span>
+                        <span class="badge-pourcentage @TVM.DeterminerClasse(TVM.VariationSelectionnee.VariationPourcentage)">
+                            @(TVM.VariationSelectionnee.VariationPourcentage > 0 ? "+" : "")@TVM.ToStringPourcentage(TVM.VariationSelectionnee.VariationPourcentage, "P2")
+                        </span>
+                    </div>
+                    <span class="periode-label">sur la période sélectionnée</span>
                 </div>
-                <span class="periode-label">sur la période sélectionnée</span>
             </div>
+
 
             <div class="options">
                 <_CompteTROptionsAffichageGraphique Model="TVM" />

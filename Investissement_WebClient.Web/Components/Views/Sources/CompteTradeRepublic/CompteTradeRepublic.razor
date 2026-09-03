@@ -23,6 +23,7 @@
     <div class="sidebar @(CVM.SynchronisationTransactions || CVM.ParametrageIdentifiants ? "flou" : "")">
         <_CompteTradeRepubliqueSidebar Model="@CVM" />
     </div>
+
     <div class="content @(CVM.SynchronisationTransactions || CVM.ParametrageIdentifiants ? "flou" : "")">
         @switch (CVM.PageSelectionnee)
         {
