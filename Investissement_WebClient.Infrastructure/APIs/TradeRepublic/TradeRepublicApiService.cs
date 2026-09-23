@@ -19,7 +19,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
     public class TradeRepublicApiService : ITradeRepublicApiService
     {
         private readonly ITradeRepublicAccesRepository _tradeRepublicAccesRepository;
-        private readonly IFluxInvestissementService _fluxInvestissementService;
+        private readonly IFluxTradeRepublicService _fluxInvestissementService;
         private readonly TradeRepublicApiOptions _optionsTradeRepublic;
         private readonly CryptOptions _optionsEncryption;
         private readonly ICryptService _encryptService;
@@ -27,7 +27,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 
         public TradeRepublicApiService(ITradeRepublicAccesRepository tradeRepublicAccesRepository,
                                        IOptions<TradeRepublicApiOptions> optionsTradeRepublic,
-                                       IFluxInvestissementService fluxInvestissementService,
+                                       IFluxTradeRepublicService fluxInvestissementService,
                                        IOptions<CryptOptions> optionsEncryption,
                                        ICryptService encryptService, 
                                        HttpClient httpClient)

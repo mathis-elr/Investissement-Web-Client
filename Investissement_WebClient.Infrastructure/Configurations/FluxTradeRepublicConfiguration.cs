@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Infrastructure.Configurations
 {
-    internal class FluxInvestissementConfiguration : IEntityTypeConfiguration<FluxInvestissement>
+    internal class FluxTradeRepublicConfiguration : IEntityTypeConfiguration<FluxTradeRepublic>
     {
-        public void Configure(EntityTypeBuilder<FluxInvestissement> builder)
+        public void Configure(EntityTypeBuilder<FluxTradeRepublic> builder)
         {
             builder.Property(t => t.Id)
                 .ValueGeneratedNever();

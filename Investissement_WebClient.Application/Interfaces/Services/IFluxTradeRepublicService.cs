@@ -4,9 +4,9 @@ using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Application.Interfaces.Services
 {
-    public interface IFluxInvestissementService
+    public interface IFluxTradeRepublicService
     {
-        Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId);
+        Task<IEnumerable<FluxTradeRepublicDto>> GetFluxInvestissement(int userId);
 
         Task<string?> GetDernierFluxEnregistre(int userId);
 

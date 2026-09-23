@@ -19,7 +19,7 @@ public class EnregistrementValeurPatrimoineWorker(IServiceProvider serviceProvid
 
                 if (dateDernierHistorique == null || DateTime.Now - dateDernierHistorique.Value >= TimeSpan.FromHours(1))
                 {
-                    var fluxInvestissementService = scope.ServiceProvider.GetRequiredService<IFluxInvestissementService>();
+                    var fluxInvestissementService = scope.ServiceProvider.GetRequiredService<IFluxTradeRepublicService>();
 
                     try
                     {

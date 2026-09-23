@@ -2,7 +2,7 @@ using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Domain.Modeles
 {
-    public class FluxInvestissement
+    public class FluxTradeRepublic
     {
         public string? Id { get; init; }
 

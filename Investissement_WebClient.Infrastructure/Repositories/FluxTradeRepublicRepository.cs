@@ -8,23 +8,23 @@ using Microsoft.Extensions.Options;
 
 namespace Investissement_WebClient.Infrastructure.Repositories
 {
-    public class FluxInvestissementRepository(IDbContextFactory<InvestissementDbContext> dbContext, 
-                                              IOptions<TradeRepublicApiOptions> options) : IFluxInvestissementRepository
+    public class FluxTradeRepublicRepository(IDbContextFactory<InvestissementDbContext> dbContext, 
+                                              IOptions<TradeRepublicApiOptions> options) : IFluxTradeRepublicRepository
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
         private readonly TradeRepublicApiOptions _options = options.Value;
 
-        public async Task<IEnumerable<FluxInvestissementDto>> GetAllByUserId(int userId)
+        public async Task<IEnumerable<FluxTradeRepublicDto>> GetAllByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var data = await context.FluxInvestissement
+            var data = await context.FluxTradeRepublic
                 .Include(f => f.Actif)
                 .Where(f => f.UtilisateurId == userId)
                 .ToListAsync();
 
             return data
-                .Select(t => new FluxInvestissementDto
+                .Select(t => new FluxTradeRepublicDto
                 {
                     Date = t.Date,
                     Actif = t.Actif!.Libelle,
@@ -35,21 +35,21 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 });
         }
 
-        public async Task<FluxInvestissement?> GetLastByUserId(int userId)
+        public async Task<FluxTradeRepublic?> GetLastByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            return await context.FluxInvestissement
+            return await context.FluxTradeRepublic
                 .Where(f => f.UtilisateurId == userId)
                 .OrderByDescending(f => f.Date)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<FluxInvestissement?> GetFirstDateByUserId(int userId)
+        public async Task<FluxTradeRepublic?> GetFirstDateByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            return await context.FluxInvestissement
+            return await context.FluxTradeRepublic
                 .Where(f => f.UtilisateurId == userId)
                 .OrderBy(f => f.Date)
                 .FirstOrDefaultAsync();
@@ -59,7 +59,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            return await context.FluxInvestissement
+            return await context.FluxTradeRepublic
                 .Where(f => f.UtilisateurId == userId)
                 .GroupBy(t => new
                 {
@@ -79,7 +79,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            return await context.FluxInvestissement
+            return await context.FluxTradeRepublic
                 .Where(f => f.UtilisateurId == userId)
                 .SumAsync(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total);
         }
@@ -88,7 +88,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var data = await context.FluxInvestissement
+            var data = await context.FluxTradeRepublic
                 .Where(f => f.UtilisateurId == userId)
                 .GroupBy(t => new
                 {
@@ -122,7 +122,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            var query = context.FluxInvestissement
+            var query = context.FluxTradeRepublic
             .AsNoTracking()
             .Where(h => h.UtilisateurId == userId);
 
@@ -155,11 +155,11 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task AddRange(List<FluxInvestissement> flux)
+        public async Task AddRange(List<FluxTradeRepublic> flux)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            await context.FluxInvestissement.AddRangeAsync(flux);
+            await context.FluxTradeRepublic.AddRangeAsync(flux);
             await context.SaveChangesAsync();
         }
 

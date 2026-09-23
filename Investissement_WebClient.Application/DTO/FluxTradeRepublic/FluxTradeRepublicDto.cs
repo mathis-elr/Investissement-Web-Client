@@ -1,6 +1,6 @@
 ﻿namespace Investissement_WebClient.Application.DTO.FluxInvestissements
 {
-    public class FluxInvestissementDto
+    public class FluxTradeRepublicDto
     {
         public DateTime Date { get; set; }
 

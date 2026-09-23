@@ -5,7 +5,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
     public class PowensTransactionsApiResponse
     {
         [JsonPropertyName("transactions")]
-        public List<PowensFluxApiResponse> Transactions { get; set; } = [];
+        public List<PowensTransactionApiResponse> Transactions { get; set; } = [];
     }
 }
 

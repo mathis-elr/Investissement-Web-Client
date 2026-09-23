@@ -164,7 +164,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
-            return await context.FluxInvestissement
+            return await context.FluxTradeRepublic
                 .AsNoTracking()
                 .Where(f => f.Actif != null)
                 .GroupBy(f => new

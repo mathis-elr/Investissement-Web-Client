@@ -4,6 +4,7 @@ using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260904124145_AjoutTablePostionInvestissement")]
+    partial class AjoutTablePostionInvestissement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,7 +377,10 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Property<int>("ActifId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompteBanqueId")
+                    b.Property<int?>("CompteBanqueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompteInvestissementId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCours")
@@ -389,11 +395,16 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Property<decimal>("Quantite")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActifId");
 
                     b.HasIndex("CompteBanqueId");
+
+                    b.HasIndex("UtilisateurId");
 
                     b.ToTable("PositionInvestissement");
                 });
@@ -574,13 +585,19 @@ namespace Investissement_WebClient.Infrastructure.Migrations
 
                     b.HasOne("Investissement_WebClient.Domain.Modeles.CompteBanque", "CompteBanque")
                         .WithMany()
-                        .HasForeignKey("CompteBanqueId")
+                        .HasForeignKey("CompteBanqueId");
+
+                    b.HasOne("Investissement_WebClient.Domain.Modeles.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Actif");
 
                     b.Navigation("CompteBanque");
+
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.UtilisateurPowens", b =>

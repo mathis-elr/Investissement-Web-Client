@@ -8,11 +8,11 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.CompteTradeRepubli
 {
     public class TradeRepublicEvolutionViewModel(SessionService sessionService,
                                                  IValeurPatrimoineService valeurPatrimoineService,
-                                                 IFluxInvestissementService fluxInvestissementService)
+                                                 IFluxTradeRepublicService fluxInvestissementService)
     {
         private readonly SessionService _sessionService = sessionService;
         private readonly IValeurPatrimoineService _valeurPatrimoineService = valeurPatrimoineService;
-        private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
+        private readonly IFluxTradeRepublicService _fluxInvestissementService = fluxInvestissementService;
 
 
         // USER CONNECTE

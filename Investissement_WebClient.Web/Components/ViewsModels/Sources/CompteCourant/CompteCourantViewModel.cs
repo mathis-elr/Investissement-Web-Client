@@ -1,5 +1,4 @@
-﻿using Investissement_WebClient.Web.Components.ViewsModels.Sources;
-using Investissement_WebClient.Application.Interfaces.Services;
+﻿using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Infrastructure.APIs.Powens;
@@ -7,7 +6,7 @@ using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.Extensions.Options;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels
+namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCourant
 {
     public class CompteCourantViewModel(IFluxBancaireService fluxBancaireService,
                                         IOptions<PowensApiOptions> options,

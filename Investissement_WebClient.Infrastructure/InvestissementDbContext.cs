@@ -15,10 +15,12 @@ public class InvestissementDbContext(DbContextOptions<InvestissementDbContext> o
     public DbSet<CompteBanque> CompteBanque { get; set; }
 
     public DbSet<Actif> Actif { get; set; }
-    public DbSet<FluxInvestissement> FluxInvestissement { get; set; }
+    public DbSet<FluxTradeRepublic> FluxTradeRepublic { get; set; }
 
     public DbSet<CategorieFlux> CategorieFlux { get; set; }
     public DbSet<FluxBancaire> FluxBancaire { get; set; }
+
+    public DbSet<PositionInvestissement> PositionInvestissement { get; set; }
 
     public DbSet<ValeurPatrimoine> ValeurPatrimoine { get; set; }
     

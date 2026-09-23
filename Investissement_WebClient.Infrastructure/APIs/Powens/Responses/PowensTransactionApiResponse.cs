@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
 {
-    public class PowensFluxApiResponse
+    public class PowensTransactionApiResponse
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }

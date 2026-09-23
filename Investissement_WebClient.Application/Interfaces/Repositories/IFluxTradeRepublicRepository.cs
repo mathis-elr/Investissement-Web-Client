@@ -4,13 +4,13 @@ using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
-    public interface IFluxInvestissementRepository
+    public interface IFluxTradeRepublicRepository
     {
-        Task<IEnumerable<FluxInvestissementDto>> GetAllByUserId(int userId);
+        Task<IEnumerable<FluxTradeRepublicDto>> GetAllByUserId(int userId);
 
-        Task<FluxInvestissement?> GetLastByUserId(int userId);
+        Task<FluxTradeRepublic?> GetLastByUserId(int userId);
 
-        Task<FluxInvestissement?> GetFirstDateByUserId(int userId);
+        Task<FluxTradeRepublic?> GetFirstDateByUserId(int userId);
 
         Task<List<PositionActifDto>> GetPositionsParActifByUserId(int userId);
 
@@ -20,6 +20,6 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<List<InvestissementParMoisDto>> GetInvestissementParMoisByUserId(PeriodeHistoriqueInvest periode, int userId);
 
-        Task AddRange(List<FluxInvestissement> flux);
+        Task AddRange(List<FluxTradeRepublic> flux);
     }
 }

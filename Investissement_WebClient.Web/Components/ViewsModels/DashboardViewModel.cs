@@ -7,10 +7,10 @@ using System.Globalization;
 namespace Investissement_WebClient.Web.Components.ViewsModels
 {
     public class DashboardViewModel(SessionService sessionService, 
-                                 IFluxInvestissementService fluxInvestissementService)
+                                 IFluxTradeRepublicService fluxInvestissementService)
     {
         private readonly SessionService _sessionService = sessionService;
-        private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
+        private readonly IFluxTradeRepublicService _fluxInvestissementService = fluxInvestissementService;
 
         // USER CONNECTE
         public int IdUser { get; set; }

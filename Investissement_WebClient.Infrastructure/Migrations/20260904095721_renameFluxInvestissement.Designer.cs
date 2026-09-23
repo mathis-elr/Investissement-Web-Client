@@ -4,6 +4,7 @@ using Investissement_WebClient.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investissement_WebClient.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestissementDbContext))]
-    partial class InvestissementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260904095721_RenameFluxInvestissement")]
+    partial class RenameFluxInvestissement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,41 +366,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.ToTable("FluxTradeRepublic");
                 });
 
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.PositionInvestissement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActifId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompteBanqueId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCours")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DerniereMaj")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("PrixAchat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Quantite")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActifId");
-
-                    b.HasIndex("CompteBanqueId");
-
-                    b.ToTable("PositionInvestissement");
-                });
-
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.Utilisateur", b =>
                 {
                     b.Property<int>("Id")
@@ -562,25 +530,6 @@ namespace Investissement_WebClient.Infrastructure.Migrations
                     b.Navigation("Actif");
 
                     b.Navigation("Utilisateur");
-                });
-
-            modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.PositionInvestissement", b =>
-                {
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.Actif", "Actif")
-                        .WithMany()
-                        .HasForeignKey("ActifId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Investissement_WebClient.Domain.Modeles.CompteBanque", "CompteBanque")
-                        .WithMany()
-                        .HasForeignKey("CompteBanqueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actif");
-
-                    b.Navigation("CompteBanque");
                 });
 
             modelBuilder.Entity("Investissement_WebClient.Domain.Modeles.UtilisateurPowens", b =>

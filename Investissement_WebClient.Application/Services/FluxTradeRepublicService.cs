@@ -8,15 +8,15 @@ using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Application.Services
 {
-    public class FluxInvestissementService(IFluxInvestissementRepository fluxInvestissementRepository,
+    public class FluxTradeRepublicService(IFluxTradeRepublicRepository fluxInvestissementRepository,
                                            IYahooFinanceApiService yahooFinanceApiService,
-                                           IActifService actifService) : IFluxInvestissementService
+                                           IActifService actifService) : IFluxTradeRepublicService
     {
-        private readonly IFluxInvestissementRepository _fluxInvestissementRepository = fluxInvestissementRepository;
+        private readonly IFluxTradeRepublicRepository _fluxInvestissementRepository = fluxInvestissementRepository;
         private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
         private readonly IActifService _actifService = actifService;
 
-        public async Task<IEnumerable<FluxInvestissementDto>> GetFluxInvestissement(int userId)
+        public async Task<IEnumerable<FluxTradeRepublicDto>> GetFluxInvestissement(int userId)
         {
             return await _fluxInvestissementRepository.GetAllByUserId(userId);
         }
@@ -151,11 +151,11 @@ namespace Investissement_WebClient.Application.Services
             var actifsParIsin = actifsLocaux
                 .ToDictionary(a => a.ISIN);
 
-            var fluxAInserer = new List<FluxInvestissement>();
+            var fluxAInserer = new List<FluxTradeRepublic>();
 
             foreach (var transaction in transactions)
             {
-                var nvFlux = new FluxInvestissement
+                var nvFlux = new FluxTradeRepublic
                 {
                     Id = transaction.Id,
                     Date = transaction.Date.DateTime,

@@ -1,18 +1,18 @@
-﻿using Investissement_WebClient.Application.DTO.Auth;
-using Investissement_WebClient.Application.DTO.FluxInvestissements;
-using Investissement_WebClient.Application.Interfaces.APIs;
+﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
 using Investissement_WebClient.Application.Interfaces.Services;
-using Investissement_WebClient.Domain.Enums;
+using Investissement_WebClient.Application.Interfaces.APIs;
+using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Web.GestionSession;
+using Investissement_WebClient.Domain.Enums;
 using System.Globalization;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels
+namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteTradeRepublic
 {
-    public class CompteTradeRepublicViewModel(IFluxInvestissementService fluxInvestissementService,
+    public class CompteTradeRepublicViewModel(IFluxTradeRepublicService fluxInvestissementService,
                                               ITradeRepublicApiService tradeRepublicApiService,
                                               SessionService sessionService)
     {
-        private readonly IFluxInvestissementService _fluxInvestissementService = fluxInvestissementService;
+        private readonly IFluxTradeRepublicService _fluxInvestissementService = fluxInvestissementService;
         private readonly ITradeRepublicApiService _tradeRepublicApiService = tradeRepublicApiService;
         private readonly SessionService _sessionService = sessionService;
 
@@ -42,9 +42,9 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
         // TRANSACTIONS
         public TradeRepublicAccesDto TradeRepublicAcces { get; set; } = new TradeRepublicAccesDto();
         public bool IdentifiantsRequis { get; set; } = false;
-        public IEnumerable<FluxInvestissementDto> FluxInvestissement { get; set; } = [];
+        public IEnumerable<FluxTradeRepublicDto> FluxInvestissement { get; set; } = [];
 
-        public IEnumerable<FluxInvestissementDto> FluxInvestissementFiltres =>
+        public IEnumerable<FluxTradeRepublicDto> FluxInvestissementFiltres =>
             string.IsNullOrWhiteSpace(TexteRecherche)
                 ? FluxInvestissement
                 : FluxInvestissement.Where(f =>
