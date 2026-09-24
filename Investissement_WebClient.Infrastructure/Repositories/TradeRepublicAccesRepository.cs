@@ -30,5 +30,17 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await context.CompteTradeRepublic.AddAsync(acces);
             await context.SaveChangesAsync();
         }
+
+        public async Task UpdateDateSynchornisation(int userId)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            var acces = await GetLoginByUserId(userId);
+
+            if(acces != null)
+            {
+                acces.DerniereSynchronisation = DateTime.Now;
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

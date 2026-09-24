@@ -9,5 +9,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
         Task<CompteTradeRepublic?> GetLoginByUserId(int userId);
 
         Task Add(CompteTradeRepublic acces);
+
+        Task UpdateDateSynchornisation(int userId);
     }
 }

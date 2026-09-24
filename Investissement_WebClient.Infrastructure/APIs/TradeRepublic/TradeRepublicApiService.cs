@@ -171,6 +171,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
 
                     await _fluxInvestissementService.MapperTransactions(fluxImport,userId);
 
+                    await _tradeRepublicAccesRepository.UpdateDateSynchornisation(userId);
+
                     return true;
                 }
                 return false;
@@ -216,7 +218,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
                 {
                     NumTelCrypte = _encryptService.Encrypt(accesDto.NumTel, _optionsEncryption.MasterKey),
                     PinCrypte = _encryptService.Encrypt(accesDto.Pin, _optionsEncryption.MasterKey),
-                    UtilisateurId = userId
+                    UtilisateurId = userId,
+                    DerniereSynchronisation = DateTime.Now
                 };
 
                 await _tradeRepublicAccesRepository.Add(newAcces);
