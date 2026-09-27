@@ -1,4 +1,6 @@
+using Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteTradeRepublic;
 using Investissement_WebClient.Web.Components.ViewsModels.CompteTradeRepublic.Onglets;
+using Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCourant;
 using Investissement_WebClient.Web.Components.ViewsModels.Authentification;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Investissement_WebClient.Application.Interfaces.Repositories;
@@ -48,8 +50,9 @@ builder.Services.Configure<LogoDevApiOptions>(builder.Configuration.GetSection("
 
 
 // services
+builder.Services.AddScoped<IPositionInvestissementService, PositionInvestissementService>();
 builder.Services.AddScoped<ICompteTradeRepubliqueService, CompteTradeRepubliqueService>();
-builder.Services.AddScoped<IFluxInvestissementService, FluxInvestissementService>();
+builder.Services.AddScoped<IFluxTradeRepublicService, FluxTradeRepublicService>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IValeurPatrimoineService, ValeurPatrimoineService>();
 builder.Services.AddScoped<ICompteBanqueService, CompteBanqueService>();
@@ -77,7 +80,8 @@ builder.Services.AddScoped<SourcesViewModel>();
 
 
 // repositories
-builder.Services.AddScoped<IFluxInvestissementRepository, FluxInvestissementRepository>();
+builder.Services.AddScoped<IPositionInvestissementRepository, PositionInvestissementRepository>();
+builder.Services.AddScoped<IFluxTradeRepublicRepository, FluxTradeRepublicRepository>();
 builder.Services.AddScoped<ITradeRepublicAccesRepository, TradeRepublicAccesRepository>();
 builder.Services.AddScoped<IUtilisateurPowensRepository, UtilisateurPowensRepository>();
 builder.Services.AddScoped<IValeurPatrimoineRepository, ValeurPatrimoineRepository>();

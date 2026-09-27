@@ -5,6 +5,7 @@ using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Services.Encrypt;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Domain.Extensions;
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
@@ -14,6 +15,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 {
     public class PowensApiService : IPowensApiService
     {
+        private readonly IPositionInvestissementService _positionInvestissementService;
         private readonly IUtilisateurPowensRepository _utilisateurPowensRepository;
         private readonly ICompteBanqueRepository _compteBanqueRepository;
         private readonly IFluxBancaireService _fluxBancaireService;
@@ -23,7 +25,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
         private readonly PowensApiOptions _options;
         private readonly HttpClient _httpClient;
 
-        public PowensApiService(IUtilisateurPowensRepository utilisateurPowensRepository,
+        public PowensApiService(IPositionInvestissementService positionInvestissementService,
+                                IUtilisateurPowensRepository utilisateurPowensRepository,
                                 ICompteBanqueRepository compteBanqueRepository,
                                 IFluxBancaireService fluxBancaireService,      
                                 IOptions<CryptOptions> optionsEncryption,
@@ -32,6 +35,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                                 ICryptService encryptService,
                                 HttpClient httpClient)
         {
+            _positionInvestissementService = positionInvestissementService;
             _utilisateurPowensRepository = utilisateurPowensRepository;
             _compteBanqueRepository = compteBanqueRepository;
             _banqueAccesRepository = banqueAccesRepository;
@@ -142,11 +146,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
                 var dateDebut = derniereDate ?? new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(-2);
 
-                await GetFlux(dateDebut, finMoisPrecedent, compte);
+                await GetTransactions(dateDebut, finMoisPrecedent, compte);
             }
         }
 
-        public async Task GetFlux(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque)
+        public async Task GetTransactions(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque)
         {
             var utilisateurPowens = compteBanque.Banque.UtilisateurPowens;
             var tokenClair = _encryptService.Decrypt(utilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
@@ -171,6 +175,34 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                 .ToList();
 
             await _fluxBancaireService.AddFluxBancaire(flux, utilisateurPowens.UtilisateurId, compteBanque.Id);
+        }
+
+        public async Task GetPositionInvestissements(CompteBanque compteBanque)
+        {
+            var utilisateurPowens = compteBanque.Banque.UtilisateurPowens;
+            var tokenClair = _encryptService.Decrypt(utilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
+
+            var reponse = await RequeteGetAvecToken(tokenClair, string.Format(_options.InvestEndPoint, compteBanque.IdComptePowens));
+
+            var reponseString = await reponse.Content.ReadAsStringAsync();
+            var investissements = JsonSerializer.Deserialize<PowensInvestissementsApiResponse>(reponseString);
+
+            var positions = investissements?.PositionsInvest?
+                .Select(t => new PositionInvestissementImportDto
+                {
+                    ISIN = t.CodeType == "isin" ,
+                    Code = t.Code,
+                    Label = t.Label,
+                    Quantite = t.Quantite,
+                    PrixAchat = t.PrixAchat,
+                    PrixCourant = t.PrixCourant,
+                    DatePrixCourant = t.DatePrixCourant,
+                    DerniereMaj = t.DateDerniereMAJ,
+                    CompteBanqueId = compteBanque.Id
+                })
+                .ToList();
+
+            await _positionInvestissementService.MapperInvestissements(positions, compteBanque.Id);
         }
 
         public async Task SynchroniserSoldeComptes()

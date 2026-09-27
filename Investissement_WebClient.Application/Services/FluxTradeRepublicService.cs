@@ -149,7 +149,9 @@ namespace Investissement_WebClient.Application.Services
             var actifsLocaux = await _actifService.GetAll();
 
             var actifsParIsin = actifsLocaux
-                .ToDictionary(a => a.ISIN);
+                    .Where(a => !string.IsNullOrWhiteSpace(a.ISIN))
+                    .DistinctBy(a => a.ISIN)
+                    .ToDictionary(a => a.ISIN!);
 
             var fluxAInserer = new List<FluxTradeRepublic>();
 

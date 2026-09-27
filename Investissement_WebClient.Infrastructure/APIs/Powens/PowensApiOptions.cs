@@ -12,6 +12,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
         public string AccountsEndPoint { get; set; } = string.Empty;
         public string ConnectionsEndPoint { get; set; } = string.Empty;
         public string AccountsConnectionEndPoint { get; set; } = string.Empty;
+        public string InvestEndPoint {  get; set; } = string.Empty;
         public string ConnectorEndPoint { get; set; } = string.Empty;
 
         public string RedirectUri { get; set; } = string.Empty;

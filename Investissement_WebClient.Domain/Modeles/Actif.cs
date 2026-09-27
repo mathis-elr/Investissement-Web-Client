@@ -6,8 +6,8 @@
 
         public required string Libelle { get; set; }
 
-        public required string ISIN { get; init; }
+        public string? ISIN { get; init; }
 
-        public required string Ticker { get; set; }
+        public string? Ticker { get; set; }
     }
 }
