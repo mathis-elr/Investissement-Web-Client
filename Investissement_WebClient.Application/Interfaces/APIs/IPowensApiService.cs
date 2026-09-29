@@ -4,6 +4,10 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
 {
     public interface IPowensApiService
     {
+        Task<string> GetUrlConnexionPowens(int idUser);
+
+        Task<string> GetUrlReconnexionPowens(int idUser, int compteId);
+
         Task CreeNouvelUtilisateur(int userId);
 
         Task VerifierUtilisateurPowensExists(int userId);

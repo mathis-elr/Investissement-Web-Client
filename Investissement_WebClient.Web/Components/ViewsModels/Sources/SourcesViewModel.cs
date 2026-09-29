@@ -1,22 +1,18 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
-using Investissement_WebClient.Infrastructure.APIs.Powens;
 using Investissement_WebClient.Web.GestionSession;
-using Microsoft.Extensions.Options;
 
-namespace Investissement_WebClient.Web.Components.ViewsModels
+namespace Investissement_WebClient.Web.Components.ViewsModels.Sources
 {
     public class SourcesViewModel(ICompteTradeRepubliqueService tradeRepubliqueService,
                                   ICompteBanqueService compteBanqueService,
-                                  IOptions<PowensApiOptions> options,
                                   IPowensApiService powensApiService,
                                   SessionService sessionService)
     {
         private readonly ICompteTradeRepubliqueService _tradeRepubliqueService = tradeRepubliqueService;
         private readonly ICompteBanqueService _compteBanqueService = compteBanqueService;
         private readonly IPowensApiService _powensApiService = powensApiService;
-        private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
 
         // CONNEXION BANQUE
@@ -86,11 +82,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             }
         }     
 
-        public async Task InitialiserUrlConnexionPowens()
-        {
-            UrlConnexionPowens = await GetUrlConnexionPowens();
-        }
-
         public async Task ChangerSourceSelectionne(SourceDto source)
         {
             SourceSelectionne = source;
@@ -112,18 +103,17 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             return await _tradeRepubliqueService.GetByUserId(IdUser);
         }
 
-        private async Task<string> GetUrlConnexionPowens()
+        public async Task InitialiserUrlConnexionPowens()
         {
-            await _powensApiService.VerifierUtilisateurPowensExists(IdUser);
-
-            var code = await _powensApiService.GenerateCodeTemporaireByUserId(IdUser);
-
-            var fullConnectUrl = new Uri(new Uri(_powensApiOptions.BaseUri), _powensApiOptions.ConnectEndPoint);
-
-            var encodedRedirect =
-                Uri.EscapeDataString(_powensApiOptions.RedirectUri);
-
-            return $"{fullConnectUrl}?client_id={_powensApiOptions.ClientId}&redirect_uri={encodedRedirect}&code={code}";
+            try
+            {
+                UrlConnexionPowens = await _powensApiService.GetUrlConnexionPowens(IdUser);
+            }
+            catch (Exception ex)
+            {
+                HasErreur = true;
+                MessageErreur = ex.Message;
+            }
         }
     }
 }

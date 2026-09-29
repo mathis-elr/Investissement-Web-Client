@@ -49,6 +49,41 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             _httpClient.Timeout = TimeSpan.FromSeconds(10);
         }
 
+        public async Task<string> GetUrlConnexionPowens(int idUser)
+        {
+            await VerifierUtilisateurPowensExists(idUser);
+
+            var code = await GenerateCodeTemporaireByUserId(idUser);
+
+            var fullConnectUrl = new Uri(new Uri(_options.BaseUri), _options.ConnectEndPoint);
+
+            var encodedRedirect = Uri.EscapeDataString(_options.RedirectUri);
+
+            return $"{fullConnectUrl}" +
+                       $"?client_id={_options.ClientId}" +
+                       $"&redirect_uri={encodedRedirect}" +
+                       $"&code={code}";
+        }
+
+        public async Task<string> GetUrlReconnexionPowens(int idUser, int compteId)
+        {
+            await VerifierUtilisateurPowensExists(idUser);
+
+            var code = await GenerateCodeTemporaireByUserId(idUser);
+
+            var banqueAssocie = await _banqueAccesRepository.GetByCompteId(compteId) 
+                ?? throw new Exception("Aucune banque associée a ce compte");
+
+            var fullConnectUrl = new Uri(new Uri(_options.BaseUri), _options.ReconnectEndPoint);
+
+            var encodedRedirect = Uri.EscapeDataString(_options.RedirectUri);
+
+            return $"{fullConnectUrl}" +
+                       $"?client_id={_options.ClientId}" +
+                       $"&redirect_uri={encodedRedirect}" +
+                       $"&connection_id={banqueAssocie.IdConnectionPowens}" +
+                       $"&code={code}";
+        }
 
         public async Task CreeNouvelUtilisateur(int userId)
         {
@@ -214,7 +249,8 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
             foreach(var banque in banques)
             {
-                var comptesPowens = await GetComptes(banque.UtilisateurPowens.AccessTokenCrypte, banque.IdConnectionPowens);
+                var tokenClair = _encryptService.Decrypt(banque.UtilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
+                var comptesPowens = await GetComptes(tokenClair, banque.IdConnectionPowens);
                 var comptesPowensDict = comptesPowens.ToDictionary(c => c.Id);
 
                 foreach(var compte in banque.Comptes)
@@ -231,10 +267,10 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)
         {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            using var request = new HttpRequestMessage(HttpMethod.Get, requete);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var reponse = await _httpClient.GetAsync(requete);
+            var reponse = await _httpClient.SendAsync(request);
 
             var codeStatus = (int)reponse.StatusCode;
             VerifierContenueReponse(reponse, codeStatus);
@@ -264,8 +300,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         private async Task<IEnumerable<PowensTypeCompteApiResponse>> GetComptes(string token, int connectionBanqueId)
         {
-            var reponse = await RequeteGetAvecToken(token, string.Format(_options.AccountsConnectionEndPoint, connectionBanqueId));
+            var url = string.Format(_options.AccountsConnectionEndPoint, connectionBanqueId);
+
+            var reponse = await RequeteGetAvecToken(token, url);
             var reponseString = await reponse.Content.ReadAsStringAsync();
+
             var comptes = JsonSerializer.Deserialize<PowensComptesApiResponse>(reponseString);
 
             if (comptes?.Comptes == null || !comptes.Comptes.Any())
