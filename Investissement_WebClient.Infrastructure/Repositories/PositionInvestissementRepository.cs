@@ -14,6 +14,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             return await context.PositionInvestissement
                 .Where(f => f.CompteBanqueId == compteId)
                 .Include(p => p.Actif)
+                .Include(p => p.CompteBanque)
                 .ToListAsync();
         }
 

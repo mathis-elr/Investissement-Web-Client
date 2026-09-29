@@ -40,7 +40,7 @@
             break;
 
         case TypeCompte.Epargne:
-            <CompteEpargne/>
+            <CompteEpargne />
             break;
 
         case TypeCompte.Investissement:
@@ -50,12 +50,12 @@
             }
             else
             {
-                <CompteInvestissement />
+                <CompteInvestissement IdCompte="SVM.SourceSelectionne.Id" />
             }
             break;
 
         default:
-            <CompteCourant IdCompte="SVM.SourceSelectionne.Id"/>
+            <CompteCourant IdCompte="SVM.SourceSelectionne.Id" />
             break;
     }
 </div>
@@ -100,6 +100,8 @@
     private async Task SynchroniserSource()
     {
         await SVM.InitialiserUrlConnexionPowens();
+        if (SVM.HasErreur) TS.ShowError(SVM.MessageErreur);
+
         Nav.NavigateTo(SVM.UrlConnexionPowens, forceLoad: true);
     }
 

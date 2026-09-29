@@ -14,6 +14,21 @@ namespace Investissement_WebClient.Application.Services
         public IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
         public IActifService _actifService = actifService;
 
+        public async Task<IEnumerable<PositionInvestissementDto>> GetPositionsByCompte(int compteId)
+        {
+            var positions = await _positionInvestissementRepository.GetByCompteBanqueId(compteId);
+            return positions.Select(p =>
+                new PositionInvestissementDto
+                {
+                    Actif = p.Actif!,
+                    Quantite = p.Quantite,
+                    PrixAchat = p.PrixAchat,
+                    PrixCourant = p.PrixCourant,
+                    DateCours = p.DateCours,
+                    DerniereMaj = p.DerniereMaj,
+                    CompteBanque = p.CompteBanque!
+                }).ToList();
+        }
 
         public async Task MapperInvestissements(List<PositionInvestissementImportDto>? positions, int compteBanqueId)
         {

@@ -1,5 +1,18 @@
-﻿<h3>CompteInvestissement</h3>
+﻿@attribute [Authorize]
+@inject CompteInvestissementViewModel CVM
+
+<div class="compte-invest">
+    <div class="content">
+       @CVM.ValeureTotale.ToString("C2")
+    </div>
+</div>
 
 @code {
+    [Parameter] public required int IdCompte { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        CVM.OnChange += StateHasChanged;
+        await CVM.StartLoadData(IdCompte);
+    }
 }
