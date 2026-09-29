@@ -15,5 +15,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
         Task Add(Banque acces);
 
         Task Update(Banque acces);
+
+        Task SaveChanges();
     }
 }

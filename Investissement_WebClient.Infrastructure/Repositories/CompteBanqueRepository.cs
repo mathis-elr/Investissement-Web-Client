@@ -1,5 +1,6 @@
 ﻿using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investissement_WebClient.Infrastructure.Repositories
@@ -8,10 +9,11 @@ namespace Investissement_WebClient.Infrastructure.Repositories
     {
         private readonly IDbContextFactory<InvestissementDbContext> _dbFactory = dbContext;
 
-        public async Task<IEnumerable<CompteBanque>> GetAll()
+        public async Task<IEnumerable<CompteBanque>> GetAllNonInvestissement()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.CompteBanque
+                .Where(c => c.TypeCompte != TypeCompte.Investissement)
                 .Include(c => c.Banque)
                     .ThenInclude(b => b.UtilisateurPowens)
                 .ToListAsync();

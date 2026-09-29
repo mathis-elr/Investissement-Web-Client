@@ -1,12 +1,13 @@
-using Investissement_WebClient.Infrastructure.APIs.Powens.Responses;
+using Investissement_WebClient.Application.DTO;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
+using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
-using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Services.Encrypt;
-using Investissement_WebClient.Application.Interfaces.APIs;
+using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Domain.Extensions;
-using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Infrastructure.APIs.Powens.Responses;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -139,24 +140,34 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var tokenClair = _encryptService.Decrypt(utilisateurPowens!.AccessTokenCrypte, _optionsEncryption.MasterKey);
 
             var banquesEnregistrees = await _banqueAccesRepository.GetAllByUserId(userId);
-            var idConnector = await GetIdConnector(tokenClair, connectionBanqueId);
+            var connection = await GetConnection(tokenClair, connectionBanqueId);
 
             var idBanque = 0;
-            var banqueExiste = banquesEnregistrees?.FirstOrDefault(b => b.IdConnectorPowens == idConnector);
+            var banqueExiste = banquesEnregistrees?.FirstOrDefault(b => b.IdConnectorPowens == connection.IdConnector);
             if (banqueExiste == null)
             {
                 var newBanque = new Banque
                 {
                     IdConnectionPowens = connectionBanqueId,
-                    IdConnectorPowens = idConnector,
-                    Nom = await GetNomBanque(tokenClair, idConnector),
+                    IdConnectorPowens = connection.IdConnector,
+                    Nom = await GetNomBanque(tokenClair, connection.IdConnector),
+                    StatutConnexion = StatutConnexionExtension.ToStatutConnexion(connection.PowensState),
+                    DerniereSynchro = connection.LastUpdate,
                     UtilisateurPowensId = utilisateurPowens.Id,
                 };
                 await _banqueAccesRepository.Add(newBanque);
                 idBanque = newBanque.Id;
             }
             else
+            {
                 idBanque = banqueExiste.Id;
+
+                banqueExiste.IdConnectionPowens = connectionBanqueId;
+                banqueExiste.StatutConnexion = StatutConnexionExtension.ToStatutConnexion(connection.PowensState);
+                banqueExiste.DerniereSynchro = connection.LastUpdate;
+
+                await _banqueAccesRepository.SaveChanges();
+            }
 
             await SaveComptes(tokenClair, idBanque, connectionBanqueId);
         }
@@ -167,7 +178,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
             var finMoisPrecedent = new DateTime(currentDate.Year, currentDate.Month, 1).AddDays(-1);
 
-            var comptes = await _compteBanqueRepository.GetAll();
+            var comptes = await _compteBanqueRepository.GetAllNonInvestissement();
 
             if (!comptes.Any())
                 return;
@@ -289,13 +300,13 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             return comptes.NomBanque;
         }
 
-        private async Task<int> GetIdConnector(string token, int connectionBanqueId)
+        private async Task<PowensConnectionApiResponse> GetConnection(string token, int connectionBanqueId)
         {
             var reponse = await RequeteGetAvecToken(token, string.Format(_options.ConnectionsEndPoint, connectionBanqueId));
             var reponseString = await reponse.Content.ReadAsStringAsync();
-            var compte = JsonSerializer.Deserialize<PowensConnectionApiResponse>(reponseString);
+            var connection = JsonSerializer.Deserialize<PowensConnectionApiResponse>(reponseString);
 
-            return compte == null ? throw new Exception("L'API n'a renvoyé aucune connection pour cet utilisateur.") : compte.IdConnector;
+            return connection == null ? throw new Exception("L'API n'a renvoyé aucune connection pour cet utilisateur.") : connection;
         }
 
         private async Task<IEnumerable<PowensTypeCompteApiResponse>> GetComptes(string token, int connectionBanqueId)
