@@ -1,14 +1,15 @@
-﻿using System.Text.Json.Serialization;
+﻿using Investissement_WebClient.Infrastructure.APIs.Powens.Converters;
+using System.Text.Json.Serialization;
 
 namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
 {
     public class PowensPositionInvestApiResponse
     {
         [JsonPropertyName("code_type")]
-        public string CodeType { get; set; } = string.Empty;
+        public string? CodeType { get; set; } 
 
         [JsonPropertyName("code")]
-        public string Code { get; set; } = string.Empty;
+        public string? Code { get; set; }
 
         [JsonPropertyName("label")]
         public string Label { get; set; } = string.Empty;
@@ -23,9 +24,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
         public decimal PrixCourant { get; set; }
 
         [JsonPropertyName("vdate")]
-        public DateTime DatePrixCourant { get; set; }
+        [JsonConverter(typeof(PowensDateTimeConverter))]
+        public DateTime? DatePrixCourant { get; set; }
 
         [JsonPropertyName("last_update")]
-        public DateTime DateDerniereMAJ { get; set; }
+        [JsonConverter(typeof(PowensDateTimeConverter))]
+        public DateTime? DateDerniereMAJ { get; set; }
     }
 }

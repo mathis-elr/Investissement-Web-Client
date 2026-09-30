@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Investissement_WebClient.Infrastructure.APIs.Powens.Converters;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
@@ -12,14 +13,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens.Responses
         public string? PowensState { get; set; }
 
         [JsonPropertyName("last_update")]
-        public string? RawLastUpdate { get; set; }
-
-        [JsonIgnore]
-        public DateTime? LastUpdate => DateTime.TryParseExact(
-            RawLastUpdate,
-            "yyyy-MM-dd HH:mm:ss",
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.None,
-            out var dt) ? dt : null;
+        [JsonConverter(typeof(PowensDateTimeConverter))]
+        public DateTime? LastUpdate { get; set; }
     }
 }
