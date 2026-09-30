@@ -9,7 +9,7 @@
         @switch (CVM.StatutMoisActif?.Statut)
         {
             case null:
-                <_CompteCourantRecap @key="CVM.CompteCourantId" Model="@CVM" />
+                <_CompteCourantRecap @key="CVM.CompteCourant.Id" Model="@CVM" />
                 break;
             case Statut.a_completer or Statut.edition:
                 <_CompteCourantEditionFluxMensuel Model="@CVM" />
@@ -26,11 +26,11 @@
 </div>
 
 @code {
-    [Parameter] public required int IdCompte { get; set; }
+    [Parameter] public required SourceDto SourceSelectionnee { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         CVM.OnChange += StateHasChanged;
-        await CVM.StartLoadData(IdCompte);
+        await CVM.StartLoadData(SourceSelectionnee);
     }
 }

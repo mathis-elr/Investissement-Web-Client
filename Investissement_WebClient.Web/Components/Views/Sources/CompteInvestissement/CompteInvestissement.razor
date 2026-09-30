@@ -3,16 +3,31 @@
 
 <div class="compte-invest">
     <div class="content">
-       @CVM.ValeureTotale.ToString("C2")
+        <div class="header">
+            <label>@CVM.CompteInvestissementCourant.NomCompte</label>
+            @if (CVM.CompteInvestissementCourant.StatutConnexion != StatutConnexion.Valide)
+            {
+                <span>⚠️</span>
+            }
+            else
+            {
+                <span>✅</span>
+            }
+
+            <span>Dernière synchro : @CVM.CompteInvestissementCourant.DerniereSychro?.ToString("dd MMMM yyyy")</span>
+        </div>
+
+
+        @CVM.ValeureTotale.ToString("C2")
     </div>
 </div>
 
 @code {
-    [Parameter] public required int IdCompte { get; set; }
+    [Parameter] public required SourceDto SourceSelectionne { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         CVM.OnChange += StateHasChanged;
-        await CVM.StartLoadData(IdCompte);
+        await CVM.StartLoadData(SourceSelectionne);
     }
 }

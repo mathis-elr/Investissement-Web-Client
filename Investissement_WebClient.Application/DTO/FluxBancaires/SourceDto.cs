@@ -13,5 +13,9 @@ namespace Investissement_WebClient.Application.DTO.FluxBancaires
         public TypeCompte TypeCompte { get; set; }
 
         public string LogoUrl { get; set; } = string.Empty;
+
+        public StatutConnexion StatutConnexion { get; set; }
+
+        public DateTime? DerniereSychro { get; set; }
     }
 }

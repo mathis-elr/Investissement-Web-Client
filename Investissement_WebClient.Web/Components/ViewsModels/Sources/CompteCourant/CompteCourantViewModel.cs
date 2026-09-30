@@ -18,7 +18,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
         private readonly PowensApiOptions _powensApiOptions = options.Value;
         private readonly SessionService _sessionService = sessionService;
 
-        public int CompteCourantId { get; set; }
+        public SourceDto CompteCourant { get; set; } = null!;
 
         // USER CONNECTE
         public int IdUser { get; set; }
@@ -31,7 +31,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
         // FLUX BANCAIRES
         public List<FluxBancaireDto> FluxCompte { get; set; } = [];
         public List<FluxBancaireDto> FluxCourant => FluxCompte
-                .Where(f => f.CompteBancaireId == CompteCourantId)
+                .Where(f => f.CompteBancaireId == CompteCourant.Id)
                 .ToList();
 
         // RECAPITULATIF GLOBAL
@@ -107,7 +107,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
             }
         }
 
-        public async Task StartLoadData(int compteCourantId)
+        public async Task StartLoadData(SourceDto sourceSelectionnee)
         {
             ActionEnCours = true;
 
@@ -115,7 +115,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
             {
                 await InitialiserSession();
 
-                CompteCourantId = compteCourantId;
+                CompteCourant = sourceSelectionnee;
 
                 await Task.WhenAll(
                     LoadFluxCompte(),
@@ -218,7 +218,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
 
         private async Task LoadFluxCompte()
         {
-            FluxCompte = await _fluxBancaireService.GetFluxByCompteId(CompteCourantId);
+            FluxCompte = await _fluxBancaireService.GetFluxByCompteId(CompteCourant.Id);
         }
 
         private async Task LoadCategories()
@@ -228,7 +228,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
 
         private async Task LoadBudgetParCategorie()
         {
-            BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(CompteCourantId);
+            BudgetLineCharts = await _fluxBancaireService.CalculerBudgetCategorieParMois(CompteCourant.Id);
         }
 
         //private async Task RafraichirGraphique()

@@ -20,7 +20,9 @@ namespace Investissement_WebClient.Application.Services
                 NomSource = c.Banque.Nom,
                 NomCompte = c.Nom,
                 TypeCompte = c.TypeCompte,
-                LogoUrl = _logoDevApiService.GetUrlLogoByName(c.Banque.Nom)
+                LogoUrl = _logoDevApiService.GetUrlLogoByName(c.Banque.Nom),
+                StatutConnexion = c.Banque.StatutConnexion,
+                DerniereSychro = c.Banque.DerniereSynchro
             }).ToList();
         }
     }
