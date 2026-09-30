@@ -23,7 +23,7 @@ namespace Investissement_WebClient.Infrastructure.Workers
             {
                 try
                 {
-                    bool isJourOk = DateTime.Now.Day >= 5;
+                    bool isJourOk = DateTime.UtcNow.Day >= 5;
                     bool signaled = await _signalSyncImmediate.WaitAsync(TimeSpan.FromDays(1), stoppingToken);
 
                     if (isJourOk || signaled)

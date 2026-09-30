@@ -72,14 +72,14 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
 
 
         // HISTORIQUE MENSUEL
-        public DateTime DateDebut { get; set; } = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-2);
+        public DateTime DateDebut { get; set; } = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(-2);
         public List<StatutParMoisVM> StatutsParMois { get; set; } = [];
         public StatutParMoisVM? StatutMoisActif { get; set; } = null;
         public DateTime? DateActive { get; set; } = null;
         public string? DateActiveString => DateActive?.ToString("MMMM yyyy");
 
         // ENREGISTREMENT MENSUEL
-        public DateTime DateEditMensuel { get; set; } = DateTime.Today;
+        public DateTime DateEditMensuel { get; set; } = DateTime.UtcNow;
         public List<FluxBancaireDto> FluxMensuel { get; set; } = [];
         public List<FluxBancaireDto> CreditsFluxMensuel => FluxMensuel.Where(f => f.Valeur >= 0).ToList();
         public List<FluxBancaireDto> DebitsFluxMensuel => FluxMensuel.Where(f => f.Valeur < 0).ToList();
@@ -265,7 +265,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteCour
         {
             StatutsParMois.Clear();
 
-            var aujourdHui = DateTime.Now;
+            var aujourdHui = DateTime.UtcNow;
             var moisCourant = new DateTime(aujourdHui.Year, aujourdHui.Month, 1);
             var moisPrecedent = moisCourant.AddMonths(-1);
 

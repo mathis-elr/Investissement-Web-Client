@@ -64,7 +64,7 @@ namespace Investissement_WebClient.Application.Services
                         PrixAchat = position.PrixAchat,
                         PrixCourant = position.PrixCourant,
                         DateCours = position.DatePrixCourant,
-                        DerniereMaj = DateTime.Now,
+                        DerniereMaj = DateTime.UtcNow,
                         CompteBanqueId = compteBanqueId,
                     });
                 }

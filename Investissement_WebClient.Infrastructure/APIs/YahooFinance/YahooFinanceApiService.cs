@@ -121,7 +121,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.YahooFinance
                     {
                         if (periode == LapsTemps.Tout) continue;
 
-                        DateTime dateCible = DateTime.Today.AddDays(-(int)periode);
+                        DateTime dateCible = DateTime.UtcNow.AddDays(-(int)periode);
 
                         if (historique.Any())
                         {

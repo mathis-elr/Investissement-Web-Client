@@ -174,7 +174,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         public async Task VerifierEtSynchroniserFluxBancairesAsync()
         {
-            var currentDate = DateTime.Now;
+            var currentDate = DateTime.UtcNow;
 
             var finMoisPrecedent = new DateTime(currentDate.Year, currentDate.Month, 1).AddDays(-1);
 
@@ -236,14 +236,14 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var positions = investissements?.PositionsInvest?
                 .Select(t => new PositionInvestissementImportDto
                 {
-                    ISIN = t.CodeType == "isin" ,
-                    Code = t.Code,
+                    ISIN = t.CodeType == "isin",
+                    Code = t.Code ?? string.Empty,
                     Label = t.Label,
                     Quantite = t.Quantite,
                     PrixAchat = t.PrixAchat,
                     PrixCourant = t.PrixCourant,
-                    DatePrixCourant = t.DatePrixCourant,
-                    DerniereMaj = t.DateDerniereMAJ,
+                    DatePrixCourant = t.DatePrixCourant ?? DateTime.UtcNow,
+                    DerniereMaj = t.DateDerniereMAJ ?? DateTime.UtcNow,
                     CompteBanqueId = compteBanque.Id
                 })
                 .ToList();

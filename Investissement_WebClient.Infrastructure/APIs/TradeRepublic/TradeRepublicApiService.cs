@@ -219,7 +219,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.TradeRepublic
                     NumTelCrypte = _encryptService.Encrypt(accesDto.NumTel, _optionsEncryption.MasterKey),
                     PinCrypte = _encryptService.Encrypt(accesDto.Pin, _optionsEncryption.MasterKey),
                     UtilisateurId = userId,
-                    DerniereSynchronisation = DateTime.Now
+                    DerniereSynchronisation = DateTime.UtcNow
                 };
 
                 await _tradeRepublicAccesRepository.Add(newAcces);

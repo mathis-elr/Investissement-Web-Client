@@ -178,7 +178,7 @@ namespace Investissement_WebClient.Web.Components.ViewsModels
             var datePremierInvest = await _fluxInvestissementService.GetDatePremierFlux(IdUser);
             if (datePremierInvest.HasValue)
             {
-                var nbJours = (DateTime.Today - datePremierInvest.Value.Date).Days;
+                var nbJours = (DateTime.UtcNow - datePremierInvest.Value.Date).Days;
                 NombreAnnes = nbJours / 365;
                 NombreMois = (nbJours % 365) / 30;
             }

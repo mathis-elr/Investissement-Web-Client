@@ -21,7 +21,7 @@ namespace Investissement_WebClient.Application.Services
                 Email = infosInscription.Email,
                 Prenom = char.ToUpper(infosInscription.Prenom[0]) + infosInscription.Prenom.Substring(1).ToLower(),
                 MdpHash = HashPassword(infosInscription.Mdp), 
-                DateCreationCompte = DateTime.Now
+                DateCreationCompte = DateTime.UtcNow
             };
 
             await _utilisateurRepository.Add(newUser);

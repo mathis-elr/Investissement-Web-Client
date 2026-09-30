@@ -38,7 +38,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
 
             if(acces != null)
             {
-                acces.DerniereSynchronisation = DateTime.Now;
+                acces.DerniereSynchronisation = DateTime.UtcNow;
                 await context.SaveChangesAsync();
             }
         }

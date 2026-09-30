@@ -54,7 +54,7 @@ namespace Investissement_WebClient.Application.Services
         {
             var quantiteParActifParUtilisateur = await _valeurPatrimoineRepository.GetPositionsPatrimoineParUtilisateur();
 
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
 
             var nouvellesValeursPatrimoine = quantiteParActifParUtilisateur
                 .GroupBy(q => q.UtilisateurId)
@@ -88,7 +88,7 @@ namespace Investissement_WebClient.Application.Services
             }
             else
             {
-                DateTime dateDebutPeriode = DateTime.Now.AddDays(-periode);
+                DateTime dateDebutPeriode = DateTime.UtcNow.AddDays(-periode);
 
                 var historiquePeriode = historique
                     .Where(h => h.Date >= dateDebutPeriode)
