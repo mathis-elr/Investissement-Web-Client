@@ -38,12 +38,13 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<CompteBanque?> GetByBanqueId(int banqueId)
+        public async Task<CompteBanque?> GetById(int id)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
             return await context.CompteBanque
-                .Include(b => b.Banque)
-                .Where(b => b.Banque.Id == banqueId)
+                .Include(c => c.Banque)
+                    .ThenInclude(b => b.UtilisateurPowens)
+                .Where(c => c.Id == id)
                 .FirstOrDefaultAsync();
         }
 

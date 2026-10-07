@@ -1,4 +1,4 @@
-﻿namespace Investissement_WebClient.Application.DTO.FluxInvestissements
+﻿namespace Investissement_WebClient.Application.DTO.FluxTradeRepublic
 {
     public class FluxTradeRepublicDto
     {

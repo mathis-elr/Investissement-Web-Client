@@ -223,12 +223,13 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _fluxBancaireService.AddFluxBancaire(flux, utilisateurPowens.UtilisateurId, compteBanque.Id);
         }
 
-        public async Task GetPositionInvestissements(CompteBanque compteBanque)
+        public async Task GetPositionInvestissements(int idCompteBanque)
         {
-            var utilisateurPowens = compteBanque.Banque.UtilisateurPowens;
+            var compte = await _compteBanqueRepository.GetById(idCompteBanque) ?? throw new Exception("Aucun compte associe");
+            var utilisateurPowens = compte.Banque.UtilisateurPowens;
             var tokenClair = _encryptService.Decrypt(utilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
 
-            var reponse = await RequeteGetAvecToken(tokenClair, string.Format(_options.InvestEndPoint, compteBanque.IdComptePowens));
+            var reponse = await RequeteGetAvecToken(tokenClair, string.Format(_options.InvestEndPoint, compte.IdComptePowens));
 
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var investissements = JsonSerializer.Deserialize<PowensInvestissementsApiResponse>(reponseString);
@@ -244,11 +245,11 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     PrixCourant = t.PrixCourant,
                     DatePrixCourant = t.DatePrixCourant ?? DateTime.UtcNow,
                     DerniereMaj = t.DateDerniereMAJ ?? DateTime.UtcNow,
-                    CompteBanqueId = compteBanque.Id
+                    CompteBanqueId = compte.Id
                 })
                 .ToList();
 
-            await _positionInvestissementService.MapperInvestissements(positions, compteBanque.Id);
+            await _positionInvestissementService.MapperInvestissements(positions, compte.Id);
         }
 
         public async Task SynchroniserSoldeComptes()

@@ -1,6 +1,6 @@
-﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
-using Investissement_WebClient.Domain.Enums;
+﻿using Investissement_WebClient.Application.DTO.FluxTradeRepublic;
 using Investissement_WebClient.Domain.Modeles;
+using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
@@ -16,7 +16,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<decimal> GetValeurInvestissementTotalByUserId(int userId);
 
-        Task<IEnumerable<PositionInvestissementDto>> GetPositionsInvestiesParActifByUserId(int userId);
+        Task<IEnumerable<PositionTradeRepublicDto>> GetPositionsInvestiesParActifByUserId(int userId);
 
         Task<List<InvestissementParMoisDto>> GetInvestissementParMoisByUserId(PeriodeHistoriqueInvest periode, int userId);
 

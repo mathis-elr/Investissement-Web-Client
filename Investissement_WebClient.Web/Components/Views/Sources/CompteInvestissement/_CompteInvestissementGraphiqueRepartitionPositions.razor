@@ -1,0 +1,29 @@
+﻿@* Pie : proportion investit par actif par rapport au total investit *@
+
+@if (Model.PositionsInvestissement.Any())
+{
+    <ApexChart TItem="PositionInvestissementDto"
+               Options="SourceCompteInvestissementChartsOptions.OptionsPiePositions">
+
+        <ApexPointSeries TItem="PositionInvestissementDto"
+                         Items="Model.PositionsInvestissement"
+                         SeriesType="SeriesType.Donut"
+                         XValue="@(e => e.Actif.Libelle)"
+                         YAggregate="@(e => e.Sum(p => p.ValeurCourante))"
+                         OrderByDescending="e => e.Y"
+                         ShowDataLabels />
+    </ApexChart>
+}
+else if (Model.ActionEnCours)
+{
+    <_ChargementGraphique />
+}
+else
+{
+    <p>Synchroniser vos flux pour visualiser les allocations</p>
+
+}
+
+@code{
+    [Parameter] public CompteInvestissementViewModel Model { get; set; } = null!;
+}

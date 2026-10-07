@@ -1,6 +1,6 @@
-﻿namespace Investissement_WebClient.Application.DTO.FluxInvestissements
+﻿namespace Investissement_WebClient.Application.DTO.FluxTradeRepublic
 {
-    public class PositionInvestissementDto
+    public class PositionTradeRepublicDto
     {
         public string Actif { get; set; } = string.Empty;
 

@@ -1,24 +1,113 @@
 ﻿@attribute [Authorize]
 @inject CompteInvestissementViewModel CVM
+@inject NavigationManager Nav
+@inject IToastService TS
 
 <div class="compte-invest">
-    <div class="content">
-        <div class="header">
-            <label>@CVM.CompteInvestissementCourant.NomCompte</label>
-            @if (CVM.CompteInvestissementCourant.StatutConnexion != StatutConnexion.Valide)
-            {
-                <span>⚠️</span>
-            }
-            else
-            {
-                <span>✅</span>
-            }
+    <div class="header">
 
-            <span>Dernière synchro : @CVM.CompteInvestissementCourant.DerniereSychro?.ToString("dd MMMM yyyy")</span>
+        <div class="compte">
+            <div class="logo">
+                <img class="icon" src="@CVM.CompteInvestissementCourant.LogoUrl" />
+            </div>
+
+            <div class="">
+                <label>@CVM.CompteInvestissementCourant.NomCompte</label>
+
+                <div class="infos-synchro">
+                    <img src="icons/@(CVM.BadgeSynchronisation).svg" />
+                    <span class="gris">@CVM.StatusSynchronisation</span>
+                    @if(CVM.CompteInvestissementCourant.StatutConnexion != StatutConnexion.Valide)
+                    {
+                        <button class="btn-submit" @onclick="() => { Nav.NavigateTo(CVM.UrlReconnectionPowens, forceLoad: true); }"><img src="icons/sync.svg" /></button>
+                    }
+                </div>
+            </div>
         </div>
 
+        <div class="infos-compte">
+            <label class="@CVM.DeterminerClasse(CVM.ValeureTotale)">
+                @CVM.ValeureTotale.ToString("C2")
+            </label>
 
-        @CVM.ValeureTotale.ToString("C2")
+            <div>
+                <span class="@CVM.DeterminerClasse(CVM.VariationPourcentage)">
+                    @(CVM.VariationPourcentage > 0 ? "+" : "")@CVM.ToStringPourcentage(CVM.VariationPourcentage, "P2")
+                </span>
+                <span class="gris">depuis le depart</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="compte-content">
+
+            <div class="positions-section">
+                <div class="section-header">
+                    <h2>Positions (@CVM.PositionsInvestissement.Count())</h2>
+
+                    <button class="btn-submit" @onclick="async () => { await SynchroniserPositions(); }" title="Synchroniser les positions">
+                        @if (CVM.SynchronisationEnCours)
+                        {
+                            <_Chargement Couleur="black" />
+                        }
+                        else
+                        {
+                            <img src="icons/sync.svg" />
+                        }
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="positions-table">
+                        <thead>
+                            <tr>
+                                <th>Actif</th>
+                                <th class="text-right">Quantité</th>
+                                <th class="text-right">Valeur actuelle</th>
+                                <th class="text-right">Évolution (€)</th>
+                                <th class="text-right">Évolution (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (CVM.PositionsInvestissement.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="5" class="empty-state">Aucun actif trouvé sur ce compte.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var position in CVM.PositionsInvestissement)
+                                {
+                                    <tr>
+                                        <td class="actif-cell font-medium">
+                                            <img class="icon" src="@position.UrlLogo" />
+                                            @position.Actif.Libelle
+                                        </td>
+                                        <td class="text-right font-mono">@position.Quantite.ToString("N2")</td>
+                                        <td class="text-right font-bold">@position.ValeurCourante.ToString("C2")</td>
+                                        <td class="text-right font-mono @CVM.DeterminerClasse(position.EvolutionValeur)">
+                                            @(position.EvolutionValeur > 0 ? "+" : "")@position.EvolutionValeur.ToString("C2")
+                                        </td>
+                                        <td class="text-right font-mono @CVM.DeterminerClasse(position.EvolutionPourcentage)">
+                                            <span class="pill-perf @CVM.DeterminerClasse(position.EvolutionPourcentage)">
+                                                @(position.EvolutionPourcentage > 0 ? "+" : "")@position.EvolutionPourcentage.ToString("P2")
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <_CompteInvestissementGraphiqueRepartitionPositions Model="CVM" />
+        </div>
     </div>
 </div>
 
@@ -29,5 +118,16 @@
     {
         CVM.OnChange += StateHasChanged;
         await CVM.StartLoadData(SourceSelectionne);
+    }
+
+    public async Task SynchroniserPositions()
+    {
+        if(CVM.SynchronisationEnCours)
+        {
+            TS.ShowWarning("Une synchronisation des postions est déjà en cours ...");
+        }
+
+        await CVM.SynchroniserPositions();
+        if (CVM.HasError) TS.ShowError(CVM.MessageError);
     }
 }

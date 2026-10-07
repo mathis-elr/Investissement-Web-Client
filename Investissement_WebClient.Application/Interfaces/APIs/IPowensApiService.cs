@@ -20,7 +20,7 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
 
         Task GetTransactions(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque);
 
-        Task GetPositionInvestissements(CompteBanque compteBanque);
+        Task GetPositionInvestissements(int idCompteBanque);
 
         Task SynchroniserSoldeComptes();
     }

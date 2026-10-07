@@ -1,6 +1,6 @@
-﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
-using Investissement_WebClient.Application.Interfaces.Repositories;
+﻿using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Infrastructure.APIs.TradeRepublic;
+using Investissement_WebClient.Application.DTO.FluxTradeRepublic;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -84,7 +84,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .SumAsync(t => t.Type == TypeFlux.Achat ? t.Total : -t.Total);
         }
 
-        public async Task<IEnumerable<PositionInvestissementDto>> GetPositionsInvestiesParActifByUserId(int userId)
+        public async Task<IEnumerable<PositionTradeRepublicDto>> GetPositionsInvestiesParActifByUserId(int userId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
 
@@ -108,7 +108,7 @@ namespace Investissement_WebClient.Infrastructure.Repositories
 
 
             return data
-                .Select(d => new PositionInvestissementDto
+                .Select(d => new PositionTradeRepublicDto
                 {
                     Actif = d.Libelle,
                     Ticker = d.Ticker,

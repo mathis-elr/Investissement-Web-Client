@@ -17,7 +17,11 @@ namespace Investissement_WebClient.Infrastructure.Repositories
         public async Task<IEnumerable<string>> GetAllTickers()
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
-            return await context.Actif.Select(d => d.Ticker).ToListAsync();
+            return await context.FluxTradeRepublic
+                .Where(f => f.Actif.Ticker != null)
+                .Select(f => f.Actif.Ticker!)
+                .Distinct()
+                .ToListAsync();
         }
 
         public async Task<int> Add(Actif actif)

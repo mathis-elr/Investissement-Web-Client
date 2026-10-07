@@ -1,6 +1,6 @@
 ﻿using Investissement_WebClient.Domain.Enums;
 
-namespace Investissement_WebClient.Application.DTO.FluxInvestissements
+namespace Investissement_WebClient.Application.DTO.FluxTradeRepublic
 {
     public class ValeurActifInfosDto
     {

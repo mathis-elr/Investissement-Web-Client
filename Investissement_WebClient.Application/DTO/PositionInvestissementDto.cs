@@ -11,6 +11,12 @@ namespace Investissement_WebClient.Application.DTO
         public decimal PrixCourant { get; set; }
         public DateTime DateCours { get; set; }
 
+        public decimal ValeurCourante => Quantite * PrixCourant;
+        public decimal EvolutionPourcentage => (PrixCourant - PrixAchat) / PrixAchat;
+        public decimal EvolutionValeur => Quantite * PrixCourant - Quantite * PrixAchat;
+
+        public string UrlLogo { get; set; } = string.Empty;
+
         public DateTime DerniereMaj { get; set; }
 
         public CompteBanque CompteBanque { get; set; } = null!;

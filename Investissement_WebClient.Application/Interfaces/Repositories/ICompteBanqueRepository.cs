@@ -10,7 +10,7 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task<List<CompteBanque>> GetAllByUserId(int userId);
 
-        Task<CompteBanque?> GetByBanqueId(int banqueId);
+        Task<CompteBanque?> GetById(int id);
 
         Task Add(CompteBanque compte);
 

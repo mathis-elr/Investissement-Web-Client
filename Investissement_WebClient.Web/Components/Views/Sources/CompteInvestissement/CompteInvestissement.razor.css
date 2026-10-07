@@ -1,15 +1,9 @@
 ﻿.compte-invest {
-    display: block;
-    gap: 10px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 15px;
     height: 100%;
     width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-.content {
-    height: 100%;
-    gap: 30px;
     padding: 7px 13px;
     min-height: 0;
     max-height: 100%;
@@ -18,16 +12,123 @@
     opacity: 0.8;
     overflow: hidden;
     transition: all 0.3s ease-in-out;
-    position: relative;
 }
-
-    .sidebar:hover,
-    .content:hover {
+    .compte-invest:hover {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         opacity: 1;
     }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.compte{
+    display: flex;
+    gap: 10px;
+}
+
+.logo {
+    display: block;
+    align-content: center;
+    justify-self:center;
+}
+
+.infos-synchro{
+    display:flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.infos-compte{
+    display:grid;
+    justify-items: end;
+}
+
 .content {
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.compte-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.positions-section {
+    display: grid;
+    gap: 5px;
+}
+
+.section-header{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-header h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #a1a1aa;
+    margin: 0;
+}
+
+.actif-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.actif-cell .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    background-color: #202024;
+}
+
+.positions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+}
+
+    .positions-table th {
+        background-color: #18181b;
+        color: #a1a1aa;
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #27272a;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .positions-table td {
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid #27272a;
+        color: #e4e4e7;
+    }
+
+    .positions-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .positions-table tr:hover {
+        background-color: #27272a;
+    }
+
+.empty-state {
+    text-align: center;
+    color: #71717a;
+    padding: 2rem !important;
 }

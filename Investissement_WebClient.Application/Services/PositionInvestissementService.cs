@@ -8,10 +8,12 @@ namespace Investissement_WebClient.Application.Services
 {
     public class PositionInvestissementService(IPositionInvestissementRepository positionInvestissementRepository,
                                                IYahooFinanceApiService yahooFinanceApiService,
+                                               ILogoDevApiService logoDevApiService,
                                                IActifService actifService) : IPositionInvestissementService
     {
         public IPositionInvestissementRepository _positionInvestissementRepository = positionInvestissementRepository;
         public IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
+        private readonly ILogoDevApiService _logoDevApiService = logoDevApiService;
         public IActifService _actifService = actifService;
 
         public async Task<IEnumerable<PositionInvestissementDto>> GetPositionsByCompte(int compteId)
@@ -26,6 +28,7 @@ namespace Investissement_WebClient.Application.Services
                     PrixCourant = p.PrixCourant,
                     DateCours = p.DateCours,
                     DerniereMaj = p.DerniereMaj,
+                    UrlLogo = _logoDevApiService.GetUrlLogoByName(p.Actif!.Libelle),
                     CompteBanque = p.CompteBanque!
                 }).ToList();
         }

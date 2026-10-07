@@ -1,4 +1,4 @@
-﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
+﻿using Investissement_WebClient.Application.DTO.FluxTradeRepublic;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Interfaces.APIs;

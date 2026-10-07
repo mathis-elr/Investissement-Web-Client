@@ -1,10 +1,11 @@
-﻿using Investissement_WebClient.Application.DTO.FluxInvestissements;
+﻿using Investissement_WebClient.Application.DTO.FluxTradeRepublic;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Application.DTO.Auth;
 using Investissement_WebClient.Web.GestionSession;
 using Investissement_WebClient.Domain.Enums;
 using System.Globalization;
+using Investissement_WebClient.Application.DTO.FluxTradeRepublic;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteTradeRepublic
 {
