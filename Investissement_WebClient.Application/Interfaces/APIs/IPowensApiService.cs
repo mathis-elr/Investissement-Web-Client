@@ -22,7 +22,7 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
 
         Task GetTransactions(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque);
 
-        Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(int idCompteBanque);
+        Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(CompteBanque compteBanque);
 
         Task SynchroniserSoldeComptes();
     }

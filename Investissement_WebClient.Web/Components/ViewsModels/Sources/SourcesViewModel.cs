@@ -2,7 +2,6 @@
 using Investissement_WebClient.Application.DTO.FluxBancaires;
 using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Web.GestionSession;
-using Investissement_WebClient.Domain.Enums;
 
 namespace Investissement_WebClient.Web.Components.ViewsModels.Sources
 {

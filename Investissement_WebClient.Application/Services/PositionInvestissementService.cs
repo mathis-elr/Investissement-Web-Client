@@ -43,7 +43,7 @@ namespace Investissement_WebClient.Application.Services
 
             foreach (var compte in comptesInvestissement)
             {
-                var positions = await _powensApiService.GetPositionInvestissements(compte.Id);
+                var positions = await _powensApiService.GetPositionInvestissements(compte);
                 await MapperPositionsInvestissements(positions, compte.Id);
             }
         }

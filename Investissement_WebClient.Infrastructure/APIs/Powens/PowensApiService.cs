@@ -4,12 +4,10 @@ using Investissement_WebClient.Application.Interfaces.APIs;
 using Investissement_WebClient.Application.Interfaces.Repositories;
 using Investissement_WebClient.Application.Interfaces.Services;
 using Investissement_WebClient.Application.Services.Encrypt;
-using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Domain.Extensions;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure.APIs.Powens.Responses;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -125,7 +123,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var utilisateurPowens = await _utilisateurPowensRepository.GetByUserId(userId) ?? throw new Exception("Aucun utilisateur powens est associé à ce compte.");
             var tokenClair = _encryptService.Decrypt(utilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
 
-            var reponse = await RequeteGetAvecToken(tokenClair, _options.CodeByTokenEndPoint);
+            var reponse = await RequeteAvecToken(HttpMethod.Get, tokenClair, _options.CodeByTokenEndPoint);
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var codeTemporaire = JsonSerializer.Deserialize<PowensCodeTemporaireApiResponse>(reponseString);
 
@@ -199,11 +197,14 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var utilisateurPowens = compteBanque.Banque.UtilisateurPowens;
             var tokenClair = _encryptService.Decrypt(utilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
 
+            await RafraichissementCompteBancaire(tokenClair, compteBanque.Banque.IdConnectionPowens);
+            await Task.Delay(5000);
+
             var dateDebutString = dateDebut.ToString("yyyy-MM-dd");
             var dateFinString = dateFin.ToString("yyyy-MM-dd");
             var requete = $"{_options.AccountsEndPoint}/{compteBanque.IdComptePowens}/transactions?min_date={dateDebutString}&max_date={dateFinString}&limit=500";
 
-            var reponse = await RequeteGetAvecToken(tokenClair, requete);
+            var reponse = await RequeteAvecToken(HttpMethod.Get, tokenClair, requete);
 
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var transactions = JsonSerializer.Deserialize<PowensTransactionsApiResponse>(reponseString);
@@ -221,13 +222,16 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _fluxBancaireService.AddFluxBancaire(flux, utilisateurPowens.UtilisateurId, compteBanque.Id);
         }
 
-        public async Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(int idCompteBanque)
+        public async Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(CompteBanque compteBanque)
         {
-            var compte = await _compteBanqueRepository.GetById(idCompteBanque) ?? throw new Exception("Aucun compte associe");
+            var compte = await _compteBanqueRepository.GetById(compteBanque.Id) ?? throw new Exception("Aucun compte bancaire associe");
             var utilisateurPowens = compte.Banque.UtilisateurPowens;
             var tokenClair = _encryptService.Decrypt(utilisateurPowens.AccessTokenCrypte, _optionsEncryption.MasterKey);
 
-            var reponse = await RequeteGetAvecToken(tokenClair, string.Format(_options.InvestEndPoint, compte.IdComptePowens));
+            await RafraichissementCompteBancaire(tokenClair, compteBanque.Banque.IdConnectionPowens);
+            await Task.Delay(5000);
+
+            var reponse = await RequeteAvecToken(HttpMethod.Get, tokenClair, string.Format(_options.InvestEndPoint, compte.IdComptePowens));
 
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var investissements = JsonSerializer.Deserialize<PowensInvestissementsApiResponse>(reponseString);
@@ -273,9 +277,9 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _compteBanqueRepository.SaveChanges();
         }
 
-        private async Task<HttpResponseMessage> RequeteGetAvecToken(string token, string requete)
+        private async Task<HttpResponseMessage> RequeteAvecToken(HttpMethod type, string token, string requete)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, requete);
+            using var request = new HttpRequestMessage(type, requete);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var reponse = await _httpClient.SendAsync(request);
@@ -285,9 +289,15 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             return reponse;
         }
 
+        private async Task RafraichissementCompteBancaire(string token, int connectionBanqueId)
+        {
+            var uri = string.Format(_options.ConnectionsEndPoint, connectionBanqueId) + _options.RafraichissementBanqueEndPoint;
+            await RequeteAvecToken(HttpMethod.Post, token, uri);
+        }
+
         private async Task<string> GetNomBanque(string token, int idConnector)
         {
-            var reponse = await RequeteGetAvecToken(token, string.Format(_options.ConnectorEndPoint, idConnector));
+            var reponse = await RequeteAvecToken(HttpMethod.Get, token, string.Format(_options.ConnectorEndPoint, idConnector));
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var comptes = JsonSerializer.Deserialize<PowensConnectorApiResponse>(reponseString);
 
@@ -299,7 +309,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 
         private async Task<PowensConnectionApiResponse> GetConnection(string token, int connectionBanqueId)
         {
-            var reponse = await RequeteGetAvecToken(token, string.Format(_options.ConnectionsEndPoint, connectionBanqueId));
+            var reponse = await RequeteAvecToken(HttpMethod.Get, token, string.Format(_options.ConnectionsEndPoint, connectionBanqueId));
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var connection = JsonSerializer.Deserialize<PowensConnectionApiResponse>(reponseString);
 
@@ -310,7 +320,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
         {
             var url = string.Format(_options.AccountsConnectionEndPoint, connectionBanqueId);
 
-            var reponse = await RequeteGetAvecToken(token, url);
+            var reponse = await RequeteAvecToken(HttpMethod.Get, token, url);
             var reponseString = await reponse.Content.ReadAsStringAsync();
 
             var comptes = JsonSerializer.Deserialize<PowensComptesApiResponse>(reponseString);
