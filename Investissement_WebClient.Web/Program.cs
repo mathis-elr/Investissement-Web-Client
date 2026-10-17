@@ -97,6 +97,7 @@ builder.Services.AddScoped<IActifRepository, ActifRepository>();
 
 
 // workers
+builder.Services.AddHostedService<SynchronisationPositionsInvestissementWorker>();
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 builder.Services.AddHostedService<RecuperationSoldeComptesWorker>();
 builder.Services.AddSingleton<RecuperationFluxBancairesWorker>();

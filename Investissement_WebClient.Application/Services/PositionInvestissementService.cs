@@ -8,13 +8,17 @@ namespace Investissement_WebClient.Application.Services
 {
     public class PositionInvestissementService(IPositionInvestissementRepository positionInvestissementRepository,
                                                IYahooFinanceApiService yahooFinanceApiService,
+                                               ICompteBanqueRepository compteBanqueRepository,
                                                ILogoDevApiService logoDevApiService,
+                                               IPowensApiService powensApiService,
                                                IActifService actifService) : IPositionInvestissementService
     {
-        public IPositionInvestissementRepository _positionInvestissementRepository = positionInvestissementRepository;
-        public IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
+        private readonly IPositionInvestissementRepository _positionInvestissementRepository = positionInvestissementRepository;
+        private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
+        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
         private readonly ILogoDevApiService _logoDevApiService = logoDevApiService;
-        public IActifService _actifService = actifService;
+        private readonly IPowensApiService _powensApiService = powensApiService;
+        private readonly IActifService _actifService = actifService;
 
         public async Task<IEnumerable<PositionInvestissementDto>> GetPositionsByCompte(int compteId)
         {
@@ -33,7 +37,18 @@ namespace Investissement_WebClient.Application.Services
                 }).ToList();
         }
 
-        public async Task MapperInvestissements(List<PositionInvestissementImportDto>? positions, int compteBanqueId)
+        public async Task SynchroniserPositions()
+        {
+            var comptesInvestissement = await _compteBanqueRepository.GetAllInvestissement();
+
+            foreach (var compte in comptesInvestissement)
+            {
+                var positions = await _powensApiService.GetPositionInvestissements(compte.Id);
+                await MapperPositionsInvestissements(positions, compte.Id);
+            }
+        }
+
+        private async Task MapperPositionsInvestissements(List<PositionInvestissementImportDto>? positions, int compteBanqueId)
         {
             if (positions == null || positions.Count == 0)
                 return;

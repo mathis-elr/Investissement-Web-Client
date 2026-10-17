@@ -1,3 +1,4 @@
+using Investissement_WebClient.Application.DTO;
 using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Domain.Modeles;
 
@@ -21,7 +22,7 @@ namespace Investissement_WebClient.Application.Interfaces.APIs
 
         Task GetTransactions(DateTime dateDebut, DateTime dateFin, CompteBanque compteBanque);
 
-        Task GetPositionInvestissements(int idCompteBanque);
+        Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(int idCompteBanque);
 
         Task SynchroniserSoldeComptes();
     }

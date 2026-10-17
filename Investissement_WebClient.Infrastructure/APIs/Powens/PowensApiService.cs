@@ -17,7 +17,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
 {
     public class PowensApiService : IPowensApiService
     {
-        private readonly IPositionInvestissementService _positionInvestissementService;
         private readonly IUtilisateurPowensRepository _utilisateurPowensRepository;
         private readonly ICompteBanqueRepository _compteBanqueRepository;
         private readonly IFluxBancaireService _fluxBancaireService;
@@ -27,8 +26,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
         private readonly PowensApiOptions _options;
         private readonly HttpClient _httpClient;
 
-        public PowensApiService(IPositionInvestissementService positionInvestissementService,
-                                IUtilisateurPowensRepository utilisateurPowensRepository,
+        public PowensApiService(IUtilisateurPowensRepository utilisateurPowensRepository,
                                 ICompteBanqueRepository compteBanqueRepository,
                                 IFluxBancaireService fluxBancaireService,      
                                 IOptions<CryptOptions> optionsEncryption,
@@ -37,7 +35,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                                 ICryptService encryptService,
                                 HttpClient httpClient)
         {
-            _positionInvestissementService = positionInvestissementService;
             _utilisateurPowensRepository = utilisateurPowensRepository;
             _compteBanqueRepository = compteBanqueRepository;
             _banqueAccesRepository = banqueAccesRepository;
@@ -224,7 +221,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _fluxBancaireService.AddFluxBancaire(flux, utilisateurPowens.UtilisateurId, compteBanque.Id);
         }
 
-        public async Task GetPositionInvestissements(int idCompteBanque)
+        public async Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(int idCompteBanque)
         {
             var compte = await _compteBanqueRepository.GetById(idCompteBanque) ?? throw new Exception("Aucun compte associe");
             var utilisateurPowens = compte.Banque.UtilisateurPowens;
@@ -235,7 +232,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var investissements = JsonSerializer.Deserialize<PowensInvestissementsApiResponse>(reponseString);
 
-            var positions = investissements?.PositionsInvest?
+            return investissements?.PositionsInvest?
                 .Select(t => new PositionInvestissementImportDto
                 {
                     ISIN = t.CodeType == "isin",
@@ -249,8 +246,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     CompteBanqueId = compte.Id
                 })
                 .ToList();
-
-            await _positionInvestissementService.MapperInvestissements(positions, compte.Id);
         }
 
         public async Task SynchroniserSoldeComptes()

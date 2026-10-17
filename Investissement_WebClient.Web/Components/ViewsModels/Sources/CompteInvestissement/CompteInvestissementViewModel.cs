@@ -88,27 +88,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteInve
             StatusSynchronisation = $"Synchronisé {local.ToString(format)}";
         }
 
-        public async Task SynchroniserPositions()
-        {
-            SynchronisationEnCours = true;
-
-            try
-            {
-                await _powensApiService.GetPositionInvestissements(CompteInvestissementCourant.Id);
-                await LoadPositions();
-                NotifyStateChanged();
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                MessageError = ex.Message;
-            }
-            finally 
-            { 
-                SynchronisationEnCours = false;
-            }
-        }
-
         public string DeterminerClasse(decimal variationPrix)
         {
             return variationPrix switch
