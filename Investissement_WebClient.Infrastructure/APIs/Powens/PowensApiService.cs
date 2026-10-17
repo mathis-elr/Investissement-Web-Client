@@ -224,7 +224,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             await _fluxBancaireService.AddFluxBancaire(flux, utilisateurPowens.UtilisateurId, compteBanque.Id);
         }
 
-        public async Task GetPositionInvestissements(int idCompteBanque)
+        public async Task<List<PositionInvestissementImportDto>?> GetPositionInvestissements(int idCompteBanque)
         {
             var compte = await _compteBanqueRepository.GetById(idCompteBanque) ?? throw new Exception("Aucun compte associe");
             var utilisateurPowens = compte.Banque.UtilisateurPowens;
@@ -235,7 +235,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
             var reponseString = await reponse.Content.ReadAsStringAsync();
             var investissements = JsonSerializer.Deserialize<PowensInvestissementsApiResponse>(reponseString);
 
-            var positions = investissements?.PositionsInvest?
+            return investissements?.PositionsInvest?
                 .Select(t => new PositionInvestissementImportDto
                 {
                     ISIN = t.CodeType == "isin",
@@ -249,8 +249,6 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     CompteBanqueId = compte.Id
                 })
                 .ToList();
-
-            await _positionInvestissementService.MapperInvestissements(positions, compte.Id);
         }
 
         public async Task SynchroniserSoldeComptes()

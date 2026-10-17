@@ -19,6 +19,16 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<CompteBanque>> GetAllInvestissement()
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+            return await context.CompteBanque
+                .Where(c => c.TypeCompte == TypeCompte.Investissement)
+                .Include(c => c.Banque)
+                    .ThenInclude(b => b.UtilisateurPowens)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<CompteBanque>> GetAllByBanqueId(int banqueId)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
