@@ -25,9 +25,10 @@ namespace Investissement_WebClient.Infrastructure.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task SaveChanges()
+        public async Task UpdateRange(List<PositionInvestissement> positions)
         {
             await using var context = await _dbFactory.CreateDbContextAsync();
+            context.UpdateRange(positions);
             await context.SaveChangesAsync();
         }
     }

@@ -8,6 +8,6 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
 
         Task AddRange(List<PositionInvestissement> positions);
 
-        Task SaveChanges();
+        Task UpdateRange(List<PositionInvestissement> positions);
     }
 }

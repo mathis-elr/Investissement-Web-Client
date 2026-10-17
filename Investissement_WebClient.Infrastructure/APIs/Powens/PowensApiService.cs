@@ -9,6 +9,7 @@ using Investissement_WebClient.Domain.Extensions;
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Infrastructure.APIs.Powens.Responses;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Text.Json;
 

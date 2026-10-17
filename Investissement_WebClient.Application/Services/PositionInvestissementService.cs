@@ -42,6 +42,7 @@ namespace Investissement_WebClient.Application.Services
             var actifsLocaux = await _actifService.GetAll();
 
             var positionsAInserer = new List<PositionInvestissement>();
+            var positionsAMettreAJour = new List<PositionInvestissement>();
 
             foreach (var position in positions)
             {
@@ -78,12 +79,12 @@ namespace Investissement_WebClient.Application.Services
                     positionExistante.PrixCourant = position.PrixCourant;
                     positionExistante.DateCours = position.DatePrixCourant;
                     positionExistante.DerniereMaj = DateTime.UtcNow;
+                    positionsAMettreAJour.Add(positionExistante);
                 }
             }
 
-            if(positionsAInserer.Count > 0) await _positionInvestissementRepository.AddRange(positionsAInserer);
-
-            await _positionInvestissementRepository.SaveChanges();
+            if (positionsAInserer.Count > 0) await _positionInvestissementRepository.AddRange(positionsAInserer);
+            if (positionsAMettreAJour.Count > 0) await _positionInvestissementRepository.UpdateRange(positionsAMettreAJour);
         }
 
         private async Task<Actif> NouvelActif(PositionInvestissementImportDto position)

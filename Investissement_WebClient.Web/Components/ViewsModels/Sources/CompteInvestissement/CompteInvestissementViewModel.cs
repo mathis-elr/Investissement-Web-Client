@@ -95,6 +95,8 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteInve
             try
             {
                 await _powensApiService.GetPositionInvestissements(CompteInvestissementCourant.Id);
+                await LoadPositions();
+                NotifyStateChanged();
             }
             catch (Exception ex)
             {

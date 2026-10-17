@@ -129,5 +129,7 @@
 
         await CVM.SynchroniserPositions();
         if (CVM.HasError) TS.ShowError(CVM.MessageError);
+
+        TS.ShowSuccess("Positions synchornisées avec succès !");
     }
 }

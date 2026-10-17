@@ -1,3 +1,4 @@
+using Investissement_WebClient.Domain.Enums;
 using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Interfaces.APIs
