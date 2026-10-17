@@ -97,7 +97,6 @@ builder.Services.AddScoped<IActifRepository, ActifRepository>();
 
 
 // workers
-builder.Services.AddHostedService<SynchronisationPositionsInvestissementWorker>();
 builder.Services.AddHostedService<EnregistrementValeurPatrimoineWorker>();
 builder.Services.AddHostedService<RecuperationSoldeComptesWorker>();
 builder.Services.AddSingleton<RecuperationFluxBancairesWorker>();
@@ -116,6 +115,7 @@ builder.Services.AddAuthentication("Manual")
 
 builder.Services.AddAuthorizationCore();
 
+// 2. On garde ton Provider et ton LocalStorage
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddCascadingAuthenticationState();

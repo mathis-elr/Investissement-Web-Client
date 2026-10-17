@@ -6,8 +6,6 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
     {
         Task<IEnumerable<CompteBanque>> GetAllNonInvestissement();
 
-        Task<IEnumerable<CompteBanque>> GetAllInvestissement();
-
         Task<IEnumerable<CompteBanque>> GetAllByBanqueId(int banqueId);
 
         Task<List<CompteBanque>> GetAllByUserId(int userId);

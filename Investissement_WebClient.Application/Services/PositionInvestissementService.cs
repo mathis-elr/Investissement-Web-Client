@@ -7,18 +7,14 @@ using Investissement_WebClient.Domain.Modeles;
 namespace Investissement_WebClient.Application.Services
 {
     public class PositionInvestissementService(IPositionInvestissementRepository positionInvestissementRepository,
-                                               ICompteBanqueRepository compteBanqueRepository,
                                                IYahooFinanceApiService yahooFinanceApiService,
                                                ILogoDevApiService logoDevApiService,
-                                               IPowensApiService powensApiService,
                                                IActifService actifService) : IPositionInvestissementService
     {
-        private readonly IPositionInvestissementRepository _positionInvestissementRepository = positionInvestissementRepository;
-        private readonly ICompteBanqueRepository _compteBanqueRepository = compteBanqueRepository;
-        private readonly IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
+        public IPositionInvestissementRepository _positionInvestissementRepository = positionInvestissementRepository;
+        public IYahooFinanceApiService _yahooFinanceApiService = yahooFinanceApiService;
         private readonly ILogoDevApiService _logoDevApiService = logoDevApiService;
-        private readonly IPowensApiService _powersApiService = powensApiService;
-        private readonly IActifService _actifService = actifService;
+        public IActifService _actifService = actifService;
 
         public async Task<IEnumerable<PositionInvestissementDto>> GetPositionsByCompte(int compteId)
         {
@@ -37,18 +33,7 @@ namespace Investissement_WebClient.Application.Services
                 }).ToList();
         }
 
-        public async Task SynchroniserPositions()
-        {
-            var comptesInvestissement = await _compteBanqueRepository.GetAllInvestissement();
-
-            foreach(var compte in comptesInvestissement)
-            {
-                var positions = await _powersApiService.GetPositionInvestissements(compte.Id);
-                await MapperPositionsInvestissements(positions, compte.Id);
-            }
-        }
-
-        private async Task MapperPositionsInvestissements(List<PositionInvestissementImportDto>? positions, int compteBanqueId)
+        public async Task MapperInvestissements(List<PositionInvestissementImportDto>? positions, int compteBanqueId)
         {
             if (positions == null || positions.Count == 0)
                 return;
