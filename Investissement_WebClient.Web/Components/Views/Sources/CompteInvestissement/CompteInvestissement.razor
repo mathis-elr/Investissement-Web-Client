@@ -46,6 +46,17 @@
             <div class="positions-section">
                 <div class="section-header">
                     <h2>Positions (@CVM.PositionsInvestissement.Count())</h2>
+
+                    <button class="btn-submit" @onclick="async () => { await SynchroniserPositions(); }" title="Synchroniser les positions">
+                        @if (CVM.SynchronisationEnCours)
+                        {
+                            <_Chargement Couleur="black" />
+                        }
+                        else
+                        {
+                            <img src="icons/sync.svg" />
+                        }
+                    </button>
                 </div>
 
                 <div class="table-container">
@@ -107,5 +118,18 @@
     {
         CVM.OnChange += StateHasChanged;
         await CVM.StartLoadData(SourceSelectionne);
+    }
+
+    public async Task SynchroniserPositions()
+    {
+        if(CVM.SynchronisationEnCours)
+        {
+            TS.ShowWarning("Une synchronisation des postions est déjà en cours ...");
+        }
+
+        await CVM.SynchroniserPositions();
+        if (CVM.HasError) TS.ShowError(CVM.MessageError);
+
+        TS.ShowSuccess("Positions synchornisées avec succès !");
     }
 }
