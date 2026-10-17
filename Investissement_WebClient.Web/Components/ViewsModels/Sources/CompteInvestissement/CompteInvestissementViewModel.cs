@@ -27,7 +27,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteInve
         public void NotifyStateChanged() => OnChange?.Invoke();
 
         public bool ActionEnCours { get; set; } = false;
-        public bool SynchronisationEnCours { get; set; } = false;
 
         public string UrlReconnectionPowens { get; set; } = string.Empty;
 
@@ -86,27 +85,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteInve
             var format = local.Date == DateTime.Today ? "aujourd'hui à HH:mm" : "le dd MMM à HH:mm";
 
             StatusSynchronisation = $"Synchronisé {local.ToString(format)}";
-        }
-
-        public async Task SynchroniserPositions()
-        {
-            SynchronisationEnCours = true;
-
-            try
-            {
-                await _powensApiService.GetPositionInvestissements(CompteInvestissementCourant.Id);
-                await LoadPositions();
-                NotifyStateChanged();
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                MessageError = ex.Message;
-            }
-            finally 
-            { 
-                SynchronisationEnCours = false;
-            }
         }
 
         public string DeterminerClasse(decimal variationPrix)
