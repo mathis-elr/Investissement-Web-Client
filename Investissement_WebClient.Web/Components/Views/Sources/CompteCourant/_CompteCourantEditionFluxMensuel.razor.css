@@ -1,4 +1,8 @@
-﻿.une-categorie {
+﻿.content {
+    overflow-y: auto;
+}
+
+.une-categorie {
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;

@@ -5,9 +5,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace Investissement_WebClient.Infrastructure.Workers
 {
-    public class RecuperationFluxBancairesWorker(IServiceProvider serviceProvider) : BackgroundService
+    public class RecuperationFluxBancairesWorker(IServiceProvider serviceProvider,
+                                                 IHostEnvironment environment) : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IHostEnvironment _environment = environment;
         private readonly SemaphoreSlim _signalSyncImmediate = new(0); // Permet de réveiller le worker instantanément
         private int _dernierUserIdCible;
 
@@ -23,7 +25,7 @@ namespace Investissement_WebClient.Infrastructure.Workers
             {
                 try
                 {
-                    bool isJourOk = DateTime.UtcNow.Day >= 5;
+                    bool isJourOk = !_environment.IsDevelopment() && DateTime.UtcNow.Day >= 5;
                     bool signaled = await _signalSyncImmediate.WaitAsync(TimeSpan.FromDays(1), stoppingToken);
 
                     if (isJourOk || signaled)

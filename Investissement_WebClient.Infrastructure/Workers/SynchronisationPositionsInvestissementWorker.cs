@@ -4,9 +4,10 @@ using Microsoft.Extensions.Hosting;
 
 namespace Investissement_WebClient.Infrastructure.Workers
 {
-    public class SynchronisationPositionsInvestissementWorker(IServiceProvider serviceProvider) : BackgroundService
+    public class SynchronisationPositionsInvestissementWorker(IServiceProvider serviceProvider, IHostEnvironment environment) : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IHostEnvironment _environment = environment;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -17,7 +18,7 @@ namespace Investissement_WebClient.Infrastructure.Workers
 
                 try
                 {
-                    await positionInvestissementService.SynchroniserPositions();
+                    if (!_environment.IsDevelopment()) await positionInvestissementService.SynchroniserPositions();
                 }
                 catch (Exception ex)
                 {
