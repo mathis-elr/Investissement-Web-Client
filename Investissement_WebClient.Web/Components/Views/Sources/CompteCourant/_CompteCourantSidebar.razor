@@ -1,5 +1,20 @@
 ﻿<div class="header">
-    <label>Historique</label>
+    <div class="logo">
+        <img class="icon" src="@Model.CompteCourant.LogoUrl" />
+    </div>
+
+    <div class="">
+        <label>@Model.CompteCourant.NomCompte</label>
+
+        @* <div class="infos-synchro">
+            <img src="icons/@(CVM.BadgeSynchronisation).svg" />
+            <span class="gris">@CVM.StatusSynchronisation</span>
+            @if (CVM.CompteInvestissementCourant.StatutConnexion != StatutConnexion.Valide)
+            {
+                <button class="btn-submit" @onclick="() => { Nav.NavigateTo(CVM.UrlReconnectionPowens, forceLoad: true); }"><img src="icons/sync.svg" /></button>
+            }
+        </div> *@
+    </div>
 </div>
 
 <div class="un-mois recap @(Model.DateActive == null ? "active-recapitulatif-global " : "")"
