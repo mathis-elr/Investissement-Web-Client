@@ -82,10 +82,12 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources.CompteInve
             }
 
             BadgeSynchronisation = "synchronise";
-            var local = compte.DerniereSychro.Value.ToLocalTime();
-            var format = local.Date == DateTime.Today ? "aujourd'hui à HH:mm" : "le dd MMM à HH:mm";
 
-            StatusSynchronisation = $"Synchronisé {local.ToString(format)}";
+            var local = compte.DerniereSychro.Value.ToLocalTime();
+            if (local.Date == DateTime.Today)
+                StatusSynchronisation = $"Synchronisé aujourd'hui à {local:HH:mm}";
+            else
+                StatusSynchronisation = $"Synchronisé le {local:dd MMM} à {local:HH:mm}";
         }
 
         public string DeterminerClasse(decimal variationPrix)
