@@ -25,5 +25,10 @@ namespace Investissement_WebClient.Application.Services
                 DerniereSychro = c.Banque.DerniereSynchro
             }).ToList();
         }
+
+        public async Task UpdateNom(SourceDto source) 
+        {
+            await _compteBanqueRepository.UpdateNom(source);
+        }
     }
 }

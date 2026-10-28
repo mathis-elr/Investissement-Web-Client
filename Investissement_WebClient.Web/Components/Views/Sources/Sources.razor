@@ -25,7 +25,9 @@
             {
                 @foreach (var source in SVM.Sources)
                 {
-                    <_Source Source="@source" Selectionne="@SVM.SourceSelectionne" OnClick="@(async () => await SVM.ChangerSourceSelectionne(source))" />
+                    <_Source Source="@source" Selectionne="@SVM.SourceSelectionne" 
+                        OnClick="@(async () => await SVM.ChangerSourceSelectionne(source))"
+                        OnNomChanged="@(async (nouvelleSource) => await SVM.MettreAJourNomSource(nouvelleSource))" />
                 }
             }
             else

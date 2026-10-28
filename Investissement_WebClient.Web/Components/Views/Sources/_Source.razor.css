@@ -45,6 +45,19 @@
         white-space: nowrap;
     }
 
+.input-edit-compte {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid goldenrod;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 1px 4px;
+    width: fit-content;
+    outline: none;
+    box-sizing: border-box;
+}
+
 @media (min-height: 800px) {
     .un-compte .banque {
         font-size: 14px;

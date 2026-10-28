@@ -1,4 +1,5 @@
-﻿using Investissement_WebClient.Domain.Modeles;
+﻿using Investissement_WebClient.Application.DTO.FluxBancaires;
+using Investissement_WebClient.Domain.Modeles;
 
 namespace Investissement_WebClient.Application.Interfaces.Repositories
 {
@@ -13,6 +14,8 @@ namespace Investissement_WebClient.Application.Interfaces.Repositories
         Task<List<CompteBanque>> GetAllByUserId(int userId);
 
         Task<CompteBanque?> GetById(int id);
+
+        Task UpdateNom(SourceDto source);
 
         Task Add(CompteBanque compte);
 

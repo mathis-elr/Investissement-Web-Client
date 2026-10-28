@@ -87,6 +87,24 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources
             SourceSelectionne = source;
         }
 
+        public async Task InitialiserUrlConnexionPowens()
+        {
+            try
+            {
+                UrlConnexionPowens = await _powensApiService.GetUrlConnexionPowens(IdUser);
+            }
+            catch (Exception ex)
+            {
+                HasErreur = true;
+                MessageErreur = ex.Message;
+            }
+        }
+
+        public async Task MettreAJourNomSource(SourceDto source)
+        {
+            await _compteBanqueService.UpdateNom(source);
+        }
+
         private async Task InitialiserSession()
         {
             await _sessionService.VerifierInitialisation();
@@ -101,19 +119,6 @@ namespace Investissement_WebClient.Web.Components.ViewsModels.Sources
         private async Task<SourceDto?> LoadCompteTradeRepublic()
         {
             return await _tradeRepubliqueService.GetByUserId(IdUser);
-        }
-
-        public async Task InitialiserUrlConnexionPowens()
-        {
-            try
-            {
-                UrlConnexionPowens = await _powensApiService.GetUrlConnexionPowens(IdUser);
-            }
-            catch (Exception ex)
-            {
-                HasErreur = true;
-                MessageErreur = ex.Message;
-            }
         }
     }
 }

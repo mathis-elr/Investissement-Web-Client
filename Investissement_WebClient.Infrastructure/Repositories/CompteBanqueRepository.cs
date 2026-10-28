@@ -2,6 +2,7 @@
 using Investissement_WebClient.Domain.Modeles;
 using Investissement_WebClient.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Investissement_WebClient.Application.DTO.FluxBancaires;
 
 namespace Investissement_WebClient.Infrastructure.Repositories
 {
@@ -56,6 +57,19 @@ namespace Investissement_WebClient.Infrastructure.Repositories
                     .ThenInclude(b => b.UtilisateurPowens)
                 .Where(c => c.Id == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateNom(SourceDto source)
+        {
+            await using var context = await _dbFactory.CreateDbContextAsync();
+
+            var compte = await context.CompteBanque.FindAsync(source.Id);
+            if (compte != null)
+            {
+                compte.Nom = source.NomCompte;
+                context.CompteBanque.Update(compte);
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task Add(CompteBanque compte)

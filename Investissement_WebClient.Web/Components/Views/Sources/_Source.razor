@@ -4,12 +4,76 @@
     </div>
     <div class="infos">
         <span class="banque">@Source.NomSource</span>
-        <span class="compte">@Source.NomCompte</span>
+
+        @if (isEditing)
+        {
+            <input type="text"
+                   class="input-edit-compte"
+                   @bind="tempNomCompte"
+                   @bind:event="oninput"
+                   @onkeyup="HandleKeyUp"
+                   @onblur="EnregistrerModification"
+                   @ref="inputElement"
+                   @onclick:stopPropagation="true" />
+        }
+        else
+        {
+            <span class="compte" @ondblclick="ActiverEdition" @ondblclick:stopPropagation="true">
+                @Source.NomCompte
+            </span>
+        }
+
     </div>
 </div>
 
 @code {
+    [Inject] public IJSRuntime JSRuntime { get; set; }
+
     [Parameter] public required SourceDto Source { get; set; }
     [Parameter] public required SourceDto? Selectionne { get; set; }
     [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public EventCallback<SourceDto> OnNomChanged { get; set; }
+
+    private bool isEditing = false;
+    private string tempNomCompte = "";
+    private ElementReference inputElement;
+
+    private async Task ActiverEdition()
+    {
+        tempNomCompte = Source.NomCompte;
+        isEditing = true;
+
+        await Task.Delay(50);
+        try
+        {
+            await inputElement.FocusAsync();
+        }
+        catch
+        {}
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await EnregistrerModification();
+        }
+        else if (e.Key == "Escape")
+        {
+            isEditing = false;
+        }
+    }
+
+    private async Task EnregistrerModification()
+    {
+        if (!isEditing) return;
+
+        isEditing = false;
+
+        if (!string.IsNullOrWhiteSpace(tempNomCompte) && tempNomCompte != Source.NomCompte)
+        {
+            Source.NomCompte = tempNomCompte;
+            await OnNomChanged.InvokeAsync(Source);
+        }
+    }
 }
