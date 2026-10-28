@@ -72,13 +72,7 @@ namespace Investissement_WebClient.Infrastructure.Seeders
                 {
                     Id = 11,
                     MacroCategorie = "Patrimoine",
-                    MicroCategorie = "Investissement TR"
-                },
-                new CategorieFlux
-                {
-                    Id = 12,
-                    MacroCategorie = "Patrimoine",
-                    MicroCategorie = "Investissement AV"
+                    MicroCategorie = "Investissement"
                 },
                 new CategorieFlux
                 {
@@ -120,7 +114,6 @@ namespace Investissement_WebClient.Infrastructure.Seeders
                 new CategorieFlux
                 {
                     Id = 19,
-                    MacroCategorie = "Livret A",
                     MicroCategorie = "Livret A"
                 }
             );

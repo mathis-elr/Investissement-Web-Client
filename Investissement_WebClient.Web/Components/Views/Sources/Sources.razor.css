@@ -1,7 +1,6 @@
 ﻿.sources {
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: 10px;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -10,27 +9,33 @@
 
 .liste-sources {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     gap: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 7px 10px;
+}
+
+.sources-existantes {
+    display: flex;
+    align-items: stretch;
     height: fit-content;
-    gap: 30px;
-    padding: 7px 13px;
-    background-color: #1e1e1e;
+    gap: 15px;
     border-radius: 10px;
     opacity: 0.8;
     overflow-x: auto;
     overflow-y: hidden;
     transition: all 0.3s ease-in-out;
+    padding-bottom: 10px;
 }
-    .liste-sources:hover {
+    .sources-existantes:hover {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         opacity: 1;
     }
 
 
 .btn-ajouter {
-    gap: 2px;
-    min-width: 150px;
+    width: 200px;
     padding: 5px 7px;
     background: rgba(255,255,255,0.03);
     border: 1px dashed rgba(218,165,32,.35);
@@ -38,6 +43,7 @@
     color: white;
     font-size: 25px;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
     .btn-ajouter:hover {

@@ -19,20 +19,25 @@
 }
 
 <div class="sources">
-    <div class="liste-sources @(SVM.AucuneSource ? "flou" : "")">
-        @if (!SVM.AucuneSource)
-        {
-            @foreach (var source in SVM.Sources)
+    <div class="liste-sources">
+        <div class="sources-existantes@(SVM.AucuneSource ? "flou" : "")">
+            @if (!SVM.AucuneSource)
             {
-                <_Source Source="@source" Selectionne="@SVM.SourceSelectionne" OnClick="@(async () => await SVM.ChangerSourceSelectionne(source))" />
+                @foreach (var source in SVM.Sources)
+                {
+                    <_Source Source="@source" Selectionne="@SVM.SourceSelectionne" OnClick="@(async () => await SVM.ChangerSourceSelectionne(source))" />
+                }
             }
-        }
-        else
-        {
-            <p>Aucun comptes synchornisé</p>
-        }
+            else
+            {
+                <p>Aucun comptes synchornisé</p>
+            }
+        </div>
+
         <button class="btn-ajouter" @onclick="@SynchroniserSource">+</button>
     </div>
+
+
 
     @switch (SVM.SourceSelectionne?.TypeCompte)
     {
