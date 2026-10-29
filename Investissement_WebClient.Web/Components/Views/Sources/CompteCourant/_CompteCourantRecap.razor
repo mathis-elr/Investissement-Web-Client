@@ -53,7 +53,7 @@
                                      Items="categorie.BudgetCategorieParMois"
                                      Name="@categorie.Categorie"
                                      SeriesType="SeriesType.Line"
-                                     YValue="@(e => categorie.Categorie == "Patrimoine" ? Math.Abs(e.Budget) : e.Budget)"
+                                     YValue="@(e => e.Budget)"
                                      XValue="@(e => e.Date)" />
                 }
 
@@ -72,14 +72,7 @@
                         <span class="pastille" style="background-color: @couleur;"></span>
                         <span class="nom-cat">@categorie.Categorie</span>
                     </div>
-                    @if (categorie.Categorie == "Patrimoine")
-                    {
-                        <label class="goldenrod">@Math.Abs(moyenne).ToString("C")</label>
-                    }
-                    else
-                    {
-                        <label class="@(moyenne > 0 ? "vert" : "rouge")">@moyenne.ToString("C")</label>
-                    }
+                    <label class="@(moyenne > 0 ? "vert" : "rouge")">@moyenne.ToString("C")</label>
                 </div>
             }
         </div>

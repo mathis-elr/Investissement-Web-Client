@@ -57,12 +57,12 @@
             }
             else
             {
-                <CompteInvestissement SourceSelectionne="SVM.SourceSelectionne" />
+                <CompteInvestissement @key="SVM.SourceSelectionne.Id" SourceSelectionne="SVM.SourceSelectionne" />
             }
             break;
 
         default:
-            <CompteCourant SourceSelectionnee="SVM.SourceSelectionne" />
+            <CompteCourant @key="SVM.SourceSelectionne.Id" SourceSelectionnee="SVM.SourceSelectionne" />
             break;
     }
 </div>
