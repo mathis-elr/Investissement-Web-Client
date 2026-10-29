@@ -243,7 +243,7 @@ namespace Investissement_WebClient.Infrastructure.APIs.Powens
                     Code = t.Code ?? string.Empty,
                     Label = t.Label,
                     Quantite = t.Quantite,
-                    PrixAchat = t.PrixAchat,
+                    PrixAchat = t.PrixAchat == 0 ? t.PrixCourant / t.Quantite : t.PrixAchat,
                     PrixCourant = t.PrixCourant,
                     DatePrixCourant = t.DatePrixCourant ?? DateTime.UtcNow,
                     DerniereMaj = t.DateDerniereMAJ ?? DateTime.UtcNow,
